@@ -1,4 +1,4 @@
-type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
+type RequestMethod = 'GET' | 'PATCH' | 'POST' | 'PUT' | 'DELETE';
 
 type RequestParams = { [key: string]: string | number | boolean | null | undefined };
 
@@ -8,8 +8,6 @@ type ResponseResult = {
   data: unknown;
   status: number;
 };
-
-export const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
 const execute = async (method: RequestMethod, url: string, data?: RequestData) => {
   const request: RequestInit = {
@@ -56,6 +54,8 @@ export const get = async (url: string, params?: RequestParams) => {
 };
 
 export const _delete = async (url: string, data?: RequestData) => execute('DELETE', url, data);
+
+export const patch = async (url: string, data?: RequestData) => execute('PATCH', url, data);
 
 export const post = async (url: string, data?: RequestData) => execute('POST', url, data);
 
