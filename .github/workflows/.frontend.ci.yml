@@ -15,7 +15,6 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: "18"
-      - run: cd src/Logitar.Cms.Ui
-      - run: npm install
-      - run: npm run lint
-      - run: npm run build
+      - run: cd src/Logitar.Cms.Ui && npm install
+      - run: cd src/Logitar.Cms.Ui && npm run lint
+      - run: cd src/Logitar.Cms.Ui && npm run build
