@@ -1,19 +1,14 @@
-import { createHashRouter, RouterProvider } from 'react-router-dom';
 import { useMemo } from 'react';
 
 import { I18nextProvider } from 'react-i18next';
 import { CssBaseline, ThemeProvider, useMediaQuery } from '@mui/material';
+import { RouterProvider } from 'react-router-dom';
+
+import { router } from './router';
 
 import { useToggle } from '~hooks';
 import { i18n } from '~locales';
 import { getDefaultTheme } from '~themes';
-
-const router = createHashRouter([
-  {
-    path: '/',
-    element: <></>,
-  },
-]);
 
 export const App: React.FC = () => {
   const [darkMode] = useToggle(useMediaQuery('(prefers-color-scheme: dark)'));
