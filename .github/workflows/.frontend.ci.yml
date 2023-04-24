@@ -8,11 +8,13 @@ on:
 
 jobs:
   test:
+    name: It lints and builds
     runs-on: ubuntu-latest
+    steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: '18'
+          node-version: "18"
       - run: cd src/Logitar.Cms.Ui
       - run: npm install
       - run: npm run lint

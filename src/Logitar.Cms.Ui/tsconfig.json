@@ -5,7 +5,7 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "rootDir": ".",
-    "outDir": "../Logitar.Cms.Web/wwwroot",
+    "outDir": "../Logitar.Cms.Web/wwwroot/dist",
 
     /* Bundler mode */
     "moduleResolution": "bundler",

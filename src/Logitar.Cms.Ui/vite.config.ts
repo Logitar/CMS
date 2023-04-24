@@ -5,6 +5,9 @@ import path from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  build: {
+    outDir: '../Logitar.Cms.Web/wwwroot/dist',
+  },
   define: {
     // Set the value of NODE_ENV to "production" when building
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
