@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 18
       - run: |
-        cd ./src/Logitar.Cms.Ui
-        npm ci
-        npm run lint
-        npm run build
+          cd ./src/Logitar.Cms.Ui
+          npm ci
+          npm run lint
+          npm run build
