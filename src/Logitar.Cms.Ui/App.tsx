@@ -21,11 +21,13 @@ export const App: React.FC = () => {
   const theme = useMemo(() => getDefaultTheme(darkMode), [darkMode]);
 
   return (
-    <I18nextProvider i18n={i18n}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <RouterProvider router={router} />
-      </ThemeProvider>
-    </I18nextProvider>
+    <>
+      <CssBaseline />
+      <I18nextProvider i18n={i18n}>
+        <ThemeProvider theme={theme}>
+          <RouterProvider router={router} />
+        </ThemeProvider>
+      </I18nextProvider>
+    </>
   );
 };
