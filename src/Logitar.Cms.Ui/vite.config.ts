@@ -3,10 +3,21 @@ import react from '@vitejs/plugin-react';
 import tsconfigpaths from 'vite-tsconfig-paths';
 import path from 'path';
 
+import dotenv from 'dotenv';
+dotenv.config();
+
 // https://vitejs.dev/config/
 export default defineConfig({
   build: {
     outDir: '../Logitar.Cms.Web/wwwroot/dist',
+    emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        entryFileNames: `assets/[name].js`,
+        chunkFileNames: `assets/[name].js`,
+        assetFileNames: `assets/[name].[ext]`,
+      },
+    },
   },
   plugins: [react(), tsconfigpaths()],
   resolve: {
@@ -18,6 +29,15 @@ export default defineConfig({
       { find: '~models', replacement: path.resolve(__dirname, 'models') },
       { find: '~pages', replacement: path.resolve(__dirname, 'pages') },
       { find: '~themes', replacement: path.resolve(__dirname, 'themes') },
+      { find: '~styles', replacement: path.resolve(__dirname, 'styles') },
     ],
+  },
+  server: {
+    proxy: {
+      '/cms/api': {
+        target: `http://localhost:${process.env.API_PORT}/cms/api`,
+        changeOrigin: true,
+      },
+    },
   },
 });

@@ -1,0 +1,37 @@
+{
+  "forgotPassword": {
+    "title": "Mot de passe oublié",
+    "heading": "Mot de passe oublié ?",
+    "subheading": "Entrez votre adresse e-mail pour réinitialiser votre mot de passe.",
+    "form": {
+      "buttons": {
+        "submit": "Envoyer le lien",
+        "enterCode": "J'ai déjà un code",
+        "rememberPassword": "Je me souviens de mon mot de passe"
+      },
+      "labels": {
+        "email": "Adresse e-mail"
+      },
+      "validations": {
+        "required": "Ce champ est obligatoire.",
+        "email": "Veuillez saisir une adresse e-mail valide."
+      }
+    }
+  },
+  "signIn": {
+    "title": "Connexion",
+    "heading": "Bienvenue !",
+    "subheading": "Connectez-vous à votre compte pour continuer.",
+    "form": {
+      "labels": {
+        "username": "Identifiant",
+        "password": "Mot de passe",
+        "remember": "Se souvenir de moi",
+        "submit": "Connexion"
+      },
+      "validations": {
+        "required": "Ce champ est obligatoire."
+      }
+    }
+  }
+}

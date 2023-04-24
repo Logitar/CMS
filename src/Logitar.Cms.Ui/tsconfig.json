@@ -35,6 +35,8 @@
       "~models/*": ["./models/*"],
       "~pages": ["./pages"],
       "~pages/*": ["./pages/*"],
+      "~styles": ["./styles"],
+      "~styles/*": ["./styles/*"],
       "~themes": ["./themes"],
       "~themes/*": ["./themes/*"]
     }
