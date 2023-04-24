@@ -29,10 +29,14 @@
       "~components/*": ["./components/*"],
       "~hooks": ["./hooks"],
       "~hooks/*": ["./hooks/*"],
+      "~locales": ["./locales"],
+      "~locales/*": ["./locales/*"],
       "~models": ["./models"],
       "~models/*": ["./models/*"],
       "~pages": ["./pages"],
-      "~pages/*": ["./pages/*"]
+      "~pages/*": ["./pages/*"],
+      "~themes": ["./themes"],
+      "~themes/*": ["./themes/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx", "vite.config.ts"],
