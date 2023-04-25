@@ -9,7 +9,7 @@ namespace Logitar.Cms.EntityFrameworkCore.PostgreSQL;
 
 public static class DependencyInjectionExtensions
 {
-  private const string ConnectionStringKey = "POSTGRESQLCONNSTR_PortalContext";
+  private const string ConnectionStringKey = "POSTGRESQLCONNSTR_CmsContext";
 
   public static IServiceCollection AddLogitarCmsEntityFrameworkCorePostgreSQLStore(this IServiceCollection services, IConfiguration configuration)
   {
