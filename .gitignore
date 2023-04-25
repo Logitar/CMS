@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Logitar.Cms.Web launch settings
+/src/Logitar.Cms.Web/Properties/launchSettings.json
