@@ -30,6 +30,8 @@ internal class Startup : StartupBase
     services.AddLogitarCmsSchema(_graphQLSettings);
     services.AddLogitarCmsWeb();
 
+    services.AddCors(_configuration); // TODO(fpion): refactor
+
     services.AddApplicationInsightsTelemetry();
     IHealthChecksBuilder healthChecks = services.AddHealthChecks();
 
@@ -79,6 +81,8 @@ internal class Startup : StartupBase
     builder.UseHttpsRedirection();
     builder.UseStaticFiles();
     builder.UseGraphQL<CmsSchema>();
+
+    builder.UseCors(); // TODO(fpion): refactor
 
     if (builder is WebApplication application)
     {
