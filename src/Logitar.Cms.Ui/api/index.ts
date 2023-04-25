@@ -9,6 +9,10 @@ type ResponseResult = {
   status: number;
 };
 
+const isDevelopment = import.meta.env.MODE === 'development';
+
+export const apiBaseUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL : '/api';
+
 const execute = async (method: RequestMethod, url: string, data?: RequestData) => {
   const request: RequestInit = {
     method,
@@ -33,6 +37,8 @@ const execute = async (method: RequestMethod, url: string, data?: RequestData) =
   if (dataType.includes('application/json')) {
     result.data = await response.json();
   } else if (dataType.includes('text/html')) {
+    result.data = await response.text();
+  } else if (dataType.includes('text/')) {
     result.data = await response.text();
   } else {
     throw new Error(`Unsupported Content-Type: ${dataType}`);

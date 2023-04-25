@@ -11,7 +11,6 @@ import { AppLogo } from '~components';
 import { useTitle } from '~hooks';
 import { flexColCenter } from '~styles';
 import { ForgotPasswordForm, ResetPasswordForm, SignInForm } from '~components/Auth';
-import { get } from '~api';
 
 type AuthPageView = 'signIn' | 'forgotPassword' | 'resetPassword';
 
@@ -24,12 +23,6 @@ export const AuthPage: React.FC = () => {
   const isSmall = useMediaQuery(theme.breakpoints.up('sm'));
 
   useTitle(t(`${view}.title`));
-
-  useEffect(() => {
-    get('/cms/api/test123')
-      .then(res => console.log(res))
-      .catch(err => console.error(err));
-  }, []);
 
   return (
     <SplashContainer>
