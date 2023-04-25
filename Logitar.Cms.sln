@@ -14,17 +14,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.Contracts", "src\Logitar.Cms.Contracts\Logitar.Cms.Contracts.csproj", "{DF8573E2-1697-4CED-97F5-55652A53604A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms.Contracts", "src\Logitar.Cms.Contracts\Logitar.Cms.Contracts.csproj", "{DF8573E2-1697-4CED-97F5-55652A53604A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.Core", "src\Logitar.Cms.Core\Logitar.Cms.Core.csproj", "{DC62CD27-CE8B-412B-9186-3E27E233E8A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms.Core", "src\Logitar.Cms.Core\Logitar.Cms.Core.csproj", "{DC62CD27-CE8B-412B-9186-3E27E233E8A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.EntityFrameworkCore.PostgreSQL", "src\Logitar.Cms.EntityFrameworkCore.PostgreSQL\Logitar.Cms.EntityFrameworkCore.PostgreSQL.csproj", "{9E545603-B030-4E08-AFA6-EBEA015316F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms.EntityFrameworkCore.PostgreSQL", "src\Logitar.Cms.EntityFrameworkCore.PostgreSQL\Logitar.Cms.EntityFrameworkCore.PostgreSQL.csproj", "{9E545603-B030-4E08-AFA6-EBEA015316F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.Web", "src\Logitar.Cms.Web\Logitar.Cms.Web.csproj", "{23EC45D5-CE13-48D2-B3A3-FCA4736DCDE9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms.Web", "src\Logitar.Cms.Web\Logitar.Cms.Web.csproj", "{23EC45D5-CE13-48D2-B3A3-FCA4736DCDE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms", "src\Logitar.Cms\Logitar.Cms.csproj", "{C08A111D-8422-4C32-8070-6C8B6F44F8C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms", "src\Logitar.Cms\Logitar.Cms.csproj", "{C08A111D-8422-4C32-8070-6C8B6F44F8C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.Schema", "src\Logitar.Cms.Schema\Logitar.Cms.Schema.csproj", "{D10AF661-FB3A-443D-B48F-A45AF7AD9D6E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms.Schema", "src\Logitar.Cms.Schema\Logitar.Cms.Schema.csproj", "{D10AF661-FB3A-443D-B48F-A45AF7AD9D6E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{CAE70F92-F4B0-4D3A-B422-940E933C4726}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.Core.UnitTests", "tests\Logitar.Cms.Core.UnitTests\Logitar.Cms.Core.UnitTests.csproj", "{D6E655EB-D334-4F84-BF07-5910FFBA30F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.Tests", "tests\Logitar.Cms.Tests\Logitar.Cms.Tests.csproj", "{0CEBB4D9-6D22-4AE9-9EC7-12A7B37DA515}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,9 +62,21 @@ Global
 		{D10AF661-FB3A-443D-B48F-A45AF7AD9D6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D10AF661-FB3A-443D-B48F-A45AF7AD9D6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D10AF661-FB3A-443D-B48F-A45AF7AD9D6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6E655EB-D334-4F84-BF07-5910FFBA30F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6E655EB-D334-4F84-BF07-5910FFBA30F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6E655EB-D334-4F84-BF07-5910FFBA30F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6E655EB-D334-4F84-BF07-5910FFBA30F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CEBB4D9-6D22-4AE9-9EC7-12A7B37DA515}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CEBB4D9-6D22-4AE9-9EC7-12A7B37DA515}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CEBB4D9-6D22-4AE9-9EC7-12A7B37DA515}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CEBB4D9-6D22-4AE9-9EC7-12A7B37DA515}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D6E655EB-D334-4F84-BF07-5910FFBA30F5} = {CAE70F92-F4B0-4D3A-B422-940E933C4726}
+		{0CEBB4D9-6D22-4AE9-9EC7-12A7B37DA515} = {CAE70F92-F4B0-4D3A-B422-940E933C4726}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1A4E06AD-CBE1-4E63-919A-18B7AACB85EA}

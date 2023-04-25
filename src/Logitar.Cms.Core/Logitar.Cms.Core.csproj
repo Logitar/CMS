@@ -17,4 +17,8 @@
     <ProjectReference Include="..\Logitar.Cms.Contracts\Logitar.Cms.Contracts.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="Logitar.Cms.Core.UnitTests" />
+  </ItemGroup>
+
 </Project>
