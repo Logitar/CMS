@@ -13,24 +13,22 @@ internal class Startup : StartupBase
   private readonly IConfiguration _configuration;
 
   private readonly bool _enableOpenApi;
-  private readonly GraphQLSettings _graphQLSettings;
 
   public Startup(IConfiguration configuration)
   {
     _configuration = configuration;
 
     _enableOpenApi = configuration.GetValue<bool>("EnableOpenApi");
-    _graphQLSettings = configuration.GetSection("GraphQL").Get<GraphQLSettings>() ?? new();
   }
 
   public override void ConfigureServices(IServiceCollection services)
   {
     base.ConfigureServices(services);
 
-    services.AddLogitarCmsSchema(_graphQLSettings);
+    services.AddLogitarCmsSchema(_configuration);
     services.AddLogitarCmsWeb();
 
-    services.AddCors(_configuration); // TODO(fpion): refactor
+    services.AddCors(_configuration);
 
     services.AddApplicationInsightsTelemetry();
     IHealthChecksBuilder healthChecks = services.AddHealthChecks();
@@ -79,10 +77,9 @@ internal class Startup : StartupBase
     }
 
     builder.UseHttpsRedirection();
+    builder.UseCors();
     builder.UseStaticFiles();
     builder.UseGraphQL<CmsSchema>();
-
-    builder.UseCors(); // TODO(fpion): refactor
 
     if (builder is WebApplication application)
     {
