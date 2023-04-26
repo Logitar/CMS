@@ -11,5 +11,8 @@ internal class ConfigurationProfile : Profile
     CreateMap<ConfigurationAggregate, Configuration>()
       .ForMember(x => x.CreatedBy, x => x.MapFrom((y, _, __, context) => context.GetActor(y.CreatedById)))
       .ForMember(x => x.UpdatedBy, x => x.MapFrom((y, _, __, context) => context.GetActor(y.UpdatedById)));
+    CreateMap<ReadOnlyLoggingSettings, LoggingSettings>();
+    CreateMap<ReadOnlyUsernameSettings, UsernameSettings>();
+    CreateMap<ReadOnlyPasswordSettings, PasswordSettings>();
   }
 }
