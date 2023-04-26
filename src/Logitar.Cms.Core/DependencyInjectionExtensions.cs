@@ -1,4 +1,6 @@
-﻿using Logitar.Cms.Contracts.Resources;
+﻿using Logitar.Cms.Contracts.Configurations;
+using Logitar.Cms.Contracts.Resources;
+using Logitar.Cms.Core.Configurations;
 using Logitar.Cms.Core.Resources;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -13,11 +15,14 @@ public static class DependencyInjectionExtensions
 
     return services
       .AddFacades()
-      .AddMediatR(config => config.RegisterServicesFromAssembly(assembly));
+      .AddMediatR(config => config.RegisterServicesFromAssembly(assembly))
+      .AddTransient<IRequestPipeline, RequestPipeline>();
   }
 
   private static IServiceCollection AddFacades(this IServiceCollection services)
   {
-    return services.AddTransient<IResourceService, ResourceService>();
+    return services
+      .AddTransient<IConfigurationService, ConfigurationService>()
+      .AddTransient<IResourceService, ResourceService>();
   }
 }
