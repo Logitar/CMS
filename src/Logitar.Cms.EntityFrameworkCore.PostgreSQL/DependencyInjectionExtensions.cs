@@ -1,6 +1,7 @@
 ﻿using Logitar.Cms.Core.Configurations;
 using Logitar.Cms.Core.Languages;
 using Logitar.Cms.Core.Users;
+using Logitar.Cms.EntityFrameworkCore.PostgreSQL.Converters;
 using Logitar.Cms.EntityFrameworkCore.PostgreSQL.Repositories;
 using Logitar.EventSourcing;
 using Logitar.EventSourcing.EntityFrameworkCore.PostgreSQL;
@@ -25,6 +26,8 @@ public static class DependencyInjectionExtensions
 
   public static IServiceCollection AddLogitarCmsEntityFrameworkCorePostgreSQLStore(this IServiceCollection services, string connectionString)
   {
+    EventSerializer.Instance.RegisterConverter(new Pbkdf2Converter());
+
     Assembly assembly = typeof(DependencyInjectionExtensions).Assembly;
 
     return services
