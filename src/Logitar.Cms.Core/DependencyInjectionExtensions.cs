@@ -1,6 +1,8 @@
 ﻿using Logitar.Cms.Contracts.Configurations;
 using Logitar.Cms.Contracts.Resources;
+using Logitar.Cms.Core.Caching;
 using Logitar.Cms.Core.Configurations;
+using Logitar.Cms.Core.Mapping;
 using Logitar.Cms.Core.Resources;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -14,8 +16,11 @@ public static class DependencyInjectionExtensions
     Assembly assembly = typeof(DependencyInjectionExtensions).Assembly;
 
     return services
+      .AddAutoMapper(assembly)
       .AddFacades()
       .AddMediatR(config => config.RegisterServicesFromAssembly(assembly))
+      .AddSingleton<ICacheService, CacheService>()
+      .AddSingleton<IMappingService, MappingService>()
       .AddTransient<IRequestPipeline, RequestPipeline>();
   }
 
