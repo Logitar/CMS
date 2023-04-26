@@ -78,6 +78,7 @@ internal class Startup : StartupBase
 
     builder.UseHttpsRedirection();
     builder.UseCors();
+    builder.UseSession();
     builder.UseStaticFiles();
     builder.UseGraphQL<CmsSchema>();
 

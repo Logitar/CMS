@@ -13,7 +13,13 @@ public static class DependencyInjectionExtensions
 
     services.AddLogitarCmsCore();
 
-    services.AddDistributedMemoryCache();
+    services
+     .AddSession(options =>
+     {
+       options.Cookie.SameSite = SameSiteMode.Strict;
+       options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+     })
+     .AddDistributedMemoryCache();
 
     return services;
   }
