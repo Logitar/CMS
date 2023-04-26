@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Logitar.Cms.Core.Configurations;
 using Logitar.Cms.Core.Security;
+using Logitar.Cms.Core.Sessions;
 using Logitar.Cms.Core.Users.Events;
 using Logitar.Cms.Core.Users.Validators;
 using Logitar.EventSourcing;
@@ -84,6 +85,21 @@ public class UserAggregate : AggregateRoot
     ApplyChange(e);
   }
   protected virtual void Apply(EmailChanged e) => Email = e.Email;
+
+  public SessionAggregate SignIn(string password, bool remember = false, string? ipAddress = null,
+    string? additionalInformation = null)
+  {
+    if (_password?.IsMatch(password) != true)
+    {
+      throw new InvalidCredentialsException($"The password '{password}' did not match the user '{this}'.");
+    }
+
+    UserSignedIn e = new() { ActorId = Id };
+    ApplyChange(e);
+
+    return new SessionAggregate(this, e.OccurredOn, remember, ipAddress, additionalInformation);
+  }
+  protected virtual void Apply(UserSignedIn _) { }
 
   public override string ToString() => FullName == null
     ? $"{Username} | {base.ToString()}"

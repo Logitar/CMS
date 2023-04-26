@@ -13,7 +13,7 @@ public class Pbkdf2Tests
   [Fact]
   public void It_should_return_the_correct_hash_code()
   {
-    int hashCode = HashCode.Combine(GetAlgorithm(), GetIterationCount(), Convert.ToBase64String(GetSalt()), Convert.ToBase64String(GetHash()));
+    int hashCode = HashCode.Combine(GetAlgorithm(), GetIterationCount(), GetSalt(), GetHash());
     Assert.Equal(hashCode, _pbkdf2.GetHashCode());
   }
 

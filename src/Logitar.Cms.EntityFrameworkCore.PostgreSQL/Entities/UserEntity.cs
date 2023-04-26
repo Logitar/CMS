@@ -63,6 +63,8 @@ internal class UserEntity : AggregateEntity
 
   public string? Picture { get; private set; }
 
+  public List<SessionEntity> Sessions { get; private set; } = new();
+
   public void ChangePassword(PasswordChanged e)
   {
     SetVersion(e);

@@ -1,0 +1,8 @@
+﻿using Logitar.Cms.Contracts.Sessions;
+
+namespace Logitar.Cms.Core.Sessions;
+
+public interface ISessionQuerier
+{
+  Task<Session> GetAsync(SessionAggregate session, CancellationToken cancellationToken = default);
+}

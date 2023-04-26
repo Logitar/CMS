@@ -1,5 +1,6 @@
 ﻿using Bogus;
 using Logitar.Cms.Core.Configurations;
+using Logitar.Cms.Core.Sessions;
 using Logitar.Cms.Core.Users.Events;
 using Logitar.EventSourcing;
 using System.Globalization;
@@ -184,6 +185,42 @@ public class UserAggregateTests
 
     EmailChanged e = (EmailChanged)user.Changes.Where(e => e is EmailChanged).Last();
     Assert.Equal(VerificationAction.Unverify, e.VerificationAction);
+  }
+
+  [Theory]
+  [InlineData("P@s$W0rD")]
+  [InlineData("P@s$W0rD", true, "::1", "{\"User-Agent\":\"Chrome\"}")]
+  public void When_signing_in_with_a_correct_password_Then_it_returns_a_SessionAggregate(string password,
+    bool remember = false, string? ipAddress = null, string? additionalInformation = null)
+  {
+    UserAggregate user = new(_actorId, _configuration, Username);
+    user.ChangePassword(_configuration, password);
+
+    SessionAggregate session = user.SignIn(password, remember, ipAddress, additionalInformation);
+
+    Assert.Equal(user.Id, session.UserId);
+    Assert.Equal(user.Changes.Single(c => c is UserSignedIn).OccurredOn, session.CreatedOn);
+    Assert.Equal(remember, session.IsPersistent);
+    Assert.Equal(ipAddress, session.IpAddress);
+    Assert.Equal(additionalInformation, session.AdditionalInformation);
+  }
+
+  [Theory]
+  [InlineData("P@s$W0rD")]
+  public void When_signing_in_with_an_incorrect_password_Then_InvalidCredentialsException_is_thrown(string password)
+  {
+    UserAggregate user = new(_actorId, _configuration, Username);
+    user.ChangePassword(_configuration, password);
+
+    Assert.Throws<InvalidCredentialsException>(() => user.SignIn(password[..^1]));
+  }
+
+  [Fact]
+  public void When_signing_in_without_a_password_Then_InvalidCredentialsException_is_thrown()
+  {
+    UserAggregate user = new(_actorId, _configuration, Username);
+
+    Assert.Throws<InvalidCredentialsException>(() => user.SignIn(password: string.Empty));
   }
 
   [Fact]
