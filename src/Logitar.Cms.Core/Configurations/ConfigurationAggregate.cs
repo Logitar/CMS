@@ -9,7 +9,7 @@ namespace Logitar.Cms.Core.Configurations;
 
 public class ConfigurationAggregate : AggregateRoot
 {
-  internal static readonly AggregateId GlobalId = new("CONFIGURATION");
+  public static readonly AggregateId GlobalId = new("CONFIGURATION");
 
   public ConfigurationAggregate(AggregateId id) : base(id) { }
 

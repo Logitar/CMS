@@ -13,6 +13,8 @@ public static class DependencyInjectionExtensions
 
     services.AddLogitarCmsCore();
 
+    services.AddDistributedMemoryCache();
+
     return services;
   }
 }
