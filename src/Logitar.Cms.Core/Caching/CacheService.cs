@@ -1,5 +1,6 @@
 ﻿using Logitar.Cms.Contracts.Actors;
 using Logitar.Cms.Core.Configurations;
+using Logitar.Cms.Core.Users;
 using Logitar.EventSourcing;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -23,6 +24,19 @@ internal class CacheService : ICacheService
   }
 
   public Actor? GetActor(AggregateId id) => GetItem<Actor>(GetActorKey(id));
+  public void SetActor(UserAggregate user)
+  {
+    Actor actor = new()
+    {
+      Id = user.Id.Value,
+      Type = ActorType.User,
+      IsDeleted = user.IsDeleted,
+      DisplayName = user.FullName ?? user.Username,
+      EmailAddress = user.Email?.Address,
+      PictureUrl = user.Picture?.ToString()
+    };
+    SetItem(GetActorKey(user.Id), actor);
+  }
   private static string GetActorKey(AggregateId id) => $"Actor:{id}";
 
   private T? GetItem<T>(object key) => _memoryCache.Get<T>(key);
