@@ -12,6 +12,11 @@ internal class UserService : IUserService
     _pipeline = pipeline;
   }
 
+  public async Task<User> ChangePasswordAsync(Guid id, ChangePasswordInput input, CancellationToken cancellationToken)
+  {
+    return await _pipeline.ExecuteAsync(new ChangePassword(id, input), cancellationToken);
+  }
+
   public async Task<User> UpdateAsync(Guid id, UpdateUserInput input, CancellationToken cancellationToken)
   {
     return await _pipeline.ExecuteAsync(new UpdateUser(id, input), cancellationToken);
