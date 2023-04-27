@@ -1,11 +1,13 @@
 ﻿using Logitar.Cms.Contracts.Configurations;
 using Logitar.Cms.Contracts.Resources;
 using Logitar.Cms.Contracts.Sessions;
+using Logitar.Cms.Contracts.Users;
 using Logitar.Cms.Core.Caching;
 using Logitar.Cms.Core.Configurations;
 using Logitar.Cms.Core.Mapping;
 using Logitar.Cms.Core.Resources;
 using Logitar.Cms.Core.Sessions;
+using Logitar.Cms.Core.Users;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -31,6 +33,7 @@ public static class DependencyInjectionExtensions
     return services
       .AddTransient<IConfigurationService, ConfigurationService>()
       .AddTransient<IResourceService, ResourceService>()
-      .AddTransient<ISessionService, SessionService>();
+      .AddTransient<ISessionService, SessionService>()
+      .AddTransient<IUserService, UserService>();
   }
 }

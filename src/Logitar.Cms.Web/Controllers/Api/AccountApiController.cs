@@ -13,10 +13,12 @@ namespace Logitar.Cms.Web.Controllers.Api;
 public class AccountApiController : ControllerBase
 {
   private readonly ISessionService _sessionService;
+  private readonly IUserService _userService;
 
-  public AccountApiController(ISessionService sessionService)
+  public AccountApiController(ISessionService sessionService, IUserService userService)
   {
     _sessionService = sessionService;
+    _userService = userService;
   }
 
   [Authorize(Policy = Policies.User)]
@@ -26,12 +28,21 @@ public class AccountApiController : ControllerBase
     return Ok(HttpContext.GetUser());
   }
 
-  //[Authorize(Policy = Policies.User)]
-  //[HttpPut("profile")]
-  //public async Task<ActionResult<User>> SaveProfileAsync([FromBody] SaveProfileInput input, CancellationToken cancellationToken)
-  //{
+  [Authorize(Policy = Policies.User)]
+  [HttpPut("profile")]
+  public async Task<ActionResult<User>> SaveProfileAsync([FromBody] SaveProfileInput input, CancellationToken cancellationToken)
+  {
+    UpdateUserInput updateUserInput = new()
+    {
+      Email = input.Email,
+      FirstName = input.FirstName,
+      LastName = input.LastName,
+      Locale = input.Locale,
+      Picture = input.Picture
+    };
 
-  //}
+    return Ok(await _userService.UpdateAsync(HttpContext.GetUser()!.Id, updateUserInput, cancellationToken));
+  }
 
   [HttpPost("sign/in")]
   public async Task<ActionResult> SignInAsync([FromBody] AccountSignInInput input, CancellationToken cancellationToken)

@@ -15,4 +15,16 @@ internal static class StringExtensions
       throw new InvalidLocaleException(name, paramName, innerException);
     }
   }
+
+  public static Uri? GetUri(this string url, string paramName)
+  {
+    try
+    {
+      return string.IsNullOrWhiteSpace(url) ? null : new(url);
+    }
+    catch (Exception innerException)
+    {
+      throw new InvalidUrlException(url, paramName, innerException);
+    }
+  }
 }

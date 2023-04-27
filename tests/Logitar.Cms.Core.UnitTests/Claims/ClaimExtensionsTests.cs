@@ -39,7 +39,7 @@ public class ClaimExtensionsTests
       LastName = _faker.Person.LastName,
       FullName = _faker.Person.FullName,
       Locale = "fr-CA",
-      Picture = "www.test.com/assets/img/admin.jpg",
+      Picture = "https://www.test.com/assets/img/admin.jpg",
       UpdatedOn = now.AddMinutes(-1)
     };
 

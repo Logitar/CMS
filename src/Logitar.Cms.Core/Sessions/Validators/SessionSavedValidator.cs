@@ -3,9 +3,9 @@ using Logitar.Cms.Core.Sessions.Events;
 
 namespace Logitar.Cms.Core.Sessions.Validators;
 
-internal class SessionSavedValidator<T> : AbstractValidator<T> where T : SessionSaved
+internal abstract class SessionSavedValidator<T> : AbstractValidator<T> where T : SessionSaved
 {
-  public SessionSavedValidator()
+  protected SessionSavedValidator()
   {
     RuleFor(x => x.IpAddress).NullOrNotEmpty()
       .MaximumLength(byte.MaxValue);

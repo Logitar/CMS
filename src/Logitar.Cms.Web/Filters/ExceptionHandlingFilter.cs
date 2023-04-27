@@ -15,6 +15,7 @@ internal class ExceptionHandlingFilter : IExceptionFilter
     [typeof(ConfigurationAlreadyInitializedException)] = HandleConfigurationAlreadyInitializedException,
     [typeof(InvalidCredentialsException)] = HandleInvalidCredentialsException,
     [typeof(InvalidLocaleException)] = HandleInvalidLocaleException,
+    [typeof(InvalidUrlException)] = HandleInvalidUrlException,
     [typeof(SessionIsNotActiveException)] = HandleSessionIsNotActiveException
   };
 
@@ -46,6 +47,14 @@ internal class ExceptionHandlingFilter : IExceptionFilter
   }
 
   private static void HandleInvalidLocaleException(ExceptionContext context)
+  {
+    if (context.Exception is IPropertyFailure propertyFailure)
+    {
+      context.Result = new BadRequestObjectResult(HandlePropertyFailure(propertyFailure));
+    }
+  }
+
+  private static void HandleInvalidUrlException(ExceptionContext context)
   {
     if (context.Exception is IPropertyFailure propertyFailure)
     {

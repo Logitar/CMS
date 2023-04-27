@@ -45,7 +45,8 @@ public static class DependencyInjectionExtensions
   private static IServiceCollection AddQueriers(this IServiceCollection services)
   {
     return services
-      .AddScoped<ISessionQuerier, SessionQuerier>();
+      .AddScoped<ISessionQuerier, SessionQuerier>()
+      .AddScoped<IUserQuerier, UserQuerier>();
   }
 
   private static IServiceCollection AddRepositories(this IServiceCollection services)
