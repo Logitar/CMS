@@ -28,13 +28,6 @@ public class SignOutHandlerTests
   }
 
   [Fact]
-  public async Task When_session_is_not_found_Then_AggregateNotFoundException_is_thrown()
-  {
-    await Assert.ThrowsAsync<AggregateNotFoundException<SessionAggregate>>
-      (async () => await _handler.Handle(new SignOut(Guid.NewGuid()), _cancellationToken));
-  }
-
-  [Fact]
   public async Task When_session_is_found_Then_it_is_signed_out()
   {
     ConfigurationAggregate configuration = new(actorId: _actorId);
@@ -55,5 +48,12 @@ public class SignOutHandlerTests
     Assert.Equal(_actorId, session.Changes.Single(e => e is SessionSignedOut).ActorId);
 
     _sessionRepository.Verify(x => x.SaveAsync(session, _cancellationToken), Times.Once);
+  }
+
+  [Fact]
+  public async Task When_session_is_not_found_Then_AggregateNotFoundException_is_thrown()
+  {
+    await Assert.ThrowsAsync<AggregateNotFoundException<SessionAggregate>>
+      (async () => await _handler.Handle(new SignOut(Guid.NewGuid()), _cancellationToken));
   }
 }

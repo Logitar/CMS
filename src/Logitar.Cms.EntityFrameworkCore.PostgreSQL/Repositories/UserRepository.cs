@@ -20,6 +20,11 @@ internal class UserRepository : EventStore, IUserRepository
     _cacheService = cacheService;
   }
 
+  public async Task<UserAggregate?> LoadAsync(Guid id, CancellationToken cancellationToken)
+  {
+    return await LoadAsync<UserAggregate>(new AggregateId(id), cancellationToken);
+  }
+
   public async Task<IEnumerable<UserAggregate>> LoadAsync(bool includeDeleted, CancellationToken cancellationToken)
   {
     return await LoadAsync<UserAggregate>(includeDeleted, cancellationToken);
