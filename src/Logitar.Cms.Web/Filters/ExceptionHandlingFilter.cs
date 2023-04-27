@@ -1,5 +1,6 @@
 ﻿using Logitar.Cms.Core;
 using Logitar.Cms.Core.Configurations;
+using Logitar.Cms.Core.Sessions;
 using Logitar.Cms.Core.Users;
 using Logitar.EventSourcing;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,8 @@ internal class ExceptionHandlingFilter : IExceptionFilter
   {
     [typeof(ConfigurationAlreadyInitializedException)] = HandleConfigurationAlreadyInitializedException,
     [typeof(InvalidCredentialsException)] = HandleInvalidCredentialsException,
-    [typeof(InvalidLocaleException)] = HandleInvalidLocaleException
+    [typeof(InvalidLocaleException)] = HandleInvalidLocaleException,
+    [typeof(SessionIsNotActiveException)] = HandleSessionIsNotActiveException
   };
 
   public void OnException(ExceptionContext context)
@@ -44,6 +46,11 @@ internal class ExceptionHandlingFilter : IExceptionFilter
     {
       context.Result = new BadRequestObjectResult(HandlePropertyFailure(propertyFailure));
     }
+  }
+
+  private static void HandleSessionIsNotActiveException(ExceptionContext context)
+  {
+    context.Result = new BadRequestObjectResult(new { Code = GetCode(context.Exception) });
   }
 
   private static string GetCode(object value) => value.GetType().Name.Remove(nameof(Exception));
