@@ -1,4 +1,5 @@
 ﻿using Logitar.Cms.Contracts.Sessions;
+using Logitar.Cms.Contracts.Users;
 using Logitar.Cms.Web.Constants;
 using Logitar.Cms.Web.Extensions;
 using Logitar.Cms.Web.Models.Account;
@@ -17,6 +18,20 @@ public class AccountApiController : ControllerBase
   {
     _sessionService = sessionService;
   }
+
+  [Authorize(Policy = Policies.User)]
+  [HttpGet("profile")]
+  public ActionResult<User> GetProfile()
+  {
+    return Ok(HttpContext.GetUser());
+  }
+
+  //[Authorize(Policy = Policies.User)]
+  //[HttpPut("profile")]
+  //public async Task<ActionResult<User>> SaveProfileAsync([FromBody] SaveProfileInput input, CancellationToken cancellationToken)
+  //{
+
+  //}
 
   [HttpPost("sign/in")]
   public async Task<ActionResult> SignInAsync([FromBody] AccountSignInInput input, CancellationToken cancellationToken)
