@@ -28,8 +28,21 @@ public class AccountApiController : ControllerBase
       AdditionalInformation = HttpContext.GetAdditionalInformation()
     };
     Session session = await _sessionService.SignInAsync(signInInput, cancellationToken);
-
     HttpContext.SignIn(session);
+
+    return NoContent();
+  }
+
+  [HttpPost("sign/out")]
+  public async Task<ActionResult> SignOutAsync(CancellationToken cancellationToken)
+  {
+    Guid? sessionId = HttpContext.GetSessionId();
+    if (sessionId.HasValue)
+    {
+      _ = await _sessionService.SignOutAsync(sessionId.Value, cancellationToken);
+
+      HttpContext.SignOut();
+    }
 
     return NoContent();
   }

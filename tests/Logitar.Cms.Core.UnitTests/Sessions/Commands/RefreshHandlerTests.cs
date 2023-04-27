@@ -40,7 +40,7 @@ public class RefreshHandlerTests
   {
     ConfigurationAggregate configuration = new(actorId: _actorId);
     UserAggregate user = new(_actorId, configuration, "admin");
-    SessionAggregate session = new(user, signedInOn: DateTime.UtcNow, isPersistent: true);
+    SessionAggregate session = new(user, isPersistent: true);
     Assert.True(session.RefreshToken.HasValue);
     _sessionRepository.Setup(x => x.LoadAsync(session.Id.ToGuid(), _cancellationToken))
       .ReturnsAsync(session);

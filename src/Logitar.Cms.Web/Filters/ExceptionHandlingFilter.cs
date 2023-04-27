@@ -25,6 +25,11 @@ internal class ExceptionHandlingFilter : IExceptionFilter
       handler(context);
       context.ExceptionHandled = true;
     }
+    else if (context.Exception is AggregateNotFoundException)
+    {
+      context.Result = new NotFoundResult();
+      context.ExceptionHandled = true;
+    }
   }
 
   private static void HandleConfigurationAlreadyInitializedException(ExceptionContext context)

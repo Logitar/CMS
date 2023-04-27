@@ -48,6 +48,15 @@ internal class SessionEntity : AggregateEntity
     Apply(e);
   }
 
+  public void SignOut(SessionSignedOut e)
+  {
+    SetVersion(e);
+
+    SignedOutById = e.ActorId.Value;
+    SignedOutOn = e.OccurredOn;
+    IsActive = false;
+  }
+
   private void Apply(SessionSaved e)
   {
     IpAddress = e.IpAddress;

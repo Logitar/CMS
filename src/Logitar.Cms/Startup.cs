@@ -82,6 +82,10 @@ internal class Startup : StartupBase
     builder.UseStaticFiles();
     builder.UseSession();
     builder.UseMiddleware<RefreshSession>();
+    builder.UseMiddleware<RedirectUnauthorized>();
+    builder.UseAuthentication();
+    builder.UseAuthorization();
+
     builder.UseGraphQL<CmsSchema>();
 
     if (builder is WebApplication application)

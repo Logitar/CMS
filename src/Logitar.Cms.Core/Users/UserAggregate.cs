@@ -97,7 +97,7 @@ public class UserAggregate : AggregateRoot
     UserSignedIn e = new() { ActorId = Id };
     ApplyChange(e);
 
-    return new SessionAggregate(this, e.OccurredOn, remember, ipAddress, additionalInformation);
+    return new SessionAggregate(this, remember, e.OccurredOn, ipAddress, additionalInformation);
   }
   protected virtual void Apply(UserSignedIn _) { }
 
