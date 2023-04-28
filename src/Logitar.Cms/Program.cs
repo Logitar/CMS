@@ -1,5 +1,5 @@
-﻿
-using Logitar.Cms.EntityFrameworkCore.PostgreSQL.Commands;
+﻿using Logitar.Cms.Core.Caching.Commands;
+using Logitar.Cms.Infrastructure.Commands;
 using MediatR;
 
 namespace Logitar.Cms;
@@ -20,23 +20,9 @@ public class Program
 
     using IServiceScope scope = application.Services.CreateScope();
 
-    if (application.Configuration.GetValue<bool>("MigrateDatabase"))
-    {
-      IRequest? migrateDatabase = null;
-      DatabaseProvider databaseProvider = application.Configuration.GetValue<DatabaseProvider>("DatabaseProvider");
-      switch (databaseProvider)
-      {
-        case DatabaseProvider.EntityFrameworkCorePostgreSQL:
-          migrateDatabase = new MigrateDatabase();
-          break;
-      }
-
-      if (migrateDatabase != null)
-      {
-        IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-        await mediator.Send(migrateDatabase);
-      }
-    }
+    IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+    await mediator.Publish(new InitializeDatabase());
+    await mediator.Publish(new InitializeCaching());
 
     application.Run();
   }

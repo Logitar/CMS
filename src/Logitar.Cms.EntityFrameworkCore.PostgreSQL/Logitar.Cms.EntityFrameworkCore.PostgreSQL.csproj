@@ -8,14 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Logitar.EventSourcing.EntityFrameworkCore.PostgreSQL" Version="2.1.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Logitar.Cms.Core\Logitar.Cms.Core.csproj" />
+    <ProjectReference Include="..\Logitar.Cms.Infrastructure\Logitar.Cms.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
