@@ -9,12 +9,10 @@ import { flexColCenter } from '~styles/containerStyles';
 
 type ForgotPasswordFormProps = {
   onClickRememberPassword: () => void;
-  onClickEnterCode: () => void;
 };
 
 export const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
   onClickRememberPassword,
-  onClickEnterCode,
 }) => {
   const { t } = useTranslation('Auth');
 
@@ -50,15 +48,6 @@ export const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
               <Box sx={{ ...flexColCenter, gap: 1, width: '100%' }}>
                 <Button variant="contained" type="submit" fullWidth>
                   {t('forgotPassword.form.buttons.submit')}
-                </Button>
-                <Button
-                  sx={{ textTransform: 'none' }}
-                  onClick={() => {
-                    onClickEnterCode();
-                  }}
-                  fullWidth
-                >
-                  {t('forgotPassword.form.buttons.enterCode')}
                 </Button>
                 <Button
                   sx={{ textTransform: 'none' }}

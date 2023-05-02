@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { Card, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -10,12 +10,12 @@ import { SplashContainer } from '~components/SplashContainer';
 import { AppLogo } from '~components';
 import { useTitle } from '~hooks';
 import { flexColCenter } from '~styles';
-import { ForgotPasswordForm, ResetPasswordForm, SignInForm } from '~components/Auth';
+import { ForgotPasswordForm, SignInForm } from '~components/Auth';
 
-type AuthPageView = 'signIn' | 'forgotPassword' | 'resetPassword';
+type AuthPageViewType = 'signIn' | 'forgotPassword';
 
 export const AuthPage: React.FC = () => {
-  const [view, setView] = useState<AuthPageView>('signIn');
+  const [view, setView] = useState<AuthPageViewType>('signIn');
 
   const { t } = useTranslation('Auth');
 
@@ -55,19 +55,6 @@ export const AuthPage: React.FC = () => {
           <ForgotPasswordForm
             onClickRememberPassword={() => {
               setView('signIn');
-            }}
-            onClickEnterCode={() => {
-              setView('resetPassword');
-            }}
-          />
-        )}
-        {view === 'resetPassword' && (
-          <ResetPasswordForm
-            onClickRememberPassword={() => {
-              setView('signIn');
-            }}
-            onClickDontHaveCode={() => {
-              setView('forgotPassword');
             }}
           />
         )}

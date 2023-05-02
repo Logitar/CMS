@@ -1,3 +1,6 @@
+export * from './auth';
+export * from './configurations';
+
 type RequestMethod = 'GET' | 'PATCH' | 'POST' | 'PUT' | 'DELETE';
 
 type RequestParams = { [key: string]: string | number | boolean | null | undefined };
@@ -9,15 +12,11 @@ type ResponseResult = {
   status: number;
 };
 
-const isDevelopment = import.meta.env.MODE === 'development';
-
-export const apiBaseUrl = isDevelopment ? import.meta.env.VITE_API_BASE_URL : '/api';
+export const apiBaseUrl =
+  import.meta.env.MODE === 'development' ? import.meta.env.VITE_API_BASE_URL : '/cms/api';
 
 const execute = async (method: RequestMethod, url: string, data?: RequestData) => {
-  const request: RequestInit = {
-    method,
-    credentials: 'include',
-  };
+  const request: RequestInit = { method };
 
   if (data) {
     request.headers = {
