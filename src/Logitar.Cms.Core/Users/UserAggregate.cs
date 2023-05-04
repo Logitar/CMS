@@ -1,0 +1,95 @@
+﻿using FluentValidation;
+using Logitar.Cms.Core.Configurations;
+using Logitar.Cms.Core.Security;
+using Logitar.Cms.Core.Users.Events;
+using Logitar.Cms.Core.Users.Validators;
+using Logitar.EventSourcing;
+using System.Globalization;
+
+namespace Logitar.Cms.Core.Users;
+
+public class UserAggregate : AggregateRoot
+{
+  private Pbkdf2? _password = null;
+
+  public UserAggregate(AggregateId id) : base(id) { }
+
+  public UserAggregate(AggregateId actorId, ConfigurationAggregate configuration, string username,
+    string? firstName = null, string? lastName = null, CultureInfo? locale = null, Uri? picture = null,
+    AggregateId? id = null) : base(id ?? AggregateId.NewId())
+  {
+    UserCreated e = new(username.Trim())
+    {
+      ActorId = actorId,
+      FirstName = firstName?.CleanTrim(),
+      LastName = lastName?.CleanTrim(),
+      FullName = GetFullName(firstName, lastName),
+      Locale = locale,
+      Picture = picture
+    };
+    new UserCreatedValidator(configuration.UsernameSettings).ValidateAndThrow(e);
+
+    ApplyChange(e);
+  }
+  protected virtual void Apply(UserCreated e)
+  {
+    Username = e.Username;
+
+    FirstName = e.FirstName;
+    LastName = e.LastName;
+    FullName = e.FullName;
+
+    Locale = e.Locale;
+
+    Picture = e.Picture;
+  }
+
+  public string Username { get; private set; } = string.Empty;
+  public bool HasPassword => _password != null;
+
+  public ReadOnlyEmail? Email { get; private set; }
+
+  public string? FirstName { get; private set; }
+  public string? LastName { get; private set; }
+  public string? FullName { get; private set; }
+
+  public CultureInfo? Locale { get; private set; }
+
+  public Uri? Picture { get; private set; }
+
+  public void ChangePassword(ConfigurationAggregate configuration, string password)
+  {
+    new PasswordValidator(configuration.PasswordSettings).ValidateAndThrow(password);
+
+    ApplyChange(new PasswordChanged(new Pbkdf2(password))
+    {
+      ActorId = Id
+    });
+  }
+  protected virtual void Apply(PasswordChanged e) => _password = e.Password;
+
+  public void SetEmail(ReadOnlyEmail? email)
+  {
+    bool isModified = email?.Address != Email?.Address;
+
+    EmailChanged e = new()
+    {
+      ActorId = Id,
+      Email = email,
+      VerificationAction = email?.IsVerified == true ? VerificationAction.Verify
+        : (isModified ? VerificationAction.Unverify : null)
+    };
+    new EmailChangedValidator().ValidateAndThrow(e);
+
+    ApplyChange(e);
+  }
+  protected virtual void Apply(EmailChanged e) => Email = e.Email;
+
+  public override string ToString() => FullName == null
+    ? $"{Username} | {base.ToString()}"
+    : $"{FullName} ({Username}) | {base.ToString()}";
+
+  internal static string? GetFullName(params string?[] names) => string.Join(' ', names
+    .SelectMany(name => name?.Split() ?? Array.Empty<string>())
+    .Where(name => !string.IsNullOrEmpty(name)))?.CleanTrim();
+}
