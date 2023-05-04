@@ -42,6 +42,10 @@
     "heading": "Bienvenue !",
     "subheading": "Connectez-vous à votre compte pour continuer.",
     "form": {
+      "buttons": {
+        "forgotPassword": "Mot de passe oublié?",
+        "submit": "Connexion"
+      },
       "labels": {
         "username": "Identifiant",
         "password": "Mot de passe",
