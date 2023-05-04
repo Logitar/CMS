@@ -1,5 +1,7 @@
 import { createBrowserRouter /*, redirect*/ } from 'react-router-dom';
+import { getLocales } from '~api';
 import { ForgotPasswordPage, ResetPasswordPage, SignInPage } from '~pages';
+import { SetupPage } from '~pages/Setup';
 // import { isConfigurationInitialized } from '~api';
 
 export const router = createBrowserRouter(
@@ -49,13 +51,14 @@ export const router = createBrowserRouter(
     },
     {
       path: '/setup',
-      element: <div>Setup page — requires no setup</div>,
+      element: <SetupPage />,
       // loader: async () => {
       //   const initialized = await isConfigurationInitialized();
       //   if (initialized) {
       //     return redirect('/');
       //   }
       // },
+      loader: async () => getLocales(),
     },
   ],
   {

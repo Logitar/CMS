@@ -1,5 +1,6 @@
 export * from './auth';
 export * from './configurations';
+export * from './resources';
 
 type RequestMethod = 'GET' | 'PATCH' | 'POST' | 'PUT' | 'DELETE';
 

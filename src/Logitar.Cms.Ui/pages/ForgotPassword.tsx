@@ -37,7 +37,7 @@ export const ForgotPasswordPage: React.FC = () => {
           setSubmitting(true);
         }}
       >
-        {({ errors, touched, setFieldTouched }) => (
+        {({ errors, touched, isSubmitting, setFieldTouched }) => (
           <WithTranslateFormErrors
             errors={errors}
             touched={touched}
@@ -65,7 +65,7 @@ export const ForgotPasswordPage: React.FC = () => {
                   />
                 </Box>
                 <Box sx={{ ...flexColCenter, gap: 1, width: '100%' }}>
-                  <Button variant="contained" type="submit" fullWidth>
+                  <Button variant="contained" type="submit" disabled={isSubmitting} fullWidth>
                     {t('forgotPassword.form.buttons.submit')}
                   </Button>
                 </Box>

@@ -54,7 +54,7 @@ export const SignInPage: React.FC = () => {
           setSubmitting(false);
         }}
       >
-        {({ errors, touched, setFieldTouched }) => (
+        {({ errors, touched, isSubmitting, setFieldTouched }) => (
           <WithTranslateFormErrors
             errors={errors}
             touched={touched}
@@ -96,7 +96,7 @@ export const SignInPage: React.FC = () => {
                     component={CheckboxWithLabel}
                   />
                 </Box>
-                <Button variant="contained" type="submit" fullWidth>
+                <Button variant="contained" type="submit" disabled={isSubmitting} fullWidth>
                   {t('signIn.form.buttons.submit')}
                 </Button>
               </Box>

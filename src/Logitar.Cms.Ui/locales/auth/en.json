@@ -37,6 +37,31 @@
       }
     }
   },
+  "setup": {
+    "title": "Setup",
+    "heading": "Welcome to Logitar CMS!",
+    "subheading": "Please provide the following information to get started.",
+    "form": {
+      "buttons": {
+        "submit": "Apply Settings"
+      },
+      "headings": {
+        "application": "Application settings",
+        "user": "Administrator user settings"
+      },
+      "labels": {
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "locale": "Default content language",
+        "email": "Email Address",
+        "password": "Password"
+      },
+      "validations": {
+        "required": "This field is required.",
+        "email": "Please enter a valid email address."
+      }
+    }
+  },
   "signIn": {
     "title": "Sign In",
     "heading": "Welcome back!",

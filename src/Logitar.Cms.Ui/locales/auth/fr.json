@@ -37,6 +37,31 @@
       }
     }
   },
+  "setup": {
+    "title": "Configuration",
+    "heading": "Bienvenue dans votre nouvelle application !",
+    "subheading": "Pour commencer, veuillez nous fournir quelques informations de base.",
+    "form": {
+      "buttons": {
+        "submit": "Appliquer les paramètres"
+      },
+      "headings": {
+        "application": "Paramètres d'application",
+        "user": "Paramètres de l'utilisateur administrateur"
+      },
+      "labels": {
+        "firstName": "Prénom",
+        "lastName": "Nom de famille",
+        "locale": "Langue par défaut du contenu",
+        "email": "Adresse e-mail",
+        "password": "Mot de passe"
+      },
+      "validations": {
+        "required": "Ce champ est obligatoire.",
+        "email": "Veuillez saisir une adresse e-mail valide."
+      }
+    }
+  },
   "signIn": {
     "title": "Connexion",
     "heading": "Bienvenue !",
