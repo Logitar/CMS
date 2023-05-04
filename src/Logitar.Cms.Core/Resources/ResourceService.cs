@@ -6,7 +6,7 @@ namespace Logitar.Cms.Core.Resources;
 internal class ResourceService : IResourceService
 {
   private static readonly IEnumerable<Locale> _locales = CultureInfo.GetCultures(CultureTypes.AllCultures)
-    .Select(Locale.From).OrderBy(x => x.DisplayName);
+    .Select(Locale.From).OrderBy(x => x.NativeName);
 
   public IEnumerable<Locale> GetLocales() => _locales;
 }
