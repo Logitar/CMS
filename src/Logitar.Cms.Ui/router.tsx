@@ -1,6 +1,6 @@
 import { createBrowserRouter /*, redirect*/ } from 'react-router-dom';
+import { ForgotPasswordPage, ResetPasswordPage, SignInPage } from '~pages';
 // import { isConfigurationInitialized } from '~api';
-import { AuthPage } from '~pages/auth';
 
 export const router = createBrowserRouter(
   [
@@ -22,8 +22,8 @@ export const router = createBrowserRouter(
       // },
     },
     {
-      path: '/auth',
-      element: <AuthPage />,
+      path: '/sign-in',
+      element: <SignInPage />,
       // loader: async () => {
       //   const authenticated = await isUserAuthenticated();
       //   if (authenticated) {
@@ -31,6 +31,21 @@ export const router = createBrowserRouter(
       //   }
 
       // },
+    },
+    {
+      path: '/forgot-password',
+      element: <ForgotPasswordPage />,
+      // loader: async () => {
+      //   const authenticated = await isUserAuthenticated();
+      //   if (authenticated) {
+      //     return redirect('/home');
+      //   }
+
+      // },
+    },
+    {
+      path: '/reset-password',
+      element: <ResetPasswordPage />,
     },
     {
       path: '/setup',

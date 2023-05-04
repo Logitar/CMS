@@ -1,4 +1,4 @@
 export * from './AppLogo';
-export * from './Auth';
-export * from './Form';
+export * from './AuthLayout';
 export * from './SplashContainer';
+export * from './WithTranslateFormErrors';

@@ -18,6 +18,25 @@
       }
     }
   },
+  "resetPassword": {
+    "title": "Reset Password",
+    "heading": "Reset your password",
+    "subheading": "Enter your new password and submit.",
+    "form": {
+      "buttons": {
+        "rememberPassword": "I remember my password",
+        "submit": "Reset Password"
+      },
+      "labels": {
+        "password": "New Password",
+        "confirmPassword": "Confirm Password"
+      },
+      "validations": {
+        "required": "This field is required.",
+        "confirmPassword": "Passwords must match."
+      }
+    }
+  },
   "signIn": {
     "title": "Sign In",
     "heading": "Welcome back!",

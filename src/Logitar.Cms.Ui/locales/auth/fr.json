@@ -18,6 +18,25 @@
       }
     }
   },
+  "resetPassword": {
+    "title": "Réinitialiser votre mot de passe",
+    "heading": "Réinitialiser votre mot de passe",
+    "subheading": "Entrez votre nouveau mot de passe pour continuer.",
+    "form": {
+      "buttons": {
+        "rememberPassword": "Je me souviens de mon mot de passe",
+        "submit": "Réinitialiser le mot de passe"
+      },
+      "labels": {
+        "password": "Nouveau mot de passe",
+        "confirmPassword": "Confirmer le mot de passe"
+      },
+      "validations": {
+        "required": "Ce champ est obligatoire.",
+        "confirmPassword": "Les mots de passe doivent correspondre."
+      }
+    }
+  },
   "signIn": {
     "title": "Connexion",
     "heading": "Bienvenue !",
