@@ -42,10 +42,11 @@ export const SetupPage: React.FC = () => {
         })}
         onSubmit={async (values, { setSubmitting }) => {
           setSubmitting(true);
+          console.log(values);
           setSubmitting(false);
         }}
       >
-        {({ values, errors, touched, isSubmitting, setFieldTouched }) => (
+        {({ errors, touched, isSubmitting, setFieldTouched }) => (
           <WithTranslateFormErrors
             errors={errors}
             touched={touched}
