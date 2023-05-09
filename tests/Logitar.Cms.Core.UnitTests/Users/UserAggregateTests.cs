@@ -22,6 +22,18 @@ public class UserAggregateTests
     _configuration = new(actorId: _actorId);
   }
 
+  [Fact]
+  public void When_email_is_modified_Then_it_has_correct_actor_id()
+  {
+    UserAggregate user = new(_actorId, _configuration, Username);
+
+    user.SetEmail(new ReadOnlyEmail(_faker.Person.Email));
+    Assert.Equal(user.Id, user.Changes.Single(e => e is EmailChanged).ActorId);
+
+    user.SetEmail(new ReadOnlyEmail(_faker.Person.Email), _actorId);
+    Assert.Equal(_actorId, user.Changes.Where(e => e is EmailChanged).Skip(1).Single().ActorId);
+  }
+
   [Theory]
   [InlineData(false)]
   [InlineData(true)]
@@ -162,6 +174,19 @@ public class UserAggregateTests
     Assert.True(user.HasPassword);
   }
 
+  [Theory]
+  [InlineData("P@s$W0rD")]
+  public void When_password_is_modified_Then_it_has_correct_actor_id(string password)
+  {
+    UserAggregate user = new(_actorId, _configuration, Username);
+
+    user.ChangePassword(_configuration, password);
+    Assert.Equal(user.Id, user.Changes.Single(e => e is PasswordChanged).ActorId);
+
+    user.ChangePassword(_configuration, password, _actorId);
+    Assert.Equal(_actorId, user.Changes.Where(e => e is PasswordChanged).Skip(1).Single().ActorId);
+  }
+
   [Fact]
   public void When_setting_an_invalid_email_Then_ValidationException_is_thrown()
   {
@@ -240,5 +265,40 @@ public class UserAggregateTests
   {
     string? fullName = UserAggregate.GetFullName("Charles-Antoine  ", null, "Paget  Merlot", string.Empty, "  Boucher  ", "  ", "   Lessard");
     Assert.Equal("Charles-Antoine Paget Merlot Boucher Lessard", fullName);
+  }
+
+  [Fact]
+  public void When_updating_with_invalid_parameters_Then_ValidationException_is_thrown()
+  {
+    UserAggregate user = new(_actorId, _configuration, Username);
+
+    string firstName = _faker.Random.String(byte.MaxValue + 1);
+    var exception = Assert.Throws<FluentValidation.ValidationException>(() => user.Update(_actorId,
+      firstName, lastName: null, locale: CultureInfo.InvariantCulture, picture: null));
+
+    Assert.Equal(2, exception.Errors.Count());
+    Assert.Contains(exception.Errors, e => e.PropertyName == "FirstName");
+    Assert.Contains(exception.Errors, e => e.PropertyName == "Locale");
+  }
+
+  [Fact]
+  public void When_updating_with_valid_parameters_Then_it_is_updated()
+  {
+    UserAggregate user = new(_actorId, _configuration, Username);
+
+    string firstName = $" {_faker.Person.FirstName}   ";
+    string lastName = $"   {_faker.Person.LastName} ";
+    CultureInfo locale = CultureInfo.GetCultureInfo("fr-CA");
+    Uri picture = new("https://www.test.com/assets/img/admin.jpg");
+    AggregateId actorId = AggregateId.NewId();
+
+    user.Update(actorId, firstName, lastName, locale, picture);
+    Assert.Equal(firstName.Trim(), user.FirstName);
+    Assert.Equal(lastName.Trim(), user.LastName);
+    Assert.Equal(UserAggregate.GetFullName(firstName, lastName), user.FullName);
+    Assert.Equal(locale, user.Locale);
+    Assert.Equal(picture, user.Picture);
+    Assert.Equal(actorId, user.UpdatedById);
+    Assert.NotEqual(user.CreatedOn, user.UpdatedOn);
   }
 }

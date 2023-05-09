@@ -36,13 +36,7 @@ public class UserAggregate : AggregateRoot
   {
     Username = e.Username;
 
-    FirstName = e.FirstName;
-    LastName = e.LastName;
-    FullName = e.FullName;
-
-    Locale = e.Locale;
-
-    Picture = e.Picture;
+    Apply((UserSaved)e);
   }
 
   public string Username { get; private set; } = string.Empty;
@@ -58,24 +52,24 @@ public class UserAggregate : AggregateRoot
 
   public Uri? Picture { get; private set; }
 
-  public void ChangePassword(ConfigurationAggregate configuration, string password)
+  public void ChangePassword(ConfigurationAggregate configuration, string password, AggregateId? actorId = null)
   {
     new PasswordValidator(configuration.PasswordSettings).ValidateAndThrow(password);
 
     ApplyChange(new PasswordChanged(new Pbkdf2(password))
     {
-      ActorId = Id
+      ActorId = actorId ?? Id
     });
   }
   protected virtual void Apply(PasswordChanged e) => _password = e.Password;
 
-  public void SetEmail(ReadOnlyEmail? email)
+  public void SetEmail(ReadOnlyEmail? email, AggregateId? actorId = null)
   {
     bool isModified = email?.Address != Email?.Address;
 
     EmailChanged e = new()
     {
-      ActorId = Id,
+      ActorId = actorId ?? Id,
       Email = email,
       VerificationAction = email?.IsVerified == true ? VerificationAction.Verify
         : (isModified ? VerificationAction.Unverify : null)
@@ -97,9 +91,37 @@ public class UserAggregate : AggregateRoot
     UserSignedIn e = new() { ActorId = Id };
     ApplyChange(e);
 
-    return new SessionAggregate(this, e.OccurredOn, remember, ipAddress, additionalInformation);
+    return new SessionAggregate(this, remember, e.OccurredOn, ipAddress, additionalInformation);
   }
   protected virtual void Apply(UserSignedIn _) { }
+
+  public void Update(AggregateId actorId, string? firstName, string? lastName, CultureInfo? locale, Uri? picture)
+  {
+    UserUpdated e = new()
+    {
+      ActorId = actorId,
+      FirstName = firstName?.CleanTrim(),
+      LastName = lastName?.CleanTrim(),
+      FullName = GetFullName(firstName, lastName),
+      Locale = locale,
+      Picture = picture
+    };
+    new UserUpdatedValidator().ValidateAndThrow(e);
+
+    ApplyChange(e);
+  }
+  protected virtual void Apply(UserUpdated e) => Apply((UserSaved)e);
+
+  private void Apply(UserSaved e)
+  {
+    FirstName = e.FirstName;
+    LastName = e.LastName;
+    FullName = e.FullName;
+
+    Locale = e.Locale;
+
+    Picture = e.Picture;
+  }
 
   public override string ToString() => FullName == null
     ? $"{Username} | {base.ToString()}"
