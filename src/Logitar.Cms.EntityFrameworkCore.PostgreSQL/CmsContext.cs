@@ -10,6 +10,7 @@ public class CmsContext : DbContext
   }
 
   internal DbSet<LanguageEntity> Languages { get; private set; } = null!;
+  internal DbSet<SessionEntity> Sessions { get; private set; } = null!;
   internal DbSet<UserEntity> Users { get; private set; } = null!;
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)

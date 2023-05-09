@@ -81,6 +81,78 @@ namespace Logitar.Cms.EntityFrameworkCore.PostgreSQL.Migrations
                     b.ToTable("Languages", "cms");
                 });
 
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.PostgreSQL.Entities.SessionEntity", b =>
+                {
+                    b.Property<int>("SessionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SessionId"));
+
+                    b.Property<string>("AdditionalInformation")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AggregateId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("CreatedById")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("IpAddress")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsPersistent")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Secret")
+                        .HasMaxLength(65535)
+                        .HasColumnType("character varying(65535)");
+
+                    b.Property<string>("SignedOutById")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime?>("SignedOutOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UpdatedById")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("Version")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("SessionId");
+
+                    b.HasIndex("AggregateId")
+                        .IsUnique();
+
+                    b.HasIndex("CreatedOn");
+
+                    b.HasIndex("UpdatedOn");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Sessions", "cms");
+                });
+
             modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.PostgreSQL.Entities.UserEntity", b =>
                 {
                     b.Property<int>("UserId")
@@ -200,6 +272,22 @@ namespace Logitar.Cms.EntityFrameworkCore.PostgreSQL.Migrations
                         .IsUnique();
 
                     b.ToTable("Users", "cms");
+                });
+
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.PostgreSQL.Entities.SessionEntity", b =>
+                {
+                    b.HasOne("Logitar.Cms.EntityFrameworkCore.PostgreSQL.Entities.UserEntity", "User")
+                        .WithMany("Sessions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.PostgreSQL.Entities.UserEntity", b =>
+                {
+                    b.Navigation("Sessions");
                 });
 #pragma warning restore 612, 618
         }

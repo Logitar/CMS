@@ -1,7 +1,9 @@
 ﻿using Logitar.Cms.Core.Configurations;
 using Logitar.Cms.Core.Languages;
+using Logitar.Cms.Core.Sessions;
 using Logitar.Cms.Core.Users;
 using Logitar.Cms.EntityFrameworkCore.PostgreSQL.Converters;
+using Logitar.Cms.EntityFrameworkCore.PostgreSQL.Queriers;
 using Logitar.Cms.EntityFrameworkCore.PostgreSQL.Repositories;
 using Logitar.EventSourcing;
 using Logitar.EventSourcing.EntityFrameworkCore.PostgreSQL;
@@ -35,8 +37,15 @@ public static class DependencyInjectionExtensions
       .AddDbContext<CmsContext>(options => options.UseNpgsql(connectionString))
       .AddEventSourcingWithEntityFrameworkCorePostgreSQL(connectionString)
       .AddMediatR(config => config.RegisterServicesFromAssembly(assembly))
+      .AddQueriers()
       .AddRepositories()
       .AddScoped<IEventBus, EventBus>();
+  }
+
+  private static IServiceCollection AddQueriers(this IServiceCollection services)
+  {
+    return services
+      .AddScoped<ISessionQuerier, SessionQuerier>();
   }
 
   private static IServiceCollection AddRepositories(this IServiceCollection services)
@@ -44,6 +53,7 @@ public static class DependencyInjectionExtensions
     return services
       .AddScoped<IConfigurationRepository, ConfigurationRepository>()
       .AddScoped<ILanguageRepository, LanguageRepository>()
+      .AddScoped<ISessionRepository, SessionRepository>()
       .AddScoped<IUserRepository, UserRepository>();
   }
 }

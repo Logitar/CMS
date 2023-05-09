@@ -6,7 +6,7 @@ Content management system.
 
 Execute the following command to create a PostgreSQL Docker image. You can generate secure passwords [here](https://randompasswordgenerator.com/).
 
-`docker run --name cms-postgres -e POSTGRES_USER=cms -e POSTGRES_PASSWORD=<POSTGRES_PASSWORD> -p 5433:5432 -d postgres`
+`docker run --name cms-postgres -e POSTGRES_PASSWORD=KsXvbfCZ3u9PEpdj -p 5433:5432 -d postgres`
 
 ## User Secrets
 
