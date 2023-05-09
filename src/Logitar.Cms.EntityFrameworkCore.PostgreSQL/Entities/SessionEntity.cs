@@ -13,8 +13,7 @@ internal class SessionEntity : AggregateEntity
 
     IsActive = true;
 
-    IpAddress = e.IpAddress;
-    AdditionalInformation = e.AdditionalInformation;
+    Apply(e);
   }
 
   private SessionEntity() : base()
@@ -39,4 +38,19 @@ internal class SessionEntity : AggregateEntity
 
   public string? IpAddress { get; private set; }
   public string? AdditionalInformation { get; private set; }
+
+  public void Refresh(SessionRefreshed e)
+  {
+    Update(e);
+
+    Secret = e.Secret.ToString();
+
+    Apply(e);
+  }
+
+  private void Apply(SessionSaved e)
+  {
+    IpAddress = e.IpAddress;
+    AdditionalInformation = e.AdditionalInformation;
+  }
 }

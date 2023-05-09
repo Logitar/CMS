@@ -64,6 +64,12 @@ public class SessionAggregateTests
     Assert.Equal(32, session.RefreshToken.Value.Secret.Length);
   }
 
+  //[Fact]
+  //public void When_it_is_not_active_Then_refreshing_it_should_throw_SessionIsNotActiveException()
+  //{
+  //  Assert.Fail("TODO(fpion): implement");
+  //}
+
   [Fact]
   public void When_it_is_not_persistent_Then_it_does_not_have_a_refresh_token()
   {
@@ -71,5 +77,55 @@ public class SessionAggregateTests
 
     Assert.False(session.IsPersistent);
     Assert.False(session.RefreshToken.HasValue);
+  }
+
+  [Fact]
+  public void When_it_is_not_persistent_Then_refreshing_it_should_throw_InvalidCredentialsException()
+  {
+    SessionAggregate session = new(_user, signedInOn: DateTime.UtcNow, isPersistent: false);
+    Assert.Throws<InvalidCredentialsException>(() => session.Refresh(secretBytes: Array.Empty<byte>()));
+  }
+
+  [Fact]
+  public void When_it_is_refreshed_using_incorrect_secret_Then_InvalidCredentialsException_is_thrown()
+  {
+    SessionAggregate session = new(_user, signedInOn: DateTime.UtcNow, isPersistent: true);
+    Assert.True(session.RefreshToken.HasValue);
+
+    byte[] incorrectSecret = session.RefreshToken.Value.Secret.Skip(1).ToArray();
+    Assert.Throws<InvalidCredentialsException>(() => session.Refresh(incorrectSecret));
+  }
+
+  [Fact]
+  public void When_it_is_refreshed_using_invalid_parameters_Then_FluentValidation_is_thrown()
+  {
+    string ipAddress = _faker.Random.String(byte.MaxValue + 1);
+
+    SessionAggregate session = new(_user, signedInOn: DateTime.UtcNow, isPersistent: true);
+    Assert.True(session.RefreshToken.HasValue);
+
+    var exception = Assert.Throws<FluentValidation.ValidationException>(()
+      => session.Refresh(session.RefreshToken.Value.Secret, ipAddress));
+
+    Assert.Equal("IpAddress", exception.Errors.Single().PropertyName);
+  }
+
+  [Fact]
+  public void When_it_is_refreshed_using_valid_parameters_Then_it_is_refreshed()
+  {
+    SessionAggregate session = new(_user, signedInOn: DateTime.UtcNow, isPersistent: true);
+
+    string ipAddress = "   ::1 ";
+    string additionalInformation = " {\"User-Agent\":\"Chrome\"}   ";
+    Assert.True(session.RefreshToken.HasValue);
+    byte[] oldSecret = session.RefreshToken.Value.Secret;
+    session.Refresh(session.RefreshToken.Value.Secret, ipAddress, additionalInformation);
+
+    Assert.Equal(ipAddress.Trim(), session.IpAddress);
+    Assert.Equal(additionalInformation.Trim(), session.AdditionalInformation);
+
+    Assert.True(session.RefreshToken.HasValue);
+    Assert.Equal(session.Id.ToGuid(), session.RefreshToken.Value.Id);
+    Assert.NotEqual(oldSecret, session.RefreshToken.Value.Secret);
   }
 }

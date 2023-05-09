@@ -25,13 +25,18 @@ public class SignInHandlerTests
     _handler = new(_sessionQuerier.Object, _sessionRepository.Object, _userRepository.Object);
   }
 
-  [Fact]
-  public async Task When_user_signs_in_Then_a_session_is_issued()
+  [Theory]
+  [InlineData(false)]
+  [InlineData(true, "::1", "{\"User-Agent\":\"Chrome\"}")]
+  public async Task When_user_signs_in_Then_a_session_is_issued(bool remember, string? ipAddress = null, string? additionalInformation = null)
   {
     SignInInput input = new()
     {
       Username = Username,
-      Password = "P@s$W0rD"
+      Password = "P@s$W0rD",
+      Remember = remember,
+      IpAddress = ipAddress,
+      AdditionalInformation = additionalInformation
     };
 
     ConfigurationAggregate configuration = new(actorId: _actorId);
@@ -41,7 +46,11 @@ public class SignInHandlerTests
       .ReturnsAsync(user);
 
     Session session = new();
-    _sessionQuerier.Setup(x => x.GetAsync(It.Is<SessionAggregate>(y => y.UserId == user.Id), _cancellationToken))
+    _sessionQuerier.Setup(x => x.GetAsync(It.Is<SessionAggregate>(y => y.UserId == user.Id
+      && y.IsPersistent == remember
+      && y.IpAddress == (ipAddress == null ? null : ipAddress.CleanTrim())
+      && y.AdditionalInformation == (additionalInformation == null ? null : additionalInformation.CleanTrim())
+      && y.RefreshToken.HasValue == remember), _cancellationToken))
       .ReturnsAsync(session);
 
     Session output = await _handler.Handle(new SignIn(input), _cancellationToken);
@@ -49,7 +58,11 @@ public class SignInHandlerTests
 
     _userRepository.Verify(x => x.SaveAsync(user, _cancellationToken), Times.Once);
 
-    _sessionRepository.Verify(x => x.SaveAsync(It.Is<SessionAggregate>(y => y.UserId == user.Id), _cancellationToken), Times.Once);
+    _sessionRepository.Verify(x => x.SaveAsync(It.Is<SessionAggregate>(y => y.UserId == user.Id
+      && y.IsPersistent == remember
+      && y.IpAddress == (ipAddress == null ? null : ipAddress.CleanTrim())
+      && y.AdditionalInformation == (additionalInformation == null ? null : additionalInformation.CleanTrim())
+      && y.RefreshToken.HasValue == remember), _cancellationToken), Times.Once);
   }
 
   [Fact]
