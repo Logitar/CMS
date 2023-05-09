@@ -1,4 +1,4 @@
-export * from './auth';
+export * from './account';
 export * from './configurations';
 export * from './resources';
 

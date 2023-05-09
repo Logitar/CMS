@@ -1,3 +1,2 @@
-export type { InitializeConfigurationPayload } from './initializeConfigurationPayload';
-export type { SignInPayload } from './signInPayload';
-export type { UpdateProfilePayload } from './updateProfilePayload';
+export * from './account';
+export * from './configurations';

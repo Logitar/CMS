@@ -7,5 +7,5 @@ export const getLocales = async (): Promise<Locale[]> => {
     return response.data as Locale[];
   }
 
-  throw new Error(`Failed to get locales.`);
+  throw new Error('Unknown');
 };
