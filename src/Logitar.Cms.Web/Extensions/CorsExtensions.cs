@@ -20,16 +20,25 @@ public static class CorsExtensions
         {
           policy.AllowAnyOrigin();
         }
-        else if (settings.AllowedOrigins != null)
+        else if (settings.AllowedOrigins?.Any() == true)
         {
           policy.WithOrigins(settings.AllowedOrigins);
+        }
+
+        if (settings.AllowCredentials)
+        {
+          policy.AllowCredentials();
+        }
+        else
+        {
+          policy.DisallowCredentials();
         }
 
         if (settings.AllowedMethods?.Contains("*") == true)
         {
           policy.AllowAnyMethod();
         }
-        else if (settings.AllowedMethods != null)
+        else if (settings.AllowedMethods?.Any() == true)
         {
           policy.WithMethods(settings.AllowedMethods);
         }
@@ -38,7 +47,7 @@ public static class CorsExtensions
         {
           policy.AllowAnyHeader();
         }
-        else if (settings.AllowedHeaders != null)
+        else if (settings.AllowedHeaders?.Any() == true)
         {
           policy.WithHeaders(settings.AllowedHeaders);
         }
