@@ -94,4 +94,11 @@ internal class UserEntity : AggregateEntity
         break;
     }
   }
+
+  public void SignIn(UserSignedIn e)
+  {
+    SetVersion(e);
+
+    SignedInOn = e.OccurredOn;
+  }
 }
