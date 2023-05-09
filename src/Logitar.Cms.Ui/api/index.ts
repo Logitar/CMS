@@ -22,6 +22,7 @@ const execute = async (method: RequestMethod, url: string, data?: RequestData) =
   if (data) {
     request.headers = {
       'Content-Type': 'application/json',
+      credentials: 'include',
     };
     request.body = JSON.stringify(data);
   }
