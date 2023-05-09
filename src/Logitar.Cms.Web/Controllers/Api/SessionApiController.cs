@@ -1,5 +1,4 @@
 ﻿using Logitar.Cms.Contracts.Sessions;
-using Logitar.Cms.Web.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Logitar.Cms.Web.Controllers.Api;
@@ -16,14 +15,8 @@ public class SessionApiController : ControllerBase
   }
 
   [HttpPost("sign/in")]
-  public async Task<ActionResult> SignInAsync([FromBody] SignInInput input, CancellationToken cancellationToken)
+  public async Task<ActionResult<Session>> SignInAsync([FromBody] SignInInput input, CancellationToken cancellationToken)
   {
-    input.IpAddress = HttpContext.GetClientIpAddress();
-    input.AdditionalInformation = HttpContext.GetAdditionalInformation();
-
-    Session session = await _sessionService.SignInAsync(input, cancellationToken);
-    HttpContext.SignIn(session);
-
-    return NoContent();
+    return Ok(await _sessionService.SignInAsync(input, cancellationToken));
   }
 }
