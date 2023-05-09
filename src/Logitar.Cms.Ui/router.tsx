@@ -19,6 +19,7 @@ export const router = createBrowserRouter(
 
         try {
           await getProfile();
+          return null;
         } catch (error) {
           return redirect('/sign-in');
         }
