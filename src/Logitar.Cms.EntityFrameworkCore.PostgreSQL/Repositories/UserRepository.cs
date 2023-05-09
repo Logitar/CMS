@@ -27,7 +27,7 @@ internal class UserRepository : EventStore, IUserRepository
 
   public async Task<UserAggregate?> LoadAsync(string username, CancellationToken cancellationToken)
   {
-    EventEntity[] events = await Context.Events.FromSqlInterpolated($@"SELECT e.* FROM ""cms"".""Events"" e JOIN ""cms"".""Users"" u ON u.""AggregateId"" = e.""AggregateId"" WHERE e.""AggregateType"" = {AggregateType} AND u.""UsernameNormalized"" = {username.ToUpper()}")
+    EventEntity[] events = await Context.Events.FromSqlInterpolated($@"SELECT e.* FROM ""Events"" e JOIN ""cms"".""Users"" u ON u.""AggregateId"" = e.""AggregateId"" WHERE e.""AggregateType"" = {AggregateType} AND u.""UsernameNormalized"" = {username.ToUpper()}")
       .AsNoTracking()
       .OrderBy(x => x.Version)
       .ToArrayAsync(cancellationToken);
