@@ -28,7 +28,7 @@ internal class CacheService : ICacheService
   {
     Actor actor = new()
     {
-      Id = user.Id.Value,
+      Id = user.Id.ToGuid().ToString(),
       Type = ActorType.User,
       IsDeleted = user.IsDeleted,
       DisplayName = user.FullName ?? user.Username,

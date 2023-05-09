@@ -1,5 +1,6 @@
 ﻿using Logitar.Cms.Core;
 using Logitar.Cms.Core.Configurations;
+using Logitar.Cms.Core.Users;
 using Logitar.EventSourcing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -11,6 +12,7 @@ internal class ExceptionHandlingFilter : IExceptionFilter
   private static readonly IReadOnlyDictionary<Type, Action<ExceptionContext>> _handlers = new Dictionary<Type, Action<ExceptionContext>>
   {
     [typeof(ConfigurationAlreadyInitializedException)] = HandleConfigurationAlreadyInitializedException,
+    [typeof(InvalidCredentialsException)] = HandleInvalidCredentialsException,
     [typeof(InvalidLocaleException)] = HandleInvalidLocaleException
   };
 
@@ -29,6 +31,11 @@ internal class ExceptionHandlingFilter : IExceptionFilter
     {
       StatusCode = StatusCodes.Status403Forbidden
     };
+  }
+
+  private static void HandleInvalidCredentialsException(ExceptionContext context)
+  {
+    context.Result = new BadRequestObjectResult(new { Code = GetCode(context.Exception) });
   }
 
   private static void HandleInvalidLocaleException(ExceptionContext context)

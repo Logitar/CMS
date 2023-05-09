@@ -5,9 +5,9 @@ using Logitar.EventSourcing;
 
 namespace Logitar.Cms.Core.Mapping;
 
-internal static class MappingExtensions
+public static class MappingExtensions
 {
-  public const string CacheKey = "Cache";
+  internal const string CacheKey = "Cache";
 
   public static Actor GetActor(this ResolutionContext context, AggregateId id)
   {
@@ -23,5 +23,9 @@ internal static class MappingExtensions
     {
       return cacheService.GetActor(id) ?? throw new InvalidOperationException($"The actor 'Id={id}' could not be found.");
     }
+  }
+  public static Actor? GetActor(this ResolutionContext context, string? id)
+  {
+    return id == null ? null : context.GetActor(new AggregateId(id));
   }
 }

@@ -61,8 +61,7 @@ public class Pbkdf2
     && pbkdf2._iterationCount == _iterationCount
     && pbkdf2._salt.SequenceEqual(_salt)
     && pbkdf2._hash.SequenceEqual(_hash);
-  public override int GetHashCode() => HashCode.Combine(_algorithm, _iterationCount,
-    Convert.ToBase64String(_salt), Convert.ToBase64String(_hash));
+  public override int GetHashCode() => HashCode.Combine(_algorithm, _iterationCount, _salt, _hash);
   public override string ToString() => string.Join(Separator, _algorithm, _iterationCount,
     Convert.ToBase64String(_salt), Convert.ToBase64String(_hash));
 }
