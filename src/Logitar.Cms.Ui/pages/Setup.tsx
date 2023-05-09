@@ -11,6 +11,7 @@ import { useTitle } from '~hooks';
 import { Locale } from '~models/Locale';
 import { Autocomplete } from 'formik-mui';
 import { flexCol } from '~styles';
+import { initializeConfiguration } from '~api';
 
 export const SetupPage: React.FC = () => {
   const { t, i18n } = useTranslation('Auth');
@@ -29,10 +30,14 @@ export const SetupPage: React.FC = () => {
       </Typography>
       <Formik
         initialValues={{
-          locale: i18n.language,
+          defaultLocale: i18n.language,
+          firstName: '',
+          lastName: '',
+          email: '',
+          password: '',
         }}
         validationSchema={Yup.object({
-          locale: Yup.string().required(t('setup.form.validations.required') as string),
+          defaultLocale: Yup.string().required(t('setup.form.validations.required') as string),
           firstName: Yup.string().required(t('setup.form.validations.required') as string),
           lastName: Yup.string().required(t('setup.form.validations.required') as string),
           email: Yup.string()
@@ -42,7 +47,17 @@ export const SetupPage: React.FC = () => {
         })}
         onSubmit={async (values, { setSubmitting }) => {
           setSubmitting(true);
-          console.log(values);
+          const { firstName, lastName, email, password, defaultLocale } = values;
+          await initializeConfiguration({
+            defaultLocale,
+            user: {
+              firstName,
+              lastName,
+              emailAddress: email,
+              password,
+              username: email,
+            },
+          });
           setSubmitting(false);
         }}
       >
@@ -61,7 +76,7 @@ export const SetupPage: React.FC = () => {
                 {t(`setup.form.headings.application`)}
               </Typography>
               <Field
-                name="locale"
+                name="defaultLocale"
                 component={Autocomplete}
                 options={locales.map(locale => locale.code)}
                 getOptionLabel={(option: string) =>
@@ -72,10 +87,10 @@ export const SetupPage: React.FC = () => {
                 renderInput={(params: AutocompleteRenderInputParams) => (
                   <TextField
                     {...params}
-                    name="locale"
-                    error={touched['locale'] && !!errors['locale']}
-                    helperText={errors['locale']}
-                    label={t('setup.form.labels.locale')}
+                    name="defaultLocale"
+                    error={touched['defaultLocale'] && !!errors['defaultLocale']}
+                    helperText={errors['defaultLocale']}
+                    label={t('setup.form.labels.defaultLocale')}
                     variant="outlined"
                   />
                 )}

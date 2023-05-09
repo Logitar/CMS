@@ -1,7 +1,7 @@
 export type InitializeConfigurationPayload = {
   defaultLocale: string;
   user: {
-    email: string;
+    emailAddress: string;
     username: string;
     password: string;
     firstName: string;

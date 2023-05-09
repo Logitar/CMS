@@ -1,4 +1,4 @@
-import { apiBaseUrl, get, put } from '~api';
+import { apiBaseUrl, get, post, put } from '~api';
 import { ApiErrorResponse } from '~models';
 import {
   ChangePasswordPayload,
@@ -46,7 +46,7 @@ export const updateProfile = async (payload: UpdateProfilePayload) => {
 };
 
 export const signIn = async (payload: SignInPayload) => {
-  const result = await put(`${apiBaseUrl}/account/sign-in`, payload);
+  const result = await post(`${apiBaseUrl}/account/sign/in`, payload);
   if (result.status === 204) {
     return;
   }
@@ -59,7 +59,7 @@ export const signIn = async (payload: SignInPayload) => {
 };
 
 export const signOut = async () => {
-  const result = await put(`${apiBaseUrl}/account/sign-out`);
+  const result = await post(`${apiBaseUrl}/account/sign/out`);
   if (result.status === 204) {
     return;
   }
@@ -72,7 +72,7 @@ export const signOut = async () => {
 };
 
 export const signOutAll = async () => {
-  const result = await put(`${apiBaseUrl}/account/sign-out/all`);
+  const result = await post(`${apiBaseUrl}/account/sign/out/all`);
   if (result.status === 204) {
     return;
   }

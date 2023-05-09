@@ -52,7 +52,7 @@
       "labels": {
         "firstName": "Prénom",
         "lastName": "Nom de famille",
-        "locale": "Langue par défaut du contenu",
+        "defaultLocale": "Langue par défaut du contenu",
         "email": "Adresse e-mail",
         "password": "Mot de passe"
       },

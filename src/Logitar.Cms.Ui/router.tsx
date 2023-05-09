@@ -29,10 +29,15 @@ export const router = createBrowserRouter(
       element: <SignInPage />,
       loader: async () => {
         try {
+          const initialized = await isConfigurationInitialized();
+          if (!initialized) {
+            return redirect('/setup');
+          }
+
           await getProfile();
           return redirect('/');
         } catch (error) {
-          return;
+          return null;
         }
       },
     },
@@ -41,10 +46,15 @@ export const router = createBrowserRouter(
       element: <ForgotPasswordPage />,
       loader: async () => {
         try {
+          const initialized = await isConfigurationInitialized();
+          if (!initialized) {
+            return redirect('/setup');
+          }
+
           await getProfile();
           return redirect('/');
         } catch (error) {
-          return;
+          return null;
         }
       },
     },
@@ -53,10 +63,15 @@ export const router = createBrowserRouter(
       element: <ResetPasswordPage />,
       loader: async () => {
         try {
+          const initialized = await isConfigurationInitialized();
+          if (!initialized) {
+            return redirect('/setup');
+          }
+
           await getProfile();
           return redirect('/');
         } catch (error) {
-          return;
+          return null;
         }
       },
     },

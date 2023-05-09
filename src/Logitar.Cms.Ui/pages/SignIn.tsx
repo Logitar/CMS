@@ -22,7 +22,7 @@ export const SignInPage: React.FC = () => {
   const handleSignIn = async ({ username, password, remember }: SignInPayload) => {
     try {
       await signIn({ username, password, remember });
-      return navigate('/home');
+      return navigate('/');
     } catch (error) {
       // TODO error handling
       console.error(error);
