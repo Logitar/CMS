@@ -16,7 +16,7 @@ public class SessionAggregate : AggregateRoot
 
   public SessionAggregate(AggregateId id) : base(id) { }
 
-  public SessionAggregate(UserAggregate user, DateTime signedInOn, bool isPersistent = false,
+  public SessionAggregate(UserAggregate user, bool isPersistent = false, DateTime? signedInOn = null,
     string? ipAddress = null, string? additionalInformation = null)
   {
     byte[]? bytes = null;
@@ -30,7 +30,7 @@ public class SessionAggregate : AggregateRoot
     SessionCreated e = new()
     {
       ActorId = user.Id,
-      OccurredOn = signedInOn,
+      OccurredOn = signedInOn ?? DateTime.UtcNow,
       Secret = secret,
       IpAddress = ipAddress?.CleanTrim(),
       AdditionalInformation = additionalInformation?.CleanTrim()
@@ -52,8 +52,7 @@ public class SessionAggregate : AggregateRoot
 
     IsActive = true;
 
-    IpAddress = e.IpAddress;
-    AdditionalInformation = e.AdditionalInformation;
+    Apply((SessionSaved)e);
   }
 
   public AggregateId UserId { get; private set; }
@@ -66,4 +65,54 @@ public class SessionAggregate : AggregateRoot
   public string? AdditionalInformation { get; private set; }
 
   internal RefreshToken? RefreshToken { get; private set; }
+
+  public void Refresh(byte[] secretBytes, string? ipAddress = null, string? additionalInformation = null)
+  {
+    if (!IsActive)
+    {
+      throw new SessionIsNotActiveException(this);
+    }
+    if (_secret?.IsMatch(Convert.ToBase64String(secretBytes)) != true)
+    {
+      throw new InvalidCredentialsException($"The secret '{Convert.ToBase64String(secretBytes)}' did not match the session '{this}'.");
+    }
+
+    secretBytes = RandomNumberGenerator.GetBytes(SecretLength);
+    Pbkdf2 secret = new(Convert.ToBase64String(secretBytes));
+
+    SessionRefreshed e = new(secret)
+    {
+      ActorId = UserId,
+      IpAddress = ipAddress?.CleanTrim(),
+      AdditionalInformation = additionalInformation?.CleanTrim()
+    };
+    new SessionRefreshedValidator().ValidateAndThrow(e);
+
+    ApplyChange(e);
+
+    RefreshToken = new(Id.ToGuid(), secretBytes);
+  }
+  protected virtual void Apply(SessionRefreshed e)
+  {
+    _secret = e.Secret;
+
+    Apply((SessionSaved)e);
+  }
+
+  public void SignOut(AggregateId actorId)
+  {
+    if (!IsActive)
+    {
+      throw new SessionIsNotActiveException(this);
+    }
+
+    ApplyChange(new SessionSignedOut { ActorId = actorId });
+  }
+  protected virtual void Apply(SessionSignedOut _) => IsActive = false;
+
+  private void Apply(SessionSaved e)
+  {
+    IpAddress = e.IpAddress;
+    AdditionalInformation = e.AdditionalInformation;
+  }
 }

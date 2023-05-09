@@ -2,6 +2,7 @@
 using Logitar.Cms.Schema;
 using Logitar.Cms.Web;
 using Logitar.Cms.Web.Extensions;
+using Logitar.Cms.Web.Middlewares;
 using Logitar.EventSourcing.EntityFrameworkCore.PostgreSQL;
 
 namespace Logitar.Cms;
@@ -78,8 +79,13 @@ internal class Startup : StartupBase
 
     builder.UseHttpsRedirection();
     builder.UseCors();
-    builder.UseSession();
     builder.UseStaticFiles();
+    builder.UseSession();
+    builder.UseMiddleware<RefreshSession>();
+    builder.UseMiddleware<RedirectUnauthorized>();
+    builder.UseAuthentication();
+    builder.UseAuthorization();
+
     builder.UseGraphQL<CmsSchema>();
 
     if (builder is WebApplication application)

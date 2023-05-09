@@ -8,13 +8,7 @@ internal class UserEntity : AggregateEntity
   {
     Username = e.Username;
 
-    FirstName = e.FirstName;
-    LastName = e.LastName;
-    FullName = e.FullName;
-
-    Locale = e.Locale?.Name;
-
-    Picture = e.Picture?.ToString();
+    Apply(e);
   }
 
   private UserEntity() : base()
@@ -100,5 +94,23 @@ internal class UserEntity : AggregateEntity
     SetVersion(e);
 
     SignedInOn = e.OccurredOn;
+  }
+
+  public void Update(UserUpdated e)
+  {
+    base.Update(e);
+
+    Apply(e);
+  }
+
+  private void Apply(UserSaved e)
+  {
+    FirstName = e.FirstName;
+    LastName = e.LastName;
+    FullName = e.FullName;
+
+    Locale = e.Locale?.Name;
+
+    Picture = e.Picture?.ToString();
   }
 }
