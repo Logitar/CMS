@@ -22,6 +22,27 @@ public class UserAggregateTests
     _configuration = new(actorId: _actorId);
   }
 
+  [Theory]
+  [InlineData("P@s$W0rD")]
+  public void When_current_password_is_correct_Then_password_is_changed(string password)
+  {
+    UserAggregate user = new(_actorId, _configuration, Username);
+    user.ChangePassword(_configuration, password);
+
+    user.ChangePassword(_configuration, $"{password}!", current: password);
+    Assert.Equal(2, user.Changes.Where(e => e is PasswordChanged).Count());
+  }
+
+  [Theory]
+  [InlineData("P@s$W0rD")]
+  public void When_current_password_is_incorrect_Then_InvalidCredentialsException_is_thrown(string password)
+  {
+    UserAggregate user = new(_actorId, _configuration, Username);
+    user.ChangePassword(_configuration, password);
+
+    Assert.Throws<InvalidCredentialsException>(() => user.ChangePassword(_configuration, $"{password}!", current: password[..^1]));
+  }
+
   [Fact]
   public void When_email_is_modified_Then_it_has_correct_actor_id()
   {
@@ -153,6 +174,14 @@ public class UserAggregateTests
     Assert.Equal(user.Username, user.ToString().Split('|').First().Trim());
   }
 
+  [Theory]
+  [InlineData("P@s$W0rD")]
+  public void When_it_has_no_password_when_changing_current_Then_InvalidCredentialsException_is_thrown(string password)
+  {
+    UserAggregate user = new(_actorId, _configuration, Username);
+    Assert.Throws<InvalidCredentialsException>(() => user.ChangePassword(_configuration, password, current: password));
+  }
+
   [Fact]
   public void When_new_password_is_not_valid_Then_ValidationException_is_thrown()
   {
@@ -183,7 +212,7 @@ public class UserAggregateTests
     user.ChangePassword(_configuration, password);
     Assert.Equal(user.Id, user.Changes.Single(e => e is PasswordChanged).ActorId);
 
-    user.ChangePassword(_configuration, password, _actorId);
+    user.ChangePassword(_configuration, password, current: null, _actorId);
     Assert.Equal(_actorId, user.Changes.Where(e => e is PasswordChanged).Skip(1).Single().ActorId);
   }
 
