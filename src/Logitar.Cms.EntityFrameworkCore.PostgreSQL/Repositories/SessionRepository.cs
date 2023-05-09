@@ -19,7 +19,7 @@ internal class SessionRepository : EventStore, ISessionRepository
   {
     string aggregateId = user.Id.Value;
 
-    EventEntity[] events = await Context.Events.FromSqlInterpolated($@"SELECT e.* FROM ""cms"".""Events"" e JOIN ""cms"".""Sessions"" s ON s.""AggregateId"" = e.""AggregateId"" JOIN ""cms"".""Users"" u ON u.""UserId"" = s.""UserId"" WHERE e.""AggregateType"" = {AggregateType} AND s.""IsActive"" = true AND u.""AggregateId"" = {aggregateId}")
+    EventEntity[] events = await Context.Events.FromSqlInterpolated($@"SELECT e.* FROM ""Events"" e JOIN ""cms"".""Sessions"" s ON s.""AggregateId"" = e.""AggregateId"" JOIN ""cms"".""Users"" u ON u.""UserId"" = s.""UserId"" WHERE e.""AggregateType"" = {AggregateType} AND s.""IsActive"" = true AND u.""AggregateId"" = {aggregateId}")
       .AsNoTracking()
       .OrderBy(x => x.Version)
       .ToArrayAsync(cancellationToken);
