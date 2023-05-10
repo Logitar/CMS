@@ -10,23 +10,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v2
         with:
           node-version: "18"
 
+      - name: Get CMS repository
+        uses: actions/checkout@v2
+
       - name: Get logitar-ui repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
         with:
           repository: Logitar/logitar-ui
           ref: 8-ongoing-implementation-of-mui-components-for-mvp
           path: logitar-ui
-
-      - name: Get CMS repository
-        uses: actions/checkout@v3
-        with:
-          repository: Logitar/CMS
-          ref: main
-          path: CMS
 
       - name: Link logitar-ui to CMS
         run: |
@@ -37,9 +33,13 @@ jobs:
 
       - name: Install dependencies
         run: |
+          cd logitar-ui
+          npm install
+          cd CMS/src/Logitar.Cms.Ui
           npm install
 
       - name: Lint & Build
         run: |
+          cd CMS/src/Logitar.Cms.Ui
           npm run lint
           npm run build
