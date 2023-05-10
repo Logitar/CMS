@@ -2,7 +2,7 @@ import { AutocompleteRenderInputParams, Box, Button, TextField, Typography } fro
 import { TextField as FmuiTextField } from 'formik-mui';
 import { grey } from '@mui/material/colors';
 import { useTranslation } from 'react-i18next';
-import { redirect, useLoaderData } from 'react-router-dom';
+import { useLoaderData, useNavigate } from 'react-router-dom';
 import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -17,6 +17,7 @@ export const SetupPage: React.FC = () => {
   const { t, i18n } = useTranslation('Auth');
 
   const locales = useLoaderData() as Locale[];
+  const navigate = useNavigate();
 
   useTitle(t('setup.title'));
 
@@ -59,7 +60,7 @@ export const SetupPage: React.FC = () => {
             },
           });
           setSubmitting(false);
-          return redirect('/');
+          navigate('/', { relative: 'path' });
         }}
       >
         {({ errors, touched, isSubmitting, setFieldTouched }) => (
