@@ -28,7 +28,7 @@ jobs:
         run: |
           cd logitar-ui
           npm link
-          cd ../CMS/src/Logitar.Cms.Ui
+          cd CMS/src/Logitar.Cms.Ui
           npm link @logitar/logitar-ui
 
       - name: Install dependencies
