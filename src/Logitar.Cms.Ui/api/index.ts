@@ -17,12 +17,11 @@ export const apiBaseUrl =
   import.meta.env.MODE === 'development' ? import.meta.env.VITE_API_BASE_URL : '/cms/api';
 
 const execute = async (method: RequestMethod, url: string, data?: RequestData) => {
-  const request: RequestInit = { method };
+  const request: RequestInit = { method, credentials: 'include' };
 
   if (data) {
     request.headers = {
       'Content-Type': 'application/json',
-      credentials: 'include',
     };
     request.body = JSON.stringify(data);
   }
