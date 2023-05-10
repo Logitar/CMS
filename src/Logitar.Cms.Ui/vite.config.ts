@@ -29,4 +29,7 @@ export default defineConfig({
       { find: '~styles', replacement: path.resolve(__dirname, 'styles') },
     ],
   },
+  server: {
+    port: 3000,
+  },
 });
