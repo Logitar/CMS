@@ -21,7 +21,7 @@ export const changePassword = async (payload: ChangePasswordPayload) => {
 
 export const getProfile = async () => {
   const result = await get(`${apiBaseUrl}/account/profile`);
-  if (result.status === 204) {
+  if (result.status === 200) {
     return result.data;
   }
 
