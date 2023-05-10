@@ -11,9 +11,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Print current working directory
-        run: echo "Current directory: ${{ github.workspace }}"
-
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
