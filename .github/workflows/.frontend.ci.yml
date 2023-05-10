@@ -20,14 +20,14 @@ jobs:
         run: git checkout 8-ongoing-implementation-of-mui-components-for-mvp
         working-directory: ./logitar-ui
 
-      - name: Link logitar-ui
-        run: npm link
-        working-directory: ./logitar-ui
-
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: "18"
+
+      - name: Link logitar-ui
+        run: npm link
+        working-directory: ./logitar-ui
 
       - name: Link CMS to logitar-ui
         run: npm link ../logitar-ui
