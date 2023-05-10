@@ -1,20 +1,46 @@
 name: Frontend
 
 on:
-  pull_request:
-    branches: [dev]
+  push:
+    branches:
+      - main
 
 jobs:
-  test:
-    name: It lints and builds
+  build-and-test:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Clone CMS repository
+        uses: actions/checkout@v2
+
+      - name: Clone logitar-ui repository
+        run: git clone https://github.com/Logitar/logitar-ui.git
+
+      - name: Checkout logitar-ui branch
+        run: git checkout 8-ongoing-implementation-of-mui-components-for-mvp
+        working-directory: ./logitar-ui
+
+      - name: Link logitar-ui
+        run: npm link
+        working-directory: ./logitar-ui
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          node-version: 18
-      - run: |
-          cd ./src/Logitar.Cms.Ui
-          npm i
-          npm run lint
-          npm run build
+          node-version: "18"
+
+      - name: Link CMS to logitar-ui
+        run: npm link ../logitar-ui
+        working-directory: ./CMS
+
+      - name: Install dependencies for CMS
+        run: npm install
+        working-directory: ./CMS/src/Logitar.Cms.Ui
+
+      - name: Lint CMS
+        run: npm run lint
+        working-directory: ./CMS/src/Logitar.Cms.Ui
+
+      - name: Build CMS
+        run: npm run build
+        working-directory: ./CMS/src/Logitar.Cms.Ui
