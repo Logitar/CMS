@@ -22,6 +22,13 @@ public class AccountApiController : ControllerBase
   }
 
   [Authorize(Policy = Policies.User)]
+  [HttpPut("password/change")]
+  public async Task<ActionResult<User>> ChangePasswordAsync([FromBody] ChangePasswordInput input, CancellationToken cancellationToken)
+  {
+    return Ok(await _userService.ChangePasswordAsync(HttpContext.GetUser()!.Id, input, cancellationToken));
+  }
+
+  [Authorize(Policy = Policies.User)]
   [HttpGet("profile")]
   public ActionResult<User> GetProfile()
   {

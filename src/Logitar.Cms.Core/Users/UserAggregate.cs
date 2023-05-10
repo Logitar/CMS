@@ -52,8 +52,13 @@ public class UserAggregate : AggregateRoot
 
   public Uri? Picture { get; private set; }
 
-  public void ChangePassword(ConfigurationAggregate configuration, string password, AggregateId? actorId = null)
+  public void ChangePassword(ConfigurationAggregate configuration, string password, string? current = null, AggregateId? actorId = null)
   {
+    if (current != null && _password?.IsMatch(current) != true)
+    {
+      throw new InvalidCredentialsException("The specified password did not match.");
+    }
+
     new PasswordValidator(configuration.PasswordSettings).ValidateAndThrow(password);
 
     ApplyChange(new PasswordChanged(new Pbkdf2(password))

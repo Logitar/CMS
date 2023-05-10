@@ -8,7 +8,11 @@ internal static class Cookies
   {
     HttpOnly = true,
     MaxAge = TimeSpan.FromDays(7),
+#if DEBUG
+    SameSite = SameSiteMode.None,
+#else
     SameSite = SameSiteMode.Strict,
+#endif
     Secure = true
   };
 }
