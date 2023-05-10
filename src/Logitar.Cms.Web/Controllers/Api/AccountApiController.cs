@@ -21,6 +21,14 @@ public class AccountApiController : ControllerBase
     _userService = userService;
   }
 
+  [HttpGet("authenticated")]
+  public ActionResult<CurrentUser> GetCurrentUser()
+  {
+    User? user = HttpContext.GetUser();
+
+    return Ok(new CurrentUser(user));
+  }
+
   [Authorize(Policy = Policies.User)]
   [HttpPut("password/change")]
   public async Task<ActionResult<User>> ChangePasswordAsync([FromBody] ChangePasswordInput input, CancellationToken cancellationToken)
