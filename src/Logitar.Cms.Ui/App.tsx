@@ -1,27 +1,25 @@
 import { useMemo } from 'react';
 
 import { I18nextProvider } from 'react-i18next';
-import { CssBaseline, ThemeProvider, useMediaQuery } from '@mui/material';
 import { RouterProvider } from 'react-router-dom';
+
+import { LogitarUi, useToggle, useMediaQuery, defaultTheme } from '@logitar/logitar-ui';
 
 import { router } from './router';
 
-import { useToggle } from '~hooks';
 import { i18n } from '~locales';
-import { getDefaultTheme } from '~themes';
 
 export const App: React.FC = () => {
   const [darkMode] = useToggle(useMediaQuery('(prefers-color-scheme: dark)'));
 
-  const theme = useMemo(() => getDefaultTheme(darkMode), [darkMode]);
+  const theme = useMemo(() => defaultTheme(darkMode), [darkMode]);
 
   return (
     <>
-      <CssBaseline />
       <I18nextProvider i18n={i18n}>
-        <ThemeProvider theme={theme}>
+        <LogitarUi theme={theme} reset>
           <RouterProvider router={router} />
-        </ThemeProvider>
+        </LogitarUi>
       </I18nextProvider>
     </>
   );

@@ -522,6 +522,10 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
+"@logitar/logitar-ui@link:../@logitar/logitar-ui/src":
+  version "0.0.0"
+  uid ""
+
 "@mui/base@5.0.0-alpha.126":
   version "5.0.0-alpha.126"
   resolved "https://registry.yarnpkg.com/@mui/base/-/base-5.0.0-alpha.126.tgz#99555a5876a60e7dad772d75eb171e3d1336321d"

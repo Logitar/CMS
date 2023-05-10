@@ -7,6 +7,14 @@ import path from 'path';
 export default defineConfig({
   build: {
     outDir: '../Logitar.Cms.Web/wwwroot/dist',
+    emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        entryFileNames: `assets/[name].js`,
+        chunkFileNames: `assets/[name].js`,
+        assetFileNames: `assets/[name].[ext]`,
+      },
+    },
   },
   plugins: [react(), tsconfigpaths()],
   resolve: {
