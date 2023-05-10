@@ -2,7 +2,7 @@ import { createBrowserRouter, redirect } from 'react-router-dom';
 
 import { getLocales } from '~api/resources';
 import { isConfigurationInitialized } from '~api/configurations';
-import { getProfile } from '~api/account';
+import { getCurrentUser } from '~api/account';
 
 import { ForgotPasswordPage, ResetPasswordPage, SetupPage, SignInPage } from '~pages';
 
@@ -17,63 +17,63 @@ export const router = createBrowserRouter(
           return redirect('/setup');
         }
 
-        try {
-          await getProfile();
-          return null;
-        } catch (error) {
+        const currentUser = await getCurrentUser();
+        if (!currentUser.isAuthenticated) {
           return redirect('/sign-in');
         }
+
+        return currentUser;
       },
     },
     {
       path: '/sign-in',
       element: <SignInPage />,
       loader: async () => {
-        try {
-          const initialized = await isConfigurationInitialized();
-          if (!initialized) {
-            return redirect('/setup');
-          }
-
-          await getProfile();
-          return redirect('/');
-        } catch (error) {
-          return null;
+        const initialized = await isConfigurationInitialized();
+        if (!initialized) {
+          return redirect('/setup');
         }
+
+        const currentUser = await getCurrentUser();
+        if (currentUser.isAuthenticated) {
+          return redirect('/');
+        }
+
+        return null;
       },
     },
     {
       path: '/forgot-password',
       element: <ForgotPasswordPage />,
       loader: async () => {
-        try {
-          const initialized = await isConfigurationInitialized();
-          if (!initialized) {
-            return redirect('/setup');
-          }
-
-          await getProfile();
-          return redirect('/');
-        } catch (error) {
-          return null;
+        const initialized = await isConfigurationInitialized();
+        if (!initialized) {
+          return redirect('/setup');
         }
+
+        const currentUser = await getCurrentUser();
+        if (currentUser.isAuthenticated) {
+          return redirect('/');
+        }
+
+        return null;
       },
     },
     {
       path: '/reset-password',
       element: <ResetPasswordPage />,
       loader: async () => {
-        try {
-          const initialized = await isConfigurationInitialized();
-          if (!initialized) {
-            return redirect('/setup');
-          }
-
-          await getProfile();
-          return redirect('/');
-        } catch (error) {
-          return null;
+        const initialized = await isConfigurationInitialized();
+        if (!initialized) {
+          return redirect('/setup');
         }
+
+        const currentUser = await getCurrentUser();
+        if (currentUser.isAuthenticated) {
+          return redirect('/');
+        }
+
+        return null;
       },
     },
     {

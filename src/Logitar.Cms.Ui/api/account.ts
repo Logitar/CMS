@@ -1,5 +1,5 @@
 import { apiBaseUrl, get, post, put } from '~api';
-import { ApiErrorResponse } from '~models';
+import { ApiErrorResponse, CurrentUser } from '~models';
 import {
   ChangePasswordPayload,
   SignInPayload,
@@ -14,6 +14,15 @@ export const changePassword = async (payload: ChangePasswordPayload) => {
 
   if (result.status === 401) {
     throw new Error((result.data as ApiErrorResponse).code);
+  }
+
+  throw new Error('Unknown');
+};
+
+export const getCurrentUser = async (): Promise<CurrentUser> => {
+  const result = await get(`${apiBaseUrl}/account/authenticated`);
+  if (result.status === 200) {
+    return result.data as CurrentUser;
   }
 
   throw new Error('Unknown');
