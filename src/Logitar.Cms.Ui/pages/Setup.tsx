@@ -2,7 +2,7 @@ import { AutocompleteRenderInputParams, Box, Button, TextField, Typography } fro
 import { TextField as FmuiTextField } from 'formik-mui';
 import { grey } from '@mui/material/colors';
 import { useTranslation } from 'react-i18next';
-import { useLoaderData } from 'react-router-dom';
+import { redirect, useLoaderData } from 'react-router-dom';
 import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -59,6 +59,7 @@ export const SetupPage: React.FC = () => {
             },
           });
           setSubmitting(false);
+          return redirect('/');
         }}
       >
         {({ errors, touched, isSubmitting, setFieldTouched }) => (
