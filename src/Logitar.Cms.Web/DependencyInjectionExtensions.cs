@@ -28,12 +28,16 @@ public static class DependencyInjectionExtensions
     });
 
     services
-     .AddSession(options =>
-     {
-       options.Cookie.SameSite = SameSiteMode.Strict;
-       options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-     })
-     .AddDistributedMemoryCache();
+      .AddSession(options =>
+      {
+#if DEBUG
+        options.Cookie.SameSite = SameSiteMode.None;
+#else
+        options.Cookie.SameSite = SameSiteMode.Strict;
+#endif
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+      })
+      .AddDistributedMemoryCache();
 
     services.AddHttpContextAccessor();
     services.AddLogitarCmsCore();
