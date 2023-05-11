@@ -7,7 +7,7 @@ import {
 } from '~models/payloads/account';
 
 export const changePassword = async (payload: ChangePasswordPayload) => {
-  const result = await put(`${apiBaseUrl}/account/change-password`, payload);
+  const result = await put(`${apiBaseUrl}/account/password/change`, payload);
   if (result.status === 200) {
     return result.data;
   }
@@ -60,10 +60,6 @@ export const signIn = async (payload: SignInPayload) => {
     return;
   }
 
-  if (result.status === 401) {
-    throw new Error((result.data as ApiErrorResponse).code);
-  }
-
   throw new Error('Unknown');
 };
 
@@ -71,10 +67,6 @@ export const signOut = async () => {
   const result = await post(`${apiBaseUrl}/account/sign/out`);
   if (result.status === 204) {
     return;
-  }
-
-  if (result.status === 401) {
-    throw new Error((result.data as ApiErrorResponse).code);
   }
 
   throw new Error('Unknown');

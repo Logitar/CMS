@@ -5,7 +5,7 @@ import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 
 import { CheckboxWithLabel, TextField } from 'formik-mui';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 
 import { signIn } from '~api';
 import { AuthLayout, WithTranslateFormErrors } from '~components';
@@ -16,12 +16,19 @@ import { flexCol, flexColCenter } from '~styles';
 export const SignInPage: React.FC = () => {
   const { t } = useTranslation('Auth');
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   useTitle(t('signIn.title'));
 
   const handleSignIn = async ({ username, password, remember }: SignInPayload) => {
     try {
       await signIn({ username, password, remember });
+
+      if (searchParams.has('redirectUrl')) {
+        const redirectUrl = searchParams.get('redirectUrl') as string;
+        return navigate(redirectUrl);
+      }
+
       return navigate('/');
     } catch (error) {
       // TODO error handling

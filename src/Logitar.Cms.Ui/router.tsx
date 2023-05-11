@@ -1,95 +1,46 @@
-import { createBrowserRouter, redirect } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 
-import { getLocales } from '~api/resources';
-import { isConfigurationInitialized } from '~api/configurations';
-import { getCurrentUser } from '~api/account';
-
-import { ForgotPasswordPage, ResetPasswordPage, SetupPage, SignInPage } from '~pages';
+import { basename, rootLoader } from '~routes';
+import ForgotPasswordPage, { forgotPasswordLoader } from '~routes/forgotPassword';
+import ResetPasswordPage, { resetPasswordLoader } from '~routes/resetPassword';
+import SetupPage, { setupLoader } from '~routes/setup';
+import SignInPage, { signInLoader } from '~routes/signIn';
 
 export const router = createBrowserRouter(
   [
     {
       path: '',
       element: <p>Home page — requires setup & authorization</p>,
-      loader: async () => {
-        const initialized = await isConfigurationInitialized();
-        if (!initialized) {
-          return redirect('/setup');
-        }
-
-        const currentUser = await getCurrentUser();
-        if (!currentUser.isAuthenticated) {
-          return redirect('/sign-in');
-        }
-
-        return currentUser;
-      },
+      loader: ({ request }) => rootLoader(request),
+      children: [
+        {
+          path: '/home',
+          element: <p>Home page</p>,
+        },
+      ],
     },
     {
       path: '/sign-in',
       element: <SignInPage />,
-      loader: async () => {
-        const initialized = await isConfigurationInitialized();
-        if (!initialized) {
-          return redirect('/setup');
-        }
-
-        const currentUser = await getCurrentUser();
-        if (currentUser.isAuthenticated) {
-          return redirect('/');
-        }
-
-        return null;
-      },
+      loader: signInLoader,
     },
     {
       path: '/forgot-password',
       element: <ForgotPasswordPage />,
-      loader: async () => {
-        const initialized = await isConfigurationInitialized();
-        if (!initialized) {
-          return redirect('/setup');
-        }
-
-        const currentUser = await getCurrentUser();
-        if (currentUser.isAuthenticated) {
-          return redirect('/');
-        }
-
-        return null;
-      },
+      loader: forgotPasswordLoader,
     },
     {
       path: '/reset-password',
       element: <ResetPasswordPage />,
-      loader: async () => {
-        const initialized = await isConfigurationInitialized();
-        if (!initialized) {
-          return redirect('/setup');
-        }
-
-        const currentUser = await getCurrentUser();
-        if (currentUser.isAuthenticated) {
-          return redirect('/');
-        }
-
-        return null;
-      },
+      loader: resetPasswordLoader,
     },
     {
       path: '/setup',
       element: <SetupPage />,
-      loader: async () => {
-        const initialized = await isConfigurationInitialized();
-        if (initialized) {
-          return redirect('/');
-        }
-
-        return getLocales();
-      },
+      loader: setupLoader,
     },
   ],
   {
-    basename: import.meta.env.MODE === 'production' ? '/cms' : undefined,
+    basename,
   }
 );
