@@ -8,33 +8,21 @@ import { CheckboxWithLabel, TextField } from 'formik-mui';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 
 import { signIn } from '~api';
-import { AuthLayout, WithTranslateFormErrors } from '~components';
+import { AuthLayout, FormError, WithTranslateFormErrors } from '~components';
 import { useTitle } from '~hooks';
-import { SignInPayload } from '~models';
 import { flexCol, flexColCenter } from '~styles';
+import { useState } from 'react';
 
 export const SignInPage: React.FC = () => {
   const { t } = useTranslation('Auth');
+
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
+  const [errorOpen, setErrorOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
+
   useTitle(t('signIn.title'));
-
-  const handleSignIn = async ({ username, password, remember }: SignInPayload) => {
-    try {
-      await signIn({ username, password, remember });
-
-      if (searchParams.has('redirectUrl')) {
-        const redirectUrl = searchParams.get('redirectUrl') as string;
-        return navigate(redirectUrl);
-      }
-
-      return navigate('/');
-    } catch (error) {
-      // TODO error handling
-      console.error(error);
-    }
-  };
 
   return (
     <AuthLayout>
@@ -55,10 +43,23 @@ export const SignInPage: React.FC = () => {
           password: Yup.string().required(t('signIn.form.validations.required') as string),
           remember: Yup.boolean(),
         })}
-        onSubmit={async (values, { setSubmitting }) => {
-          setSubmitting(true);
-          await handleSignIn(values);
-          setSubmitting(false);
+        onSubmit={async ({ username, password, remember }, { setSubmitting }) => {
+          try {
+            setSubmitting(true);
+            await signIn({ username, password, remember });
+
+            if (searchParams.has('redirectUrl')) {
+              const redirectUrl = searchParams.get('redirectUrl') as string;
+              return navigate(redirectUrl);
+            }
+
+            return navigate('/');
+          } catch (error) {
+            const message = error instanceof Error ? error.message : 'unknown';
+            setErrorMessage(message);
+            setErrorOpen(true);
+            setSubmitting(false);
+          }
         }}
       >
         {({ errors, touched, isSubmitting, setFieldTouched }) => (
@@ -67,6 +68,12 @@ export const SignInPage: React.FC = () => {
             touched={touched}
             setFieldTouched={setFieldTouched}
           >
+            <FormError
+              open={errorOpen}
+              onClose={() => setErrorOpen(false)}
+              namespace="Auth"
+              error={`signIn.form.errors.${errorMessage}`}
+            />
             <Form style={{ width: '100%' }}>
               <Box sx={{ ...flexColCenter, mt: 4, gap: 3 }}>
                 <Field

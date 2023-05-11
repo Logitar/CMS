@@ -45,6 +45,9 @@
       "buttons": {
         "submit": "Apply Settings"
       },
+      "errors": {
+        "Unknown": "An unexpected error has occurred. Please try again later."
+      },
       "headings": {
         "application": "Application settings",
         "user": "Administrator user settings"
@@ -71,8 +74,12 @@
         "submit": "Sign In",
         "forgotPassword": "Forgot your password?"
       },
+      "errors": {
+        "InvalidCredentials": "Invalid email or password.",
+        "Unknown": "We could not sign you in. Please try again later."
+      },
       "labels": {
-        "username": "Username",
+        "username": "Email Address",
         "password": "Password",
         "remember": "Remember me"
       },

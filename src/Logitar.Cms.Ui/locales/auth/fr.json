@@ -45,6 +45,9 @@
       "buttons": {
         "submit": "Appliquer les paramètres"
       },
+      "errors": {
+        "Unknown": "Une erreur inconnue s'est produite. Veuillez réessayer plus tard."
+      },
       "headings": {
         "application": "Paramètres d'application",
         "user": "Paramètres de l'utilisateur administrateur"
@@ -71,8 +74,12 @@
         "forgotPassword": "Mot de passe oublié?",
         "submit": "Connexion"
       },
+      "errors": {
+        "InvalidCredentials": "L'adresse courriel ou le mot de passe est invalide.",
+        "Unknown": "Nous n'avons pas pu vous connecter. Veuillez réessayer plus tard."
+      },
       "labels": {
-        "username": "Identifiant",
+        "username": "Adresse e-mail",
         "password": "Mot de passe",
         "remember": "Se souvenir de moi",
         "submit": "Connexion"

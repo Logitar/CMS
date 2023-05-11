@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { AutocompleteRenderInputParams, Box, Button, TextField, Typography } from '@mui/material';
 import { TextField as FmuiTextField } from 'formik-mui';
 import { grey } from '@mui/material/colors';
@@ -6,7 +7,7 @@ import { useLoaderData, useNavigate } from 'react-router-dom';
 import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { AuthLayout, WithTranslateFormErrors } from '~components';
+import { AuthLayout, FormError, WithTranslateFormErrors } from '~components';
 import { useTitle } from '~hooks';
 import { Locale } from '~models/Locale';
 import { Autocomplete } from 'formik-mui';
@@ -18,6 +19,9 @@ export const SetupPage: React.FC = () => {
 
   const locales = useLoaderData() as Locale[];
   const navigate = useNavigate();
+
+  const [errorOpen, setErrorOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
 
   useTitle(t('setup.title'));
 
@@ -47,20 +51,26 @@ export const SetupPage: React.FC = () => {
           password: Yup.string().required(t('setup.form.validations.required') as string),
         })}
         onSubmit={async (values, { setSubmitting }) => {
-          setSubmitting(true);
-          const { firstName, lastName, email, password, defaultLocale } = values;
-          await initializeConfiguration({
-            defaultLocale,
-            user: {
-              firstName,
-              lastName,
-              emailAddress: email,
-              password,
-              username: email,
-            },
-          });
-          setSubmitting(false);
-          navigate('/', { relative: 'path' });
+          try {
+            setSubmitting(true);
+            const { firstName, lastName, email, password, defaultLocale } = values;
+            await initializeConfiguration({
+              defaultLocale,
+              user: {
+                firstName,
+                lastName,
+                emailAddress: email,
+                password,
+                username: email,
+              },
+            });
+            navigate('/', { relative: 'path' });
+          } catch (error) {
+            const message = error instanceof Error ? error.message : 'Unknown';
+            setErrorMessage(message);
+            setErrorOpen(true);
+            setSubmitting(false);
+          }
         }}
       >
         {({ errors, touched, isSubmitting, setFieldTouched }) => (
@@ -69,6 +79,12 @@ export const SetupPage: React.FC = () => {
             touched={touched}
             setFieldTouched={setFieldTouched}
           >
+            <FormError
+              open={errorOpen}
+              onClose={() => setErrorOpen(false)}
+              namespace="Auth"
+              error={`signIn.form.errors.${errorMessage}`}
+            />
             <Form style={{ width: '100%' }}>
               <Typography
                 component="h2"
