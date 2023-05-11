@@ -56,7 +56,7 @@ export const SignInPage: React.FC = () => {
             return navigate('/');
           } catch (error) {
             const message = error instanceof Error ? error.message : 'unknown';
-            setErrorMessage(message);
+            setErrorMessage(`signIn.form.errors.${message}`);
             setErrorOpen(true);
             setSubmitting(false);
           }
@@ -72,7 +72,7 @@ export const SignInPage: React.FC = () => {
               open={errorOpen}
               onClose={() => setErrorOpen(false)}
               namespace="Auth"
-              error={errorMessage && `signIn.form.errors.${errorMessage}`}
+              error={errorMessage}
             />
             <Form style={{ width: '100%' }}>
               <Box sx={{ ...flexColCenter, mt: 4, gap: 3 }}>

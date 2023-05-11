@@ -67,7 +67,7 @@ export const SetupPage: React.FC = () => {
             navigate('/', { relative: 'path' });
           } catch (error) {
             const message = error instanceof Error ? error.message : 'Unknown';
-            setErrorMessage(message);
+            setErrorMessage(`setup.form.errors.${message}`);
             setErrorOpen(true);
             setSubmitting(false);
           }
@@ -83,7 +83,7 @@ export const SetupPage: React.FC = () => {
               open={errorOpen}
               onClose={() => setErrorOpen(false)}
               namespace="Auth"
-              error={errorMessage && `setup.form.errors.${errorMessage}`}
+              error={errorMessage}
             />
             <Form style={{ width: '100%' }}>
               <Typography
