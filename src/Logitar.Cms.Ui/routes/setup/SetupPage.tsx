@@ -83,7 +83,7 @@ export const SetupPage: React.FC = () => {
               open={errorOpen}
               onClose={() => setErrorOpen(false)}
               namespace="Auth"
-              error={`signIn.form.errors.${errorMessage}`}
+              error={errorMessage && `setup.form.errors.${errorMessage}`}
             />
             <Form style={{ width: '100%' }}>
               <Typography

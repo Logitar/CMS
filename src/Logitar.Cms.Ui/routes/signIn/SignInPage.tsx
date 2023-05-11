@@ -72,7 +72,7 @@ export const SignInPage: React.FC = () => {
               open={errorOpen}
               onClose={() => setErrorOpen(false)}
               namespace="Auth"
-              error={`signIn.form.errors.${errorMessage}`}
+              error={errorMessage && `signIn.form.errors.${errorMessage}`}
             />
             <Form style={{ width: '100%' }}>
               <Box sx={{ ...flexColCenter, mt: 4, gap: 3 }}>
