@@ -59,6 +59,10 @@ export const signIn = async (payload: SignInPayload) => {
   if (result.status === 204) {
     return;
   }
+  
+  if (result.status === 400) {
+    throw new Error((result.data as ApiErrorResponse).code);
+  }
 
   throw new Error('Unknown');
 };
