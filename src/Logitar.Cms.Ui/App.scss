@@ -1,0 +1,13 @@
+:root {
+  --palette-primary-light: #42a5f5;
+  --palette-primary-main: #1976d2;
+}
+
+a {
+  color: var(--palette-primary-main);
+  transition: color 0.2s ease-in-out;
+
+  &:hover {
+    color: var(--palette-primary-light);
+  }
+}

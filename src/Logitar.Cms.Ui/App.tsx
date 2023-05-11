@@ -10,6 +10,8 @@ import { useToggle } from '~hooks';
 import { i18n } from '~locales';
 import { getDefaultTheme } from '~themes';
 
+import './App.scss';
+
 export const App: React.FC = () => {
   const [darkMode] = useToggle(useMediaQuery('(prefers-color-scheme: dark)'));
 

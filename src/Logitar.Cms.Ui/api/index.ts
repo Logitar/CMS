@@ -1,3 +1,7 @@
+export * from './account';
+export * from './configurations';
+export * from './resources';
+
 type RequestMethod = 'GET' | 'PATCH' | 'POST' | 'PUT' | 'DELETE';
 
 type RequestParams = { [key: string]: string | number | boolean | null | undefined };
@@ -9,11 +13,11 @@ type ResponseResult = {
   status: number;
 };
 
+export const apiBaseUrl =
+  import.meta.env.MODE === 'development' ? import.meta.env.VITE_API_BASE_URL : '/cms/api';
+
 const execute = async (method: RequestMethod, url: string, data?: RequestData) => {
-  const request: RequestInit = {
-    method,
-    credentials: 'include',
-  };
+  const request: RequestInit = { method, credentials: 'include' };
 
   if (data) {
     request.headers = {
@@ -32,7 +36,7 @@ const execute = async (method: RequestMethod, url: string, data?: RequestData) =
 
   if (dataType.includes('application/json')) {
     result.data = await response.json();
-  } else if (dataType.includes('text/html')) {
+  } else if (dataType.includes('text/')) {
     result.data = await response.text();
   } else {
     throw new Error(`Unsupported Content-Type: ${dataType}`);

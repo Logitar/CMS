@@ -5,7 +5,7 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "rootDir": ".",
-    "outDir": "../Logitar.Cms.Web/wwwroot/dist",
+    "outDir": "../Logitar.Cms.Web/wwwroot",
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -33,13 +33,15 @@
       "~locales/*": ["./locales/*"],
       "~models": ["./models"],
       "~models/*": ["./models/*"],
-      "~pages": ["./pages"],
-      "~pages/*": ["./pages/*"],
+      "~routes": ["./routes"],
+      "~routes/*": ["./routes/*"],
+      "~styles": ["./styles"],
+      "~styles/*": ["./styles/*"],
       "~themes": ["./themes"],
       "~themes/*": ["./themes/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "vite.config.ts"],
+  "exclude": ["node_modules", "vite.config.ts", "./index.html"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

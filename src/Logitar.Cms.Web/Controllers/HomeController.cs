@@ -6,6 +6,6 @@ namespace Logitar.Cms.Web.Controllers;
 [Route("cms")]
 public class HomeController : Controller
 {
-  [HttpGet]
+  [HttpGet("{**anything}")]
   public ActionResult Index() => View();
 }

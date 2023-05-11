@@ -7,6 +7,14 @@ import path from 'path';
 export default defineConfig({
   build: {
     outDir: '../Logitar.Cms.Web/wwwroot/dist',
+    emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        entryFileNames: `assets/[name].js`,
+        chunkFileNames: `assets/[name].js`,
+        assetFileNames: `assets/[name].[ext]`,
+      },
+    },
   },
   plugins: [react(), tsconfigpaths()],
   resolve: {
@@ -16,8 +24,12 @@ export default defineConfig({
       { find: '~hooks', replacement: path.resolve(__dirname, 'hooks') },
       { find: '~locales', replacement: path.resolve(__dirname, 'locales') },
       { find: '~models', replacement: path.resolve(__dirname, 'models') },
-      { find: '~pages', replacement: path.resolve(__dirname, 'pages') },
+      { find: '~routes', replacement: path.resolve(__dirname, 'routes') },
       { find: '~themes', replacement: path.resolve(__dirname, 'themes') },
+      { find: '~styles', replacement: path.resolve(__dirname, 'styles') },
     ],
+  },
+  server: {
+    port: 3000,
   },
 });
