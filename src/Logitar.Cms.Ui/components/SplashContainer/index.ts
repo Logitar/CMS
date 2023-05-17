@@ -1,1 +1,0 @@
-export { SplashContainer } from './SplashContainer';

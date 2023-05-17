@@ -1,0 +1,64 @@
+{
+  "forgotPassword": {
+    "title": "Mot de passe oublié",
+    "heading": "Mot de passe oublié ?",
+    "subheading": "Entrez votre adresse e-mail pour réinitialiser votre mot de passe.",
+    "form": {
+      "buttons": {
+        "submit": "Envoyer le lien",
+        "enterCode": "J'ai déjà un code",
+        "rememberPassword": "Je me souviens de mon mot de passe"
+      },
+      "labels": {
+        "email": "Adresse e-mail"
+      },
+      "validations": {
+        "required": "Ce champ est obligatoire.",
+        "email": "Veuillez saisir une adresse e-mail valide."
+      }
+    }
+  },
+  "resetPassword": {
+    "title": "Réinitialiser votre mot de passe",
+    "heading": "Réinitialiser votre mot de passe",
+    "subheading": "Entrez votre nouveau mot de passe pour continuer.",
+    "form": {
+      "buttons": {
+        "rememberPassword": "Je me souviens de mon mot de passe",
+        "submit": "Réinitialiser le mot de passe"
+      },
+      "labels": {
+        "password": "Nouveau mot de passe",
+        "confirmPassword": "Confirmer le mot de passe"
+      },
+      "validations": {
+        "required": "Ce champ est obligatoire.",
+        "confirmPassword": "Les mots de passe doivent correspondre."
+      }
+    }
+  },
+  "signIn": {
+    "title": "Connexion",
+    "heading": "Bienvenue !",
+    "subheading": "Connectez-vous à votre compte pour continuer.",
+    "form": {
+      "buttons": {
+        "forgotPassword": "Mot de passe oublié?",
+        "submit": "Connexion"
+      },
+      "errors": {
+        "InvalidCredentials": "L'adresse courriel ou le mot de passe est invalide.",
+        "Unknown": "Nous n'avons pas pu vous connecter. Veuillez réessayer plus tard."
+      },
+      "labels": {
+        "username": "Adresse e-mail",
+        "password": "Mot de passe",
+        "remember": "Se souvenir de moi",
+        "submit": "Connexion"
+      },
+      "validations": {
+        "required": "Ce champ est obligatoire."
+      }
+    }
+  }
+}

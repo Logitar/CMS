@@ -1,0 +1,1 @@
+export { SplashLayout } from './SplashLayout';

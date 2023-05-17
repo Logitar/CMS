@@ -1,0 +1,63 @@
+{
+  "forgotPassword": {
+    "title": "Forgot Password",
+    "heading": "Forgot your password?",
+    "subheading": "Enter your email address below and we'll send you a link to reset your password.",
+    "form": {
+      "buttons": {
+        "submit": "Send link",
+        "enterCode": "I have a reset code",
+        "rememberPassword": "I remember my password"
+      },
+      "labels": {
+        "email": "Email Address"
+      },
+      "validations": {
+        "required": "This field is required.",
+        "email": "Please enter a valid email address."
+      }
+    }
+  },
+  "resetPassword": {
+    "title": "Reset Password",
+    "heading": "Reset your password",
+    "subheading": "Enter your new password and submit.",
+    "form": {
+      "buttons": {
+        "rememberPassword": "I remember my password",
+        "submit": "Reset Password"
+      },
+      "labels": {
+        "password": "New Password",
+        "confirmPassword": "Confirm Password"
+      },
+      "validations": {
+        "required": "This field is required.",
+        "confirmPassword": "Passwords must match."
+      }
+    }
+  },
+  "signIn": {
+    "title": "Sign In",
+    "heading": "Welcome back!",
+    "subheading": "Sign in to your account to continue.",
+    "form": {
+      "buttons": {
+        "submit": "Sign In",
+        "forgotPassword": "Forgot your password?"
+      },
+      "errors": {
+        "InvalidCredentials": "Invalid email or password.",
+        "Unknown": "We could not sign you in. Please try again later."
+      },
+      "labels": {
+        "username": "Email Address",
+        "password": "Password",
+        "remember": "Remember me"
+      },
+      "validations": {
+        "required": "This field is required."
+      }
+    }
+  }
+}

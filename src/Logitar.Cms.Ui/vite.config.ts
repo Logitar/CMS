@@ -19,14 +19,8 @@ export default defineConfig({
   plugins: [react(), tsconfigpaths()],
   resolve: {
     alias: [
-      { find: '~api', replacement: path.resolve(__dirname, 'api') },
-      { find: '~components', replacement: path.resolve(__dirname, 'components') },
-      { find: '~hooks', replacement: path.resolve(__dirname, 'hooks') },
-      { find: '~locales', replacement: path.resolve(__dirname, 'locales') },
-      { find: '~models', replacement: path.resolve(__dirname, 'models') },
-      { find: '~routes', replacement: path.resolve(__dirname, 'routes') },
-      { find: '~themes', replacement: path.resolve(__dirname, 'themes') },
-      { find: '~styles', replacement: path.resolve(__dirname, 'styles') },
+      { find: '@/', replacement: path.resolve(__dirname, 'src') },
+      { find: '~/', replacement: path.resolve(__dirname, 'src/modules') },
     ],
   },
   server: {
