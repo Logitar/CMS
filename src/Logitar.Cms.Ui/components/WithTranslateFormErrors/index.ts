@@ -1,1 +1,0 @@
-export { WithTranslateFormErrors } from './WithTranslateFormErrors';
