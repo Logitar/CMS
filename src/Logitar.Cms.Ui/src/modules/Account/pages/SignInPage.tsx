@@ -74,7 +74,7 @@ export const SignInPage: React.FC = () => {
             <FormError
               open={errorOpen}
               onClose={() => setErrorOpen(false)}
-              namespace="Auth"
+              namespace="Account"
               error={errorMessage}
             />
             <Form style={{ width: '100%' }}>
