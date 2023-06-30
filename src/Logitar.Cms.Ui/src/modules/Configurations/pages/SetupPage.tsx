@@ -23,7 +23,7 @@ import { Locale } from '~/Resources';
 import { initializeConfiguration } from '../Configurations.api';
 
 export const SetupPage: React.FC = () => {
-  const { t, i18n } = useTranslation('Auth');
+  const { t, i18n } = useTranslation('Configurations');
 
   const locales = useLoaderData() as Locale[];
   const navigate = useNavigate();

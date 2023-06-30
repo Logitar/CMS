@@ -17,7 +17,7 @@ import { SplashLayout } from '~/Layout';
 import { signIn } from '../Account.api';
 
 export const SignInPage: React.FC = () => {
-  const { t } = useTranslation('Auth');
+  const { t } = useTranslation('Account');
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
