@@ -1,10 +1,11 @@
-﻿using MediatR;
+﻿using Logitar.Cms.Infrastructure.Commands;
+using MediatR;
 
 namespace Logitar.Cms;
 
 public class Program
 {
-  public static void Main(string[] args)
+  public static async Task Main(string[] args)
   {
     WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +18,7 @@ public class Program
 
     IServiceScope scope = application.Services.CreateScope();
     IPublisher publisher = scope.ServiceProvider.GetRequiredService<IPublisher>();
-    // TODO(fpion): initialize database
+    await publisher.Publish(new InitializeDatabaseCommand());
 
     // TODO(fpion): initialize application
 

@@ -1,4 +1,5 @@
-﻿using Logitar.Cms.Web.Filters;
+﻿using Logitar.Cms.Core;
+using Logitar.Cms.Web.Filters;
 
 namespace Logitar.Cms.Web;
 
@@ -9,6 +10,6 @@ public static class DependencyInjectionExtensions
     services.AddControllersWithViews(options => options.Filters.Add<ExceptionHandling>())
       .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
-    return services;
+    return services.AddLogitarCmsCore();
   }
 }

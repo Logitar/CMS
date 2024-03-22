@@ -1,4 +1,6 @@
-﻿namespace Logitar.Cms.Core.Archetypes;
+﻿using Logitar.Cms.Core.Archetypes;
+
+namespace Logitar.Cms.Infrastructure.Converters;
 
 public class ArchetypeIdConverter : JsonConverter<ArchetypeId>
 {

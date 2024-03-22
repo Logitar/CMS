@@ -12,6 +12,8 @@ public class ArchetypeAggregate : AggregateRoot
 
   public new ArchetypeId Id => new(base.Id);
 
+  public bool IsInvariant { get; private set; }
+
   private IdentifierUnit? _uniqueName = null;
   public IdentifierUnit UniqueName => _uniqueName ?? throw new InvalidOperationException($"The {nameof(UniqueName)} has not been initialized yet.");
   private DisplayNameUnit? _displayName = null;
@@ -48,10 +50,13 @@ public class ArchetypeAggregate : AggregateRoot
   public ArchetypeAggregate(IdentifierUnit identifier, ActorId actorId = default, ArchetypeId? id = null)
     : base((id ?? ArchetypeId.NewId()).AggregateId)
   {
-    Raise(new ArchetypeCreatedEvent(identifier, actorId));
+    bool isInvariant = true;
+    Raise(new ArchetypeCreatedEvent(isInvariant, identifier, actorId));
   }
   protected virtual void Apply(ArchetypeCreatedEvent @event)
   {
+    IsInvariant = @event.IsInvariant;
+
     _uniqueName = @event.UniqueName;
   }
 

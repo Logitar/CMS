@@ -6,10 +6,13 @@ namespace Logitar.Cms.Core.Archetypes.Events;
 
 public record ArchetypeCreatedEvent : DomainEvent, INotification
 {
+  public bool IsInvariant { get; }
+
   public IdentifierUnit UniqueName { get; }
 
-  public ArchetypeCreatedEvent(IdentifierUnit uniqueName, ActorId actorId)
+  public ArchetypeCreatedEvent(bool isInvariant, IdentifierUnit uniqueName, ActorId actorId)
   {
+    IsInvariant = isInvariant;
     UniqueName = uniqueName;
     ActorId = actorId;
   }

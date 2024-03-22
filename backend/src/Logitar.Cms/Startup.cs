@@ -1,8 +1,13 @@
 ﻿using Logitar.Cms.Core;
+using Logitar.Cms.EntityFrameworkCore;
+using Logitar.Cms.EntityFrameworkCore.SqlServer;
 using Logitar.Cms.Extensions;
+using Logitar.Cms.Infrastructure;
 using Logitar.Cms.Middlewares;
 using Logitar.Cms.Settings;
 using Logitar.Cms.Web;
+using Logitar.EventSourcing.EntityFrameworkCore.Relational;
+using Logitar.Identity.EntityFrameworkCore.Relational;
 
 namespace Logitar.Cms;
 
@@ -41,7 +46,18 @@ internal class Startup : StartupBase
     services.AddApplicationInsightsTelemetry();
     IHealthChecksBuilder healthChecks = services.AddHealthChecks();
 
-    // TODO(fpion): Persistence
+    DatabaseProvider databaseProvider = _configuration.GetValue<DatabaseProvider?>("DatabaseProvider") ?? DatabaseProvider.EntityFrameworkCoreSqlServer;
+    switch (databaseProvider)
+    {
+      case DatabaseProvider.EntityFrameworkCoreSqlServer:
+        services.AddLogitarCmsWithEntityFrameworkCoreSqlServer(_configuration);
+        healthChecks.AddDbContextCheck<EventContext>();
+        healthChecks.AddDbContextCheck<IdentityContext>();
+        healthChecks.AddDbContextCheck<CmsContext>();
+        break;
+      default:
+        throw new DatabaseProviderNotSupportedException(databaseProvider);
+    }
 
     // TODO(fpion): GraphQL
     services.AddLogitarCmsWeb();

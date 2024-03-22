@@ -1,4 +1,6 @@
-﻿namespace Logitar.Cms.Core.Shared;
+﻿using Logitar.Cms.Core.Shared;
+
+namespace Logitar.Cms.Infrastructure.Converters;
 
 public class IdentifierConverter : JsonConverter<IdentifierUnit>
 {
