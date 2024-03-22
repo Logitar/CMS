@@ -65,6 +65,7 @@ public class ArchetypeAggregate : AggregateRoot
     if (_updatedEvent.HasChanges)
     {
       _updatedEvent.ActorId = actorId;
+      _updatedEvent.OccurredOn = DateTime.Now;
       Raise(_updatedEvent);
       _updatedEvent = new();
     }

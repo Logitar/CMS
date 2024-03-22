@@ -25,6 +25,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.EntityFramework
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.Infrastructure", "src\Logitar.Cms.Infrastructure\Logitar.Cms.Infrastructure.csproj", "{2AB38745-880E-4925-8D5F-85F1528C7265}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D9F43323-D279-49E9-B0A7-F1511AFA5C8B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.IntegrationTests", "tests\Logitar.Cms.IntegrationTests\Logitar.Cms.IntegrationTests.csproj", "{70DC0BA6-886B-4770-A620-88C1911F1B33}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,9 +63,16 @@ Global
 		{2AB38745-880E-4925-8D5F-85F1528C7265}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2AB38745-880E-4925-8D5F-85F1528C7265}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2AB38745-880E-4925-8D5F-85F1528C7265}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70DC0BA6-886B-4770-A620-88C1911F1B33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70DC0BA6-886B-4770-A620-88C1911F1B33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70DC0BA6-886B-4770-A620-88C1911F1B33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70DC0BA6-886B-4770-A620-88C1911F1B33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{70DC0BA6-886B-4770-A620-88C1911F1B33} = {D9F43323-D279-49E9-B0A7-F1511AFA5C8B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FCB1956F-2ABD-4A19-BE95-DE49803221CB}
