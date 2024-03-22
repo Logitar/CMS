@@ -19,10 +19,10 @@ internal class SaveArchetypeCommandHandler : IRequestHandler<SaveArchetypeComman
 
     if (archetype.Changes.Any(change => change is ArchetypeCreatedEvent))
     {
-      ArchetypeAggregate? other = await _archetypeRepository.LoadAsync(archetype.Identifier, cancellationToken);
+      ArchetypeAggregate? other = await _archetypeRepository.LoadAsync(archetype.UniqueName, cancellationToken);
       if (other != null && !other.Equals(archetype))
       {
-        throw new IdentifierAlreadyUsedException<ArchetypeAggregate>(archetype.Identifier, nameof(archetype.Identifier));
+        throw new UniqueNameAlreadyUsedException<ArchetypeAggregate>(archetype.UniqueName, nameof(archetype.UniqueName));
       }
     }
 

@@ -3,7 +3,7 @@
 namespace Logitar.Cms.Web.Controllers;
 
 [ApiExplorerSettings(IgnoreApi = true)]
-[Route("cms)]
+[Route("cms")]
 public class AppController : Controller
 {
   [HttpGet("{**anything}")]

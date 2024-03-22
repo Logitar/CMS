@@ -6,11 +6,11 @@ namespace Logitar.Cms.Core.Archetypes.Events;
 
 public record ArchetypeCreatedEvent : DomainEvent, INotification
 {
-  public IdentifierUnit Identifier { get; }
+  public IdentifierUnit UniqueName { get; }
 
-  public ArchetypeCreatedEvent(IdentifierUnit identifier, ActorId actorId)
+  public ArchetypeCreatedEvent(IdentifierUnit uniqueName, ActorId actorId)
   {
-    Identifier = identifier;
+    UniqueName = uniqueName;
     ActorId = actorId;
   }
 }

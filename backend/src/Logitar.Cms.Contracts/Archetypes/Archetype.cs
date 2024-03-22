@@ -2,7 +2,7 @@
 
 public class Archetype : Aggregate
 {
-  public string Identifier { get; set; }
+  public string UniqueName { get; set; }
   public string? DisplayName { get; set; }
   public string? Description { get; set; }
 
@@ -10,10 +10,10 @@ public class Archetype : Aggregate
   {
   }
 
-  public Archetype(string identifier)
+  public Archetype(string uniqueName)
   {
-    Identifier = identifier;
+    UniqueName = uniqueName;
   }
 
-  public override string ToString() => $"{DisplayName ?? Identifier} | {base.ToString()}";
+  public override string ToString() => $"{DisplayName ?? UniqueName} | {base.ToString()}";
 }

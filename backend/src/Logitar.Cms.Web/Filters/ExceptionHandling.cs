@@ -20,12 +20,12 @@ public class ExceptionHandling : ExceptionFilterAttribute
       context.Result = handler(context);
       context.ExceptionHandled = true;
     }
-    else if (context.Exception is IdentifierAlreadyUsedException identifierAlreadyUsed)
+    else if (context.Exception is UniqueNameAlreadyUsedException uniqueNameAlreadyUsed)
     {
-      context.Result = new ConflictObjectResult(new ValidationFailure(identifierAlreadyUsed.GetErrorCode(), IdentifierAlreadyUsedException.ErrorMessage)
+      context.Result = new ConflictObjectResult(new ValidationFailure(uniqueNameAlreadyUsed.GetErrorCode(), UniqueNameAlreadyUsedException.ErrorMessage)
       {
-        PropertyName = identifierAlreadyUsed.PropertyName,
-        AttemptedValue = identifierAlreadyUsed.Identifier
+        PropertyName = uniqueNameAlreadyUsed.PropertyName,
+        AttemptedValue = uniqueNameAlreadyUsed.UniqueName
       });
       context.ExceptionHandled = true;
     }

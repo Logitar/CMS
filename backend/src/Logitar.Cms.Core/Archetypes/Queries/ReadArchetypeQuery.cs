@@ -3,4 +3,4 @@ using MediatR;
 
 namespace Logitar.Cms.Core.Archetypes.Queries;
 
-public record ReadArchetypeQuery(Guid? Id, string? Identifier) : IRequest<Archetype?>;
+public record ReadArchetypeQuery(Guid? Id, string? UniqueName) : IRequest<Archetype?>;

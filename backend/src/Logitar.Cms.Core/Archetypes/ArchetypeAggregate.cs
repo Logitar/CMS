@@ -12,8 +12,8 @@ public class ArchetypeAggregate : AggregateRoot
 
   public new ArchetypeId Id => new(base.Id);
 
-  private IdentifierUnit? _identifier = null;
-  public IdentifierUnit Identifier => _identifier ?? throw new InvalidOperationException($"The {nameof(Identifier)} has not been initialized yet.");
+  private IdentifierUnit? _uniqueName = null;
+  public IdentifierUnit UniqueName => _uniqueName ?? throw new InvalidOperationException($"The {nameof(UniqueName)} has not been initialized yet.");
   private DisplayNameUnit? _displayName = null;
   public DisplayNameUnit? DisplayName
   {
@@ -52,7 +52,7 @@ public class ArchetypeAggregate : AggregateRoot
   }
   protected virtual void Apply(ArchetypeCreatedEvent @event)
   {
-    _identifier = @event.Identifier;
+    _uniqueName = @event.UniqueName;
   }
 
   public void Update(ActorId actorId = default)
@@ -76,5 +76,5 @@ public class ArchetypeAggregate : AggregateRoot
     }
   }
 
-  public override string ToString() => $"{DisplayName?.Value ?? Identifier.Value} | {base.ToString()}";
+  public override string ToString() => $"{DisplayName?.Value ?? UniqueName.Value} | {base.ToString()}";
 }

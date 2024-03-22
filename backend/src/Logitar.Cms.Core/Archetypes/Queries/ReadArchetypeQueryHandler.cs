@@ -26,9 +26,9 @@ internal class ReadArchetypeQueryHandler : IRequestHandler<ReadArchetypeQuery, A
       }
     }
 
-    if (!string.IsNullOrWhiteSpace(query.Identifier))
+    if (!string.IsNullOrWhiteSpace(query.UniqueName))
     {
-      Archetype? archetype = await _archetypeQuerier.ReadAsync(query.Identifier, cancellationToken);
+      Archetype? archetype = await _archetypeQuerier.ReadAsync(query.UniqueName, cancellationToken);
       if (archetype != null)
       {
         archetypes[archetype.Id] = archetype;

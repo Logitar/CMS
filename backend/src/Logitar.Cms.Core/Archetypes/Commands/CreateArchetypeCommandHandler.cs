@@ -23,7 +23,7 @@ internal class CreateArchetypeCommandHandler : IRequestHandler<CreateArchetypeCo
     CreateArchetypePayload payload = command.Payload;
     new CreateArchetypeValidator().ValidateAndThrow(payload);
 
-    ArchetypeAggregate archetype = new(new IdentifierUnit(payload.Identifier), command.ActorId)
+    ArchetypeAggregate archetype = new(new IdentifierUnit(payload.UniqueName), command.ActorId)
     {
       DisplayName = DisplayNameUnit.TryCreate(payload.DisplayName),
       Description = DescriptionUnit.TryCreate(payload.Description)
