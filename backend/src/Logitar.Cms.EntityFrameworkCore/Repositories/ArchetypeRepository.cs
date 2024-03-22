@@ -22,13 +22,15 @@ internal class ArchetypeRepository : EventSourcing.EntityFrameworkCore.Relationa
 
   public async Task<ArchetypeAggregate?> LoadAsync(IdentifierUnit uniqueName, CancellationToken cancellationToken)
   {
-    IQueryBuilder query = _sqlHelper.QueryFrom(EventDb.Events.Table).SelectAll(EventDb.Events.Table)
+    IQuery query = _sqlHelper.QueryFrom(EventDb.Events.Table).SelectAll(EventDb.Events.Table)
       .Join(CmsDb.Archetypes.AggregateId, EventDb.Events.AggregateId,
         new OperatorCondition(EventDb.Events.AggregateType, Operators.IsEqualTo(AggregateType))
       )
-      .Where(CmsDb.Archetypes.UniqueNameNormalized, Operators.IsEqualTo(uniqueName.Value.ToUpper()));
+      .Where(CmsDb.Archetypes.UniqueNameNormalized, Operators.IsEqualTo(uniqueName.Value.ToUpper()))
+      .Build();
 
-    EventEntity[] events = await EventContext.Events.AsNoTracking()
+    EventEntity[] events = await EventContext.Events.FromQuery(query)
+      .AsNoTracking()
       .OrderBy(e => e.Version)
       .ToArrayAsync(cancellationToken);
 
