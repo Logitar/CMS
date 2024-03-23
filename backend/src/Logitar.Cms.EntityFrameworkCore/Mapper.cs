@@ -1,5 +1,6 @@
 ﻿using Logitar.Cms.Contracts;
 using Logitar.Cms.Contracts.Actors;
+using Logitar.Cms.Contracts.Contents;
 using Logitar.Cms.Contracts.ContentTypes;
 using Logitar.Cms.EntityFrameworkCore.Entities;
 using Logitar.EventSourcing;
@@ -33,6 +34,49 @@ internal class Mapper
     EmailAddress = source.EmailAddress,
     PictureUrl = source.PictureUrl
   };
+
+  public ContentItem ToContentItem(ContentItemEntity source, ContentType? contentType = null)
+  {
+    if (contentType == null)
+    {
+      if (source.ContentType == null)
+      {
+        throw new ArgumentException($"The {nameof(source.ContentType)} is required.", nameof(source));
+      }
+      contentType = ToContentType(source.ContentType);
+    }
+
+    ContentItem destination = new(contentType);
+
+    foreach (ContentLocaleEntity locale in source.ContentLocales)
+    {
+      destination.Locales.Add(ToContentLocale(locale, destination));
+    }
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public ContentLocale ToContentLocale(ContentLocaleEntity source, ContentItem? contentItem = null)
+  {
+    if (contentItem == null)
+    {
+      if (source.ContentItem == null)
+      {
+        throw new ArgumentException($"The {nameof(source.ContentItem)} is required.", nameof(source));
+      }
+      contentItem = ToContentItem(source.ContentItem);
+    }
+
+    ContentLocale destination = new(contentItem, source.UniqueName)
+    {
+      DisplayName = source.DisplayName,
+      Description = source.Description
+    };
+
+    return destination;
+  }
 
   public ContentType ToContentType(ContentTypeEntity source)
   {

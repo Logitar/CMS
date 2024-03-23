@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Logitar.Cms.Contracts.Errors;
+using Logitar.Cms.Core;
 using Logitar.Cms.Core.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -18,6 +19,15 @@ public class ExceptionHandling : ExceptionFilterAttribute
     if (_handlers.TryGetValue(context.Exception.GetType(), out Func<ExceptionContext, ActionResult>? handler))
     {
       context.Result = handler(context);
+      context.ExceptionHandled = true;
+    }
+    else if (context.Exception is AggregateNotFoundException aggregateNotFound)
+    {
+      context.Result = new NotFoundObjectResult(new ValidationFailure(aggregateNotFound.GetErrorCode(), AggregateNotFoundException.ErrorMessage)
+      {
+        PropertyName = aggregateNotFound.PropertyName,
+        AttemptedValue = aggregateNotFound.Id
+      });
       context.ExceptionHandled = true;
     }
     else if (context.Exception is UniqueNameAlreadyUsedException uniqueNameAlreadyUsed)
