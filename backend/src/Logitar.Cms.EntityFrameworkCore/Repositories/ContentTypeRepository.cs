@@ -1,6 +1,7 @@
 ﻿using Logitar.Cms.Core.ContentTypes;
 using Logitar.Cms.Core.Shared;
 using Logitar.Data;
+using Logitar.EventSourcing;
 using Logitar.EventSourcing.EntityFrameworkCore.Relational;
 using Logitar.EventSourcing.Infrastructure;
 using Logitar.Identity.EntityFrameworkCore.Relational;
@@ -18,6 +19,11 @@ internal class ContentTypeRepository : EventSourcing.EntityFrameworkCore.Relatio
     : base(eventBus, eventContext, eventSerializer)
   {
     _sqlHelper = sqlHelper;
+  }
+
+  public async Task<ContentTypeAggregate?> LoadAsync(Guid id, CancellationToken cancellationToken)
+  {
+    return await LoadAsync<ContentTypeAggregate>(new AggregateId(id), cancellationToken);
   }
 
   public async Task<ContentTypeAggregate?> LoadAsync(IdentifierUnit uniqueName, CancellationToken cancellationToken)
