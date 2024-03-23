@@ -9,7 +9,7 @@ public class CmsContext : DbContext
   {
   }
 
-  internal DbSet<ArchetypeEntity> Archetypes { get; private set; }
+  internal DbSet<ContentTypeEntity> ContentTypes { get; private set; }
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {

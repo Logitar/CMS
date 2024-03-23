@@ -1,4 +1,4 @@
-﻿using Logitar.Cms.Core.Archetypes;
+﻿using Logitar.Cms.Core.ContentTypes;
 using Logitar.Cms.EntityFrameworkCore.Actors;
 using Logitar.Cms.EntityFrameworkCore.Queriers;
 using Logitar.Cms.EntityFrameworkCore.Repositories;
@@ -23,11 +23,11 @@ public static class DependencyInjectionExtensions
 
   private static IServiceCollection AddQueriers(this IServiceCollection services)
   {
-    return services.AddTransient<IArchetypeQuerier, ArchetypeQuerier>();
+    return services.AddTransient<IContentTypeQuerier, ContentTypeQuerier>();
   }
 
   private static IServiceCollection AddRepositories(this IServiceCollection services)
   {
-    return services.AddTransient<IArchetypeRepository, ArchetypeRepository>();
+    return services.AddTransient<IContentTypeRepository, ContentTypeRepository>();
   }
 }

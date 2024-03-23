@@ -32,7 +32,7 @@ public static class DependencyInjectionExtensions
     List<JsonConverter> converters = new(capacity);
     converters.AddRange(identityConverters);
 
-    converters.Add(new ArchetypeIdConverter());
+    converters.Add(new ContentTypeIdConverter());
     converters.Add(new IdentifierConverter());
 
     return converters.AsReadOnly();

@@ -10,7 +10,6 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Text;
 
 namespace Logitar.Cms;
 
@@ -58,7 +57,7 @@ public abstract class IntegrationTests : IAsyncLifetime
     await publisher.Publish(new InitializeDatabaseCommand());
 
     StringBuilder statement = new();
-    statement.AppendLine(SqlServerDeleteBuilder.From(CmsDb.Archetypes.Table).Build().Text);
+    statement.AppendLine(SqlServerDeleteBuilder.From(CmsDb.ContentTypes.Table).Build().Text);
     statement.AppendLine(SqlServerDeleteBuilder.From(EventDb.Events.Table).Build().Text);
     await CmsContext.Database.ExecuteSqlRawAsync(statement.ToString());
   }

@@ -1,6 +1,6 @@
 ﻿using Logitar.Cms.Contracts;
 using Logitar.Cms.Contracts.Actors;
-using Logitar.Cms.Contracts.Archetypes;
+using Logitar.Cms.Contracts.ContentTypes;
 using Logitar.Cms.EntityFrameworkCore.Entities;
 using Logitar.EventSourcing;
 using Logitar.Identity.EntityFrameworkCore.Relational.Entities;
@@ -34,9 +34,9 @@ internal class Mapper
     PictureUrl = source.PictureUrl
   };
 
-  public Archetype ToArchetype(ArchetypeEntity source)
+  public ContentType ToContentType(ContentTypeEntity source)
   {
-    Archetype destination = new(source.UniqueName)
+    ContentType destination = new(source.UniqueName)
     {
       IsInvariant = source.IsInvariant,
       DisplayName = source.DisplayName,
