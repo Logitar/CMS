@@ -1,0 +1,69 @@
+﻿using FluentValidation.Results;
+using Logitar.Cms.Contracts.Actors;
+using Logitar.Cms.Contracts.ContentTypes;
+using Logitar.Cms.Core.Shared;
+using Logitar.EventSourcing;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Logitar.Cms.Core.ContentTypes.Commands;
+
+[Trait(Traits.Category, Categories.Integration)]
+public class CreateContentTypeCommandTests : IntegrationTests
+{
+  private readonly IContentTypeRepository _contentTypeRepository;
+
+  public CreateContentTypeCommandTests() : base()
+  {
+    _contentTypeRepository = ServiceProvider.GetRequiredService<IContentTypeRepository>();
+  }
+
+  [Fact(DisplayName = "It should create a new content type.")]
+  public async Task It_should_create_a_new_content_type()
+  {
+    CreateContentTypePayload payload = new("Product")
+    {
+      DisplayName = "  Products  ",
+      Description = "    "
+    };
+    CreateContentTypeCommand command = new(payload);
+    ContentType contentType = await Pipeline.ExecuteAsync(command);
+
+    Assert.NotEqual(Guid.Empty, contentType.Id);
+    Assert.Equal(2, contentType.Version);
+    Assert.Equal(Actor.System, contentType.CreatedBy);
+    Assert.Equal(Actor.System, contentType.UpdatedBy);
+    Assert.True(contentType.CreatedOn < contentType.UpdatedOn);
+
+    Assert.True(contentType.IsInvariant);
+    Assert.Equal(payload.UniqueName.Trim(), contentType.UniqueName);
+    Assert.Equal(payload.DisplayName?.CleanTrim(), contentType.DisplayName);
+    Assert.Equal(payload.Description?.CleanTrim(), contentType.Description);
+
+    Assert.NotNull(await CmsContext.ContentTypes.AsNoTracking().SingleOrDefaultAsync(x => x.AggregateId == new AggregateId(contentType.Id).Value));
+  }
+
+  [Fact(DisplayName = "It should throw UniqueNameAlreadyUsedException when the unique name is already used.")]
+  public async Task It_should_throw_UniqueNameAlreadyUsedException_when_the_unique_name_is_already_used()
+  {
+    ContentTypeAggregate contentType = new(new IdentifierUnit("Product"));
+    await _contentTypeRepository.SaveAsync(contentType);
+
+    CreateContentTypePayload payload = new(contentType.UniqueName.Value);
+    CreateContentTypeCommand command = new(payload);
+    var exception = await Assert.ThrowsAsync<UniqueNameAlreadyUsedException<ContentTypeAggregate>>(async () => await Pipeline.ExecuteAsync(command));
+    Assert.Equal(payload.UniqueName, exception.UniqueName);
+    Assert.Equal(nameof(payload.UniqueName), exception.PropertyName);
+  }
+
+  [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
+  public async Task It_should_throw_ValidationException_when_the_payload_is_not_valid()
+  {
+    CreateContentTypePayload payload = new("0_Products");
+    CreateContentTypeCommand command = new(payload);
+    var exception = await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await Pipeline.ExecuteAsync(command));
+    ValidationFailure error = Assert.Single(exception.Errors);
+    Assert.Equal(nameof(Identity.Domain.Shared.IdentifierValidator), error.ErrorCode);
+    Assert.Equal(nameof(payload.UniqueName), error.PropertyName);
+  }
+}

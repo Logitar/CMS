@@ -1,3 +1,26 @@
 version: '3.8'
 name: cms
-#services:
+services:
+  cms_mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: Logitar.Cms_mssql
+    environment:
+      ACCEPT_EULA: 'Y'
+      SA_PASSWORD: hMe5CJmF2SVLDtvN
+    ports:
+      - 1440:1433
+
+  cms_backend:
+    build:
+      context: ./backend
+      dockerfile: /src/Logitar.Cms/Dockerfile
+    image: cms_backend
+    container_name: Logitar.Cms_backend
+    depends_on:
+      - cms_mssql
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_Environment: Development
+      SQLCONNSTR_Cms: "Server=cms_mssql;Database=Cms;User Id=SA;Password=hMe5CJmF2SVLDtvN;Persist Security Info=False;Encrypt=False;"
+    ports:
+      - 8090:8080
