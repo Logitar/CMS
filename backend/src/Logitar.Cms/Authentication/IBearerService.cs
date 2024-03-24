@@ -5,5 +5,6 @@ namespace Logitar.Cms.Authentication;
 
 public interface IBearerService
 {
-  Task<TokenResponse> GetTokenResponseAsync(Session session, CancellationToken cancellationToken);
+  Task<TokenResponse> GetTokenResponseAsync(Session session, CancellationToken cancellationToken = default);
+  Task<ClaimsPrincipal> ValidateAsync(string accessToken, CancellationToken cancellationToken = default);
 }

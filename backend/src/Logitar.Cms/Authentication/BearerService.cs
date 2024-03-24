@@ -8,7 +8,6 @@ using Logitar.Cms.Settings;
 using Logitar.Cms.Web.Extensions;
 using Logitar.Identity.Domain.Tokens;
 using Logitar.Security.Claims;
-using System.Security.Claims;
 
 namespace Logitar.Cms.Authentication;
 
@@ -92,5 +91,20 @@ internal class BearerService : IBearerService
       RefreshToken = session.RefreshToken
     };
     return response;
+  }
+
+  public async Task<ClaimsPrincipal> ValidateAsync(string accessToken, CancellationToken cancellationToken)
+  {
+    Configuration configuration = _cacheService.Configuration ?? throw new InvalidOperationException("The configuration was not found in the cache.");
+    ValidateTokenParameters parameters = new(accessToken, configuration.Secret);
+    parameters.ValidTypes.Add(_settings.TokenType);
+    if (_httpContextAccessor.HttpContext != null)
+    {
+      string baseUrl = _httpContextAccessor.HttpContext.GetBaseUri().ToString();
+      parameters.ValidAudiences.Add(baseUrl);
+      parameters.ValidIssuers.Add(baseUrl);
+    }
+    ValidatedToken validatedToken = await _tokenManager.ValidateAsync(parameters, cancellationToken);
+    return validatedToken.ClaimsPrincipal;
   }
 }

@@ -1,4 +1,6 @@
 ﻿using Logitar.Cms.Authentication;
+using Logitar.Cms.Authorization;
+using Logitar.Cms.Constants;
 using Logitar.Cms.Core;
 using Logitar.Cms.EntityFrameworkCore;
 using Logitar.Cms.EntityFrameworkCore.SqlServer;
@@ -10,17 +12,21 @@ using Logitar.Cms.Web;
 using Logitar.Cms.Web.Settings;
 using Logitar.EventSourcing.EntityFrameworkCore.Relational;
 using Logitar.Identity.EntityFrameworkCore.Relational;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Logitar.Cms;
 
 internal class Startup : StartupBase
 {
   private readonly IConfiguration _configuration;
+  private readonly string[] _authenticationSchemes;
   private readonly bool _enableOpenApi;
 
   public Startup(IConfiguration configuration)
   {
     _configuration = configuration;
+    _authenticationSchemes = Schemes.GetEnabled(configuration);
     _enableOpenApi = configuration.GetValue<bool>("EnableOpenApi");
   }
 
@@ -32,9 +38,22 @@ internal class Startup : StartupBase
     services.AddSingleton(corsSettings);
     services.AddCors(corsSettings);
 
-    // TODO(fpion): Authentication
+    AuthenticationBuilder authenticationBuilder = services.AddAuthentication()
+      .AddScheme<BearerAuthenticationOptions, BearerAuthenticationHandler>(Schemes.Bearer, options => { })
+      .AddScheme<SessionAuthenticationOptions, SessionAuthenticationHandler>(Schemes.Session, options => { });
+    if (_authenticationSchemes.Contains(Schemes.Basic))
+    {
+      authenticationBuilder.AddScheme<BasicAuthenticationOptions, BasicAuthenticationHandler>(Schemes.Basic, options => { });
+    }
 
-    // TODO(fpion): Authorization
+    AuthorizationPolicy portalActorPolicy = new AuthorizationPolicyBuilder(_authenticationSchemes)
+      .RequireAuthenticatedUser()
+      .AddRequirements(new UserAuthorizationRequirement())
+      .Build();
+    services.AddAuthorizationBuilder()
+      .SetDefaultPolicy(portalActorPolicy)
+      .AddPolicy(Policies.User, portalActorPolicy);
+    services.AddSingleton<IAuthorizationHandler, UserAuthorizationHandler>();
 
     BearerSettings bearerSettings = _configuration.GetSection("Bearer").Get<BearerSettings>() ?? new();
     services.AddSingleton(bearerSettings);
@@ -91,8 +110,8 @@ internal class Startup : StartupBase
     builder.UseSession();
     builder.UseMiddleware<RenewSession>();
     builder.UseMiddleware<RedirectNotFound>();
-    // TODO(fpion): Authentication
-    // TODO(fpion): Authorization
+    builder.UseAuthentication();
+    builder.UseAuthorization();
 
     // TODO(fpion): GraphQL
 
