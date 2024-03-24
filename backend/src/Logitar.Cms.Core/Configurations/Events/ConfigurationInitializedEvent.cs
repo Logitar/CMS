@@ -6,7 +6,7 @@ namespace Logitar.Cms.Core.Configurations.Events;
 
 public record ConfigurationInitializedEvent : DomainEvent, INotification
 {
-  public LocaleUnit? DefaultLocale { get; }
+  public LocaleUnit DefaultLocale { get; }
   public JwtSecretUnit Secret { get; }
 
   public ReadOnlyUniqueNameSettings UniqueNameSettings { get; }
@@ -15,7 +15,7 @@ public record ConfigurationInitializedEvent : DomainEvent, INotification
 
   public ReadOnlyLoggingSettings LoggingSettings { get; }
 
-  public ConfigurationInitializedEvent(LocaleUnit? defaultLocale, JwtSecretUnit secret, ReadOnlyUniqueNameSettings uniqueNameSettings,
+  public ConfigurationInitializedEvent(LocaleUnit defaultLocale, JwtSecretUnit secret, ReadOnlyUniqueNameSettings uniqueNameSettings,
     ReadOnlyPasswordSettings passwordSettings, bool requireUniqueEmail, ReadOnlyLoggingSettings loggingSettings, ActorId actorId)
   {
     DefaultLocale = defaultLocale;

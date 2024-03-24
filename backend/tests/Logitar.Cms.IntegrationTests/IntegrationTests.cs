@@ -93,7 +93,7 @@ public abstract class IntegrationTests : IAsyncLifetime
     statement.AppendLine(SqlServerDeleteBuilder.From(EventDb.Events.Table).Build().Text);
     await CmsContext.Database.ExecuteSqlRawAsync(statement.ToString());
 
-    await publisher.Publish(new InitializeConfigurationCommand(UsernameString, PasswordString));
+    await publisher.Publish(new InitializeConfigurationCommand(Faker.Locale, UsernameString, PasswordString));
 
     IUserRepository userRepository = ServiceProvider.GetRequiredService<IUserRepository>();
     UserAggregate userAggregate = Assert.Single(await userRepository.LoadAsync());

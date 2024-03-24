@@ -3,7 +3,9 @@ using Logitar.Cms.Contracts.Actors;
 using Logitar.Cms.Contracts.Configurations;
 using Logitar.Cms.Contracts.Contents;
 using Logitar.Cms.Contracts.ContentTypes;
+using Logitar.Cms.Contracts.Localization;
 using Logitar.Cms.Contracts.Roles;
+using Logitar.Cms.Contracts.Sessions;
 using Logitar.Cms.Contracts.Users;
 using Logitar.Cms.Core.Configurations;
 using Logitar.Cms.EntityFrameworkCore.Entities;
@@ -115,6 +117,18 @@ internal class Mapper
     return destination;
   }
 
+  public Language ToLanguage(LanguageEntity source)
+  {
+    Language destination = new(new Locale(source.Locale))
+    {
+      IsDefault = source.IsDefault
+    };
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
   public Role ToRole(RoleEntity source)
   {
     Role destination = new(source.UniqueName)
@@ -122,6 +136,42 @@ internal class Mapper
       DisplayName = source.DisplayName,
       Description = source.Description
     };
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public Session ToSession(SessionEntity source, User? user = null)
+  {
+    if (user == null)
+    {
+      if (source.User == null)
+      {
+        throw new ArgumentException($"The {nameof(source.User)} is required.", nameof(source));
+      }
+      user = ToUser(source.User);
+    }
+
+    Session destination = new(user)
+    {
+      IsPersistent = source.IsPersistent,
+      IsActive = source.IsActive,
+      SignedOutBy = TryFindActor(source.SignedOutBy),
+      SignedOutOn = AsUniversalTime(source.SignedOutOn)
+    };
+    foreach (KeyValuePair<string, string> customAttribute in source.CustomAttributes)
+    {
+      switch (customAttribute.Key)
+      {
+        case "AdditionalInformation":
+          destination.AdditionalInformation = customAttribute.Value;
+          break;
+        case "IpAddress":
+          destination.IpAddress = customAttribute.Value;
+          break;
+      }
+    }
 
     MapAggregate(source, destination);
 
