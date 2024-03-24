@@ -102,7 +102,7 @@ internal class Startup : StartupBase
       builder.UseOpenApi();
     }
 
-    // TODO(fpion): GraphQL UIs
+    // TODO(fpion): GraphQL
 
     builder.UseHttpsRedirection();
     builder.UseCors();

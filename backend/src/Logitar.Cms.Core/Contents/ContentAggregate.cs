@@ -35,5 +35,5 @@ public class ContentAggregate : AggregateRoot
     _locales.Add(new ContentLocaleUnit(@event.UniqueName));
   }
 
-  public override string ToString() => base.ToString(); // TODO(fpion): implement
+  public override string ToString() => base.ToString(); // TODO(fpion): invariant
 }

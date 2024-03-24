@@ -7,5 +7,5 @@ public class ReadSessionQueryTests : IntegrationTests
   {
   }
 
-  // TODO(fpion): implement
+  // TODO(fpion): integration tests
 }

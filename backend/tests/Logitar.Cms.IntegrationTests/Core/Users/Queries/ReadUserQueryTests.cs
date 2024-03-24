@@ -7,5 +7,5 @@ public class ReadUserQueryTests : IntegrationTests
   {
   }
 
-  // TODO(fpion): implement
+  // TODO(fpion): integration tests
 }

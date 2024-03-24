@@ -7,5 +7,5 @@ public class AuthenticateUserCommandTests : IntegrationTests
   {
   }
 
-  // TODO(fpion): implement
+  // TODO(fpion): integration tests
 }

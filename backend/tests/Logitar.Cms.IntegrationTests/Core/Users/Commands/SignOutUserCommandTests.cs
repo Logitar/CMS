@@ -7,5 +7,5 @@ public class SignOutUserCommandTests : IntegrationTests
   {
   }
 
-  // TODO(fpion): implement
+  // TODO(fpion): integration tests
 }
