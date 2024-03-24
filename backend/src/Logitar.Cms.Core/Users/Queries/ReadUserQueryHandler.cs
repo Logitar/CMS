@@ -33,6 +33,15 @@ internal class ReadUserQueryHandler : IRequestHandler<ReadUserQuery, User?>
       {
         users[user.Id] = user;
       }
+      else if (query.RequireUniqueEmail)
+      {
+        IEnumerable<User> usersByEmail = await _userQuerier.ReadByEmailAsync(query.Username, cancellationToken);
+        if (usersByEmail.Count() == 1)
+        {
+          user = usersByEmail.Single();
+          users[user.Id] = user;
+        }
+      }
     }
 
     if (users.Count > 1)

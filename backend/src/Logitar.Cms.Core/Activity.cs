@@ -31,6 +31,8 @@ public abstract record Activity : IActivity
     RequireUniqueEmail = Context.Configuration.RequireUniqueEmail
   };
 
+  public bool RequireUniqueEmail => Context.Configuration.RequireUniqueEmail;
+
   public virtual void Contextualize(ActivityContext context)
   {
     _context = context;

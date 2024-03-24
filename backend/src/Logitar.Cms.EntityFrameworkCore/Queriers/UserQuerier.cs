@@ -52,12 +52,28 @@ internal class UserQuerier : IUserQuerier
     return user == null ? null : await MapAsync(user, cancellationToken);
   }
 
+  public async Task<IEnumerable<User>> ReadByEmailAsync(string emailAddress, CancellationToken cancellationToken)
+  {
+    string emailAddressNormalized = emailAddress.Trim().ToUpper();
+
+    UserEntity[] users = await _users.AsNoTracking()
+      .Include(x => x.Roles)
+      .Where(x => x.EmailAddressNormalized == emailAddressNormalized)
+      .ToArrayAsync(cancellationToken);
+
+    return await MapAsync(users, cancellationToken);
+  }
+
   private async Task<User> MapAsync(UserEntity user, CancellationToken cancellationToken)
   {
-    IEnumerable<ActorId> actorIds = user.GetActorIds();
+    return (await MapAsync([user], cancellationToken)).Single();
+  }
+  private async Task<IEnumerable<User>> MapAsync(IEnumerable<UserEntity> users, CancellationToken cancellationToken)
+  {
+    IEnumerable<ActorId> actorIds = users.SelectMany(user => user.GetActorIds());
     IEnumerable<Actor> actors = await _actorService.FindAsync(actorIds, cancellationToken);
     Mapper mapper = new(actors);
 
-    return mapper.ToUser(user);
+    return users.Select(mapper.ToUser);
   }
 }

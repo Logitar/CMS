@@ -19,6 +19,13 @@ public class UserController : ControllerBase
     _pipeline = pipeline;
   }
 
+  [HttpPatch("authenticate")]
+  public async Task<ActionResult<User>> AuthenticateAsync([FromBody] AuthenticateUserPayload payload, CancellationToken cancellationToken)
+  {
+    User user = await _pipeline.ExecuteAsync(new AuthenticateUserCommand(payload), cancellationToken);
+    return Ok(user);
+  }
+
   [HttpGet("{id}")]
   public async Task<ActionResult<User>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
