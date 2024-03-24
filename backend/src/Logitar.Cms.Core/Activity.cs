@@ -1,5 +1,7 @@
 ﻿using Logitar.Cms.Contracts.Actors;
 using Logitar.EventSourcing;
+using Logitar.Identity.Contracts.Settings;
+using Logitar.Identity.Domain.Settings;
 
 namespace Logitar.Cms.Core;
 
@@ -21,6 +23,13 @@ public abstract record Activity : IActivity
     }
   }
   public virtual ActorId ActorId => new(Actor.Id);
+
+  public IUserSettings UserSettings => new UserSettings
+  {
+    UniqueName = Context.Configuration.UniqueNameSettings,
+    Password = Context.Configuration.PasswordSettings,
+    RequireUniqueEmail = Context.Configuration.RequireUniqueEmail
+  };
 
   public virtual void Contextualize(ActivityContext context)
   {

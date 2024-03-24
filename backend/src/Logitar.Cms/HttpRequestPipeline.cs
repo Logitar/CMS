@@ -1,15 +1,20 @@
-﻿using Logitar.Cms.Core;
+﻿using Logitar.Cms.Contracts.Configurations;
+using Logitar.Cms.Core;
+using Logitar.Cms.Core.Caching;
+using Logitar.Cms.Web.Extensions;
 using MediatR;
 
 namespace Logitar.Cms;
 
 internal class HttpRequestPipeline : IRequestPipeline
 {
+  private readonly ICacheService _cacheService;
   private readonly IHttpContextAccessor _httpContextAccessor;
   private readonly ISender _sender;
 
-  public HttpRequestPipeline(IHttpContextAccessor httpContextAccessor, ISender sender)
+  public HttpRequestPipeline(ICacheService cacheService, IHttpContextAccessor httpContextAccessor, ISender sender)
   {
+    _cacheService = cacheService;
     _httpContextAccessor = httpContextAccessor;
     _sender = sender;
   }
@@ -18,7 +23,10 @@ internal class HttpRequestPipeline : IRequestPipeline
   {
     if (request is IActivity activity && _httpContextAccessor.HttpContext != null)
     {
-      ActivityContext context = new(User: null); // TODO(fpion): Authentication
+      HttpContext httpContext = _httpContextAccessor.HttpContext;
+
+      Configuration configuration = _cacheService.Configuration ?? throw new InvalidOperationException("The configuration was not found in the cache.");
+      ActivityContext context = new(configuration, httpContext.GetUser(), httpContext.GetSession());
       activity.Contextualize(context);
     }
 

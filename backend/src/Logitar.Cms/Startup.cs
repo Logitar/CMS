@@ -1,4 +1,5 @@
-﻿using Logitar.Cms.Core;
+﻿using Logitar.Cms.Authentication;
+using Logitar.Cms.Core;
 using Logitar.Cms.EntityFrameworkCore;
 using Logitar.Cms.EntityFrameworkCore.SqlServer;
 using Logitar.Cms.Extensions;
@@ -6,6 +7,7 @@ using Logitar.Cms.Infrastructure;
 using Logitar.Cms.Middlewares;
 using Logitar.Cms.Settings;
 using Logitar.Cms.Web;
+using Logitar.Cms.Web.Settings;
 using Logitar.EventSourcing.EntityFrameworkCore.Relational;
 using Logitar.Identity.EntityFrameworkCore.Relational;
 
@@ -34,7 +36,18 @@ internal class Startup : StartupBase
 
     // TODO(fpion): Authorization
 
-    //services.AddDistributedMemoryCache(); // TODO(fpion): Session
+    BearerSettings bearerSettings = _configuration.GetSection("Bearer").Get<BearerSettings>() ?? new();
+    services.AddSingleton(bearerSettings);
+    services.AddTransient<IBearerService, BearerService>();
+
+    CookiesSettings cookiesSettings = _configuration.GetSection("Cookies").Get<CookiesSettings>() ?? new();
+    services.AddSingleton(cookiesSettings);
+    services.AddSession(options =>
+    {
+      options.Cookie.SameSite = cookiesSettings.Session.SameSite;
+      options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    });
+    services.AddDistributedMemoryCache();
 
     if (_enableOpenApi)
     {
@@ -75,7 +88,8 @@ internal class Startup : StartupBase
     builder.UseHttpsRedirection();
     builder.UseCors();
     builder.UseStaticFiles();
-    //builder.UseSession(); builder.UseMiddleware<RenewSession>(); // TODO(fpion): Session
+    builder.UseSession();
+    builder.UseMiddleware<RenewSession>();
     builder.UseMiddleware<RedirectNotFound>();
     // TODO(fpion): Authentication
     // TODO(fpion): Authorization

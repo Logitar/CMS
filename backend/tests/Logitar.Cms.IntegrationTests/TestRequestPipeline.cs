@@ -1,15 +1,19 @@
-﻿using Logitar.Cms.Core;
+﻿using Logitar.Cms.Contracts.Configurations;
+using Logitar.Cms.Core;
+using Logitar.Cms.Core.Caching;
 using MediatR;
 
 namespace Logitar.Cms;
 
 internal class TestRequestPipeline : IRequestPipeline
 {
+  private readonly ICacheService _cacheService;
   private readonly TestContext _context;
   private readonly ISender _sender;
 
-  public TestRequestPipeline(TestContext context, ISender sender)
+  public TestRequestPipeline(ICacheService cacheService, TestContext context, ISender sender)
   {
+    _cacheService = cacheService;
     _context = context;
     _sender = sender;
   }
@@ -18,7 +22,8 @@ internal class TestRequestPipeline : IRequestPipeline
   {
     if (request is IActivity activity)
     {
-      ActivityContext context = new(_context.User);
+      Configuration configuration = _cacheService.Configuration ?? throw new InvalidOperationException("The configuration was not found in the cache.");
+      ActivityContext context = new(configuration, _context.User, Session: null);
       activity.Contextualize(context);
     }
 

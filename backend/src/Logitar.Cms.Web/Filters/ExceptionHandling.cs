@@ -2,6 +2,7 @@
 using Logitar.Cms.Contracts.Errors;
 using Logitar.Cms.Core;
 using Logitar.Cms.Core.Shared;
+using Logitar.Identity.Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -30,18 +31,23 @@ public class ExceptionHandling : ExceptionFilterAttribute
       });
       context.ExceptionHandled = true;
     }
-    else if (context.Exception is UniqueNameAlreadyUsedException uniqueNameAlreadyUsed)
+    else if (context.Exception is InvalidCredentialsException)
     {
-      context.Result = new ConflictObjectResult(new ValidationFailure(uniqueNameAlreadyUsed.GetErrorCode(), UniqueNameAlreadyUsedException.ErrorMessage)
-      {
-        PropertyName = uniqueNameAlreadyUsed.PropertyName,
-        AttemptedValue = uniqueNameAlreadyUsed.UniqueName
-      });
+      context.Result = new BadRequestObjectResult(new Error("InvalidCredentials", InvalidCredentialsException.ErrorMessage));
       context.ExceptionHandled = true;
     }
     else if (context.Exception is TooManyResultsException)
     {
       context.Result = new BadRequestObjectResult(new Error(context.Exception.GetErrorCode(), TooManyResultsException.ErrorMessage));
+      context.ExceptionHandled = true;
+    }
+    else if (context.Exception is Core.Shared.UniqueNameAlreadyUsedException uniqueNameAlreadyUsed)
+    {
+      context.Result = new ConflictObjectResult(new ValidationFailure(uniqueNameAlreadyUsed.GetErrorCode(), Core.Shared.UniqueNameAlreadyUsedException.ErrorMessage)
+      {
+        PropertyName = uniqueNameAlreadyUsed.PropertyName,
+        AttemptedValue = uniqueNameAlreadyUsed.UniqueName
+      });
       context.ExceptionHandled = true;
     }
     else

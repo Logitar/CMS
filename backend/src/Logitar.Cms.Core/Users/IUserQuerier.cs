@@ -8,4 +8,5 @@ public interface IUserQuerier
   Task<User> ReadAsync(UserAggregate user, CancellationToken cancellationToken = default);
   Task<User?> ReadAsync(UserId id, CancellationToken cancellationToken = default);
   Task<User?> ReadAsync(Guid id, CancellationToken cancellationToken = default);
+  Task<User?> ReadAsync(string username, CancellationToken cancellationToken = default);
 }
