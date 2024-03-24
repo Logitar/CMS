@@ -4,12 +4,13 @@ using Logitar.Cms.Core;
 using Logitar.Cms.Core.Contents.Commands;
 using Logitar.Cms.Core.Contents.Queries;
 using Logitar.Cms.Web.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Logitar.Cms.Web.Controllers;
 
 [ApiController]
-//[Authorize] // TODO(fpion): Authorization
+[Authorize]
 [Route("api/contents")]
 public class ContentController : ControllerBase
 {

@@ -5,7 +5,7 @@ namespace Logitar.Cms.Contracts.Users;
 
 public class User : Aggregate
 {
-  public string UniqueName { get; set; }
+  public string Username { get; set; }
 
   public bool HasPassword { get; set; }
   public Actor? PasswordChangedBy { get; set; }
@@ -37,9 +37,9 @@ public class User : Aggregate
 
   public User(string uniqueName)
   {
-    UniqueName = uniqueName;
+    Username = uniqueName;
     Roles = [];
   }
 
-  public override string ToString() => $"{FullName ?? UniqueName} | {base.ToString()}";
+  public override string ToString() => $"{FullName ?? Username} | {base.ToString()}";
 }

@@ -17,5 +17,5 @@ public class ContentItem : Aggregate
     ContentType = contentType;
   }
 
-  //public override string ToString() => $"{DisplayName ?? UniqueName} | {base.ToString()}"; // TODO(fpion): implement
+  //public override string ToString() => $"{DisplayName ?? UniqueName} | {base.ToString()}"; // TODO(fpion): invariant
 }

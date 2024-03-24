@@ -3,12 +3,13 @@ using Logitar.Cms.Core;
 using Logitar.Cms.Core.ContentTypes.Commands;
 using Logitar.Cms.Core.ContentTypes.Queries;
 using Logitar.Cms.Web.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Logitar.Cms.Web.Controllers;
 
 [ApiController]
-//[Authorize] // TODO(fpion): Authorization
+[Authorize]
 [Route("api/contents/types")]
 public class ContentTypeController : ControllerBase
 {

@@ -23,7 +23,7 @@ public class Actor
     DisplayName = displayName;
   }
 
-  public Actor(User user) : this(user.FullName ?? user.UniqueName)
+  public Actor(User user) : this(user.FullName ?? user.Username)
   {
     Id = user.Id;
     Type = ActorType.User;
