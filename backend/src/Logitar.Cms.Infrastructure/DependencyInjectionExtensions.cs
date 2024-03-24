@@ -32,9 +32,11 @@ public static class DependencyInjectionExtensions
     List<JsonConverter> converters = new(capacity);
     converters.AddRange(identityConverters);
 
+    converters.Add(new ConfigurationIdConverter());
     converters.Add(new ContentIdConverter());
     converters.Add(new ContentTypeIdConverter());
     converters.Add(new IdentifierConverter());
+    converters.Add(new JwtSecretConverter());
 
     return converters.AsReadOnly();
   }

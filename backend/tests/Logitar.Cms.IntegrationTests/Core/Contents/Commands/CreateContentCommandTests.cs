@@ -37,8 +37,8 @@ public class CreateContentCommandTests : IntegrationTests
 
     Assert.NotEqual(Guid.Empty, contentItem.Id);
     Assert.Equal(1, contentItem.Version);
-    Assert.Equal(Actor.System, contentItem.CreatedBy);
-    Assert.Equal(Actor.System, contentItem.UpdatedBy);
+    Assert.Equal(Actor, contentItem.CreatedBy);
+    Assert.Equal(Actor, contentItem.UpdatedBy);
     Assert.Equal(contentItem.CreatedOn, contentItem.UpdatedOn);
 
     Assert.Equal(contentType.Id.ToGuid(), contentItem.ContentType.Id);

@@ -17,4 +17,6 @@ public record ContentLocale
     Item = item;
     UniqueName = uniqueName;
   }
+
+  public override string ToString() => $"{DisplayName ?? UniqueName} | {base.ToString()} (ItemId={Item.Id})"; // TODO(fpion): LanguageId
 }
