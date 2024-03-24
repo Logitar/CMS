@@ -1,7 +1,11 @@
 ﻿using Logitar.Cms.Contracts;
 using Logitar.Cms.Contracts.Actors;
+using Logitar.Cms.Contracts.Configurations;
 using Logitar.Cms.Contracts.Contents;
 using Logitar.Cms.Contracts.ContentTypes;
+using Logitar.Cms.Contracts.Roles;
+using Logitar.Cms.Contracts.Users;
+using Logitar.Cms.Core.Configurations;
 using Logitar.Cms.EntityFrameworkCore.Entities;
 using Logitar.EventSourcing;
 using Logitar.Identity.EntityFrameworkCore.Relational.Entities;
@@ -34,6 +38,25 @@ internal class Mapper
     EmailAddress = source.EmailAddress,
     PictureUrl = source.PictureUrl
   };
+
+  public Configuration ToConfiguration(ConfigurationAggregate source)
+  {
+    Configuration destination = new(source.Secret.Value)
+    {
+      UniqueNameSettings = new UniqueNameSettings(source.UniqueNameSettings),
+      PasswordSettings = new PasswordSettings(source.PasswordSettings),
+      RequireUniqueEmail = source.RequireUniqueEmail,
+      LoggingSettings = new LoggingSettings(source.LoggingSettings)
+    };
+    if (source.DefaultLocale != null)
+    {
+      destination.DefaultLocale = new Locale(source.DefaultLocale.Code);
+    }
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
 
   public ContentItem ToContentItem(ContentItemEntity source, ContentType? contentType = null)
   {
@@ -92,6 +115,62 @@ internal class Mapper
     return destination;
   }
 
+  public Role ToRole(RoleEntity source)
+  {
+    Role destination = new(source.UniqueName)
+    {
+      DisplayName = source.DisplayName,
+      Description = source.Description
+    };
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public User ToUser(UserEntity source)
+  {
+    User destination = new(source.UniqueName)
+    {
+      HasPassword = source.HasPassword,
+      PasswordChangedBy = TryFindActor(source.PasswordChangedBy),
+      PasswordChangedOn = AsUniversalTime(source.PasswordChangedOn),
+      DisabledBy = TryFindActor(source.DisabledBy),
+      DisabledOn = AsUniversalTime(source.DisabledOn),
+      IsDisabled = source.IsDisabled,
+      IsConfirmed = source.IsConfirmed,
+      FirstName = source.FirstName,
+      LastName = source.LastName,
+      FullName = source.FullName,
+      TimeZone = source.TimeZone,
+      Picture = source.Picture,
+      AuthenticatedOn = AsUniversalTime(source.AuthenticatedOn)
+    };
+    if (source.Locale != null)
+    {
+      destination.Locale = new Locale(source.Locale);
+    }
+
+    if (source.EmailAddress != null)
+    {
+      destination.Email = new Email(source.EmailAddress)
+      {
+        IsVerified = source.IsEmailVerified,
+        VerifiedBy = TryFindActor(source.EmailVerifiedBy),
+        VerifiedOn = AsUniversalTime(source.EmailVerifiedOn)
+      };
+    }
+
+    foreach (RoleEntity role in source.Roles)
+    {
+      destination.Roles.Add(ToRole(role));
+    }
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
   private void MapAggregate(AggregateEntity source, Aggregate destination)
   {
     destination.Id = new AggregateId(source.AggregateId).ToGuid();
@@ -101,10 +180,21 @@ internal class Mapper
     destination.UpdatedBy = FindActor(source.UpdatedBy);
     destination.UpdatedOn = AsUniversalTime(source.UpdatedOn);
   }
+  private void MapAggregate(AggregateRoot source, Aggregate destination)
+  {
+    destination.Id = source.Id.ToGuid();
+    destination.Version = source.Version;
+    destination.CreatedBy = FindActor(source.CreatedBy);
+    destination.CreatedOn = AsUniversalTime(source.CreatedOn);
+    destination.UpdatedBy = FindActor(source.UpdatedBy);
+    destination.UpdatedOn = AsUniversalTime(source.UpdatedOn);
+  }
 
+  private Actor? TryFindActor(string? id) => id == null ? null : FindActor(id);
   private Actor FindActor(string id) => FindActor(new ActorId(id));
   private Actor FindActor(ActorId id) => _actors.TryGetValue(id, out Actor? actor) ? actor : Actor.System;
 
+  private static DateTime? AsUniversalTime(DateTime? value) => value.HasValue ? AsUniversalTime(value.Value) : null;
   private static DateTime AsUniversalTime(DateTime value) => value.Kind switch
   {
     DateTimeKind.Local => value.ToUniversalTime(),

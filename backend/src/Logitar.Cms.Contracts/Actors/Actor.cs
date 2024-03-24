@@ -1,4 +1,6 @@
-﻿namespace Logitar.Cms.Contracts.Actors;
+﻿using Logitar.Cms.Contracts.Users;
+
+namespace Logitar.Cms.Contracts.Actors;
 
 public class Actor
 {
@@ -19,6 +21,15 @@ public class Actor
   public Actor(string displayName)
   {
     DisplayName = displayName;
+  }
+
+  public Actor(User user) : this(user.FullName ?? user.UniqueName)
+  {
+    Id = user.Id;
+    Type = ActorType.User;
+
+    EmailAddress = user.Email?.Address;
+    PictureUrl = user.Picture;
   }
 
   public override bool Equals(object? obj) => obj is Actor actor && actor.Type == Type && actor.Id == Id;

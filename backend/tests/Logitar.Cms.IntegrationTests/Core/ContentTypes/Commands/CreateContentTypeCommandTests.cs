@@ -1,5 +1,4 @@
 ﻿using FluentValidation.Results;
-using Logitar.Cms.Contracts.Actors;
 using Logitar.Cms.Contracts.ContentTypes;
 using Logitar.Cms.Core.Shared;
 using Logitar.EventSourcing;
@@ -31,8 +30,8 @@ public class CreateContentTypeCommandTests : IntegrationTests
 
     Assert.NotEqual(Guid.Empty, contentType.Id);
     Assert.Equal(2, contentType.Version);
-    Assert.Equal(Actor.System, contentType.CreatedBy);
-    Assert.Equal(Actor.System, contentType.UpdatedBy);
+    Assert.Equal(Actor, contentType.CreatedBy);
+    Assert.Equal(Actor, contentType.UpdatedBy);
     Assert.True(contentType.CreatedOn < contentType.UpdatedOn);
 
     Assert.True(contentType.IsInvariant);

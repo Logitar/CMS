@@ -1,15 +1,20 @@
-﻿using Logitar.Cms.Infrastructure.Commands;
+﻿using Logitar.Cms.Core.Configurations.Commands;
+using Logitar.Cms.Infrastructure.Commands;
 using MediatR;
 
 namespace Logitar.Cms;
 
-public class Program
+internal class Program
 {
+  private const string DefaultUsername = "admin";
+  private const string DefaultPassword = "P@s$W0rD";
+
   public static async Task Main(string[] args)
   {
     WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+    IConfiguration configuration = builder.Configuration;
 
-    Startup startup = new(builder.Configuration);
+    Startup startup = new(configuration);
     startup.ConfigureServices(builder.Services);
 
     WebApplication application = builder.Build();
@@ -20,7 +25,9 @@ public class Program
     IPublisher publisher = scope.ServiceProvider.GetRequiredService<IPublisher>();
     await publisher.Publish(new InitializeDatabaseCommand());
 
-    // TODO(fpion): initialize application
+    string username = configuration.GetValue<string>("CMS_USERNAME") ?? DefaultUsername;
+    string password = configuration.GetValue<string>("CMS_PASSWORD") ?? DefaultPassword;
+    await publisher.Publish(new InitializeConfigurationCommand(username, password));
 
     application.Run();
   }

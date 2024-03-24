@@ -3,4 +3,4 @@ using MediatR;
 
 namespace Logitar.Cms.Core.ContentTypes.Commands;
 
-public record CreateContentTypeCommand(CreateContentTypePayload Payload) : Request, IRequest<ContentType>;
+public record CreateContentTypeCommand(CreateContentTypePayload Payload) : Activity, IRequest<ContentType>;

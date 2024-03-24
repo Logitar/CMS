@@ -16,10 +16,10 @@ internal class TestRequestPipeline : IRequestPipeline
 
   public async Task<T> ExecuteAsync<T>(IRequest<T> request, CancellationToken cancellationToken)
   {
-    if (request is Request applicationRequest)
+    if (request is IActivity activity)
     {
-      RequestContext context = new(_context.Actor);
-      applicationRequest.Contextualize(context);
+      ActivityContext context = new(_context.User);
+      activity.Contextualize(context);
     }
 
     return await _sender.Send(request, cancellationToken);
