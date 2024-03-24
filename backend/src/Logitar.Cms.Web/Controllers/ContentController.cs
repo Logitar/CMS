@@ -1,5 +1,4 @@
 ﻿using Logitar.Cms.Contracts.Contents;
-using Logitar.Cms.Contracts.ContentTypes;
 using Logitar.Cms.Core;
 using Logitar.Cms.Core.Contents.Commands;
 using Logitar.Cms.Core.Contents.Queries;
@@ -33,7 +32,7 @@ public class ContentController : ControllerBase
   }
 
   [HttpGet("{id}")]
-  public async Task<ActionResult<ContentType>> ReadAsync(Guid id, CancellationToken cancellationToken)
+  public async Task<ActionResult<ContentItem>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
     ContentItem? contentItem = await _pipeline.ExecuteAsync(new ReadContentQuery(id), cancellationToken);
     return contentItem == null ? NotFound() : Ok(contentItem);

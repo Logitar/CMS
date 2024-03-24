@@ -9,8 +9,8 @@ public class ConfigurationIdConverter : JsonConverter<ConfigurationId>
     return new ConfigurationId();
   }
 
-  public override void Write(Utf8JsonWriter writer, ConfigurationId contentType, JsonSerializerOptions options)
+  public override void Write(Utf8JsonWriter writer, ConfigurationId configurationId, JsonSerializerOptions options)
   {
-    writer.WriteStringValue(contentType.Value);
+    writer.WriteStringValue(configurationId.Value);
   }
 }
