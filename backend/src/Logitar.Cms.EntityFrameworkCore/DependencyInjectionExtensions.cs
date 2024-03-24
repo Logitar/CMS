@@ -1,6 +1,8 @@
 ﻿using Logitar.Cms.Core.Configurations;
 using Logitar.Cms.Core.Contents;
 using Logitar.Cms.Core.ContentTypes;
+using Logitar.Cms.Core.Localization;
+using Logitar.Cms.Core.Sessions;
 using Logitar.Cms.Core.Users;
 using Logitar.Cms.EntityFrameworkCore.Actors;
 using Logitar.Cms.EntityFrameworkCore.Queriers;
@@ -30,6 +32,8 @@ public static class DependencyInjectionExtensions
       .AddTransient<IConfigurationQuerier, ConfigurationQuerier>()
       .AddTransient<IContentQuerier, ContentQuerier>()
       .AddTransient<IContentTypeQuerier, ContentTypeQuerier>()
+      .AddTransient<ILanguageQuerier, LanguageQuerier>()
+      .AddTransient<ISessionQuerier, SessionQuerier>()
       .AddTransient<IUserQuerier, UserQuerier>();
   }
 
@@ -38,6 +42,7 @@ public static class DependencyInjectionExtensions
     return services
       .AddTransient<IConfigurationRepository, ConfigurationRepository>()
       .AddTransient<IContentRepository, ContentRepository>()
-      .AddTransient<IContentTypeRepository, ContentTypeRepository>();
+      .AddTransient<IContentTypeRepository, ContentTypeRepository>()
+      .AddTransient<ILanguageRepository, LanguageRepository>();
   }
 }

@@ -45,6 +45,7 @@ public abstract class IntegrationTests : IAsyncLifetime
 
   protected IRequestPipeline Pipeline { get; }
   protected CmsContext CmsContext { get; }
+  protected IdentityContext IdentityContext { get; }
 
   protected IntegrationTests()
   {
@@ -72,6 +73,7 @@ public abstract class IntegrationTests : IAsyncLifetime
 
     Pipeline = ServiceProvider.GetRequiredService<IRequestPipeline>();
     CmsContext = ServiceProvider.GetRequiredService<CmsContext>();
+    IdentityContext = ServiceProvider.GetRequiredService<IdentityContext>();
   }
 
   public virtual async Task InitializeAsync()
@@ -82,6 +84,7 @@ public abstract class IntegrationTests : IAsyncLifetime
     StringBuilder statement = new();
     statement.AppendLine(SqlServerDeleteBuilder.From(CmsDb.ContentItems.Table).Build().Text);
     statement.AppendLine(SqlServerDeleteBuilder.From(CmsDb.ContentTypes.Table).Build().Text);
+    statement.AppendLine(SqlServerDeleteBuilder.From(CmsDb.Languages.Table).Build().Text);
     statement.AppendLine(SqlServerDeleteBuilder.From(IdentityDb.TokenBlacklist.Table).Build().Text);
     statement.AppendLine(SqlServerDeleteBuilder.From(IdentityDb.OneTimePasswords.Table).Build().Text);
     statement.AppendLine(SqlServerDeleteBuilder.From(IdentityDb.Sessions.Table).Build().Text);
@@ -93,7 +96,7 @@ public abstract class IntegrationTests : IAsyncLifetime
     statement.AppendLine(SqlServerDeleteBuilder.From(EventDb.Events.Table).Build().Text);
     await CmsContext.Database.ExecuteSqlRawAsync(statement.ToString());
 
-    await publisher.Publish(new InitializeConfigurationCommand(UsernameString, PasswordString));
+    await publisher.Publish(new InitializeConfigurationCommand(Faker.Locale, UsernameString, PasswordString));
 
     IUserRepository userRepository = ServiceProvider.GetRequiredService<IUserRepository>();
     UserAggregate userAggregate = Assert.Single(await userRepository.LoadAsync());

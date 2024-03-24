@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Logitar.Cms.Contracts.Errors;
 using Logitar.Cms.Core;
+using Logitar.Cms.Core.Localization;
 using Logitar.Cms.Core.Shared;
 using Logitar.Identity.Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,15 @@ public class ExceptionHandling : ExceptionFilterAttribute
     else if (context.Exception is InvalidCredentialsException)
     {
       context.Result = new BadRequestObjectResult(new Error("InvalidCredentials", InvalidCredentialsException.ErrorMessage));
+      context.ExceptionHandled = true;
+    }
+    else if (context.Exception is LocaleAlreadyUsedException localeAlreadyUsed)
+    {
+      context.Result = new ConflictObjectResult(new ValidationFailure(localeAlreadyUsed.GetErrorCode(), LocaleAlreadyUsedException.ErrorMessage)
+      {
+        PropertyName = localeAlreadyUsed.PropertyName,
+        AttemptedValue = localeAlreadyUsed.Locale
+      });
       context.ExceptionHandled = true;
     }
     else if (context.Exception is TooManyResultsException)

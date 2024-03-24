@@ -6,6 +6,7 @@ namespace Logitar.Cms;
 
 internal class Program
 {
+  private const string DefaultLocale = "en";
   private const string DefaultUsername = "admin";
   private const string DefaultPassword = "P@s$W0rD";
 
@@ -25,9 +26,10 @@ internal class Program
     IPublisher publisher = scope.ServiceProvider.GetRequiredService<IPublisher>();
     await publisher.Publish(new InitializeDatabaseCommand());
 
+    string defaultLocale = configuration.GetValue<string>("CMS_LOCALE") ?? DefaultLocale;
     string username = configuration.GetValue<string>("CMS_USERNAME") ?? DefaultUsername;
     string password = configuration.GetValue<string>("CMS_PASSWORD") ?? DefaultPassword;
-    await publisher.Publish(new InitializeConfigurationCommand(username, password));
+    await publisher.Publish(new InitializeConfigurationCommand(defaultLocale, username, password));
 
     application.Run();
   }

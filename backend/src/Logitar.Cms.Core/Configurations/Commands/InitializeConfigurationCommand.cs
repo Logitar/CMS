@@ -2,4 +2,4 @@
 
 namespace Logitar.Cms.Core.Configurations.Commands;
 
-public record InitializeConfigurationCommand(string Username, string Password) : INotification;
+public record InitializeConfigurationCommand(string DefaultLocale, string Username, string Password) : INotification;

@@ -9,8 +9,8 @@ public class ContentTypeIdConverter : JsonConverter<ContentTypeId>
     return ContentTypeId.TryCreate(reader.GetString());
   }
 
-  public override void Write(Utf8JsonWriter writer, ContentTypeId contentType, JsonSerializerOptions options)
+  public override void Write(Utf8JsonWriter writer, ContentTypeId contentTypeId, JsonSerializerOptions options)
   {
-    writer.WriteStringValue(contentType.Value);
+    writer.WriteStringValue(contentTypeId.Value);
   }
 }

@@ -53,7 +53,7 @@ public class ReadContentTypeQueryTests : IntegrationTests
   }
 
   [Fact(DisplayName = "It should throw TooManyResultsException when many content types are found.")]
-  public async Task It_should_throw_TooManyResultsException_when_many_content_type_are_found()
+  public async Task It_should_throw_TooManyResultsException_when_many_content_types_are_found()
   {
     ReadContentTypeQuery query = new(_articles.Id.ToGuid(), _products.UniqueName.Value);
     var exception = await Assert.ThrowsAsync<TooManyResultsException<ContentType>>(async () => await Pipeline.ExecuteAsync(query));
