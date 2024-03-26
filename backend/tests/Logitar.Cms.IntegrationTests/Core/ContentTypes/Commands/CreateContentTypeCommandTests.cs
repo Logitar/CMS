@@ -22,6 +22,7 @@ public class CreateContentTypeCommandTests : IntegrationTests
   {
     CreateContentTypePayload payload = new("Product")
     {
+      IsInvariant = true,
       DisplayName = "  Products  ",
       Description = "    "
     };
@@ -34,7 +35,7 @@ public class CreateContentTypeCommandTests : IntegrationTests
     Assert.Equal(Actor, contentType.UpdatedBy);
     Assert.True(contentType.CreatedOn < contentType.UpdatedOn);
 
-    Assert.True(contentType.IsInvariant);
+    Assert.Equal(payload.IsInvariant, contentType.IsInvariant);
     Assert.Equal(payload.UniqueName.Trim(), contentType.UniqueName);
     Assert.Equal(payload.DisplayName?.CleanTrim(), contentType.DisplayName);
     Assert.Equal(payload.Description?.CleanTrim(), contentType.Description);

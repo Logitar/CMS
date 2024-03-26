@@ -23,7 +23,7 @@ internal class CreateContentTypeCommandHandler : IRequestHandler<CreateContentTy
     CreateContentTypePayload payload = command.Payload;
     new CreateContentTypeValidator().ValidateAndThrow(payload);
 
-    ContentTypeAggregate contentType = new(new IdentifierUnit(payload.UniqueName), command.ActorId)
+    ContentTypeAggregate contentType = new(new IdentifierUnit(payload.UniqueName), payload.IsInvariant, command.ActorId)
     {
       DisplayName = DisplayNameUnit.TryCreate(payload.DisplayName),
       Description = DescriptionUnit.TryCreate(payload.Description)
