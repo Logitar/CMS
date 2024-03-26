@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Logitar.Identity.EntityFrameworkCore.Relational" Version="0.12.0" />
+    <PackageReference Include="Logitar.Identity.EntityFrameworkCore.Relational" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>

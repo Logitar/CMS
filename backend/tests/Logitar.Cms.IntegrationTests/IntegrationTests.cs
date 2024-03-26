@@ -9,6 +9,7 @@ using Logitar.Cms.Infrastructure;
 using Logitar.Cms.Infrastructure.Commands;
 using Logitar.Data.SqlServer;
 using Logitar.EventSourcing;
+using Logitar.EventSourcing.EntityFrameworkCore.Relational;
 using Logitar.Identity.Domain.Shared;
 using Logitar.Identity.Domain.Users;
 using Logitar.Identity.EntityFrameworkCore.Relational;

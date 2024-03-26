@@ -51,7 +51,7 @@ public class ContentTypeAggregate : AggregateRoot
     : base((id ?? ContentTypeId.NewId()).AggregateId)
   {
     bool isInvariant = true;
-    Raise(new ContentTypeCreatedEvent(isInvariant, identifier, actorId));
+    Raise(new ContentTypeCreatedEvent(isInvariant, identifier), actorId);
   }
   protected virtual void Apply(ContentTypeCreatedEvent @event)
   {
@@ -64,9 +64,7 @@ public class ContentTypeAggregate : AggregateRoot
   {
     if (_updatedEvent.HasChanges)
     {
-      _updatedEvent.ActorId = actorId;
-      _updatedEvent.OccurredOn = DateTime.Now;
-      Raise(_updatedEvent);
+      Raise(_updatedEvent, actorId, DateTime.Now);
       _updatedEvent = new();
     }
   }
