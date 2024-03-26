@@ -49,7 +49,7 @@ public class ConfigurationAggregate : AggregateRoot
     ReadOnlyPasswordSettings passwordSettings = new();
     bool requireUniqueEmail = true;
     ReadOnlyLoggingSettings loggingSettings = new();
-    configuration.Raise(new ConfigurationInitializedEvent(secret, uniqueNameSettings, passwordSettings, requireUniqueEmail, loggingSettings, actorId));
+    configuration.Raise(new ConfigurationInitializedEvent(secret, uniqueNameSettings, passwordSettings, requireUniqueEmail, loggingSettings), actorId);
 
     return configuration;
   }

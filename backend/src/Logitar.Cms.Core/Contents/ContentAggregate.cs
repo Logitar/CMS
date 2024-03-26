@@ -26,7 +26,7 @@ public class ContentAggregate : AggregateRoot
   public ContentAggregate(ContentTypeAggregate contentType, UniqueNameUnit uniqueName, ActorId actorId = default, ContentId? id = null)
     : base((id ?? ContentId.NewId()).AggregateId)
   {
-    Raise(new ContentCreatedEvent(contentType.Id, uniqueName, actorId));
+    Raise(new ContentCreatedEvent(contentType.Id, uniqueName), actorId);
   }
   protected virtual void Apply(ContentCreatedEvent @event)
   {
