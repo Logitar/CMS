@@ -2,12 +2,4 @@
 
 namespace Logitar.Cms.Core.Contents;
 
-public record ContentLocaleUnit
-{
-  public UniqueNameUnit UniqueName { get; }
-
-  public ContentLocaleUnit(UniqueNameUnit uniqueName)
-  {
-    UniqueName = uniqueName;
-  }
-}
+public record ContentLocaleUnit(UniqueNameUnit UniqueName, DisplayNameUnit? DisplayName = null, DescriptionUnit? Description = null);

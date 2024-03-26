@@ -15,7 +15,7 @@ internal class LanguageConfiguration : AggregateConfiguration<LanguageEntity>, I
     builder.ToTable(nameof(CmsContext.Languages));
     builder.HasKey(x => x.LanguageId);
 
-    builder.HasIndex(x => x.IsDefault); // TODO(fpion): unique where is true
+    builder.HasIndex(x => x.IsDefault); // ISSUE: https://github.com/Logitar/CMS/issues/10
     builder.HasIndex(x => x.Locale);
     builder.HasIndex(x => x.LocaleNormalized).IsUnique();
 

@@ -67,11 +67,19 @@ internal class Mapper
       contentType = ToContentType(source.ContentType);
     }
 
-    ContentItem destination = new(contentType);
+    ContentItem destination = new(contentType, new ContentLocale());
 
-    foreach (ContentLocaleEntity locale in source.ContentLocales)
+    foreach (ContentLocaleEntity localeSource in source.ContentLocales)
     {
-      destination.Locales.Add(ToContentLocale(locale, destination));
+      ContentLocale locale = ToContentLocale(localeSource, destination);
+      if (locale.Language == null)
+      {
+        destination.Invariant = locale;
+      }
+      else
+      {
+        destination.Locales.Add(locale);
+      }
     }
 
     MapAggregate(source, destination);
@@ -93,8 +101,17 @@ internal class Mapper
     ContentLocale destination = new(contentItem, source.UniqueName)
     {
       DisplayName = source.DisplayName,
-      Description = source.Description
+      Description = source.Description,
+      CreatedBy = FindActor(source.CreatedBy),
+      CreatedOn = AsUniversalTime(source.CreatedOn),
+      UpdatedBy = FindActor(source.UpdatedBy),
+      UpdatedOn = AsUniversalTime(source.UpdatedOn)
     };
+
+    if (source.Language != null)
+    {
+      destination.Language = ToLanguage(source.Language);
+    }
 
     return destination;
   }

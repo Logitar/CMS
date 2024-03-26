@@ -13,10 +13,10 @@ internal class ContentLocaleConfiguration : IEntityTypeConfiguration<ContentLoca
     builder.ToTable(nameof(CmsContext.ContentLocales));
     builder.HasKey(x => x.ContentLocaleId);
 
+    builder.HasIndex(x => new { x.ContentItemId, x.LanguageId }).IsUnique();
     builder.HasIndex(x => x.UniqueName);
-    // TODO(fpion): UniqueNameNormalized should be unique per ContentTypeId & LanguageId
+    builder.HasIndex(x => new { x.ContentTypeId, x.LanguageId, x.UniqueNameNormalized }).IsUnique();
     builder.HasIndex(x => x.DisplayName);
-    builder.HasIndex(x => x.Version);
     builder.HasIndex(x => x.CreatedBy);
     builder.HasIndex(x => x.CreatedOn);
     builder.HasIndex(x => x.UpdatedBy);
@@ -29,5 +29,6 @@ internal class ContentLocaleConfiguration : IEntityTypeConfiguration<ContentLoca
     builder.Property(x => x.UpdatedBy).HasMaxLength(ActorId.MaximumLength);
 
     builder.HasOne(x => x.ContentItem).WithMany(x => x.ContentLocales).OnDelete(DeleteBehavior.Cascade);
+    builder.HasOne(x => x.Language).WithMany(x => x.ContentLocales).OnDelete(DeleteBehavior.Restrict);
   }
 }

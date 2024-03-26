@@ -34,6 +34,27 @@ namespace Logitar.Cms.EntityFrameworkCore.SqlServer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Languages",
+                columns: table => new
+                {
+                    LanguageId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IsDefault = table.Column<bool>(type: "bit", nullable: false),
+                    Locale = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: false),
+                    LocaleNormalized = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: false),
+                    AggregateId = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Version = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Languages", x => x.LanguageId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ContentItems",
                 columns: table => new
                 {
@@ -64,12 +85,13 @@ namespace Logitar.Cms.EntityFrameworkCore.SqlServer.Migrations
                 {
                     ContentLocaleId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    ContentTypeId = table.Column<int>(type: "int", nullable: false),
                     ContentItemId = table.Column<int>(type: "int", nullable: false),
+                    LanguageId = table.Column<int>(type: "int", nullable: true),
                     UniqueName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     UniqueNameNormalized = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     DisplayName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Version = table.Column<long>(type: "bigint", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedBy = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
@@ -84,6 +106,12 @@ namespace Logitar.Cms.EntityFrameworkCore.SqlServer.Migrations
                         principalTable: "ContentItems",
                         principalColumn: "ContentItemId",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ContentLocales_Languages_LanguageId",
+                        column: x => x.LanguageId,
+                        principalTable: "Languages",
+                        principalColumn: "LanguageId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -123,9 +151,18 @@ namespace Logitar.Cms.EntityFrameworkCore.SqlServer.Migrations
                 column: "Version");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ContentLocales_ContentItemId",
+                name: "IX_ContentLocales_ContentItemId_LanguageId",
                 table: "ContentLocales",
-                column: "ContentItemId");
+                columns: new[] { "ContentItemId", "LanguageId" },
+                unique: true,
+                filter: "[LanguageId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ContentLocales_ContentTypeId_LanguageId_UniqueNameNormalized",
+                table: "ContentLocales",
+                columns: new[] { "ContentTypeId", "LanguageId", "UniqueNameNormalized" },
+                unique: true,
+                filter: "[LanguageId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContentLocales_CreatedBy",
@@ -143,6 +180,11 @@ namespace Logitar.Cms.EntityFrameworkCore.SqlServer.Migrations
                 column: "DisplayName");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ContentLocales_LanguageId",
+                table: "ContentLocales",
+                column: "LanguageId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ContentLocales_UniqueName",
                 table: "ContentLocales",
                 column: "UniqueName");
@@ -156,11 +198,6 @@ namespace Logitar.Cms.EntityFrameworkCore.SqlServer.Migrations
                 name: "IX_ContentLocales_UpdatedOn",
                 table: "ContentLocales",
                 column: "UpdatedOn");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ContentLocales_Version",
-                table: "ContentLocales",
-                column: "Version");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContentTypes_AggregateId",
@@ -213,6 +250,53 @@ namespace Logitar.Cms.EntityFrameworkCore.SqlServer.Migrations
                 name: "IX_ContentTypes_Version",
                 table: "ContentTypes",
                 column: "Version");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Languages_AggregateId",
+                table: "Languages",
+                column: "AggregateId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Languages_CreatedBy",
+                table: "Languages",
+                column: "CreatedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Languages_CreatedOn",
+                table: "Languages",
+                column: "CreatedOn");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Languages_IsDefault",
+                table: "Languages",
+                column: "IsDefault");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Languages_Locale",
+                table: "Languages",
+                column: "Locale");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Languages_LocaleNormalized",
+                table: "Languages",
+                column: "LocaleNormalized",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Languages_UpdatedBy",
+                table: "Languages",
+                column: "UpdatedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Languages_UpdatedOn",
+                table: "Languages",
+                column: "UpdatedOn");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Languages_Version",
+                table: "Languages",
+                column: "Version");
         }
 
         /// <inheritdoc />
@@ -223,6 +307,9 @@ namespace Logitar.Cms.EntityFrameworkCore.SqlServer.Migrations
 
             migrationBuilder.DropTable(
                 name: "ContentItems");
+
+            migrationBuilder.DropTable(
+                name: "Languages");
 
             migrationBuilder.DropTable(
                 name: "ContentTypes");
