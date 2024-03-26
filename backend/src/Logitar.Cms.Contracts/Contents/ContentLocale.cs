@@ -1,4 +1,8 @@
-﻿namespace Logitar.Cms.Contracts.Contents;
+﻿using Logitar.Cms.Contracts.Actors;
+using Logitar.Cms.Contracts.ContentTypes;
+using Logitar.Cms.Contracts.Localization;
+
+namespace Logitar.Cms.Contracts.Contents;
 
 public record ContentLocale
 {
@@ -7,9 +11,19 @@ public record ContentLocale
   public string? Description { get; set; }
 
   public ContentItem Item { get; set; }
+  public Language? Language { get; set; }
 
-  public ContentLocale() : this(new ContentItem(), string.Empty)
+  public Actor CreatedBy { get; set; } = Actor.System;
+  public DateTime CreatedOn { get; set; }
+
+  public Actor UpdatedBy { get; set; } = Actor.System;
+  public DateTime UpdatedOn { get; set; }
+
+  public ContentLocale()
   {
+    UniqueName = string.Empty;
+
+    Item = new ContentItem(new ContentType(), this);
   }
 
   public ContentLocale(ContentItem item, string uniqueName)
@@ -18,5 +32,5 @@ public record ContentLocale
     UniqueName = uniqueName;
   }
 
-  public override string ToString() => $"{DisplayName ?? UniqueName} | {base.ToString()} (ItemId={Item.Id})"; // TODO(fpion): LanguageId
+  public override string ToString() => $"{DisplayName ?? UniqueName} | {base.ToString()} (ItemId={Item.Id}, LanguageId={Language?.Id.ToString() ?? "<null>"})";
 }

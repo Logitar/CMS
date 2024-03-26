@@ -3,6 +3,7 @@ using Logitar.Cms.Contracts.Errors;
 using Logitar.Cms.Core;
 using Logitar.Cms.Core.Localization;
 using Logitar.Cms.Core.Shared;
+using Logitar.EventSourcing;
 using Logitar.Identity.Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -53,11 +54,23 @@ public class ExceptionHandling : ExceptionFilterAttribute
     }
     else if (context.Exception is Core.Shared.UniqueNameAlreadyUsedException uniqueNameAlreadyUsed)
     {
-      context.Result = new ConflictObjectResult(new ValidationFailure(uniqueNameAlreadyUsed.GetErrorCode(), Core.Shared.UniqueNameAlreadyUsedException.ErrorMessage)
+      if (uniqueNameAlreadyUsed.LanguageId == null)
       {
-        PropertyName = uniqueNameAlreadyUsed.PropertyName,
-        AttemptedValue = uniqueNameAlreadyUsed.UniqueName
-      });
+        context.Result = new ConflictObjectResult(new ValidationFailure(uniqueNameAlreadyUsed.GetErrorCode(), Core.Shared.UniqueNameAlreadyUsedException.ErrorMessage)
+        {
+          PropertyName = uniqueNameAlreadyUsed.PropertyName,
+          AttemptedValue = uniqueNameAlreadyUsed.UniqueName
+        });
+      }
+      else
+      {
+        context.Result = new ConflictObjectResult(new ContentUniqueNameAlreadyUsed(uniqueNameAlreadyUsed.GetErrorCode(), Core.Shared.UniqueNameAlreadyUsedException.ErrorMessage)
+        {
+          PropertyName = uniqueNameAlreadyUsed.PropertyName,
+          AttemptedValue = uniqueNameAlreadyUsed.UniqueName,
+          LanguageId = new AggregateId(uniqueNameAlreadyUsed.LanguageId).ToGuid()
+        });
+      }
       context.ExceptionHandled = true;
     }
     else

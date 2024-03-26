@@ -29,11 +29,11 @@ internal static class CmsDb
     public static readonly ColumnId CreatedOn = new(nameof(ContentLocaleEntity.CreatedOn), Table);
     public static readonly ColumnId Description = new(nameof(ContentLocaleEntity.Description), Table);
     public static readonly ColumnId DisplayName = new(nameof(ContentLocaleEntity.DisplayName), Table);
+    public static readonly ColumnId LanguageId = new(nameof(ContentLocaleEntity.LanguageId), Table);
     public static readonly ColumnId UniqueName = new(nameof(ContentLocaleEntity.UniqueName), Table);
     public static readonly ColumnId UniqueNameNormalized = new(nameof(ContentLocaleEntity.UniqueNameNormalized), Table);
     public static readonly ColumnId UpdatedBy = new(nameof(ContentLocaleEntity.UpdatedBy), Table);
     public static readonly ColumnId UpdatedOn = new(nameof(ContentLocaleEntity.UpdatedOn), Table);
-    public static readonly ColumnId Version = new(nameof(ContentLocaleEntity.Version), Table);
   }
 
   public static class ContentTypes

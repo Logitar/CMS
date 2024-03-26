@@ -3,6 +3,7 @@
 public record CreateContentPayload
 {
   public Guid ContentTypeId { get; set; }
+  public Guid? LanguageId { get; set; }
 
   public string UniqueName { get; set; }
   public string? DisplayName { get; set; }

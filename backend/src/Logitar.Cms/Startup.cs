@@ -91,7 +91,7 @@ internal class Startup : StartupBase
         throw new DatabaseProviderNotSupportedException(databaseProvider);
     }
 
-    // TODO(fpion): GraphQL
+    // ISSUE: https://github.com/Logitar/CMS/issues/11
     services.AddLogitarCmsWeb();
   }
 
@@ -102,7 +102,7 @@ internal class Startup : StartupBase
       builder.UseOpenApi();
     }
 
-    // TODO(fpion): GraphQL
+    // ISSUE: https://github.com/Logitar/CMS/issues/11
 
     builder.UseHttpsRedirection();
     builder.UseCors();
@@ -113,7 +113,7 @@ internal class Startup : StartupBase
     builder.UseAuthentication();
     builder.UseAuthorization();
 
-    // TODO(fpion): GraphQL
+    // ISSUE: https://github.com/Logitar/CMS/issues/11
 
     if (builder is WebApplication application)
     {

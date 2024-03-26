@@ -21,7 +21,9 @@ public class ReadContentQueryTests : IntegrationTests
     _contentTypeRepository = ServiceProvider.GetRequiredService<IContentTypeRepository>();
 
     _contentType = new(new IdentifierUnit("BlogArticle"));
-    _content = new(_contentType, new UniqueNameUnit(ContentAggregate.UniqueNameSettings, "prolongez-lete-avec-une-acura-nsx-coupe"));
+
+    ContentLocaleUnit invariant = new(new UniqueNameUnit(ContentAggregate.UniqueNameSettings, "prolongez-lete-avec-une-acura-nsx-coupe"));
+    _content = new(_contentType, invariant);
   }
 
   public override async Task InitializeAsync()

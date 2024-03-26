@@ -34,7 +34,7 @@ internal class ContentQuerier : IContentQuerier
 
     ContentItemEntity? contentItem = await _contentItems.AsNoTracking()
       .Include(x => x.ContentType)
-      .Include(x => x.ContentLocales)
+      .Include(x => x.ContentLocales).ThenInclude(x => x.Language)
       .SingleOrDefaultAsync(x => x.AggregateId == aggregateId, cancellationToken);
 
     return contentItem == null ? null : await MapAsync(contentItem, cancellationToken);
@@ -42,7 +42,7 @@ internal class ContentQuerier : IContentQuerier
 
   private async Task<ContentItem> MapAsync(ContentItemEntity contentItem, CancellationToken cancellationToken)
   {
-    IEnumerable<ActorId> actorIds = contentItem.GetActorIds();
+    IEnumerable<ActorId> actorIds = contentItem.GetActorIds(includeLocales: true);
     IEnumerable<Actor> actors = await _actorService.FindAsync(actorIds, cancellationToken);
     Mapper mapper = new(actors);
 

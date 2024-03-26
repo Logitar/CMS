@@ -1,5 +1,6 @@
 ﻿using Logitar.Cms.Core.Localization;
 using Logitar.Data;
+using Logitar.EventSourcing;
 using Logitar.EventSourcing.EntityFrameworkCore.Relational;
 using Logitar.EventSourcing.Infrastructure;
 using Logitar.Identity.Domain.Shared;
@@ -18,6 +19,11 @@ internal class LanguageRepository : EventSourcing.EntityFrameworkCore.Relational
     : base(eventBus, eventContext, eventSerializer)
   {
     _sqlHelper = sqlHelper;
+  }
+
+  public async Task<LanguageAggregate?> LoadAsync(Guid id, CancellationToken cancellationToken)
+  {
+    return await LoadAsync<LanguageAggregate>(new AggregateId(id), cancellationToken);
   }
 
   public async Task<LanguageAggregate?> LoadAsync(LocaleUnit locale, CancellationToken cancellationToken)
