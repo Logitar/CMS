@@ -50,10 +50,6 @@ internal class Mapper
       RequireUniqueEmail = source.RequireUniqueEmail,
       LoggingSettings = new LoggingSettings(source.LoggingSettings)
     };
-    if (source.DefaultLocale != null)
-    {
-      destination.DefaultLocale = new Locale(source.DefaultLocale.Code);
-    }
 
     MapAggregate(source, destination);
 

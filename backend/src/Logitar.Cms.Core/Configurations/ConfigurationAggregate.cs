@@ -1,16 +1,12 @@
 ﻿using Logitar.Cms.Core.Configurations.Events;
 using Logitar.EventSourcing;
-using Logitar.Identity.Domain.Shared;
 
 namespace Logitar.Cms.Core.Configurations;
 
 public class ConfigurationAggregate : AggregateRoot
 {
-  private LocaleUnit? _defaultLocale = null;
-  public LocaleUnit DefaultLocale
-  {
-    get => _defaultLocale ?? throw new InvalidOperationException($"The {nameof(DefaultLocale)} has not been initialized yet.");
-  }
+  public new ConfigurationId Id { get; } = new();
+
   private JwtSecretUnit? _secret = null;
   public JwtSecretUnit Secret
   {
@@ -43,7 +39,7 @@ public class ConfigurationAggregate : AggregateRoot
   {
   }
 
-  public static ConfigurationAggregate Initialize(LocaleUnit defaultLocale, ActorId actorId = default)
+  public static ConfigurationAggregate Initialize(ActorId actorId = default)
   {
     ConfigurationId id = new();
     ConfigurationAggregate configuration = new(id.AggregateId);
@@ -53,13 +49,12 @@ public class ConfigurationAggregate : AggregateRoot
     ReadOnlyPasswordSettings passwordSettings = new();
     bool requireUniqueEmail = true;
     ReadOnlyLoggingSettings loggingSettings = new();
-    configuration.Raise(new ConfigurationInitializedEvent(defaultLocale, secret, uniqueNameSettings, passwordSettings, requireUniqueEmail, loggingSettings, actorId));
+    configuration.Raise(new ConfigurationInitializedEvent(secret, uniqueNameSettings, passwordSettings, requireUniqueEmail, loggingSettings, actorId));
 
     return configuration;
   }
   protected virtual void Apply(ConfigurationInitializedEvent @event)
   {
-    _defaultLocale = @event.DefaultLocale;
     _secret = @event.Secret;
 
     _uniqueNameSettings = @event.UniqueNameSettings;

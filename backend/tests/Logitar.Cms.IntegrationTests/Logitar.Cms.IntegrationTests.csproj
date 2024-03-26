@@ -44,7 +44,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Logitar.Cms\Logitar.Cms.csproj" />
+    <ProjectReference Include="..\..\src\Logitar.Cms.EntityFrameworkCore.SqlServer\Logitar.Cms.EntityFrameworkCore.SqlServer.csproj" />
   </ItemGroup>
 
   <ItemGroup>

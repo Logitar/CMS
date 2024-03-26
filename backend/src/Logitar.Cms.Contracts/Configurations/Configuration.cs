@@ -2,7 +2,6 @@
 
 public class Configuration : Aggregate
 {
-  public Locale? DefaultLocale { get; set; }
   public string Secret { get; set; }
 
   public UniqueNameSettings UniqueNameSettings { get; set; } = new();

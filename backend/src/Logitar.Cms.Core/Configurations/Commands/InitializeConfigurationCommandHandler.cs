@@ -38,8 +38,7 @@ internal class InitializeConfigurationCommandHandler : INotificationHandler<Init
       UserId userId = UserId.NewId();
       ActorId actorId = new(userId.Value);
 
-      LocaleUnit defaultLocale = new(command.DefaultLocale);
-      configuration = ConfigurationAggregate.Initialize(defaultLocale, actorId);
+      configuration = ConfigurationAggregate.Initialize(actorId);
       UserSettings userSettings = new()
       {
         UniqueName = configuration.UniqueNameSettings,
@@ -47,15 +46,15 @@ internal class InitializeConfigurationCommandHandler : INotificationHandler<Init
         RequireUniqueEmail = configuration.RequireUniqueEmail
       };
 
+      LanguageAggregate language = new(new LocaleUnit(command.DefaultLocale), isDefault: true, actorId);
+
       UserAggregate user = new(new UniqueNameUnit(configuration.UniqueNameSettings, command.Username), tenantId: null, actorId, userId);
 
       Password password = _passwordManager.ValidateAndCreate(command.Password);
       user.SetPassword(password, actorId);
 
-      user.Locale = defaultLocale;
+      user.Locale = language.Locale;
       user.Update(actorId);
-
-      LanguageAggregate language = new(defaultLocale, isDefault: true, actorId);
 
       await _userManager.SaveAsync(user, userSettings, actorId, cancellationToken);
       await _sender.Send(new SaveLanguageCommand(language), cancellationToken);
