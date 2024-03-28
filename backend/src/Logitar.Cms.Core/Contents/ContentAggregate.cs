@@ -1,9 +1,9 @@
-﻿using Logitar.Cms.Core.Contents.Events;
+﻿using Logitar.Cms.Contracts.Configurations;
+using Logitar.Cms.Core.Contents.Events;
 using Logitar.Cms.Core.ContentTypes;
 using Logitar.Cms.Core.Localization;
 using Logitar.EventSourcing;
 using Logitar.Identity.Contracts.Settings;
-using Logitar.Identity.Domain.Settings;
 
 namespace Logitar.Cms.Core.Contents;
 

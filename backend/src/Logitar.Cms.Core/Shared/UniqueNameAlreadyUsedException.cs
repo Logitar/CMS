@@ -59,6 +59,9 @@ public class UniqueNameAlreadyUsedException : Exception
 
 public class UniqueNameAlreadyUsedException<T> : UniqueNameAlreadyUsedException
 {
+  public UniqueNameAlreadyUsedException(UniqueNameUnit uniqueName, string? propertyName = null) : this(languageId: null, uniqueName, propertyName)
+  {
+  }
   public UniqueNameAlreadyUsedException(LanguageId? languageId, UniqueNameUnit uniqueName, string? propertyName = null) : base(typeof(T), languageId, uniqueName, propertyName)
   {
   }
