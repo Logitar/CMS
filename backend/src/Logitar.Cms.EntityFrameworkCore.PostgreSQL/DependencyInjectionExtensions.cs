@@ -7,7 +7,7 @@ namespace Logitar.Cms.EntityFrameworkCore.PostgreSQL;
 
 public static class DependencyInjectionExtensions
 {
-  private const string ConfigurationKey = "POSTGRESQLCONNSTR_Portal";
+  private const string ConfigurationKey = "POSTGRESQLCONNSTR_Cms";
 
   public static IServiceCollection AddLogitarCmsWithEntityFrameworkCorePostgreSQL(this IServiceCollection services, IConfiguration configuration)
   {

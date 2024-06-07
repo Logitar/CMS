@@ -9,7 +9,7 @@ public readonly struct ConfigurationId
 
   public ConfigurationId()
   {
-    AggregateId = new("CONFIGURATION");
+    AggregateId = new(Guid.Empty);
   }
 
   public static bool operator ==(ConfigurationId left, ConfigurationId right) => left.Equals(right);

@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Logitar.Cms.Core.Localization.Commands;
 
-internal class SaveLanguageCommandHandler : INotificationHandler<SaveLanguageCommand>
+internal class SaveLanguageCommandHandler : IRequestHandler<SaveLanguageCommand>
 {
   private readonly ILanguageRepository _languageRepository;
 

@@ -9,3 +9,12 @@ services:
       SA_PASSWORD: hMe5CJmF2SVLDtvN
     ports:
       - 1440:1433
+
+  cms_postgres:
+    image: postgres
+    container_name: Logitar.Cms_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: kzXnZxLf9s8WQ3vh
+    ports:
+      - 5440:5432

@@ -4,6 +4,7 @@ using Logitar.Cms.EntityFrameworkCore.Actors;
 using Logitar.Cms.EntityFrameworkCore.Queriers;
 using Logitar.Cms.EntityFrameworkCore.Repositories;
 using Logitar.Cms.Infrastructure;
+using Logitar.Identity.EntityFrameworkCore.Relational;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Logitar.Cms.EntityFrameworkCore;
@@ -13,7 +14,7 @@ public static class DependencyInjectionExtensions
   public static IServiceCollection AddLogitarCmsWithEntityFrameworkCore(this IServiceCollection services)
   {
     return services
-      .AddLogitarCmsWithEntityFrameworkCore()
+      .AddLogitarIdentityWithEntityFrameworkCoreRelational()
       .AddLogitarCmsInfrastructure()
       .AddMediatR(config => config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()))
       .AddQueriers()
