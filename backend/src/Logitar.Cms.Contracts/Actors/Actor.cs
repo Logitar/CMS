@@ -2,7 +2,9 @@
 
 public class Actor
 {
-  public string Id { get; set; }
+  public static Actor System => new(ActorType.System.ToString());
+
+  public Guid Id { get; set; }
   public ActorType Type { get; set; }
   public bool IsDeleted { get; set; }
 
@@ -10,13 +12,12 @@ public class Actor
   public string? EmailAddress { get; set; }
   public string? PictureUrl { get; set; }
 
-  public Actor() : this(string.Empty, string.Empty)
+  public Actor() : this(string.Empty)
   {
   }
 
-  public Actor(string id, string displayName)
+  public Actor(string displayName)
   {
-    Id = id;
     DisplayName = displayName;
   }
 

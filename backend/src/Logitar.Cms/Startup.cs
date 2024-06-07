@@ -1,6 +1,12 @@
-﻿using Logitar.Cms.Extensions;
+﻿using Logitar.Cms.EntityFrameworkCore;
+using Logitar.Cms.EntityFrameworkCore.PostgreSQL;
+using Logitar.Cms.EntityFrameworkCore.SqlServer;
+using Logitar.Cms.Extensions;
+using Logitar.Cms.Infrastructure;
 using Logitar.Cms.Settings;
 using Logitar.Cms.Web;
+using Logitar.EventSourcing.EntityFrameworkCore.Relational;
+using Logitar.Identity.EntityFrameworkCore.Relational;
 
 namespace Logitar.Cms;
 
@@ -23,8 +29,6 @@ internal class Startup : StartupBase
     services.AddSingleton(corsSettings);
     services.AddCors(corsSettings);
 
-    services.AddLogitarCmsWeb();
-
     if (_enableOpenApi)
     {
       services.AddOpenApi();
@@ -33,7 +37,26 @@ internal class Startup : StartupBase
     services.AddApplicationInsightsTelemetry();
     IHealthChecksBuilder healthChecks = services.AddHealthChecks();
 
-    //healthChecks.AddDbContextCheck<EventContext>(); // TODO(fpion): implement
+    DatabaseProvider databaseProvider = _configuration.GetValue<DatabaseProvider?>("DatabaseProvider") ?? DatabaseProvider.EntityFrameworkCoreSqlServer;
+    switch (databaseProvider)
+    {
+      case DatabaseProvider.EntityFrameworkCorePostgreSQL:
+        services.AddLogitarCmsWithEntityFrameworkCorePostgreSQL(_configuration);
+        healthChecks.AddDbContextCheck<EventContext>();
+        healthChecks.AddDbContextCheck<IdentityContext>();
+        healthChecks.AddDbContextCheck<CmsContext>();
+        break;
+      case DatabaseProvider.EntityFrameworkCoreSqlServer:
+        services.AddLogitarCmsWithEntityFrameworkCoreSqlServer(_configuration);
+        healthChecks.AddDbContextCheck<EventContext>();
+        healthChecks.AddDbContextCheck<IdentityContext>();
+        healthChecks.AddDbContextCheck<CmsContext>();
+        break;
+      default:
+        throw new DatabaseProviderNotSupportedException(databaseProvider);
+    }
+
+    services.AddLogitarCmsWeb();
   }
 
   public override void Configure(IApplicationBuilder builder)

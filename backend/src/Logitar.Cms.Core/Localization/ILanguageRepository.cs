@@ -1,0 +1,10 @@
+﻿using Logitar.Identity.Domain.Shared;
+
+namespace Logitar.Cms.Core.Localization;
+
+public interface ILanguageRepository
+{
+  Task<LanguageAggregate?> LoadAsync(LocaleUnit locale, CancellationToken cancellationToken = default);
+
+  Task SaveAsync(LanguageAggregate language, CancellationToken cancellationToken = default);
+}
