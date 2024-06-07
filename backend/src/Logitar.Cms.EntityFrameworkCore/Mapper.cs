@@ -1,6 +1,9 @@
 ﻿using Logitar.Cms.Contracts;
 using Logitar.Cms.Contracts.Actors;
 using Logitar.Cms.Contracts.Configurations;
+using Logitar.Cms.Contracts.Roles;
+using Logitar.Cms.Contracts.Sessions;
+using Logitar.Cms.Contracts.Users;
 using Logitar.Cms.Core.Configurations;
 using Logitar.EventSourcing;
 using Logitar.Identity.EntityFrameworkCore.Relational.Entities;
@@ -43,6 +46,124 @@ internal class Mapper
       RequireUniqueEmail = source.RequireUniqueEmail,
       LoggingSettings = new LoggingSettings(source.LoggingSettings)
     };
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public Role ToRole(RoleEntity source)
+  {
+    Role destination = new(source.UniqueName)
+    {
+      DisplayName = source.DisplayName,
+      Description = source.Description
+    };
+
+    foreach (KeyValuePair<string, string> customAttribute in source.CustomAttributes)
+    {
+      destination.CustomAttributes.Add(new CustomAttribute(customAttribute));
+    }
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public Session ToSession(SessionEntity source)
+  {
+    if (source.User == null)
+    {
+      throw new ArgumentException($"The {nameof(source.User)} is required.", nameof(source));
+    }
+
+    User user = ToUser(source.User);
+    Session destination = new(user)
+    {
+      IsPersistent = source.IsPersistent,
+      IsActive = source.IsActive,
+      SignedOutBy = TryFindActor(source.SignedOutBy),
+      SignedOutOn = AsUniversalTime(source.SignedOutOn)
+    };
+
+    foreach (KeyValuePair<string, string> customAttribute in source.CustomAttributes)
+    {
+      destination.CustomAttributes.Add(new CustomAttribute(customAttribute));
+    }
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public User ToUser(UserEntity source)
+  {
+    User destination = new(source.UniqueName)
+    {
+      HasPassword = source.HasPassword,
+      PasswordChangedBy = TryFindActor(source.PasswordChangedBy),
+      PasswordChangedOn = AsUniversalTime(source.PasswordChangedOn),
+      DisabledBy = TryFindActor(source.DisabledBy),
+      DisabledOn = AsUniversalTime(source.DisabledOn),
+      IsDisabled = source.IsDisabled,
+      IsConfirmed = source.IsConfirmed,
+      FirstName = source.FirstName,
+      MiddleName = source.MiddleName,
+      LastName = source.LastName,
+      FullName = source.FullName,
+      Nickname = source.Nickname,
+      Birthdate = AsUniversalTime(source.Birthdate),
+      Gender = source.Gender,
+      Locale = source.Locale == null ? null : new Locale(source.Locale),
+      TimeZone = source.TimeZone,
+      Picture = source.Picture,
+      Profile = source.Profile,
+      Website = source.Website,
+      AuthenticatedOn = AsUniversalTime(source.AuthenticatedOn)
+    };
+
+    if (source.AddressStreet != null && source.AddressLocality != null && source.AddressCountry != null && source.AddressFormatted != null)
+    {
+      destination.Address = new Address(source.AddressStreet, source.AddressLocality, source.AddressPostalCode, source.AddressRegion, source.AddressCountry, source.AddressFormatted)
+      {
+        IsVerified = source.IsAddressVerified,
+        VerifiedBy = TryFindActor(source.AddressVerifiedBy),
+        VerifiedOn = AsUniversalTime(source.AddressVerifiedOn)
+      };
+    }
+    if (source.EmailAddress != null)
+    {
+      destination.Email = new Email(source.EmailAddress)
+      {
+        IsVerified = source.IsEmailVerified,
+        VerifiedBy = TryFindActor(source.EmailVerifiedBy),
+        VerifiedOn = AsUniversalTime(source.EmailVerifiedOn)
+      };
+    }
+    if (source.PhoneNumber != null && source.PhoneE164Formatted != null)
+    {
+      destination.Phone = new Phone(source.PhoneCountryCode, source.PhoneNumber, source.PhoneExtension, source.PhoneE164Formatted)
+      {
+        IsVerified = source.IsEmailVerified,
+        VerifiedBy = TryFindActor(source.EmailVerifiedBy),
+        VerifiedOn = AsUniversalTime(source.EmailVerifiedOn)
+      };
+    }
+
+    foreach (KeyValuePair<string, string> customAttribute in source.CustomAttributes)
+    {
+      destination.CustomAttributes.Add(new CustomAttribute(customAttribute));
+    }
+
+    foreach (UserIdentifierEntity identifier in source.Identifiers)
+    {
+      destination.CustomIdentifiers.Add(new CustomIdentifier(identifier.Key, identifier.Value));
+    }
+
+    foreach (RoleEntity role in source.Roles)
+    {
+      destination.Roles.Add(ToRole(role));
+    }
 
     MapAggregate(source, destination);
 
