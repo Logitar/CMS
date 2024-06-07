@@ -5,17 +5,17 @@ VisualStudioVersion = 17.9.34902.65
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms.Contracts", "src\Logitar.Cms.Contracts\Logitar.Cms.Contracts.csproj", "{CA11620B-2097-427F-9D9F-5CA44BCE136E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.Core", "src\Logitar.Cms.Core\Logitar.Cms.Core.csproj", "{4681076E-950D-46FC-81B8-19157F14C041}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms.Core", "src\Logitar.Cms.Core\Logitar.Cms.Core.csproj", "{4681076E-950D-46FC-81B8-19157F14C041}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.Infrastructure", "src\Logitar.Cms.Infrastructure\Logitar.Cms.Infrastructure.csproj", "{7E85A2F8-0449-4207-8AEA-945CDB4E2499}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms.Infrastructure", "src\Logitar.Cms.Infrastructure\Logitar.Cms.Infrastructure.csproj", "{7E85A2F8-0449-4207-8AEA-945CDB4E2499}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.EntityFrameworkCore", "src\Logitar.Cms.EntityFrameworkCore\Logitar.Cms.EntityFrameworkCore.csproj", "{5DD78696-D04C-47D0-AB68-11AE8694B350}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms.EntityFrameworkCore", "src\Logitar.Cms.EntityFrameworkCore\Logitar.Cms.EntityFrameworkCore.csproj", "{5DD78696-D04C-47D0-AB68-11AE8694B350}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.EntityFrameworkCore.SqlServer", "src\Logitar.Cms.EntityFrameworkCore.SqlServer\Logitar.Cms.EntityFrameworkCore.SqlServer.csproj", "{B9BF7562-AC12-428C-B145-5822357C6EDF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms.EntityFrameworkCore.SqlServer", "src\Logitar.Cms.EntityFrameworkCore.SqlServer\Logitar.Cms.EntityFrameworkCore.SqlServer.csproj", "{B9BF7562-AC12-428C-B145-5822357C6EDF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.Web", "src\Logitar.Cms.Web\Logitar.Cms.Web.csproj", "{4BAFC7E5-FFDD-40AE-982C-98987A3C221D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms.Web", "src\Logitar.Cms.Web\Logitar.Cms.Web.csproj", "{4BAFC7E5-FFDD-40AE-982C-98987A3C221D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms", "src\Logitar.Cms\Logitar.Cms.csproj", "{FD0141D0-0A5D-41AA-B3A4-89F6736DB93C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms", "src\Logitar.Cms\Logitar.Cms.csproj", "{FD0141D0-0A5D-41AA-B3A4-89F6736DB93C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{81C85A94-3666-4598-B4B1-BEBD29F04414}"
 	ProjectSection(SolutionItems) = preProject
@@ -24,6 +24,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.EntityFrameworkCore.PostgreSQL", "src\Logitar.Cms.EntityFrameworkCore.PostgreSQL\Logitar.Cms.EntityFrameworkCore.PostgreSQL.csproj", "{5C57EAF6-9109-4D42-BCC7-5FE6822D9A82}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +61,10 @@ Global
 		{FD0141D0-0A5D-41AA-B3A4-89F6736DB93C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD0141D0-0A5D-41AA-B3A4-89F6736DB93C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD0141D0-0A5D-41AA-B3A4-89F6736DB93C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C57EAF6-9109-4D42-BCC7-5FE6822D9A82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C57EAF6-9109-4D42-BCC7-5FE6822D9A82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C57EAF6-9109-4D42-BCC7-5FE6822D9A82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C57EAF6-9109-4D42-BCC7-5FE6822D9A82}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
