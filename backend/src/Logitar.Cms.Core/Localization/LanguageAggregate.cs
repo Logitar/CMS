@@ -12,7 +12,7 @@ public class LanguageAggregate : AggregateRoot
   private LocaleUnit? _locale = null;
   public LocaleUnit Locale => _locale ?? throw new InvalidOperationException($"The {nameof(Locale)} has not been initialized yet.");
 
-  private LanguageAggregate() : base()
+  public LanguageAggregate() : base()
   {
   }
 

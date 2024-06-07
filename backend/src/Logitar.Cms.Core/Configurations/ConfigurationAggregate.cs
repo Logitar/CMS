@@ -28,7 +28,7 @@ public class ConfigurationAggregate : AggregateRoot
   private ReadOnlyLoggingSettings? _loggingSettings = null;
   public ReadOnlyLoggingSettings LoggingSettings => _loggingSettings ?? throw new InvalidOperationException($"The {nameof(LoggingSettings)} has not been initialized yet.");
 
-  private ConfigurationAggregate() : base()
+  public ConfigurationAggregate() : base()
   {
   }
 
