@@ -10,6 +10,8 @@ public static class DependencyInjectionExtensions
     services.AddControllersWithViews(options => options.Filters.Add<ExceptionHandling>())
       .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
-    return services.AddLogitarCmsCore();
+    return services
+      .AddLogitarCmsCore()
+      .AddTransient<IRequestPipeline, HttpRequestPipeline>();
   }
 }

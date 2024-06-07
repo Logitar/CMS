@@ -1,5 +1,6 @@
 ﻿using Logitar.Cms.Core.Configurations;
 using Logitar.Cms.Core.Localization;
+using Logitar.Cms.Core.Sessions;
 using Logitar.Cms.EntityFrameworkCore.Actors;
 using Logitar.Cms.EntityFrameworkCore.Queriers;
 using Logitar.Cms.EntityFrameworkCore.Repositories;
@@ -25,7 +26,8 @@ public static class DependencyInjectionExtensions
   private static IServiceCollection AddQueriers(this IServiceCollection services)
   {
     return services
-      .AddTransient<IConfigurationQuerier, ConfigurationQuerier>();
+      .AddTransient<IConfigurationQuerier, ConfigurationQuerier>()
+      .AddTransient<ISessionQuerier, SessionQuerier>();
   }
 
   private static IServiceCollection AddRepositories(this IServiceCollection services)
