@@ -7,12 +7,21 @@ public readonly struct LanguageId
   public AggregateId AggregateId { get; }
   public string Value => AggregateId.Value;
 
+  public LanguageId(Guid id)
+  {
+    AggregateId = new(id);
+  }
+  public LanguageId(string id)
+  {
+    AggregateId = new(id);
+  }
   public LanguageId(AggregateId aggregateId)
   {
     AggregateId = aggregateId;
   }
 
   public static LanguageId NewId() => new(AggregateId.NewId());
+  public static LanguageId? TryCreate(string? value) => string.IsNullOrWhiteSpace(value) ? null : new(value.Trim());
 
   public static bool operator ==(LanguageId left, LanguageId right) => left.Equals(right);
   public static bool operator !=(LanguageId left, LanguageId right) => !left.Equals(right);
