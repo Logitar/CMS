@@ -1,12 +1,17 @@
-﻿using Logitar.Cms.EntityFrameworkCore;
+﻿using Logitar.Cms.Authentication;
+using Logitar.Cms.Constants;
+using Logitar.Cms.EntityFrameworkCore;
 using Logitar.Cms.EntityFrameworkCore.PostgreSQL;
 using Logitar.Cms.EntityFrameworkCore.SqlServer;
 using Logitar.Cms.Extensions;
 using Logitar.Cms.Infrastructure;
 using Logitar.Cms.Settings;
 using Logitar.Cms.Web;
+using Logitar.Cms.Web.Settings;
 using Logitar.EventSourcing.EntityFrameworkCore.Relational;
 using Logitar.Identity.EntityFrameworkCore.Relational;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Logitar.Cms;
 
@@ -29,13 +34,33 @@ internal class Startup : StartupBase
     services.AddSingleton(corsSettings);
     services.AddCors(corsSettings);
 
+    AuthenticationBuilder authenticationBuilder = services.AddAuthentication()
+      //.AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(Schemes.ApiKey, options => { }) // TODO(fpion): ApiKey
+      //.AddScheme<BearerAuthenticationOptions, BearerAuthenticationHandler>(Schemes.Bearer, options => { }) // TODO(fpion): Bearer
+      .AddScheme<SessionAuthenticationOptions, SessionAuthenticationHandler>(Schemes.Session, options => { });
+    //if (_authenticationSchemes.Contains(Schemes.Basic))
+    //{
+    //  authenticationBuilder.AddScheme<BasicAuthenticationOptions, BasicAuthenticationHandler>(Schemes.Basic, options => { });
+    //} // TODO(fpion): Basic
+
+    services.AddAuthorizationBuilder().SetDefaultPolicy(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build());
+
+    CookiesSettings cookiesSettings = _configuration.GetSection("Cookies").Get<CookiesSettings>() ?? new();
+    services.AddSingleton(cookiesSettings);
+    services.AddSession(options =>
+    {
+      options.Cookie.SameSite = cookiesSettings.Session.SameSite;
+      options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    });
+    services.AddDistributedMemoryCache();
+
+    services.AddApplicationInsightsTelemetry();
+    IHealthChecksBuilder healthChecks = services.AddHealthChecks();
+
     if (_enableOpenApi)
     {
       services.AddOpenApi();
     }
-
-    services.AddApplicationInsightsTelemetry();
-    IHealthChecksBuilder healthChecks = services.AddHealthChecks();
 
     DatabaseProvider databaseProvider = _configuration.GetValue<DatabaseProvider?>("DatabaseProvider") ?? DatabaseProvider.EntityFrameworkCoreSqlServer;
     switch (databaseProvider)
@@ -69,6 +94,12 @@ internal class Startup : StartupBase
     builder.UseHttpsRedirection();
     builder.UseCors();
     builder.UseStaticFiles();
+    builder.UseSession();
+    //builder.UseMiddleware<Logging>(); // TODO(fpion): implement logging
+    //builder.UseMiddleware<RenewSession>(); // TODO(fpion): session renewal
+    //builder.UseMiddleware<RedirectNotFound>(); // TODO(fpion): client app
+    builder.UseAuthentication();
+    builder.UseAuthorization();
 
     if (builder is WebApplication application)
     {
