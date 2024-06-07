@@ -12,6 +12,7 @@ public class ExceptionHandling : ExceptionFilterAttribute
   public override void OnException(ExceptionContext context)
   {
     // TODO(fpion): handle LocaleAlreadyUsedException
+    // TODO(fpion): handle Renewal exceptions
     // TODO(fpion): handle SignIn exceptions
 
     if (context.Exception is ValidationException validation)

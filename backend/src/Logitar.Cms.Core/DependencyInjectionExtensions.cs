@@ -11,6 +11,7 @@ public static class DependencyInjectionExtensions
     return services
       .AddLogitarIdentityDomain()
       .AddMediatR(config => config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()))
-      .AddScoped<ILoggingService, LoggingService>();
+      .AddScoped<ILoggingService, LoggingService>()
+      .AddTransient<IRequestPipeline, RequestPipeline>();
   }
 }

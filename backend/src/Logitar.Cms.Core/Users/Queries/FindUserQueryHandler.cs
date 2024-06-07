@@ -27,6 +27,6 @@ internal class FindUserQueryHandler : IRequestHandler<FindUserQuery, UserAggrega
       }
     }
 
-    return user ?? throw new NotImplementedException(); // TODO(fpion): implement
+    return user ?? throw new NotImplementedException(); // TODO(fpion): UserNotFoundException (InvalidCredentialsException)
   }
 }

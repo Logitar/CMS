@@ -5,6 +5,7 @@ using Logitar.Cms.EntityFrameworkCore.PostgreSQL;
 using Logitar.Cms.EntityFrameworkCore.SqlServer;
 using Logitar.Cms.Extensions;
 using Logitar.Cms.Infrastructure;
+using Logitar.Cms.Middlewares;
 using Logitar.Cms.Settings;
 using Logitar.Cms.Web;
 using Logitar.Cms.Web.Settings;
@@ -95,9 +96,9 @@ internal class Startup : StartupBase
     builder.UseCors();
     builder.UseStaticFiles();
     builder.UseSession();
-    //builder.UseMiddleware<Logging>(); // TODO(fpion): implement logging
-    //builder.UseMiddleware<RenewSession>(); // TODO(fpion): session renewal
-    //builder.UseMiddleware<RedirectNotFound>(); // TODO(fpion): client app
+    //builder.UseMiddleware<Logging>(); // TODO(fpion): Logging
+    builder.UseMiddleware<RenewSession>();
+    //builder.UseMiddleware<RedirectNotFound>(); // TODO(fpion): Frontend
     builder.UseAuthentication();
     builder.UseAuthorization();
 
