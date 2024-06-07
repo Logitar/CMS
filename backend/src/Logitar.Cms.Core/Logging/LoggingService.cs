@@ -4,20 +4,17 @@ using Logitar.Cms.Contracts.Users;
 
 namespace Logitar.Cms.Core.Logging;
 
-public class LoggingService : ILoggingService
+public class LoggingService : ILoggingService // TODO(fpion): Logging
 {
   public virtual void SetApiKey(ApiKey? apiKey)
   {
-    // TODO(fpion): implement
   }
 
   public virtual void SetSession(Session? session)
   {
-    // TODO(fpion): implement
   }
 
   public virtual void SetUser(User? user)
   {
-    // TODO(fpion): implement
   }
 }

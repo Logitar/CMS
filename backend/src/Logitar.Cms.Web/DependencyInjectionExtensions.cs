@@ -12,6 +12,6 @@ public static class DependencyInjectionExtensions
 
     return services
       .AddLogitarCmsCore()
-      .AddTransient<IRequestPipeline, HttpRequestPipeline>();
+      .AddTransient<IActivityContextResolver, HttpActivityContextResolver>();
   }
 }
