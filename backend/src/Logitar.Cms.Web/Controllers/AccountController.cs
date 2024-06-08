@@ -2,6 +2,7 @@
 using Logitar.Cms.Contracts.Users;
 using Logitar.Cms.Core;
 using Logitar.Cms.Core.Sessions.Commands;
+using Logitar.Cms.Core.Users.Commands;
 using Logitar.Cms.Web.Authentication;
 using Logitar.Cms.Web.Extensions;
 using Logitar.Cms.Web.Models.Account;
@@ -37,6 +38,30 @@ public class AccountController : ControllerBase
 
     CurrentUser currentUser = new(session);
     return Ok(currentUser);
+  }
+
+  [Authorize]
+  [HttpPost("sign/out")]
+  public async Task<ActionResult> SignOutAsync(CancellationToken cancellationToken)
+  {
+    Guid? sessionId = HttpContext.GetSessionId();
+    if (sessionId.HasValue)
+    {
+      _ = await _pipeline.ExecuteAsync(new SignOutSessionCommand(sessionId.Value), cancellationToken);
+    }
+    HttpContext.SignOut();
+
+    return NoContent();
+  }
+
+  [Authorize]
+  [HttpPost("sign/out/everywhere")]
+  public async Task<ActionResult> SignOutEverywhereAsync(CancellationToken cancellationToken)
+  {
+    _ = await _pipeline.ExecuteAsync(new SignOutUserCommand(User.Id), cancellationToken);
+    HttpContext.SignOut();
+
+    return NoContent();
   }
 
   [HttpPost("token")]
