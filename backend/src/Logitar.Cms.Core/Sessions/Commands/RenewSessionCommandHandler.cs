@@ -68,4 +68,4 @@ internal class RenewSessionCommandHandler : IRequestHandler<RenewSessionCommand,
     result.RefreshToken = RefreshToken.Encode(session, secretString);
     return result;
   }
-}
+} // TODO(fpion): Integration Tests

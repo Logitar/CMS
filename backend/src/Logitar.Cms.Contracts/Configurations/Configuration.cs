@@ -2,7 +2,7 @@
 
 public class Configuration : Aggregate
 {
-  public string JwtSecret { get; set; }
+  public string Secret { get; set; }
 
   public UniqueNameSettings UniqueNameSettings { get; set; } = new();
   public PasswordSettings PasswordSettings { get; set; } = new();
@@ -14,8 +14,8 @@ public class Configuration : Aggregate
   {
   }
 
-  public Configuration(string jwtSecret)
+  public Configuration(string secret)
   {
-    JwtSecret = jwtSecret;
+    Secret = secret;
   }
 }

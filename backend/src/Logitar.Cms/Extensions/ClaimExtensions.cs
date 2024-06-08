@@ -3,7 +3,6 @@ using Logitar.Cms.Contracts.Roles;
 using Logitar.Cms.Contracts.Sessions;
 using Logitar.Cms.Contracts.Users;
 using Logitar.Security.Claims;
-using System.Security.Claims;
 
 namespace Logitar.Cms.Extensions;
 

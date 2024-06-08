@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Logitar.Cms.EntityFrameworkCore.Actors;
 
-internal class ActorService : IActorService
+public class ActorService : IActorService
 {
   private readonly DbSet<ActorEntity> _actors;
   private readonly ICacheService _cacheService;
@@ -18,7 +18,7 @@ internal class ActorService : IActorService
     _cacheService = cacheService;
   }
 
-  public async Task<IReadOnlyCollection<Actor>> FindAsync(IEnumerable<ActorId> ids, CancellationToken cancellationToken)
+  public virtual async Task<IReadOnlyCollection<Actor>> FindAsync(IEnumerable<ActorId> ids, CancellationToken cancellationToken)
   {
     int capacity = ids.Count();
 

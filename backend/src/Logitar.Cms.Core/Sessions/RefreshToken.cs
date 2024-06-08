@@ -2,7 +2,7 @@
 
 namespace Logitar.Cms.Core.Sessions;
 
-internal record RefreshToken
+public record RefreshToken
 {
   public const int SecretLength = 256 / 8;
   private const string Prefix = "RT";
