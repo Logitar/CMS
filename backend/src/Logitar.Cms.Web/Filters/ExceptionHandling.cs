@@ -15,6 +15,7 @@ public class ExceptionHandling : ExceptionFilterAttribute
     // TODO(fpion): handle Authentication exceptions
     // TODO(fpion): handle Renewal exceptions
     // TODO(fpion): handle SignIn exceptions
+    // TODO(fpion): handle SignOut & SignOutEverywhere exceptions
 
     if (context.Exception is ValidationException validation)
     {
