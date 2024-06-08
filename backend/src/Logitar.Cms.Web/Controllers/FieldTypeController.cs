@@ -1,6 +1,7 @@
 ﻿using Logitar.Cms.Contracts.Fields;
 using Logitar.Cms.Core;
 using Logitar.Cms.Core.Fields.Commands;
+using Logitar.Cms.Core.Fields.Queries;
 using Logitar.Cms.Web.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -30,19 +31,19 @@ public class FieldTypeController : ControllerBase
     return Created(location, fieldType);
   }
 
-  //[HttpGet("{id}")]
-  //public async Task<ActionResult<FieldType>> ReadAsync(Guid id, CancellationToken cancellationToken)
-  //{
-  //  FieldType? fieldType = await _pipeline.ExecuteAsync(new ReadFieldTypeQuery(id, UniqueName: null), cancellationToken);
-  //  return fieldType == null ? NotFound() : Ok(fieldType);
-  //}
+  [HttpGet("{id}")]
+  public async Task<ActionResult<FieldType>> ReadAsync(Guid id, CancellationToken cancellationToken)
+  {
+    FieldType? fieldType = await _pipeline.ExecuteAsync(new ReadFieldTypeQuery(id, UniqueName: null), cancellationToken);
+    return fieldType == null ? NotFound() : Ok(fieldType);
+  }
 
-  //[HttpGet("unique-name:{uniqueName}")]
-  //public async Task<ActionResult<FieldType>> ReadAsync(string uniqueName, CancellationToken cancellationToken)
-  //{
-  //  FieldType? fieldType = await _pipeline.ExecuteAsync(new ReadFieldTypeQuery(Id: null, uniqueName), cancellationToken);
-  //  return fieldType == null ? NotFound() : Ok(fieldType);
-  //}
+  [HttpGet("unique-name:{uniqueName}")]
+  public async Task<ActionResult<FieldType>> ReadAsync(string uniqueName, CancellationToken cancellationToken)
+  {
+    FieldType? fieldType = await _pipeline.ExecuteAsync(new ReadFieldTypeQuery(Id: null, uniqueName), cancellationToken);
+    return fieldType == null ? NotFound() : Ok(fieldType);
+  }
 
   //[HttpPut("{id}")]
   //public async Task<ActionResult<FieldType>> ReplaceAsync(Guid id, [FromBody] ReplaceFieldTypePayload payload, long? version, CancellationToken cancellationToken = default)

@@ -23,6 +23,8 @@ public readonly struct LanguageId
   public static LanguageId NewId() => new(AggregateId.NewId());
   public static LanguageId? TryCreate(string? value) => string.IsNullOrWhiteSpace(value) ? null : new(value.Trim());
 
+  public Guid ToGuid() => AggregateId.ToGuid();
+
   public static bool operator ==(LanguageId left, LanguageId right) => left.Equals(right);
   public static bool operator !=(LanguageId left, LanguageId right) => !left.Equals(right);
 

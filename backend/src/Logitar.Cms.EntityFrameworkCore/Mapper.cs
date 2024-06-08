@@ -1,10 +1,14 @@
 ﻿using Logitar.Cms.Contracts;
 using Logitar.Cms.Contracts.Actors;
 using Logitar.Cms.Contracts.Configurations;
+using Logitar.Cms.Contracts.Fields;
+using Logitar.Cms.Contracts.Fields.Properties;
 using Logitar.Cms.Contracts.Roles;
 using Logitar.Cms.Contracts.Sessions;
 using Logitar.Cms.Contracts.Users;
 using Logitar.Cms.Core.Configurations;
+using Logitar.Cms.Core.Fields;
+using Logitar.Cms.EntityFrameworkCore.Entities;
 using Logitar.EventSourcing;
 using Logitar.Identity.EntityFrameworkCore.Relational.Entities;
 
@@ -51,6 +55,79 @@ internal class Mapper
 
     return destination;
   }
+
+  public FieldType ToFieldType(FieldTypeEntity s)
+  {
+    FieldType d = new(s.UniqueName)
+    {
+      DisplayName = s.DisplayName,
+      Description = s.Description
+    };
+
+    switch (s.DataType)
+    {
+      case DataType.Boolean:
+        d.DataType = DataType.Boolean;
+        d.BooleanProperties = new BooleanProperties();
+        break;
+      case DataType.DateTime:
+        d.DataType = DataType.DateTime;
+        d.DateTimeProperties = new DateTimeProperties
+        {
+          MinimumValue = TryGetDateTime(s, nameof(IDateTimeProperties.MinimumValue)),
+          MaximumValue = TryGetDateTime(s, nameof(IDateTimeProperties.MaximumValue))
+        };
+        break;
+      case DataType.Number:
+        d.DataType = DataType.Number;
+        d.NumberProperties = new NumberProperties
+        {
+          MinimumValue = TryGetDouble(s, nameof(INumberProperties.MinimumValue)),
+          MaximumValue = TryGetDouble(s, nameof(INumberProperties.MaximumValue)),
+          Step = TryGetDouble(s, nameof(INumberProperties.Step))
+        };
+        break;
+      case DataType.String:
+        d.DataType = DataType.String;
+        d.StringProperties = new StringProperties
+        {
+          MinimumLength = TryGetInt32(s, nameof(IStringProperties.MinimumLength)),
+          MaximumLength = TryGetInt32(s, nameof(IStringProperties.MaximumLength)),
+          Pattern = TryGetProperty(s, nameof(IStringProperties.Pattern))
+        };
+        break;
+      case DataType.Text:
+        d.DataType = DataType.Text;
+        d.TextProperties = new TextProperties(s.Properties[nameof(ITextProperties.ContentType)])
+        {
+          MinimumLength = TryGetInt32(s, nameof(ITextProperties.MinimumLength)),
+          MaximumLength = TryGetInt32(s, nameof(ITextProperties.MaximumLength)),
+        };
+        break;
+      default:
+        throw new DataTypeNotSupportedException(s.DataType);
+    }
+
+    MapAggregate(s, d);
+
+    return d;
+  }
+  private static DateTime? TryGetDateTime(FieldTypeEntity entity, string key)
+  {
+    string? value = TryGetProperty(entity, key);
+    return value == null ? null : DateTime.Parse(value);
+  }
+  private static double? TryGetDouble(FieldTypeEntity entity, string key)
+  {
+    string? value = TryGetProperty(entity, key);
+    return value == null ? null : double.Parse(value);
+  }
+  private static int? TryGetInt32(FieldTypeEntity entity, string key)
+  {
+    string? value = TryGetProperty(entity, key);
+    return value == null ? null : int.Parse(value);
+  }
+  private static string? TryGetProperty(FieldTypeEntity entity, string key) => entity.Properties.TryGetValue(key, out string? value) ? value : null;
 
   public Role ToRole(RoleEntity source)
   {

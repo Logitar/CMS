@@ -23,6 +23,8 @@ public readonly struct FieldTypeId
   public static FieldTypeId NewId() => new(AggregateId.NewId());
   public static FieldTypeId? TryCreate(string? value) => string.IsNullOrWhiteSpace(value) ? null : new(value.Trim());
 
+  public Guid ToGuid() => AggregateId.ToGuid();
+
   public static bool operator ==(FieldTypeId left, FieldTypeId right) => left.Equals(right);
   public static bool operator !=(FieldTypeId left, FieldTypeId right) => !left.Equals(right);
 

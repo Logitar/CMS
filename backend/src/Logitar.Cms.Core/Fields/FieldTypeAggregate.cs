@@ -61,6 +61,10 @@ public class FieldTypeAggregate : AggregateRoot
   private FieldTypeProperties? _properties = null;
   public FieldTypeProperties Properties => _properties ?? throw new InvalidOperationException($"The {nameof(Properties)} has not been initialized yet.");
 
+  public FieldTypeAggregate() : base()
+  {
+  }
+
   public FieldTypeAggregate(UniqueNameUnit uniqueName, FieldTypeProperties properties, ActorId actorId = default, FieldTypeId? id = null)
     : base((id ?? FieldTypeId.NewId()).AggregateId)
   {

@@ -17,6 +17,7 @@ public class ExceptionHandling : ExceptionFilterAttribute
     // TODO(fpion): handle SignIn exceptions
     // TODO(fpion): handle SignOut & SignOutEverywhere exceptions
     // TODO(fpion): handle Logitar.Cms.Core.UniqueNameAlreadyUsedException
+    // TODO(fpion): handle TooManyResultsException
 
     if (context.Exception is ValidationException validation)
     {
