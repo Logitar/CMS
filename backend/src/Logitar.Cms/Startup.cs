@@ -41,10 +41,10 @@ internal class Startup : StartupBase // TODO(fpion): reduce the size of this fil
       //.AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(Schemes.ApiKey, options => { }) // TODO(fpion): X-API-Key
       .AddScheme<BearerAuthenticationOptions, BearerAuthenticationHandler>(Schemes.Bearer, options => { })
       .AddScheme<SessionAuthenticationOptions, SessionAuthenticationHandler>(Schemes.Session, options => { });
-    //if (_authenticationSchemes.Contains(Schemes.Basic))
-    //{
-    //  authenticationBuilder.AddScheme<BasicAuthenticationOptions, BasicAuthenticationHandler>(Schemes.Basic, options => { });
-    //} // TODO(fpion): Basic
+    if (_authenticationSchemes.Contains(Schemes.Basic))
+    {
+      authenticationBuilder.AddScheme<BasicAuthenticationOptions, BasicAuthenticationHandler>(Schemes.Basic, options => { });
+    }
 
     services.AddAuthorizationBuilder()
       .SetDefaultPolicy(new AuthorizationPolicyBuilder(_authenticationSchemes).RequireAuthenticatedUser().Build());
