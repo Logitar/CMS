@@ -56,61 +56,61 @@ internal class Mapper
     return destination;
   }
 
-  public FieldType ToFieldType(FieldTypeEntity s)
+  public FieldType ToFieldType(FieldTypeEntity source)
   {
-    FieldType d = new(s.UniqueName)
+    FieldType destination = new(source.UniqueName)
     {
-      DisplayName = s.DisplayName,
-      Description = s.Description
+      DisplayName = source.DisplayName,
+      Description = source.Description
     };
 
-    switch (s.DataType)
+    switch (source.DataType)
     {
       case DataType.Boolean:
-        d.DataType = DataType.Boolean;
-        d.BooleanProperties = new BooleanProperties();
+        destination.DataType = DataType.Boolean;
+        destination.BooleanProperties = new BooleanProperties();
         break;
       case DataType.DateTime:
-        d.DataType = DataType.DateTime;
-        d.DateTimeProperties = new DateTimeProperties
+        destination.DataType = DataType.DateTime;
+        destination.DateTimeProperties = new DateTimeProperties
         {
-          MinimumValue = TryGetDateTime(s, nameof(IDateTimeProperties.MinimumValue)),
-          MaximumValue = TryGetDateTime(s, nameof(IDateTimeProperties.MaximumValue))
+          MinimumValue = TryGetDateTime(source, nameof(IDateTimeProperties.MinimumValue)),
+          MaximumValue = TryGetDateTime(source, nameof(IDateTimeProperties.MaximumValue))
         };
         break;
       case DataType.Number:
-        d.DataType = DataType.Number;
-        d.NumberProperties = new NumberProperties
+        destination.DataType = DataType.Number;
+        destination.NumberProperties = new NumberProperties
         {
-          MinimumValue = TryGetDouble(s, nameof(INumberProperties.MinimumValue)),
-          MaximumValue = TryGetDouble(s, nameof(INumberProperties.MaximumValue)),
-          Step = TryGetDouble(s, nameof(INumberProperties.Step))
+          MinimumValue = TryGetDouble(source, nameof(INumberProperties.MinimumValue)),
+          MaximumValue = TryGetDouble(source, nameof(INumberProperties.MaximumValue)),
+          Step = TryGetDouble(source, nameof(INumberProperties.Step))
         };
         break;
       case DataType.String:
-        d.DataType = DataType.String;
-        d.StringProperties = new StringProperties
+        destination.DataType = DataType.String;
+        destination.StringProperties = new StringProperties
         {
-          MinimumLength = TryGetInt32(s, nameof(IStringProperties.MinimumLength)),
-          MaximumLength = TryGetInt32(s, nameof(IStringProperties.MaximumLength)),
-          Pattern = TryGetProperty(s, nameof(IStringProperties.Pattern))
+          MinimumLength = TryGetInt32(source, nameof(IStringProperties.MinimumLength)),
+          MaximumLength = TryGetInt32(source, nameof(IStringProperties.MaximumLength)),
+          Pattern = TryGetProperty(source, nameof(IStringProperties.Pattern))
         };
         break;
       case DataType.Text:
-        d.DataType = DataType.Text;
-        d.TextProperties = new TextProperties(s.Properties[nameof(ITextProperties.ContentType)])
+        destination.DataType = DataType.Text;
+        destination.TextProperties = new TextProperties(source.Properties[nameof(ITextProperties.ContentType)])
         {
-          MinimumLength = TryGetInt32(s, nameof(ITextProperties.MinimumLength)),
-          MaximumLength = TryGetInt32(s, nameof(ITextProperties.MaximumLength)),
+          MinimumLength = TryGetInt32(source, nameof(ITextProperties.MinimumLength)),
+          MaximumLength = TryGetInt32(source, nameof(ITextProperties.MaximumLength)),
         };
         break;
       default:
-        throw new DataTypeNotSupportedException(s.DataType);
+        throw new DataTypeNotSupportedException(source.DataType);
     }
 
-    MapAggregate(s, d);
+    MapAggregate(source, destination);
 
-    return d;
+    return destination;
   }
   private static DateTime? TryGetDateTime(FieldTypeEntity entity, string key)
   {

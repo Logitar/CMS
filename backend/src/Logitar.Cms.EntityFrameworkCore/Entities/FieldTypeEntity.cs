@@ -2,7 +2,6 @@
 using Logitar.Cms.Contracts.Fields.Properties;
 using Logitar.Cms.Core.Fields.Events;
 using Logitar.Identity.EntityFrameworkCore.Relational.Entities;
-using System.Text.Json;
 
 namespace Logitar.Cms.EntityFrameworkCore.Entities;
 
