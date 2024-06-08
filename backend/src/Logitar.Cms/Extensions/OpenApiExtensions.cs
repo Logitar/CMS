@@ -73,32 +73,32 @@ internal static class OpenApiExtensions
     //  }
     //}); // TODO(fpion): X-API-Key
 
-    //options.AddSecurityDefinition(Schemes.Basic, new OpenApiSecurityScheme
-    //{
-    //  Description = "Enter your credentials in the inputs below:",
-    //  In = ParameterLocation.Header,
-    //  Name = Headers.Authorization,
-    //  Scheme = Schemes.Basic,
-    //  Type = SecuritySchemeType.Http
-    //});
-    //options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    //{
-    //  {
-    //    new OpenApiSecurityScheme
-    //    {
-    //      In = ParameterLocation.Header,
-    //      Name = Headers.Authorization,
-    //      Reference = new OpenApiReference
-    //      {
-    //        Id = Schemes.Basic,
-    //        Type = ReferenceType.SecurityScheme
-    //      },
-    //      Scheme = Schemes.Basic,
-    //      Type = SecuritySchemeType.Http
-    //    },
-    //    new List<string>()
-    //  }
-    //}); // TODO(fpion): Basic
+    options.AddSecurityDefinition(Schemes.Basic, new OpenApiSecurityScheme
+    {
+      Description = "Enter your credentials in the inputs below:",
+      In = ParameterLocation.Header,
+      Name = Headers.Authorization,
+      Scheme = Schemes.Basic,
+      Type = SecuritySchemeType.Http
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+      {
+        new OpenApiSecurityScheme
+        {
+          In = ParameterLocation.Header,
+          Name = Headers.Authorization,
+          Reference = new OpenApiReference
+          {
+            Id = Schemes.Basic,
+            Type = ReferenceType.SecurityScheme
+          },
+          Scheme = Schemes.Basic,
+          Type = SecuritySchemeType.Http
+        },
+        new List<string>()
+      }
+    });
 
     options.AddSecurityDefinition(Schemes.Bearer, new OpenApiSecurityScheme
     {
