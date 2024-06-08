@@ -1,6 +1,6 @@
-﻿namespace Logitar.Cms.Contracts.Fields;
+﻿namespace Logitar.Cms.Contracts.Fields.Properties;
 
-public record NumberProperties
+public record NumberProperties : INumberProperties
 {
   public double? MinimumValue { get; set; }
   public double? MaximumValue { get; set; }
