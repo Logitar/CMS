@@ -10,7 +10,6 @@ using Logitar.Cms.Web.Settings;
 using Logitar.Identity.Domain.Sessions;
 using Logitar.Identity.Domain.Tokens;
 using Logitar.Security.Claims;
-using System.Security.Claims;
 
 namespace Logitar.Cms.Web.Authentication;
 
