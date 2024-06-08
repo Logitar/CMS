@@ -3,19 +3,14 @@ using Logitar.Cms.Web.Extensions;
 
 namespace Logitar.Cms.Web.Models.Account;
 
-public record SignInPayload
+public record SignInPayload : Credentials
 {
-  public string Username { get; set; }
-  public string Password { get; set; }
-
-  public SignInPayload() : this(string.Empty, string.Empty)
+  public SignInPayload() : base()
   {
   }
 
-  public SignInPayload(string username, string password)
+  public SignInPayload(string username, string password) : base(username, password)
   {
-    Username = username;
-    Password = password;
   }
 
   public SignInSessionPayload ToPayload(HttpContext context) => new(Username, Password, context.GetSessionCustomAttributes());

@@ -4,7 +4,7 @@ using Logitar.Cms.Core.Validators;
 
 namespace Logitar.Cms.Core.Sessions.Validators;
 
-internal class RenewSessionValidator : AbstractValidator<RenewSessionPayload>
+public class RenewSessionValidator : AbstractValidator<RenewSessionPayload>
 {
   public RenewSessionValidator()
   {

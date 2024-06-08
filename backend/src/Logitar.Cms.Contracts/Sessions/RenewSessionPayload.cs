@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Logitar.Cms.Contracts.Sessions;
+﻿namespace Logitar.Cms.Contracts.Sessions;
 
 public record RenewSessionPayload
 {

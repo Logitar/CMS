@@ -7,7 +7,6 @@ using Logitar.Cms.Web.Constants;
 using Logitar.Cms.Web.Settings;
 using Logitar.Net.Http;
 using Microsoft.Extensions.Primitives;
-using System.Text.Json;
 
 namespace Logitar.Cms.Web.Extensions;
 

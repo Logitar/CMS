@@ -1,5 +1,4 @@
 ﻿using Logitar.Cms.Authentication;
-using Logitar.Cms.Constants;
 using Logitar.Cms.EntityFrameworkCore;
 using Logitar.Cms.EntityFrameworkCore.PostgreSQL;
 using Logitar.Cms.EntityFrameworkCore.SqlServer;
@@ -8,6 +7,7 @@ using Logitar.Cms.Infrastructure;
 using Logitar.Cms.Middlewares;
 using Logitar.Cms.Settings;
 using Logitar.Cms.Web;
+using Logitar.Cms.Web.Constants;
 using Logitar.Cms.Web.Settings;
 using Logitar.EventSourcing.EntityFrameworkCore.Relational;
 using Logitar.Identity.EntityFrameworkCore.Relational;
@@ -16,14 +16,16 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Logitar.Cms;
 
-internal class Startup : StartupBase
+internal class Startup : StartupBase // TODO(fpion): reduce the size of this file
 {
   private readonly IConfiguration _configuration;
+  private readonly string[] _authenticationSchemes;
   private readonly bool _enableOpenApi;
 
   public Startup(IConfiguration configuration)
   {
     _configuration = configuration;
+    _authenticationSchemes = Schemes.GetEnabled(configuration);
     _enableOpenApi = configuration.GetValue<bool>("EnableOpenApi");
   }
 
@@ -36,24 +38,27 @@ internal class Startup : StartupBase
     services.AddCors(corsSettings);
 
     AuthenticationBuilder authenticationBuilder = services.AddAuthentication()
-      //.AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(Schemes.ApiKey, options => { }) // TODO(fpion): ApiKey
-      //.AddScheme<BearerAuthenticationOptions, BearerAuthenticationHandler>(Schemes.Bearer, options => { }) // TODO(fpion): Bearer
+      //.AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(Schemes.ApiKey, options => { }) // TODO(fpion): X-API-Key
+      .AddScheme<BearerAuthenticationOptions, BearerAuthenticationHandler>(Schemes.Bearer, options => { })
       .AddScheme<SessionAuthenticationOptions, SessionAuthenticationHandler>(Schemes.Session, options => { });
     //if (_authenticationSchemes.Contains(Schemes.Basic))
     //{
     //  authenticationBuilder.AddScheme<BasicAuthenticationOptions, BasicAuthenticationHandler>(Schemes.Basic, options => { });
     //} // TODO(fpion): Basic
 
-    services.AddAuthorizationBuilder().SetDefaultPolicy(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build());
+    services.AddAuthorizationBuilder()
+      .SetDefaultPolicy(new AuthorizationPolicyBuilder(_authenticationSchemes).RequireAuthenticatedUser().Build());
 
     CookiesSettings cookiesSettings = _configuration.GetSection("Cookies").Get<CookiesSettings>() ?? new();
-    services.AddSingleton(cookiesSettings);
+    services.AddSingleton(cookiesSettings); // TODO(fpion): move to Logitar.Cms.Web
     services.AddSession(options =>
     {
       options.Cookie.SameSite = cookiesSettings.Session.SameSite;
       options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     });
     services.AddDistributedMemoryCache();
+
+    services.AddLogitarCmsWeb();
 
     services.AddApplicationInsightsTelemetry();
     IHealthChecksBuilder healthChecks = services.AddHealthChecks();
@@ -81,8 +86,6 @@ internal class Startup : StartupBase
       default:
         throw new DatabaseProviderNotSupportedException(databaseProvider);
     }
-
-    services.AddLogitarCmsWeb();
   }
 
   public override void Configure(IApplicationBuilder builder)

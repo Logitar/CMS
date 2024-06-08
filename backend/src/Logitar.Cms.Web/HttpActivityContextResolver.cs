@@ -1,5 +1,4 @@
-﻿using Logitar.Cms.Contracts.Configurations;
-using Logitar.Cms.Core;
+﻿using Logitar.Cms.Core;
 using Logitar.Cms.Core.Caching;
 using Logitar.Cms.Web.Extensions;
 
@@ -20,9 +19,7 @@ public class HttpActivityContextResolver : IActivityContextResolver
 
   public virtual Task<ActivityContext> ResolveAsync(CancellationToken cancellationToken)
   {
-    Configuration configuration = _cacheService.Configuration ?? throw new InvalidOperationException("The configuration was not found in the cache.");
-    ActivityContext context = new(configuration, Context.GetApiKey(), Context.GetSession(), Context.GetUser());
-
+    ActivityContext context = new(_cacheService.GetConfiguration(), Context.GetApiKey(), Context.GetSession(), Context.GetUser());
     return Task.FromResult(context);
   }
 }
