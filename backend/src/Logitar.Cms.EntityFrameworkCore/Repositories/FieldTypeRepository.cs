@@ -20,6 +20,16 @@ internal class FieldTypeRepository : EventSourcing.EntityFrameworkCore.Relationa
     _sqlHelper = sqlHelper;
   }
 
+  public async Task<FieldTypeAggregate?> LoadAsync(FieldTypeId id, CancellationToken cancellationToken)
+  {
+    return await LoadAsync(id, version: null, cancellationToken);
+  }
+
+  public async Task<FieldTypeAggregate?> LoadAsync(FieldTypeId id, long? version, CancellationToken cancellationToken)
+  {
+    return await LoadAsync<FieldTypeAggregate>(id.AggregateId, version, cancellationToken);
+  }
+
   public async Task<FieldTypeAggregate?> LoadAsync(UniqueNameUnit uniqueName, CancellationToken cancellationToken)
   {
     IQuery query = _sqlHelper.QueryFrom(EventDb.Events.Table).SelectAll(EventDb.Events.Table)
