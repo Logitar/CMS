@@ -46,12 +46,16 @@ internal class FieldTypeEntity : AggregateEntity
   {
   }
 
-  public void SetProperties(BooleanFieldTypePropertiesChangedEvent _)
+  public void SetProperties(BooleanFieldTypePropertiesChangedEvent @event)
   {
+    Update(@event);
+
     Properties.Clear();
   }
   public void SetProperties(DateTimeFieldTypePropertiesChangedEvent @event)
   {
+    Update(@event);
+
     Properties.Clear();
 
     if (@event.Properties.MinimumValue.HasValue)
@@ -65,6 +69,8 @@ internal class FieldTypeEntity : AggregateEntity
   }
   public void SetProperties(NumberFieldTypePropertiesChangedEvent @event)
   {
+    Update(@event);
+
     Properties.Clear();
 
     if (@event.Properties.MinimumValue.HasValue)
@@ -82,6 +88,8 @@ internal class FieldTypeEntity : AggregateEntity
   }
   public void SetProperties(StringFieldTypePropertiesChangedEvent @event)
   {
+    Update(@event);
+
     Properties.Clear();
 
     if (@event.Properties.MinimumLength.HasValue)
@@ -99,6 +107,8 @@ internal class FieldTypeEntity : AggregateEntity
   }
   public void SetProperties(TextFieldTypePropertiesChangedEvent @event)
   {
+    Update(@event);
+
     Properties.Clear();
 
     Properties[nameof(ITextProperties.ContentType)] = @event.Properties.ContentType;

@@ -22,7 +22,7 @@ internal class FieldTypeQuerier : IFieldTypeQuerier
   public async Task<FieldType> ReadAsync(FieldTypeAggregate fieldType, CancellationToken cancellationToken)
   {
     return await ReadAsync(fieldType.Id, cancellationToken)
-      ?? throw new InvalidOperationException($"The fieldType entity (AggregateId={fieldType.Id.AggregateId}) could not be found.");
+      ?? throw new InvalidOperationException($"The field type entity (AggregateId={fieldType.Id.AggregateId}) could not be found.");
   }
   public async Task<FieldType?> ReadAsync(FieldTypeId id, CancellationToken cancellationToken)
   {
