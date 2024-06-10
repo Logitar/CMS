@@ -17,7 +17,11 @@ public record GetTokenPayload
       throw new InvalidOperationException($"The {nameof(RefreshToken)} is required.");
     }
 
-    return new RenewSessionPayload(RefreshToken, context.GetSessionCustomAttributes());
+    return new RenewSessionPayload(RefreshToken)
+    {
+      AdditionalInformation = context.GetAdditionalInformation(),
+      IpAddress = context.GetClientIpAddress()
+    };
   }
 
   public SignInSessionPayload ToSignInPayload(HttpContext context)
@@ -27,6 +31,10 @@ public record GetTokenPayload
       throw new InvalidOperationException($"The {nameof(Credentials)} is required.");
     }
 
-    return new SignInSessionPayload(Credentials.Username, Credentials.Password, context.GetSessionCustomAttributes());
+    return new SignInSessionPayload(Credentials.Username, Credentials.Password)
+    {
+      AdditionalInformation = context.GetAdditionalInformation(),
+      IpAddress = context.GetClientIpAddress()
+    };
   }
 }

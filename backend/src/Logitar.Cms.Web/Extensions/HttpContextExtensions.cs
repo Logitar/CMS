@@ -1,5 +1,4 @@
-﻿using Logitar.Cms.Contracts;
-using Logitar.Cms.Contracts.ApiKeys;
+﻿using Logitar.Cms.Contracts.ApiKeys;
 using Logitar.Cms.Contracts.Sessions;
 using Logitar.Cms.Contracts.Users;
 using Logitar.Cms.Core.Logging;
@@ -44,21 +43,6 @@ public static class HttpContextExtensions
     return builder.BuildUri();
   }
 
-  public static IReadOnlyCollection<CustomAttribute> GetSessionCustomAttributes(this HttpContext context)
-  {
-    List<CustomAttribute> customAttributes = new(capacity: 2)
-    {
-      new("AdditionalInformation", context.GetAdditionalInformation())
-    };
-
-    string? ipAddress = context.GetClientIpAddress();
-    if (ipAddress != null)
-    {
-      customAttributes.Add(new("IpAddress", ipAddress));
-    }
-
-    return customAttributes.AsReadOnly();
-  }
   public static string GetAdditionalInformation(this HttpContext context)
   {
     return JsonSerializer.Serialize(context.Request.Headers);

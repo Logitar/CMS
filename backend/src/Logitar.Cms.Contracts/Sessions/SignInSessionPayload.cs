@@ -6,6 +6,8 @@ public record SignInSessionPayload
   public string Password { get; set; }
 
   public List<CustomAttribute> CustomAttributes { get; set; }
+  public string? AdditionalInformation { get; set; }
+  public string? IpAddress { get; set; }
 
   public SignInSessionPayload() : this(string.Empty, string.Empty)
   {

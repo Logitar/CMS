@@ -1,5 +1,15 @@
 name: cms
 services:
+  cms_mongo:
+    image: mongo
+    container_name: Logitar.Cms_mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: cms
+      MONGO_INITDB_ROOT_PASSWORD: PbsBwp2TM9Fy5A6g
+    ports:
+      - 27030:27017
+
   cms_mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: Logitar.Cms_mssql
@@ -18,3 +28,21 @@ services:
       POSTGRES_PASSWORD: kzXnZxLf9s8WQ3vh
     ports:
       - 5440:5432
+
+  cms_backend:
+    build:
+      context: ./backend
+      dockerfile: /src/Logitar.Cms/Dockerfile
+    image: cms_backend
+    container_name: Logitar.Cms_backend
+    depends_on:
+      - cms_mongo
+      - cms_mssql
+      - cms_postgres
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_Environment: Development
+      POSTGRESQLCONNSTR_Cms: "User ID=postgres;Password=kzXnZxLf9s8WQ3vh;Host=cms_postgres;Port=5432;Database=Cms;"
+      SQLCONNSTR_Cms: "Server=cms_mssql;Database=Cms;User Id=SA;Password=hMe5CJmF2SVLDtvN;Persist Security Info=False;Encrypt=False;"
+    ports:
+      - 8090:8080

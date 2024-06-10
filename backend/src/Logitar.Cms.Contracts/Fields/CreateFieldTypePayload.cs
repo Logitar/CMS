@@ -1,4 +1,6 @@
-﻿namespace Logitar.Cms.Contracts.Fields;
+﻿using Logitar.Cms.Contracts.Fields.Properties;
+
+namespace Logitar.Cms.Contracts.Fields;
 
 public record CreateFieldTypePayload
 {

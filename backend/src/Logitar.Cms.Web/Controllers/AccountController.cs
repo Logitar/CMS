@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Logitar.Cms.Web.Controllers;
 
 [ApiController]
-[Route("account")]
+[Route("api/account")]
 public class AccountController : ControllerBase
 {
   private readonly IOpenAuthenticationService _openAuthenticationService;

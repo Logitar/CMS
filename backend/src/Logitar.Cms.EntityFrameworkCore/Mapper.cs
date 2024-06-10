@@ -1,10 +1,15 @@
 ﻿using Logitar.Cms.Contracts;
 using Logitar.Cms.Contracts.Actors;
 using Logitar.Cms.Contracts.Configurations;
+using Logitar.Cms.Contracts.Fields;
+using Logitar.Cms.Contracts.Fields.Properties;
 using Logitar.Cms.Contracts.Roles;
 using Logitar.Cms.Contracts.Sessions;
 using Logitar.Cms.Contracts.Users;
 using Logitar.Cms.Core.Configurations;
+using Logitar.Cms.Core.Fields;
+using Logitar.Cms.Core.Sessions;
+using Logitar.Cms.EntityFrameworkCore.Entities;
 using Logitar.EventSourcing;
 using Logitar.Identity.EntityFrameworkCore.Relational.Entities;
 
@@ -52,6 +57,79 @@ internal class Mapper
     return destination;
   }
 
+  public FieldType ToFieldType(FieldTypeEntity source)
+  {
+    FieldType destination = new(source.UniqueName)
+    {
+      DisplayName = source.DisplayName,
+      Description = source.Description
+    };
+
+    switch (source.DataType)
+    {
+      case DataType.Boolean:
+        destination.DataType = DataType.Boolean;
+        destination.BooleanProperties = new BooleanProperties();
+        break;
+      case DataType.DateTime:
+        destination.DataType = DataType.DateTime;
+        destination.DateTimeProperties = new DateTimeProperties
+        {
+          MinimumValue = TryGetDateTime(source, nameof(IDateTimeProperties.MinimumValue)),
+          MaximumValue = TryGetDateTime(source, nameof(IDateTimeProperties.MaximumValue))
+        };
+        break;
+      case DataType.Number:
+        destination.DataType = DataType.Number;
+        destination.NumberProperties = new NumberProperties
+        {
+          MinimumValue = TryGetDouble(source, nameof(INumberProperties.MinimumValue)),
+          MaximumValue = TryGetDouble(source, nameof(INumberProperties.MaximumValue)),
+          Step = TryGetDouble(source, nameof(INumberProperties.Step))
+        };
+        break;
+      case DataType.String:
+        destination.DataType = DataType.String;
+        destination.StringProperties = new StringProperties
+        {
+          MinimumLength = TryGetInt32(source, nameof(IStringProperties.MinimumLength)),
+          MaximumLength = TryGetInt32(source, nameof(IStringProperties.MaximumLength)),
+          Pattern = TryGetProperty(source, nameof(IStringProperties.Pattern))
+        };
+        break;
+      case DataType.Text:
+        destination.DataType = DataType.Text;
+        destination.TextProperties = new TextProperties(source.Properties[nameof(ITextProperties.ContentType)])
+        {
+          MinimumLength = TryGetInt32(source, nameof(ITextProperties.MinimumLength)),
+          MaximumLength = TryGetInt32(source, nameof(ITextProperties.MaximumLength)),
+        };
+        break;
+      default:
+        throw new DataTypeNotSupportedException(source.DataType);
+    }
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+  private static DateTime? TryGetDateTime(FieldTypeEntity entity, string key)
+  {
+    string? value = TryGetProperty(entity, key);
+    return value == null ? null : DateTime.Parse(value);
+  }
+  private static double? TryGetDouble(FieldTypeEntity entity, string key)
+  {
+    string? value = TryGetProperty(entity, key);
+    return value == null ? null : double.Parse(value);
+  }
+  private static int? TryGetInt32(FieldTypeEntity entity, string key)
+  {
+    string? value = TryGetProperty(entity, key);
+    return value == null ? null : int.Parse(value);
+  }
+  private static string? TryGetProperty(FieldTypeEntity entity, string key) => entity.Properties.TryGetValue(key, out string? value) ? value : null;
+
   public Role ToRole(RoleEntity source)
   {
     Role destination = new(source.UniqueName)
@@ -88,7 +166,18 @@ internal class Mapper
 
     foreach (KeyValuePair<string, string> customAttribute in source.CustomAttributes)
     {
-      destination.CustomAttributes.Add(new CustomAttribute(customAttribute));
+      switch (customAttribute.Key)
+      {
+        case SessionExtensions.AdditionalInformationKey:
+          destination.AdditionalInformation = customAttribute.Value;
+          break;
+        case SessionExtensions.IpAddressKey:
+          destination.IpAddress = customAttribute.Value;
+          break;
+        default:
+          destination.CustomAttributes.Add(new CustomAttribute(customAttribute));
+          break;
+      }
     }
 
     MapAggregate(source, destination);

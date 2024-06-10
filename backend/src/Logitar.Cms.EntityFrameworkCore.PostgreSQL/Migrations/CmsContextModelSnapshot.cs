@@ -21,6 +21,91 @@ namespace Logitar.Cms.EntityFrameworkCore.PostgreSQL.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.FieldTypeEntity", b =>
+                {
+                    b.Property<int>("FieldTypeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("FieldTypeId"));
+
+                    b.Property<string>("AggregateId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("DataType")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("DisplayName")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("PropertiesSerialized")
+                        .HasColumnType("text")
+                        .HasColumnName("Properties");
+
+                    b.Property<string>("UniqueName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("UniqueNameNormalized")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("Version")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("FieldTypeId");
+
+                    b.HasIndex("AggregateId")
+                        .IsUnique();
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("CreatedOn");
+
+                    b.HasIndex("DataType");
+
+                    b.HasIndex("DisplayName");
+
+                    b.HasIndex("UniqueName");
+
+                    b.HasIndex("UniqueNameNormalized")
+                        .IsUnique();
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.HasIndex("UpdatedOn");
+
+                    b.HasIndex("Version");
+
+                    b.ToTable("FieldTypes", (string)null);
+                });
+
             modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.LanguageEntity", b =>
                 {
                     b.Property<int>("LanguageId")

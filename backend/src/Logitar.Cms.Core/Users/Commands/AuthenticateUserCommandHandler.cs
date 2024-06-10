@@ -36,4 +36,4 @@ internal class AuthenticateUserCommandHandler : IRequestHandler<AuthenticateUser
 
     return await _userQuerier.ReadAsync(user, cancellationToken);
   }
-} // TODO(fpion): Integration Tests
+}

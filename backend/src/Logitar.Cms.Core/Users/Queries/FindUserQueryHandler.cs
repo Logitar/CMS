@@ -1,4 +1,5 @@
-﻿using Logitar.Identity.Domain.Shared;
+﻿using Logitar.Identity.Contracts.Settings;
+using Logitar.Identity.Domain.Shared;
 using Logitar.Identity.Domain.Users;
 using MediatR;
 
@@ -15,18 +16,62 @@ internal class FindUserQueryHandler : IRequestHandler<FindUserQuery, UserAggrega
 
   public async Task<UserAggregate> Handle(FindUserQuery query, CancellationToken cancellationToken)
   {
-    UniqueNameUnit uniqueName = new(query.UserSettings.UniqueName, query.Username); // TODO(fpion): will throw if invalid
-    UserAggregate? user = await _userRepository.LoadAsync(tenantId: null, uniqueName, cancellationToken);
-    if (user == null && query.UserSettings.RequireUniqueEmail)
+    IUserSettings userSettings = query.UserSettings;
+
+    Dictionary<UserId, UserAggregate> users = new(capacity: 3);
+
+    if (query.IncludeId && Guid.TryParse(query.User, out Guid id))
     {
-      EmailUnit email = new(query.Username); // TODO(fpion): will throw if invalid
-      IEnumerable<UserAggregate> users = await _userRepository.LoadAsync(tenantId: null, email, cancellationToken);
-      if (users.Count() == 1)
+      UserAggregate? user = await _userRepository.LoadAsync(new UserId(id), cancellationToken);
+      if (user != null && user.TenantId == null)
       {
-        user = users.Single();
+        users[user.Id] = user;
       }
     }
 
-    return user ?? throw new NotImplementedException(); // TODO(fpion): UserNotFoundException (InvalidCredentialsException)
+    UniqueNameUnit? uniqueName = null;
+    try
+    {
+      uniqueName = new(userSettings.UniqueName, query.User);
+    }
+    catch (Exception)
+    {
+    }
+    if (uniqueName != null)
+    {
+      UserAggregate? user = await _userRepository.LoadAsync(tenantId: null, uniqueName, cancellationToken);
+      if (user != null)
+      {
+        users[user.Id] = user;
+      }
+    }
+
+    if (userSettings.RequireUniqueEmail)
+    {
+      EmailUnit? email = null;
+      try
+      {
+        email = new(query.User);
+      }
+      catch (Exception)
+      {
+      }
+      if (email != null)
+      {
+        IEnumerable<UserAggregate> foundUsers = await _userRepository.LoadAsync(tenantId: null, email, cancellationToken);
+        if (foundUsers.Count() == 1)
+        {
+          UserAggregate user = foundUsers.Single();
+          users[user.Id] = user;
+        }
+      }
+    }
+
+    if (users.Count > 1)
+    {
+      throw new TooManyResultsException<UserAggregate>(expectedCount: 1, actualCount: users.Count);
+    }
+
+    return users.Values.SingleOrDefault() ?? throw new UserNotFoundException(query.User, query.PropertyName);
   }
 }
