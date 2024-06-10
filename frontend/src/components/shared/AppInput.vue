@@ -50,10 +50,10 @@ const validationRules = computed<ValidationRules>(() => {
   const max: number | undefined = parseNumber(props.max);
   const min: number | undefined = parseNumber(props.min);
   if (isNumericInput(props.type)) {
-    if (max) {
+    if (typeof max === "number") {
       rules.max_value = max;
     }
-    if (min) {
+    if (typeof min === "number") {
       rules.min_value = min;
     }
   } else if (isTextualInput(props.type)) {

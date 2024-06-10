@@ -58,14 +58,8 @@ internal class FieldTypeEntity : AggregateEntity
 
     Properties.Clear();
 
-    if (@event.Properties.MinimumValue.HasValue)
-    {
-      Properties[nameof(IDateTimeProperties.MinimumValue)] = @event.Properties.MinimumValue.Value.ToString("O");
-    }
-    if (@event.Properties.MaximumValue.HasValue)
-    {
-      Properties[nameof(IDateTimeProperties.MaximumValue)] = @event.Properties.MaximumValue.Value.ToString("O");
-    }
+    SetProperty(nameof(IDateTimeProperties.MinimumValue), @event.Properties.MinimumValue?.ToString("O"));
+    SetProperty(nameof(IDateTimeProperties.MaximumValue), @event.Properties.MaximumValue?.ToString("O"));
   }
   public void SetProperties(NumberFieldTypePropertiesChangedEvent @event)
   {
@@ -73,18 +67,9 @@ internal class FieldTypeEntity : AggregateEntity
 
     Properties.Clear();
 
-    if (@event.Properties.MinimumValue.HasValue)
-    {
-      Properties[nameof(INumberProperties.MinimumValue)] = @event.Properties.MinimumValue.Value.ToString();
-    }
-    if (@event.Properties.MaximumValue.HasValue)
-    {
-      Properties[nameof(INumberProperties.MaximumValue)] = @event.Properties.MaximumValue.Value.ToString();
-    }
-    if (@event.Properties.Step.HasValue)
-    {
-      Properties[nameof(INumberProperties.Step)] = @event.Properties.Step.Value.ToString();
-    }
+    SetProperty(nameof(INumberProperties.MinimumValue), @event.Properties.MinimumValue?.ToString());
+    SetProperty(nameof(INumberProperties.MaximumValue), @event.Properties.MaximumValue?.ToString());
+    SetProperty(nameof(INumberProperties.Step), @event.Properties.Step?.ToString());
   }
   public void SetProperties(StringFieldTypePropertiesChangedEvent @event)
   {
@@ -92,18 +77,9 @@ internal class FieldTypeEntity : AggregateEntity
 
     Properties.Clear();
 
-    if (@event.Properties.MinimumLength.HasValue)
-    {
-      Properties[nameof(IStringProperties.MinimumLength)] = @event.Properties.MinimumLength.Value.ToString();
-    }
-    if (@event.Properties.MaximumLength.HasValue)
-    {
-      Properties[nameof(IStringProperties.MaximumLength)] = @event.Properties.MaximumLength.Value.ToString();
-    }
-    if (@event.Properties.Pattern != null)
-    {
-      Properties[nameof(IStringProperties.Pattern)] = @event.Properties.Pattern;
-    }
+    SetProperty(nameof(IStringProperties.MinimumLength), @event.Properties.MinimumLength?.ToString());
+    SetProperty(nameof(IStringProperties.MaximumLength), @event.Properties.MaximumLength?.ToString());
+    SetProperty(nameof(IStringProperties.Pattern), @event.Properties.Pattern);
   }
   public void SetProperties(TextFieldTypePropertiesChangedEvent @event)
   {
@@ -111,14 +87,20 @@ internal class FieldTypeEntity : AggregateEntity
 
     Properties.Clear();
 
-    Properties[nameof(ITextProperties.ContentType)] = @event.Properties.ContentType;
-    if (@event.Properties.MinimumLength.HasValue)
+    SetProperty(nameof(ITextProperties.ContentType), @event.Properties.ContentType);
+    SetProperty(nameof(ITextProperties.MinimumLength), @event.Properties.MinimumLength?.ToString());
+    SetProperty(nameof(ITextProperties.MaximumLength), @event.Properties.MaximumLength?.ToString());
+  }
+
+  private void SetProperty(string key, string? value)
+  {
+    if (value == null)
     {
-      Properties[nameof(ITextProperties.MinimumLength)] = @event.Properties.MinimumLength.Value.ToString();
+      Properties.Remove(key);
     }
-    if (@event.Properties.MaximumLength.HasValue)
+    else
     {
-      Properties[nameof(ITextProperties.MaximumLength)] = @event.Properties.MaximumLength.Value.ToString();
+      Properties[key] = value;
     }
   }
 

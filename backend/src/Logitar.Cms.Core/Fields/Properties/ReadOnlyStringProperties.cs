@@ -20,6 +20,7 @@ public record ReadOnlyStringProperties : FieldTypeProperties, IStringProperties
   {
   }
 
+  [JsonConstructor]
   public ReadOnlyStringProperties(int? minimumLength, int? maximumLength, string? pattern)
   {
     MinimumLength = minimumLength;

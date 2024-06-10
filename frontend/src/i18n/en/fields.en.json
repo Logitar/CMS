@@ -1,0 +1,65 @@
+{
+  "types": {
+    "created": "The field type has been created.",
+    "dataType": {
+      "label": "Data Type",
+      "options": {
+        "Boolean": "Boolean",
+        "DateTime": "Date & Time",
+        "Number": "Number",
+        "String": "String",
+        "Text": "Text"
+      },
+      "placeholder": "Select a data type"
+    },
+    "delete": {
+      "confirm": "Do you really want to delete the following field type?",
+      "success": "The field type has been deleted.",
+      "title": "Delete field type"
+    },
+    "empty": "This list is empty.",
+    "properties": {
+      "boolean": {
+        "none": "Boolean fields have no property yet."
+      },
+      "dateTime": {
+        "maximumValue": "Maximum Value",
+        "minimumValue": "Minimum Value"
+      },
+      "number": {
+        "maximumValue": "Maximum Value",
+        "minimumValue": "Minimum Value",
+        "step": "Step"
+      },
+      "string": {
+        "maximumLength": "Maximum Length",
+        "minimumLength": "Minimum Length",
+        "pattern": "Pattern"
+      },
+      "text": {
+        "contentType": {
+          "label": "Content Type",
+          "options": {
+            "text/plain": "Plain text"
+          },
+          "placeholder": "Select a content type"
+        },
+        "maximumLength": "Maximum Length",
+        "minimumLength": "Minimum Length"
+      },
+      "title": "Properties"
+    },
+    "sort": {
+      "options": {
+        "DisplayName": "Display name",
+        "UniqueName": "Unique name",
+        "UpdatedOn": "Updated on"
+      }
+    },
+    "title": {
+      "list": "Field Types",
+      "new": "New field type"
+    },
+    "updated": "The field type has been updated."
+  }
+}

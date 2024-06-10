@@ -11,7 +11,7 @@ namespace Logitar.Cms.Core.Fields;
 
 public class FieldTypeAggregate : AggregateRoot
 {
-  public static readonly IUniqueNameSettings UniqueNameSettings = new UniqueNameSettings();
+  public static readonly IUniqueNameSettings UniqueNameSettings = new UniqueNameSettings("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_");
 
   private FieldTypeUpdatedEvent _updatedEvent = new();
 
