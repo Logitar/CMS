@@ -1,27 +1,24 @@
-import sleep from "./sleep";
 import type { CurrentUser, SaveProfilePayload, SignInPayload, UserProfile } from "@/types/account";
-import { useUserStore } from "@/stores/user";
+import { UrlBuilder } from "@/helpers/urlUtils";
+import { get, post } from ".";
 
 export async function getProfile(): Promise<UserProfile> {
-  await sleep(1000);
-  const users = useUserStore();
-  return users.getProfile();
+  const url: string = new UrlBuilder({ path: "/api/account/profile" }).buildRelative();
+  return (await get<UserProfile>(url)).data;
 }
 
 export async function saveProfile(payload: SaveProfilePayload): Promise<UserProfile> {
-  await sleep(1000);
-  const users = useUserStore();
-  return users.saveProfile(payload);
+  throw new Error("NotImplemented"); // TODO(fpion): implement
 }
 
 export async function signIn(payload: SignInPayload): Promise<CurrentUser> {
-  await sleep(1000);
-  const users = useUserStore();
-  return users.signIn(payload);
+  const url: string = new UrlBuilder({ path: "/api/account/sign/in" }).buildRelative();
+  return (await post<SignInPayload, CurrentUser>(url, payload)).data;
 }
 
 export async function signOut(): Promise<void> {
-  await sleep(1000);
-  const users = useUserStore();
-  users.signOut();
+  const url: string = new UrlBuilder({ path: "/api/account/sign/out" }).buildRelative();
+  await post(url);
 }
+
+// TODO(fpion): refactor URL building
