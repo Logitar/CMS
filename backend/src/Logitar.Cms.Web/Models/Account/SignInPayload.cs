@@ -13,5 +13,9 @@ public record SignInPayload : Credentials
   {
   }
 
-  public SignInSessionPayload ToPayload(HttpContext context) => new(Username, Password, context.GetSessionCustomAttributes());
+  public SignInSessionPayload ToPayload(HttpContext context) => new(Username, Password)
+  {
+    AdditionalInformation = context.GetAdditionalInformation(),
+    IpAddress = context.GetClientIpAddress()
+  };
 }

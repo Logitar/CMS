@@ -8,6 +8,7 @@ using Logitar.Cms.Contracts.Sessions;
 using Logitar.Cms.Contracts.Users;
 using Logitar.Cms.Core.Configurations;
 using Logitar.Cms.Core.Fields;
+using Logitar.Cms.Core.Sessions;
 using Logitar.Cms.EntityFrameworkCore.Entities;
 using Logitar.EventSourcing;
 using Logitar.Identity.EntityFrameworkCore.Relational.Entities;
@@ -165,7 +166,18 @@ internal class Mapper
 
     foreach (KeyValuePair<string, string> customAttribute in source.CustomAttributes)
     {
-      destination.CustomAttributes.Add(new CustomAttribute(customAttribute));
+      switch (customAttribute.Key)
+      {
+        case SessionExtensions.AdditionalInformationKey:
+          destination.AdditionalInformation = customAttribute.Value;
+          break;
+        case SessionExtensions.IpAddressKey:
+          destination.IpAddress = customAttribute.Value;
+          break;
+        default:
+          destination.CustomAttributes.Add(new CustomAttribute(customAttribute));
+          break;
+      }
     }
 
     MapAggregate(source, destination);

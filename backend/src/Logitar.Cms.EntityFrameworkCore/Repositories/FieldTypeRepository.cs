@@ -20,6 +20,11 @@ internal class FieldTypeRepository : EventSourcing.EntityFrameworkCore.Relationa
     _sqlHelper = sqlHelper;
   }
 
+  public async Task<IReadOnlyCollection<FieldTypeAggregate>> LoadAsync(CancellationToken cancellationToken)
+  {
+    return (await LoadAsync<FieldTypeAggregate>(cancellationToken)).ToArray();
+  }
+
   public async Task<FieldTypeAggregate?> LoadAsync(FieldTypeId id, CancellationToken cancellationToken)
   {
     return await LoadAsync(id, version: null, cancellationToken);
@@ -50,5 +55,9 @@ internal class FieldTypeRepository : EventSourcing.EntityFrameworkCore.Relationa
   public async Task SaveAsync(FieldTypeAggregate fieldType, CancellationToken cancellationToken)
   {
     await base.SaveAsync(fieldType, cancellationToken);
+  }
+  public async Task SaveAsync(IEnumerable<FieldTypeAggregate> fieldTypes, CancellationToken cancellationToken)
+  {
+    await base.SaveAsync(fieldTypes, cancellationToken);
   }
 }

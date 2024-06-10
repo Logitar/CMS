@@ -7,6 +7,6 @@ public class DateTimePropertiesValidator : AbstractValidator<IDateTimeProperties
 {
   public DateTimePropertiesValidator()
   {
-    RuleFor(x => x.MinimumValue).LessThanOrEqualTo(x => x.MaximumValue);
+    RuleFor(x => x.MinimumValue).LessThanOrEqualTo(x => x.MaximumValue ?? DateTime.MaxValue);
   }
 }

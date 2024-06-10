@@ -4,4 +4,4 @@ using MediatR;
 
 namespace Logitar.Cms.Core.Users.Queries;
 
-public record FindUserQuery(string Username, IUserSettings UserSettings, string PropertyName) : IRequest<UserAggregate>;
+public record FindUserQuery(string User, IUserSettings UserSettings, string? PropertyName = null, bool IncludeId = false) : IRequest<UserAggregate>;

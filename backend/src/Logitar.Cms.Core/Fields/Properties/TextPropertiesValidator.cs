@@ -12,7 +12,7 @@ public class TextPropertiesValidator : AbstractValidator<ITextProperties>
     RuleFor(x => x.ContentType).NotEmpty().Must(_contentTypes.Contains)
       .WithErrorCode("ContentTypeValidator")
       .WithMessage($"'{{PropertyName}}' must be one of the following: {string.Join(", ", _contentTypes)}.");
-    RuleFor(x => x.MinimumLength).GreaterThanOrEqualTo(0).LessThanOrEqualTo(x => x.MaximumLength);
+    RuleFor(x => x.MinimumLength).GreaterThanOrEqualTo(0).LessThanOrEqualTo(x => x.MaximumLength ?? int.MaxValue);
     RuleFor(x => x.MaximumLength).GreaterThan(0);
   }
 }

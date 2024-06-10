@@ -7,7 +7,7 @@ public class NumberPropertiesValidator : AbstractValidator<INumberProperties>
 {
   public NumberPropertiesValidator()
   {
-    RuleFor(x => x.MinimumValue).LessThanOrEqualTo(x => x.MaximumValue);
-    RuleFor(x => x.Step).GreaterThan(0).LessThanOrEqualTo(x => x.MaximumValue);
+    RuleFor(x => x.MinimumValue).LessThanOrEqualTo(x => x.MaximumValue ?? double.MaxValue);
+    RuleFor(x => x.Step).GreaterThan(0).LessThanOrEqualTo(x => x.MaximumValue ?? double.MaxValue);
   }
 }

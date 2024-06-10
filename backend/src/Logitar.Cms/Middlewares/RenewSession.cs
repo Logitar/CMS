@@ -23,7 +23,11 @@ internal class RenewSession
       {
         try
         {
-          RenewSessionPayload payload = new(refreshToken, context.GetSessionCustomAttributes());
+          RenewSessionPayload payload = new(refreshToken)
+          {
+            AdditionalInformation = context.GetAdditionalInformation(),
+            IpAddress = context.GetClientIpAddress()
+          };
           RenewSessionCommand command = new(payload);
           Session session = await pipeline.ExecuteAsync(command);
           context.SignIn(session);

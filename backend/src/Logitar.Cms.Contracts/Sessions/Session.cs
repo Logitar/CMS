@@ -13,6 +13,8 @@ public class Session : Aggregate
   public DateTime? SignedOutOn { get; set; }
 
   public List<CustomAttribute> CustomAttributes { get; set; }
+  public string? AdditionalInformation { get; set; }
+  public string? IpAddress { get; set; }
 
   public User User { get; set; }
 

@@ -60,6 +60,8 @@ internal class RenewSessionCommandHandler : IRequestHandler<RenewSessionCommand,
     {
       session.SetCustomAttribute(customAttribute.Key, customAttribute.Value);
     }
+    session.SetAdditionalInformation(payload.AdditionalInformation);
+    session.SetIpAddress(payload.IpAddress);
     session.Update(actorId);
 
     await _sessionRepository.SaveAsync(session, cancellationToken);
@@ -68,4 +70,4 @@ internal class RenewSessionCommandHandler : IRequestHandler<RenewSessionCommand,
     result.RefreshToken = RefreshToken.Encode(session, secretString);
     return result;
   }
-} // TODO(fpion): Integration Tests
+}

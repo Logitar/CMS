@@ -25,7 +25,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.EntityFrameworkCore.PostgreSQL", "src\Logitar.Cms.EntityFrameworkCore.PostgreSQL\Logitar.Cms.EntityFrameworkCore.PostgreSQL.csproj", "{5C57EAF6-9109-4D42-BCC7-5FE6822D9A82}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms.EntityFrameworkCore.PostgreSQL", "src\Logitar.Cms.EntityFrameworkCore.PostgreSQL\Logitar.Cms.EntityFrameworkCore.PostgreSQL.csproj", "{5C57EAF6-9109-4D42-BCC7-5FE6822D9A82}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{638FB618-07E8-4D9A-A237-540BAD3021E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.IntegrationTests", "tests\Logitar.Cms.IntegrationTests\Logitar.Cms.IntegrationTests.csproj", "{049C6A6F-67D9-428C-8A54-E4532DA5288E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,9 +69,16 @@ Global
 		{5C57EAF6-9109-4D42-BCC7-5FE6822D9A82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C57EAF6-9109-4D42-BCC7-5FE6822D9A82}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C57EAF6-9109-4D42-BCC7-5FE6822D9A82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{049C6A6F-67D9-428C-8A54-E4532DA5288E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{049C6A6F-67D9-428C-8A54-E4532DA5288E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{049C6A6F-67D9-428C-8A54-E4532DA5288E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{049C6A6F-67D9-428C-8A54-E4532DA5288E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{049C6A6F-67D9-428C-8A54-E4532DA5288E} = {638FB618-07E8-4D9A-A237-540BAD3021E1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8E2F4312-0D45-4D22-9E8B-D8B9B463DBCE}

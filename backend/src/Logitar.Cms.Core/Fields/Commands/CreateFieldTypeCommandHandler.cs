@@ -74,4 +74,4 @@ internal class CreateFieldTypeCommandHandler : IRequestHandler<CreateFieldTypeCo
 
     return properties.Single();
   }
-} // TODO(fpion): Integration Tests
+}

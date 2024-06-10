@@ -83,4 +83,4 @@ internal class ReplaceFieldTypeCommandHandler : IRequestHandler<ReplaceFieldType
 
     return await _fieldTypeQuerier.ReadAsync(fieldType, cancellationToken);
   }
-} // TODO(fpion): Integration Tests
+}

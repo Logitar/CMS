@@ -39,4 +39,4 @@ internal class SignOutSessionCommandHandler : IRequestHandler<SignOutSessionComm
 
     return await _sessionQuerier.ReadAsync(session, cancellationToken);
   }
-} // TODO(fpion): Integration Tests
+}

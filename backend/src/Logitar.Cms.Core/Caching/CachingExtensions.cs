@@ -1,7 +1,6 @@
 ﻿using Logitar.Cms.Contracts.Configurations;
-using Logitar.Cms.Core.Caching;
 
-namespace Logitar.Cms.Web.Extensions;
+namespace Logitar.Cms.Core.Caching;
 
 public static class CachingExtensions
 {

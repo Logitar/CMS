@@ -6,6 +6,8 @@ public record RenewSessionPayload
   public string RefreshToken { get; set; }
 
   public List<CustomAttribute> CustomAttributes { get; set; }
+  public string? AdditionalInformation { get; set; }
+  public string? IpAddress { get; set; }
 
   public RenewSessionPayload() : this(string.Empty)
   {

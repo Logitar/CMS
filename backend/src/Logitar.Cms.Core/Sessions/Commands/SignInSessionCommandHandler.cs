@@ -45,6 +45,8 @@ internal class SignInSessionCommandHandler : IRequestHandler<SignInSessionComman
     {
       session.SetCustomAttribute(customAttribute.Key, customAttribute.Value);
     }
+    session.SetAdditionalInformation(payload.AdditionalInformation);
+    session.SetIpAddress(payload.IpAddress);
     session.Update(actorId);
 
     await _userManager.SaveAsync(user, command.UserSettings, actorId, cancellationToken);
@@ -54,4 +56,4 @@ internal class SignInSessionCommandHandler : IRequestHandler<SignInSessionComman
     result.RefreshToken = RefreshToken.Encode(session, secretString);
     return result;
   }
-} // TODO(fpion): Integration Tests
+}
