@@ -80,9 +80,8 @@ public class ReplaceFieldTypeCommandTests : IntegrationTests
     FieldTypeAggregate fieldType = new(new UniqueNameUnit(FieldTypeAggregate.UniqueNameSettings, "Author"), new ReadOnlyStringProperties(), ActorId);
     await _fieldTypeRepository.SaveAsync(fieldType);
 
-    ReplaceFieldTypePayload payload = new()
+    ReplaceFieldTypePayload payload = new(fieldType.UniqueName.Value)
     {
-      UniqueName = fieldType.UniqueName.Value,
       StringProperties = new StringProperties
       {
         MinimumLength = 1,

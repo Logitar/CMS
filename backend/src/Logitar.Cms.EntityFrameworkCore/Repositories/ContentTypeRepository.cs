@@ -20,6 +20,11 @@ internal class ContentTypeRepository : EventSourcing.EntityFrameworkCore.Relatio
     _sqlHelper = sqlHelper;
   }
 
+  public async Task<IReadOnlyCollection<ContentTypeAggregate>> LoadAsync(CancellationToken cancellationToken)
+  {
+    return (await LoadAsync<ContentTypeAggregate>(cancellationToken)).ToArray();
+  }
+
   public async Task<ContentTypeAggregate?> LoadAsync(ContentTypeId id, CancellationToken cancellationToken)
   {
     return await LoadAsync(id, version: null, cancellationToken);
