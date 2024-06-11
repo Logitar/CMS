@@ -5,8 +5,8 @@ import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
 import LocaleSelect from "@/components/users/LocaleSelect.vue";
-import type { Language } from "@/types/languages";
-import { createLanguage } from "@/api/languages";
+import type { Language } from "@/types/localization";
+import { createLanguage } from "@/api/localization";
 
 const { t } = useI18n();
 
@@ -44,9 +44,9 @@ function onCancel(): void {
 <template>
   <span>
     <TarButton icon="fas fa-plus" :text="t('actions.create')" variant="success" data-bs-toggle="modal" :data-bs-target="`#create-language`" />
-    <TarModal :close="t('actions.close')" id="create-language" ref="modalRef" :title="t('languages.title.new')">
+    <TarModal :close="t('actions.close')" id="create-language" ref="modalRef" :title="t('localization.languages.title.new')">
       <form @submit.prevent="onSubmit">
-        <LocaleSelect label="languages.locale.label" placeholder="languages.locale.placeholder" required v-model="locale" />
+        <LocaleSelect label="localization.languages.locale.label" placeholder="localization.languages.locale.placeholder" required v-model="locale" />
       </form>
       <template #footer>
         <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="onCancel" />

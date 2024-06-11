@@ -103,7 +103,9 @@ watchEffect(() => {
               >
             </li>
             <li class="nav-item">
-              <RouterLink :to="{ name: 'LanguageList' }" class="nav-link"><font-awesome-icon icon="fas fa-cog" /> {{ t("languages.title.list") }}</RouterLink>
+              <RouterLink :to="{ name: 'LanguageList' }" class="nav-link"
+                ><font-awesome-icon icon="fas fa-cog" /> {{ t("localization.languages.title.list") }}</RouterLink
+              >
             </li>
           </template>
         </ul>

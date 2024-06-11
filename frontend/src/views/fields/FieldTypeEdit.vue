@@ -93,11 +93,11 @@ function setModel(model: FieldType): void {
   description.value = model.description ?? "";
   displayName.value = model.displayName ?? "";
   uniqueName.value = model.uniqueName;
-  booleanProperties.value = { ...model.booleanProperties } ?? {};
-  dateTimeProperties.value = { ...model.dateTimeProperties } ?? {};
-  numberProperties.value = { ...model.numberProperties } ?? {};
-  stringProperties.value = { ...model.stringProperties } ?? {};
-  textProperties.value = { ...model.textProperties, contentType: model.textProperties?.contentType ?? "text/plain" } ?? {};
+  booleanProperties.value = { ...model.booleanProperties };
+  dateTimeProperties.value = { ...model.dateTimeProperties };
+  numberProperties.value = { ...model.numberProperties };
+  stringProperties.value = { ...model.stringProperties };
+  textProperties.value = { ...model.textProperties, contentType: model.textProperties?.contentType ?? "text/plain" };
 }
 
 const { handleSubmit, isSubmitting } = useForm();

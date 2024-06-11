@@ -1,5 +1,5 @@
 import type { FieldType } from "@/types/fields";
-import type { Language } from "@/types/languages";
+import type { Language } from "@/types/localization";
 
 export function formatFieldType(fieldType: FieldType): string {
   return fieldType.displayName ? `${fieldType.displayName} (${fieldType.uniqueName})` : fieldType.uniqueName;

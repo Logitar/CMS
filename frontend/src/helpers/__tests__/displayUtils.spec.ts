@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 
 import type { Actor } from "@/types/actor";
 import type { FieldType } from "@/types/fields";
-import type { Language } from "@/types/languages";
+import type { Language } from "@/types/localization";
 import { formatFieldType, formatLanguage } from "../displayUtils";
 
 const actor: Actor = {

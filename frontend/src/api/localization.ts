@@ -1,6 +1,6 @@
 import { urlUtils } from "logitar-js";
 
-import type { CreateLanguagePayload, Language, SearchLanguagesPayload } from "@/types/languages";
+import type { CreateLanguagePayload, Language, SearchLanguagesPayload } from "@/types/localization";
 import type { SearchResults } from "@/types/search";
 import { get, patch, post } from ".";
 
