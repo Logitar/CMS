@@ -1,4 +1,5 @@
 ﻿using Logitar.Cms.Core.Configurations;
+using Logitar.Cms.Core.ContentTypes;
 using Logitar.Cms.Core.Fields;
 using Logitar.Cms.Core.Localization;
 using Logitar.Cms.Core.Sessions;
@@ -29,6 +30,7 @@ public static class DependencyInjectionExtensions
   {
     return services
       .AddTransient<IConfigurationQuerier, ConfigurationQuerier>()
+      .AddTransient<IContentTypeQuerier, ContentTypeQuerier>()
       .AddTransient<IFieldTypeQuerier, FieldTypeQuerier>()
       .AddTransient<ILanguageQuerier, LanguageQuerier>()
       .AddTransient<ISessionQuerier, SessionQuerier>()
@@ -39,6 +41,7 @@ public static class DependencyInjectionExtensions
   {
     return services
       .AddTransient<IConfigurationRepository, ConfigurationRepository>()
+      .AddTransient<IContentTypeRepository, ContentTypeRepository>()
       .AddTransient<IFieldTypeRepository, FieldTypeRepository>()
       .AddTransient<ILanguageRepository, LanguageRepository>();
   }

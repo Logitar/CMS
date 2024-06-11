@@ -53,6 +53,10 @@ public class ContentTypeAggregate : AggregateRoot
     }
   }
 
+  public ContentTypeAggregate() : base()
+  {
+  }
+
   public ContentTypeAggregate(IdentifierUnit identifier, bool isInvariant = false, ActorId actorId = default, ContentTypeId? id = null)
     : base((id ?? ContentTypeId.NewId()).AggregateId)
   {

@@ -23,13 +23,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms.EntityFrameworkCore.PostgreSQL", "src\Logitar.Cms.EntityFrameworkCore.PostgreSQL\Logitar.Cms.EntityFrameworkCore.PostgreSQL.csproj", "{5C57EAF6-9109-4D42-BCC7-5FE6822D9A82}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{638FB618-07E8-4D9A-A237-540BAD3021E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.IntegrationTests", "tests\Logitar.Cms.IntegrationTests\Logitar.Cms.IntegrationTests.csproj", "{049C6A6F-67D9-428C-8A54-E4532DA5288E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms.IntegrationTests", "tests\Logitar.Cms.IntegrationTests\Logitar.Cms.IntegrationTests.csproj", "{049C6A6F-67D9-428C-8A54-E4532DA5288E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
