@@ -1,0 +1,32 @@
+{
+  "created": "The language has been created.",
+  "default": "Default",
+  "delete": {
+    "confirm": "Do you really want to delete the following language?",
+    "success": "The language has been deleted.",
+    "title": "Delete language"
+  },
+  "displayNames": "Display names",
+  "empty": "This list is empty.",
+  "englishFormat": "{englishName} (English)",
+  "isDefault": "Is default?",
+  "nativeFormat": "{nativeName} (native)",
+  "locale": {
+    "label": "Locale",
+    "placeholder": "Select a locale"
+  },
+  "setDefault": {
+    "action": "Set default",
+    "success": "The language has been set default."
+  },
+  "sort": {
+    "options": {
+      "Locale": "Locale",
+      "UpdatedOn": "Updated on"
+    }
+  },
+  "title": {
+    "list": "Languages",
+    "new": "New language"
+  }
+}

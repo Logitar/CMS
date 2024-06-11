@@ -154,7 +154,7 @@ onMounted(async () => {
       <StatusDetail :aggregate="fieldType" />
       <form @submit.prevent="onSubmit">
         <div class="mb-3">
-          <AppSaveButton class="me-1" :disabled="isSubmitting || !hasChanges" :exists="Boolean(fieldType)" :loading="isSubmitting" />
+          <AppSaveButton class="me-1" :disabled="isSubmitting || !hasChanges" exists :loading="isSubmitting" />
           <AppBackButton class="mx-1" :has-changes="hasChanges" />
           <AppDelete
             class="ms-1"
