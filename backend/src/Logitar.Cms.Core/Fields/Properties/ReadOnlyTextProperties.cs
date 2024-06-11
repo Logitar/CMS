@@ -19,6 +19,7 @@ public record ReadOnlyTextProperties : FieldTypeProperties, ITextProperties
   {
   }
 
+  [JsonConstructor]
   public ReadOnlyTextProperties(string contentType, int? minimumLength, int? maximumLength)
   {
     ContentType = contentType;

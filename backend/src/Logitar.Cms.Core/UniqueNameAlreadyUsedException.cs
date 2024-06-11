@@ -1,9 +1,10 @@
-﻿using Logitar.Cms.Core.Localization;
+﻿using Logitar.Cms.Contracts.Errors;
+using Logitar.Cms.Core.Localization;
 using Logitar.Identity.Domain.Shared;
 
 namespace Logitar.Cms.Core;
 
-public class UniqueNameAlreadyUsedException : Exception
+public class UniqueNameAlreadyUsedException : ConflictException
 {
   public const string ErrorMessage = "The specified unique name is already used.";
 
@@ -27,6 +28,8 @@ public class UniqueNameAlreadyUsedException : Exception
     get => (string?)Data[nameof(PropertyName)];
     private set => Data[nameof(PropertyName)] = value;
   }
+
+  public override Error Error => new(this.GetErrorCode(), ErrorMessage);
 
   public UniqueNameAlreadyUsedException(Type type, LanguageId? languageId, UniqueNameUnit uniqueName, string? propertyName = null)
     : base(BuildMessage(type, languageId, uniqueName, propertyName))

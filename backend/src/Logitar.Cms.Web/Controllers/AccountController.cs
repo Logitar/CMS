@@ -1,4 +1,5 @@
-﻿using Logitar.Cms.Contracts.Sessions;
+﻿using FluentValidation;
+using Logitar.Cms.Contracts.Sessions;
 using Logitar.Cms.Contracts.Users;
 using Logitar.Cms.Core;
 using Logitar.Cms.Core.Sessions.Commands;
@@ -28,7 +29,7 @@ public class AccountController : ControllerBase
 
   [Authorize]
   [HttpGet("profile")]
-  public ActionResult<User> GetProfile() => Ok(User);
+  public ActionResult<UserProfile> GetProfile() => Ok(new UserProfile(User));
 
   [HttpPost("sign/in")]
   public async Task<ActionResult<CurrentUser>> SignInAsync([FromBody] SignInPayload payload, CancellationToken cancellationToken)
@@ -67,6 +68,8 @@ public class AccountController : ControllerBase
   [HttpPost("token")]
   public async Task<ActionResult<TokenResponse>> GetTokenAsync([FromBody] GetTokenPayload payload, CancellationToken cancellationToken)
   {
+    new GetTokenValidator().ValidateAndThrow(payload);
+
     Session session;
     if (payload.RefreshToken != null)
     {
@@ -78,7 +81,7 @@ public class AccountController : ControllerBase
     }
     else
     {
-      return BadRequest(); // TODO(fpion): error detail
+      throw new ArgumentException($"The payload is not valid. See {nameof(GetTokenValidator)} for specific information about this error.", nameof(payload));
     }
 
     TokenResponse response = await _openAuthenticationService.GetTokenResponseAsync(session, cancellationToken);

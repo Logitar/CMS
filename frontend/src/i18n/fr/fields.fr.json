@@ -1,0 +1,65 @@
+{
+  "types": {
+    "created": "Le type de champs a été créé.",
+    "dataType": {
+      "label": "Type de donnée",
+      "options": {
+        "Boolean": "Booléen",
+        "DateTime": "Date et heure",
+        "Number": "Nombre",
+        "String": "Chaîne de caractères",
+        "Text": "Texte"
+      },
+      "placeholder": "Sélectionnez un type de donnée"
+    },
+    "delete": {
+      "confirm": "Désirez-vous vraiment supprimer le type de champs suivant ?",
+      "success": "Le type de champs a été supprimé.",
+      "title": "Supprimer le type de champs"
+    },
+    "empty": "Cette liste est vide.",
+    "properties": {
+      "boolean": {
+        "none": "Les champs booléen n’ont pas de propriété pour le moment."
+      },
+      "dateTime": {
+        "maximumValue": "Valeur maximale",
+        "minimumValue": "Valeur minimale"
+      },
+      "number": {
+        "maximumValue": "Valeur maximale",
+        "minimumValue": "Valeur minimale",
+        "step": "Pas"
+      },
+      "string": {
+        "maximumLength": "Longueur maximale",
+        "minimumLength": "Longueur minimale",
+        "pattern": "Patron"
+      },
+      "text": {
+        "contentType": {
+          "label": "Type de contenu",
+          "options": {
+            "text/plain": "Texte brut"
+          },
+          "placeholder": "Sélectionnez un type de contenu"
+        },
+        "maximumLength": "Longueur maximale",
+        "minimumLength": "Longueur minimale"
+      },
+      "title": "Propriétés"
+    },
+    "sort": {
+      "options": {
+        "DisplayName": "Nom d’affichage",
+        "UniqueName": "Nom unique",
+        "UpdatedOn": "Dernière modification"
+      }
+    },
+    "title": {
+      "list": "Types de champs",
+      "new": "Nouveau type de champ"
+    },
+    "updated": "Le type de champs a été enregistré."
+  }
+}

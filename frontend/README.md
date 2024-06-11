@@ -1,6 +1,6 @@
-# Logitar Vue3 Template
+# Logitar CMS Frontend
 
-TODO
+Frontend of the Logitar content management system.
 
 ## Recommended IDE Setup
 

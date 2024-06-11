@@ -20,6 +20,7 @@ public record ReadOnlyNumberProperties : FieldTypeProperties, INumberProperties
   {
   }
 
+  [JsonConstructor]
   public ReadOnlyNumberProperties(double? minimumValue, double? maximumValue, double? step)
   {
     MinimumValue = minimumValue;

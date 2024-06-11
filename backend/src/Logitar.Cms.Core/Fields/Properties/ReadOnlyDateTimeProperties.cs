@@ -19,6 +19,7 @@ public record ReadOnlyDateTimeProperties : FieldTypeProperties, IDateTimePropert
   {
   }
 
+  [JsonConstructor]
   public ReadOnlyDateTimeProperties(DateTime? minimumValue, DateTime? maximumValue)
   {
     MinimumValue = minimumValue;

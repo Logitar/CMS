@@ -97,9 +97,11 @@ watchEffect(() => {
             </ul>
           </li>
           <template v-if="user">
-            <!-- <li class="nav-item">
-              <RouterLink :to="{ name: 'RouteName' }" class="nav-link"><font-awesome-icon icon="fas fa-list-check" /> {{ t("route.i18n.key") }}</RouterLink>
-            </li> -->
+            <li class="nav-item">
+              <RouterLink :to="{ name: 'FieldTypeList' }" class="nav-link"
+                ><font-awesome-icon icon="fas fa-cog" /> {{ t("fields.types.title.list") }}</RouterLink
+              >
+            </li>
           </template>
         </ul>
 

@@ -1,6 +1,8 @@
-﻿namespace Logitar.Cms.Core;
+﻿using Logitar.Cms.Contracts.Errors;
 
-public class TooManyResultsException : Exception
+namespace Logitar.Cms.Core;
+
+public class TooManyResultsException : BadRequestException
 {
   public const string ErrorMessage = "Too many results were found.";
 
@@ -19,6 +21,8 @@ public class TooManyResultsException : Exception
     get => (int)Data[nameof(ActualCount)]!;
     private set => Data[nameof(ActualCount)] = value;
   }
+
+  public override Error Error => new(this.GetErrorCode(), ErrorMessage);
 
   public TooManyResultsException(Type type, int expectedCount, int actualCount) : base(BuildMessage(type, expectedCount, actualCount))
   {

@@ -11,7 +11,6 @@ const router = createRouter({
       name: "Home",
       path: "/",
       component: HomeView,
-      meta: { isPublic: true },
     },
     // Account
     {
@@ -32,6 +31,17 @@ const router = createRouter({
       name: "SignOut",
       path: "/sign-out",
       component: () => import("./views/account/SignOutView.vue"),
+    },
+    // Fields
+    {
+      name: "FieldTypeList",
+      path: "/field-types",
+      component: () => import("./views/fields/FieldTypeList.vue"),
+    },
+    {
+      name: "FieldTypeEdit",
+      path: "/field-types/:id",
+      component: () => import("./views/fields/FieldTypeEdit.vue"),
     },
     // NotFound
     {
