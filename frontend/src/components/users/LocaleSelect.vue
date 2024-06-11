@@ -8,9 +8,19 @@ import locales from "@/resources/locales.json";
 
 const { orderBy } = arrayUtils;
 
-defineProps<{
-  modelValue?: string;
-}>();
+withDefaults(
+  defineProps<{
+    disabled?: boolean | string;
+    label?: string;
+    modelValue?: string;
+    placeholder?: string;
+    required?: boolean | string;
+  }>(),
+  {
+    label: "users.locale.label",
+    placeholder: "users.locale.placeholder",
+  },
+);
 
 const options = computed<SelectOption[]>(() =>
   orderBy(
@@ -26,12 +36,14 @@ defineEmits<{
 
 <template>
   <AppSelect
+    :disabled="disabled"
     floating
     id="locale"
-    label="users.locale.label"
+    :label="label"
     :model-value="modelValue"
     :options="options"
-    placeholder="users.locale.placeholder"
+    :placeholder="placeholder"
+    :required="required"
     @update:model-value="$emit('update:model-value', $event)"
   />
 </template>

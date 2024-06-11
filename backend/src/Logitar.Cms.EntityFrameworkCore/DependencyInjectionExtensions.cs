@@ -30,6 +30,7 @@ public static class DependencyInjectionExtensions
     return services
       .AddTransient<IConfigurationQuerier, ConfigurationQuerier>()
       .AddTransient<IFieldTypeQuerier, FieldTypeQuerier>()
+      .AddTransient<ILanguageQuerier, LanguageQuerier>()
       .AddTransient<ISessionQuerier, SessionQuerier>()
       .AddTransient<IUserQuerier, UserQuerier>();
   }

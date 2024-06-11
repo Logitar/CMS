@@ -3,6 +3,7 @@ using Logitar.Cms.Contracts.Actors;
 using Logitar.Cms.Contracts.Configurations;
 using Logitar.Cms.Contracts.Fields;
 using Logitar.Cms.Contracts.Fields.Properties;
+using Logitar.Cms.Contracts.Localization;
 using Logitar.Cms.Contracts.Roles;
 using Logitar.Cms.Contracts.Sessions;
 using Logitar.Cms.Contracts.Users;
@@ -129,6 +130,18 @@ internal class Mapper
     return value == null ? null : int.Parse(value);
   }
   private static string? TryGetProperty(FieldTypeEntity entity, string key) => entity.Properties.TryGetValue(key, out string? value) ? value : null;
+
+  public Language ToLanguage(LanguageEntity source)
+  {
+    Language destination = new(new Locale(source.Locale))
+    {
+      IsDefault = source.IsDefault
+    };
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
 
   public Role ToRole(RoleEntity source)
   {

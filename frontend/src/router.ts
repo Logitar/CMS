@@ -43,6 +43,17 @@ const router = createRouter({
       path: "/field-types/:id",
       component: () => import("./views/fields/FieldTypeEdit.vue"),
     },
+    // Languages
+    {
+      name: "LanguageList",
+      path: "/languages",
+      component: () => import("./views/localization/LanguageList.vue"),
+    },
+    {
+      name: "LanguageEdit",
+      path: "/languages/:id",
+      component: () => import("./views/localization/LanguageEdit.vue"),
+    },
     // NotFound
     {
       name: "NotFound",

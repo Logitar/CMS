@@ -1,9 +1,10 @@
 import { describe, it, expect } from "vitest";
 import { nanoid } from "nanoid";
 
-import { formatFieldType } from "../displayUtils";
-import type { FieldType } from "@/types/fields";
 import type { Actor } from "@/types/actor";
+import type { FieldType } from "@/types/fields";
+import type { Language } from "@/types/localization";
+import { formatFieldType, formatLanguage } from "../displayUtils";
 
 const actor: Actor = {
   id: nanoid(),
@@ -44,5 +45,27 @@ describe("formatFieldType", () => {
       stringProperties: {},
     };
     expect(formatFieldType(fieldType)).toBe("Sub-title (SubTitle)");
+  });
+});
+
+describe("formatLanguage", () => {
+  it.concurrent("should return the formatted language", () => {
+    const language: Language = {
+      id: nanoid(),
+      version: 1,
+      createdBy: actor,
+      updatedBy: actor,
+      createdOn: now,
+      updatedOn: now,
+      isDefault: true,
+      locale: {
+        id: 12,
+        code: "fr",
+        displayName: "French",
+        englishName: "French",
+        nativeName: "fran\u00E7ais",
+      },
+    };
+    expect(formatLanguage(language)).toBe("fran\u00E7ais (fr)");
   });
 });

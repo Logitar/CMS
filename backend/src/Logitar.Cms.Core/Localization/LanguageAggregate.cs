@@ -27,5 +27,17 @@ public class LanguageAggregate : AggregateRoot
     _locale = @event.Locale;
   }
 
+  public void SetDefault(bool isDefault = true, ActorId actorId = default)
+  {
+    if (isDefault != IsDefault)
+    {
+      Raise(new LanguageSetDefaultEvent(isDefault), actorId);
+    }
+  }
+  protected virtual void Apply(LanguageSetDefaultEvent @event)
+  {
+    IsDefault = @event.IsDefault;
+  }
+
   public override string ToString() => $"{Locale.Culture.DisplayName} | {base.ToString()}";
 }

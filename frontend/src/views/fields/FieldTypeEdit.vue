@@ -93,11 +93,11 @@ function setModel(model: FieldType): void {
   description.value = model.description ?? "";
   displayName.value = model.displayName ?? "";
   uniqueName.value = model.uniqueName;
-  booleanProperties.value = { ...model.booleanProperties } ?? {};
-  dateTimeProperties.value = { ...model.dateTimeProperties } ?? {};
-  numberProperties.value = { ...model.numberProperties } ?? {};
-  stringProperties.value = { ...model.stringProperties } ?? {};
-  textProperties.value = { ...model.textProperties, contentType: model.textProperties?.contentType ?? "text/plain" } ?? {};
+  booleanProperties.value = { ...model.booleanProperties };
+  dateTimeProperties.value = { ...model.dateTimeProperties };
+  numberProperties.value = { ...model.numberProperties };
+  stringProperties.value = { ...model.stringProperties };
+  textProperties.value = { ...model.textProperties, contentType: model.textProperties?.contentType ?? "text/plain" };
 }
 
 const { handleSubmit, isSubmitting } = useForm();
@@ -154,7 +154,7 @@ onMounted(async () => {
       <StatusDetail :aggregate="fieldType" />
       <form @submit.prevent="onSubmit">
         <div class="mb-3">
-          <AppSaveButton class="me-1" :disabled="isSubmitting || !hasChanges" :exists="Boolean(fieldType)" :loading="isSubmitting" />
+          <AppSaveButton class="me-1" :disabled="isSubmitting || !hasChanges" exists :loading="isSubmitting" />
           <AppBackButton class="mx-1" :has-changes="hasChanges" />
           <AppDelete
             class="ms-1"

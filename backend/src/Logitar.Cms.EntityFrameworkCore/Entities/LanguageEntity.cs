@@ -24,4 +24,11 @@ internal class LanguageEntity : AggregateEntity
   private LanguageEntity() : base()
   {
   }
+
+  public void SetDefault(LanguageSetDefaultEvent @event)
+  {
+    Update(@event);
+
+    IsDefault = @event.IsDefault;
+  }
 }
