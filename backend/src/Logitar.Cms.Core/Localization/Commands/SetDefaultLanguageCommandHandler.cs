@@ -24,7 +24,7 @@ internal class SetDefaultLanguageCommandHandler : IRequestHandler<SetDefaultLang
     }
 
     LanguageAggregate @default = await _languageRepository.LoadDefaultAsync(cancellationToken);
-    if (@default != language)
+    if (!@default.Equals(language))
     {
       @default.SetDefault(false, command.ActorId);
       language.SetDefault(true, command.ActorId);
