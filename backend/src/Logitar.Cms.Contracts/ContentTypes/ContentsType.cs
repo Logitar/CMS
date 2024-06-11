@@ -1,6 +1,6 @@
 ﻿namespace Logitar.Cms.Contracts.ContentTypes;
 
-public class ContentType : Aggregate
+public class ContentsType : Aggregate
 {
   public bool IsInvariant { get; set; }
 
@@ -8,11 +8,11 @@ public class ContentType : Aggregate
   public string? DisplayName { get; set; }
   public string? Description { get; set; }
 
-  public ContentType() : this(string.Empty)
+  public ContentsType() : this(string.Empty)
   {
   }
 
-  public ContentType(string uniqueName)
+  public ContentsType(string uniqueName)
   {
     UniqueName = uniqueName;
   }

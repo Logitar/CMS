@@ -32,7 +32,9 @@ public static class DependencyInjectionExtensions
     [
       .. identityConverters,
       new ConfigurationIdConverter(),
+      new ContentTypeIdConverter(),
       new FieldTypeIdConverter(),
+      new IdentifierConverter(),
       new JwtSecretConverter(),
       new LanguageIdConverter(),
     ];
