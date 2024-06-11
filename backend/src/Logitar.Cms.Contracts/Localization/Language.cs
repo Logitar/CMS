@@ -13,4 +13,6 @@ public class Language : Aggregate
   {
     Locale = locale;
   }
+
+  public override string ToString() => $"{Locale.NativeName} ({Locale.Code}) | {base.ToString()}";
 }
