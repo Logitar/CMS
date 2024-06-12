@@ -101,7 +101,7 @@ internal class Startup : StartupBase // TODO(fpion): reduce the size of this fil
     builder.UseSession();
     //builder.UseMiddleware<Logging>(); // TODO(fpion): Logging
     builder.UseMiddleware<RenewSession>();
-    //builder.UseMiddleware<RedirectNotFound>(); // TODO(fpion): Frontend
+    builder.UseMiddleware<RedirectNotFound>();
     builder.UseAuthentication();
     builder.UseAuthorization();
 

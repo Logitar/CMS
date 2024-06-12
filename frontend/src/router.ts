@@ -5,7 +5,7 @@ import HomeView from "./views/HomeView.vue";
 import { useAccountStore } from "./stores/account";
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(import.meta.env.MODE === "development" ? import.meta.env.BASE_URL : "/cms"),
   routes: [
     {
       name: "Home",
