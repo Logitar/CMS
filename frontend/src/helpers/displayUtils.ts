@@ -1,5 +1,10 @@
+import type { ContentType } from "@/types/contents";
 import type { FieldType } from "@/types/fields";
 import type { Language } from "@/types/localization";
+
+export function formatContentType(contentType: ContentType): string {
+  return contentType.displayName ? `${contentType.displayName} (${contentType.uniqueName})` : contentType.uniqueName;
+}
 
 export function formatFieldType(fieldType: FieldType): string {
   return fieldType.displayName ? `${fieldType.displayName} (${fieldType.uniqueName})` : fieldType.uniqueName;

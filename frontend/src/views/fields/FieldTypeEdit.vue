@@ -90,14 +90,14 @@ const hasPropertyChanges = computed<boolean>(() => {
 
 function setModel(model: FieldType): void {
   fieldType.value = model;
-  description.value = model.description ?? "";
-  displayName.value = model.displayName ?? "";
-  uniqueName.value = model.uniqueName;
   booleanProperties.value = { ...model.booleanProperties };
   dateTimeProperties.value = { ...model.dateTimeProperties };
+  description.value = model.description ?? "";
+  displayName.value = model.displayName ?? "";
   numberProperties.value = { ...model.numberProperties };
   stringProperties.value = { ...model.stringProperties };
   textProperties.value = { ...model.textProperties, contentType: model.textProperties?.contentType ?? "text/plain" };
+  uniqueName.value = model.uniqueName;
 }
 
 const { handleSubmit, isSubmitting } = useForm();
@@ -165,8 +165,8 @@ onMounted(async () => {
             @confirmed="onDelete"
           />
         </div>
+        <DataTypeSelect disabled :model-value="fieldType.dataType" />
         <div class="row">
-          <DataTypeSelect disabled :model-value="fieldType.dataType" />
           <UniqueNameInput class="col-lg-6" required v-model="uniqueName" />
           <DisplayNameInput class="col-lg-6" v-model="displayName" />
         </div>

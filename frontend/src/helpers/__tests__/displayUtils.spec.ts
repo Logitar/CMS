@@ -2,9 +2,10 @@ import { describe, it, expect } from "vitest";
 import { nanoid } from "nanoid";
 
 import type { Actor } from "@/types/actor";
+import type { ContentType } from "@/types/contents";
 import type { FieldType } from "@/types/fields";
 import type { Language } from "@/types/localization";
-import { formatFieldType, formatLanguage } from "../displayUtils";
+import { formatContentType, formatFieldType, formatLanguage } from "../displayUtils";
 
 const actor: Actor = {
   id: nanoid(),
@@ -13,6 +14,38 @@ const actor: Actor = {
   displayName: "admin",
 };
 const now: string = new Date().toISOString();
+
+describe("formatContentType", () => {
+  it.concurrent("should return the formatted content type without display name", () => {
+    const contentType: ContentType = {
+      id: nanoid(),
+      version: 1,
+      createdBy: actor,
+      updatedBy: actor,
+      createdOn: now,
+      updatedOn: now,
+      isInvariant: true,
+      uniqueName: "BlogAuthor",
+      displayName: undefined,
+    };
+    expect(formatContentType(contentType)).toBe(contentType.uniqueName);
+  });
+
+  it.concurrent("should return the formatted content type with display name", () => {
+    const contentType: ContentType = {
+      id: nanoid(),
+      version: 1,
+      createdBy: actor,
+      updatedBy: actor,
+      createdOn: now,
+      updatedOn: now,
+      isInvariant: false,
+      uniqueName: "BlogArticle",
+      displayName: "Blog Article",
+    };
+    expect(formatContentType(contentType)).toBe("Blog Article (BlogArticle)");
+  });
+});
 
 describe("formatFieldType", () => {
   it.concurrent("should return the formatted field type without display name", () => {

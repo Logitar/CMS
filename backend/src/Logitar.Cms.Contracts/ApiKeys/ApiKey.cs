@@ -26,4 +26,6 @@ public class ApiKey : Aggregate
     CustomAttributes = [];
     Roles = [];
   }
+
+  public override string ToString() => $"{DisplayName} | {base.ToString()}";
 }

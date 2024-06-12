@@ -46,18 +46,18 @@ public class UniqueNameAlreadyUsedException : ConflictException
     .AddData(nameof(PropertyName), propertyName, "<null>")
     .Build();
 
-  //public UniqueNameAlreadyUsedException(Type type, IdentifierUnit uniqueName, string? propertyName = null)
-  //  : base(BuildMessage(type, uniqueName, propertyName))
-  //{
-  //  TypeName = type.GetNamespaceQualifiedName();
-  //  UniqueName = uniqueName.Value;
-  //  PropertyName = propertyName;
-  //}
-  //private static string BuildMessage(Type type, IdentifierUnit uniqueName, string? propertyName) => new ErrorMessageBuilder(ErrorMessage)
-  //  .AddData(nameof(TypeName), type.GetNamespaceQualifiedName())
-  //  .AddData(nameof(UniqueName), uniqueName.Value)
-  //  .AddData(nameof(PropertyName), propertyName, "<null>")
-  //  .Build(); // TODO(fpion): Identifier
+  public UniqueNameAlreadyUsedException(Type type, IdentifierUnit uniqueName, string? propertyName = null)
+    : base(BuildMessage(type, uniqueName, propertyName))
+  {
+    TypeName = type.GetNamespaceQualifiedName();
+    UniqueName = uniqueName.Value;
+    PropertyName = propertyName;
+  }
+  private static string BuildMessage(Type type, IdentifierUnit uniqueName, string? propertyName) => new ErrorMessageBuilder(ErrorMessage)
+    .AddData(nameof(TypeName), type.GetNamespaceQualifiedName())
+    .AddData(nameof(UniqueName), uniqueName.Value)
+    .AddData(nameof(PropertyName), propertyName, "<null>")
+    .Build();
 }
 
 public class UniqueNameAlreadyUsedException<T> : UniqueNameAlreadyUsedException
@@ -69,7 +69,7 @@ public class UniqueNameAlreadyUsedException<T> : UniqueNameAlreadyUsedException
   {
   }
 
-  //public UniqueNameAlreadyUsedException(IdentifierUnit uniqueName, string? propertyName = null) : base(typeof(T), uniqueName, propertyName)
-  //{
-  //} // TODO(fpion): Identifier
+  public UniqueNameAlreadyUsedException(IdentifierUnit uniqueName, string? propertyName = null) : base(typeof(T), uniqueName, propertyName)
+  {
+  }
 }
