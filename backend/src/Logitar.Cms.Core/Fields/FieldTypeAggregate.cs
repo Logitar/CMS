@@ -1,4 +1,5 @@
 ﻿using Logitar.Cms.Contracts.Fields;
+using Logitar.Cms.Core.Configurations;
 using Logitar.Cms.Core.Fields.Events;
 using Logitar.Cms.Core.Fields.Properties;
 using Logitar.EventSourcing;
