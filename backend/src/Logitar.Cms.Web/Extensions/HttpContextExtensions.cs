@@ -141,5 +141,4 @@ public static class HttpContextExtensions
       await context.Response.WriteAsJsonAsync(value, cancellationToken);
     }
   }
-
 }
