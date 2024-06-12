@@ -6,14 +6,13 @@ import { useI18n } from "vue-i18n";
 
 import IdentifierInput from "@/components/shared/IdentifierInput.vue";
 import InvariantCheckbox from "./InvariantCheckbox.vue";
-import type { ContentType } from "@/types/contents";
+import type { ContentType, CreateContentTypePayload } from "@/types/contents";
 import { createContentType } from "@/api/contents";
 
 const { t } = useI18n();
 
-const isInvariant = ref<boolean>(false);
 const modalRef = ref<InstanceType<typeof TarModal> | null>(null);
-const uniqueName = ref<string>("");
+const payload = ref<CreateContentTypePayload>({ isInvariant: false, uniqueName: "" });
 
 function hide(): void {
   modalRef.value?.hide();
@@ -27,10 +26,7 @@ const emit = defineEmits<{
 const { handleSubmit, isSubmitting, resetForm } = useForm();
 const onSubmit = handleSubmit(async () => {
   try {
-    const contentType = await createContentType({
-      isInvariant: isInvariant.value,
-      uniqueName: uniqueName.value,
-    });
+    const contentType: ContentType = await createContentType(payload.value);
     emit("created", contentType);
     hide();
   } catch (e: unknown) {
@@ -49,8 +45,8 @@ function onCancel(): void {
     <TarButton icon="fas fa-plus" :text="t('actions.create')" variant="success" data-bs-toggle="modal" :data-bs-target="`#create-content-type`" />
     <TarModal :close="t('actions.close')" id="create-content-type" ref="modalRef" :title="t('contents.types.title.new')">
       <form @submit.prevent="onSubmit">
-        <InvariantCheckbox class="mb-3" v-model="isInvariant" />
-        <IdentifierInput required v-model="uniqueName" />
+        <InvariantCheckbox class="mb-3" v-model="payload.isInvariant" />
+        <IdentifierInput required v-model="payload.uniqueName" />
       </form>
       <template #footer>
         <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="onCancel" />

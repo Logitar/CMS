@@ -4,29 +4,29 @@ import { ref } from "vue";
 import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
-import LocaleSelect from "@/components/users/LocaleSelect.vue";
-import type { CreateLanguagePayload, Language } from "@/types/localization";
-import { createLanguage } from "@/api/localization";
+import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
+import type { ContentItem, CreateContentPayload } from "@/types/contents";
+import { createContentItem } from "@/api/contents";
 
 const { t } = useI18n();
 
 const modalRef = ref<InstanceType<typeof TarModal> | null>(null);
-const payload = ref<CreateLanguagePayload>({ locale: "" });
+const payload = ref<CreateContentPayload>({ contentTypeId: "", uniqueName: "" });
 
 function hide(): void {
   modalRef.value?.hide();
 }
 
 const emit = defineEmits<{
-  (e: "created", value: Language): void;
+  (e: "created", value: ContentItem): void;
   (e: "error", value: unknown): void;
 }>();
 
 const { handleSubmit, isSubmitting, resetForm } = useForm();
 const onSubmit = handleSubmit(async () => {
   try {
-    const language: Language = await createLanguage(payload.value);
-    emit("created", language);
+    const contentItem: ContentItem = await createContentItem(payload.value);
+    emit("created", contentItem);
     hide();
   } catch (e: unknown) {
     emit("error", e);
@@ -41,10 +41,12 @@ function onCancel(): void {
 
 <template>
   <span>
-    <TarButton icon="fas fa-plus" :text="t('actions.create')" variant="success" data-bs-toggle="modal" :data-bs-target="`#create-language`" />
-    <TarModal :close="t('actions.close')" id="create-language" ref="modalRef" :title="t('localization.languages.title.new')">
+    <TarButton icon="fas fa-plus" :text="t('actions.create')" variant="success" data-bs-toggle="modal" :data-bs-target="`#create-content-item`" />
+    <TarModal :close="t('actions.close')" id="create-content-item" ref="modalRef" :title="t('contents.items.title.new')">
       <form @submit.prevent="onSubmit">
-        <LocaleSelect label="localization.languages.locale.label" placeholder="localization.languages.locale.placeholder" required v-model="payload.locale" />
+        <!-- TODO(fpion): ContentTypeSelect -->
+        <!-- TODO(fpion): LanguageSelect -->
+        <UniqueNameInput required v-model="payload.uniqueName" />
       </form>
       <template #footer>
         <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="onCancel" />

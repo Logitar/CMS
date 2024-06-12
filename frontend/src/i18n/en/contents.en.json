@@ -1,4 +1,11 @@
 {
+  "items": {
+    "empty": "This list is empty.",
+    "title": {
+      "list": "Contents",
+      "new": "New content"
+    }
+  },
   "types": {
     "created": "The content type has been created.",
     "delete": {

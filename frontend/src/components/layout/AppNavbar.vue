@@ -112,6 +112,11 @@ watchEffect(() => {
                 ><font-awesome-icon icon="fas fa-cog" /> {{ t("contents.types.title.list") }}</RouterLink
               >
             </li>
+            <li class="nav-item">
+              <RouterLink :to="{ name: 'ContentItemList' }" class="nav-link"
+                ><font-awesome-icon icon="fas fa-cog" /> {{ t("contents.items.title.list") }}</RouterLink
+              >
+            </li>
           </template>
         </ul>
 

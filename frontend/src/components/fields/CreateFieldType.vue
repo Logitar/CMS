@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { TarButton, TarModal } from "logitar-vue3-ui";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
 import DataTypeSelect from "./DataTypeSelect.vue";
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
-import type { DataType, FieldType } from "@/types/fields";
+import type { CreateFieldTypePayload, DataType, FieldType } from "@/types/fields";
 import { createFieldType } from "@/api/fields";
 
 const { t } = useI18n();
@@ -14,6 +14,15 @@ const { t } = useI18n();
 const dataType = ref<DataType>("String");
 const modalRef = ref<InstanceType<typeof TarModal> | null>(null);
 const uniqueName = ref<string>("");
+
+const payload = computed<CreateFieldTypePayload>(() => ({
+  uniqueName: uniqueName.value,
+  booleanProperties: dataType.value === "Boolean" ? {} : undefined,
+  dateTimeProperties: dataType.value === "DateTime" ? {} : undefined,
+  numberProperties: dataType.value === "Number" ? {} : undefined,
+  stringProperties: dataType.value === "String" ? {} : undefined,
+  textProperties: dataType.value === "Text" ? { contentType: "text/plain" } : undefined,
+}));
 
 function hide(): void {
   modalRef.value?.hide();
@@ -27,14 +36,7 @@ const emit = defineEmits<{
 const { handleSubmit, isSubmitting, resetForm } = useForm();
 const onSubmit = handleSubmit(async () => {
   try {
-    const fieldType = await createFieldType({
-      uniqueName: uniqueName.value,
-      booleanProperties: dataType.value === "Boolean" ? {} : undefined,
-      dateTimeProperties: dataType.value === "DateTime" ? {} : undefined,
-      numberProperties: dataType.value === "Number" ? {} : undefined,
-      stringProperties: dataType.value === "String" ? {} : undefined,
-      textProperties: dataType.value === "Text" ? { contentType: "text/plain" } : undefined,
-    });
+    const fieldType: FieldType = await createFieldType(payload.value);
     emit("created", fieldType);
     hide();
   } catch (e: unknown) {
