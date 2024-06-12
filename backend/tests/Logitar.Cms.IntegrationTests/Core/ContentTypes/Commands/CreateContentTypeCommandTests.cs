@@ -18,8 +18,8 @@ public class CreateContentTypeCommandTests : IntegrationTests
     _contentTypeRepository = ServiceProvider.GetRequiredService<IContentTypeRepository>();
   }
 
-  [Fact(DisplayName = "It should create a new boolean content type.")]
-  public async Task It_should_create_a_new_boolean_content_type()
+  [Fact(DisplayName = "It should create a new content type.")]
+  public async Task It_should_create_a_new_content_type()
   {
     CreateContentTypePayload payload = new("BlogArticle")
     {

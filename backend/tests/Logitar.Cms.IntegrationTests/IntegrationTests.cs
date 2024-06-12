@@ -91,6 +91,7 @@ public abstract class IntegrationTests : IAsyncLifetime
     await publisher.Publish(new InitializeDatabaseCommand());
 
     StringBuilder statement = new();
+    statement.AppendLine(SqlServerDeleteBuilder.From(CmsDb.ContentItems.Table).Build().Text);
     statement.AppendLine(SqlServerDeleteBuilder.From(CmsDb.ContentTypes.Table).Build().Text);
     statement.AppendLine(SqlServerDeleteBuilder.From(CmsDb.FieldTypes.Table).Build().Text);
     statement.AppendLine(SqlServerDeleteBuilder.From(CmsDb.Languages.Table).Build().Text);

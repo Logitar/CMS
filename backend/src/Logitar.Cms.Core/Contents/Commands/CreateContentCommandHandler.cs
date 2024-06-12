@@ -50,7 +50,7 @@ internal class CreateContentCommandHandler : IRequestHandler<CreateContentComman
 
     if (language != null)
     {
-      content.SetLocale(language, invariant);
+      content.SetLocale(language, invariant, command.ActorId);
     }
 
     await _sender.Send(new SaveContentCommand(content), cancellationToken);

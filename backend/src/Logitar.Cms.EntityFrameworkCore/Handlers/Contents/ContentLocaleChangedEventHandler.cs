@@ -30,5 +30,7 @@ internal class ContentLocaleChangedEventHandler : INotificationHandler<ContentLo
     }
 
     content.SetLocale(language, @event);
+
+    await _context.SaveChangesAsync(cancellationToken);
   }
 }
