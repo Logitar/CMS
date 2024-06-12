@@ -55,7 +55,7 @@ async function refresh(): Promise<void> {
         .map((term) => ({ value: `%${term}%` })),
       operator: "And",
     },
-    sort: sort.value ? [{ content: sort.value as ContentTypeSort, isDescending: isDescending.value }] : undefined,
+    sort: sort.value ? [{ field: sort.value as ContentTypeSort, isDescending: isDescending.value }] : undefined,
     skip: (page.value - 1) * count.value,
     limit: count.value,
   };
