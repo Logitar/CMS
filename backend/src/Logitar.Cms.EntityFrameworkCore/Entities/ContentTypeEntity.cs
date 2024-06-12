@@ -18,6 +18,8 @@ internal class ContentTypeEntity : AggregateEntity
   public string? DisplayName { get; private set; }
   public string? Description { get; private set; }
 
+  public List<ContentItemEntity> ContentItems { get; private set; } = [];
+
   public ContentTypeEntity(ContentTypeCreatedEvent @event) : base(@event)
   {
     IsInvariant = @event.IsInvariant;
