@@ -5,9 +5,8 @@ namespace Logitar.Cms.Web.Extensions;
 
 public static class FluentValidationExtensions
 {
-  public static PropertyError ToPropertyError(this ValidationFailure failure) => new(failure.ErrorCode, failure.ErrorMessage)
+  public static PropertyError ToPropertyError(this ValidationFailure failure)
   {
-    PropertyName = failure.PropertyName,
-    AttemptedValue = failure.AttemptedValue is string s ? string.Concat('"', s, '"') : failure.AttemptedValue?.ToString()
-  };
+    return new PropertyError(failure.ErrorCode, failure.ErrorMessage, failure.PropertyName, failure.AttemptedValue);
+  }
 }

@@ -3,7 +3,7 @@
 public record PropertyError : Error
 {
   public string? PropertyName { get; set; }
-  public string? AttemptedValue { get; set; }
+  public object? AttemptedValue { get; set; }
 
   public PropertyError() : base()
   {
@@ -13,7 +13,9 @@ public record PropertyError : Error
   {
   }
 
-  public PropertyError(string code, string message, IEnumerable<ErrorData> data) : base(code, message, data)
+  public PropertyError(string code, string message, string? propertyName, object? attemptedValue) : base(code, message)
   {
+    PropertyName = propertyName;
+    AttemptedValue = attemptedValue;
   }
 }

@@ -1,5 +1,4 @@
-﻿using Logitar.Cms.Contracts.Configurations;
-using Logitar.Cms.Contracts.Fields;
+﻿using Logitar.Cms.Contracts.Fields;
 using Logitar.Cms.Core.Fields.Events;
 using Logitar.Cms.Core.Fields.Properties;
 using Logitar.EventSourcing;
@@ -11,7 +10,7 @@ namespace Logitar.Cms.Core.Fields;
 
 public class FieldTypeAggregate : AggregateRoot
 {
-  public static readonly IUniqueNameSettings UniqueNameSettings = new UniqueNameSettings("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_");
+  public static readonly IUniqueNameSettings UniqueNameSettings = new ReadOnlyUniqueNameSettings("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_");
 
   private FieldTypeUpdatedEvent _updatedEvent = new();
 
