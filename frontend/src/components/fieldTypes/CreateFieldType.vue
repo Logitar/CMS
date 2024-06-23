@@ -6,8 +6,8 @@ import { useI18n } from "vue-i18n";
 
 import DataTypeSelect from "./DataTypeSelect.vue";
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
-import type { CreateFieldTypePayload, DataType, FieldType } from "@/types/fields";
-import { createFieldType } from "@/api/fields";
+import type { CreateFieldTypePayload, DataType, FieldType } from "@/types/fieldTypes";
+import { createFieldType } from "@/api/fieldTypes";
 
 const { t } = useI18n();
 

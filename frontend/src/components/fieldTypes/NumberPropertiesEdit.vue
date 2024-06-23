@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 import { parsingUtils } from "logitar-js";
 
 import AppInput from "@/components/shared/AppInput.vue";
-import type { NumberProperties } from "@/types/fields";
+import type { NumberProperties } from "@/types/fieldTypes";
 
 const { parseNumber } = parsingUtils;
 

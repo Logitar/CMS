@@ -1,6 +1,6 @@
 import { urlUtils } from "logitar-js";
 
-import type { CreateFieldTypePayload, FieldType, ReplaceFieldTypePayload, SearchFieldTypesPayload } from "@/types/fields";
+import type { CreateFieldTypePayload, FieldType, ReplaceFieldTypePayload, SearchFieldTypesPayload } from "@/types/fieldTypes";
 import type { SearchResults } from "@/types/search";
 import { get, post, put } from ".";
 

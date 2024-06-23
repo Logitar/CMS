@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 import { objectUtils } from "logitar-js";
 
 import DateTimeInput from "@/components/shared/DateTimeInput.vue";
-import type { DateTimeProperties } from "@/types/fields";
+import type { DateTimeProperties } from "@/types/fieldTypes";
 
 const defaultMaximum = new Date(9999, 11, 31, 23, 59, 59);
 const { assign } = objectUtils;

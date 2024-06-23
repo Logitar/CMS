@@ -1,5 +1,5 @@
 import type { ContentType } from "@/types/contents";
-import type { FieldType } from "@/types/fields";
+import type { FieldType } from "@/types/fieldTypes";
 import type { Language } from "@/types/languages";
 
 export function formatContentType(contentType: ContentType): string {

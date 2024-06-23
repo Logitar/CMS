@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 
-import type { BooleanProperties } from "@/types/fields";
+import type { BooleanProperties } from "@/types/fieldTypes";
 
 const { t } = useI18n();
 

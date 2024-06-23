@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { nanoid } from "nanoid";
-import { parsingUtils } from "logitar-js";
+import { objectUtils, parsingUtils } from "logitar-js";
 
 import AppInput from "@/components/shared/AppInput.vue";
-import ContentTypeSelect from "./ContentTypeSelect.vue";
-import type { ContentType, TextProperties } from "@/types/fields";
+import type { StringProperties } from "@/types/fieldTypes";
 
+const { assign } = objectUtils;
 const { parseNumber } = parsingUtils;
 
 const props = withDefaults(
   defineProps<{
     id?: string;
-    modelValue: TextProperties;
+    modelValue: StringProperties;
   }>(),
   {
     id: () => nanoid(),
@@ -19,20 +19,20 @@ const props = withDefaults(
 );
 
 const emit = defineEmits<{
-  (e: "update:model-value", value: TextProperties): void;
+  (e: "update:model-value", value: StringProperties): void;
 }>();
 
-function setProperty(key: keyof TextProperties, value: string | undefined): void {
-  const properties: TextProperties = { ...props.modelValue };
+function setProperty(key: keyof StringProperties, value: string | undefined): void {
+  const properties: StringProperties = { ...props.modelValue };
   switch (key) {
-    case "contentType":
-      properties.contentType = (value as ContentType) ?? "text/plain";
-      break;
     case "maximumLength":
       properties.maximumLength = value === "" ? undefined : parseNumber(value);
       break;
     case "minimumLength":
       properties.minimumLength = value === "" ? undefined : parseNumber(value);
+      break;
+    default:
+      assign(properties, key, value || undefined);
       break;
   }
   emit("update:model-value", properties);
@@ -41,17 +41,16 @@ function setProperty(key: keyof TextProperties, value: string | undefined): void
 
 <template>
   <div>
-    <ContentTypeSelect disabled :model-value="modelValue.contentType" />
     <div class="row">
       <AppInput
         class="col-lg-6"
         floating
         :id="`${id}_minimum-length`"
-        label="fields.types.properties.text.minimumLength"
+        label="fields.types.properties.string.minimumLength"
         min="0"
         :max="modelValue.maximumLength ?? 0x7fffffff"
         :model-value="modelValue.minimumLength?.toString() ?? '0'"
-        placeholder="fields.types.properties.text.minimumLength"
+        placeholder="fields.types.properties.string.minimumLength"
         type="number"
         @update:model-value="setProperty('minimumLength', $event)"
       />
@@ -59,13 +58,21 @@ function setProperty(key: keyof TextProperties, value: string | undefined): void
         class="col-lg-6"
         floating
         :id="`${id}_maximum-length`"
-        label="fields.types.properties.text.maximumLength"
+        label="fields.types.properties.string.maximumLength"
         min="0"
         :model-value="modelValue.maximumLength?.toString() ?? '0'"
-        placeholder="fields.types.properties.text.maximumLength"
+        placeholder="fields.types.properties.string.maximumLength"
         type="number"
         @update:model-value="setProperty('maximumLength', $event)"
       />
     </div>
+    <AppInput
+      floating
+      :id="`${id}_pattern`"
+      label="fields.types.properties.string.pattern"
+      :model-value="modelValue.pattern"
+      placeholder="fields.types.properties.string.pattern"
+      @update:model-value="setProperty('pattern', $event)"
+    />
   </div>
 </template>

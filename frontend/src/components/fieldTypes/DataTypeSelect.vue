@@ -4,7 +4,7 @@ import { arrayUtils } from "logitar-js";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
-import type { ContentType } from "@/types/fields";
+import type { DataType } from "@/types/fieldTypes";
 
 const { orderBy } = arrayUtils;
 const { rt, t, tm } = useI18n();
@@ -12,23 +12,23 @@ const { rt, t, tm } = useI18n();
 withDefaults(
   defineProps<{
     id?: string;
-    modelValue?: ContentType;
+    modelValue?: DataType;
     required?: boolean | string;
   }>(),
   {
-    id: "content-type",
+    id: "data-type",
   },
 );
 
 const options = computed<SelectOption[]>(() =>
   orderBy(
-    Object.entries(tm(rt("fields.types.properties.text.contentType.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
+    Object.entries(tm(rt("fields.types.dataType.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
     "text",
   ),
 );
 
 defineEmits<{
-  (e: "update:model-value", value?: ContentType): void;
+  (e: "update:model-value", value?: DataType): void;
 }>();
 </script>
 
@@ -36,10 +36,10 @@ defineEmits<{
   <TarSelect
     floating
     :id="id"
-    :label="t('fields.types.properties.text.contentType.label')"
+    :label="t('fields.types.dataType.label')"
     :model-value="modelValue"
     :options="options"
-    :placeholder="t('fields.types.properties.text.contentType.placeholder')"
+    :placeholder="t('fields.types.dataType.placeholder')"
     :required="required"
     @update:model-value="$emit('update:model-value', $event)"
   />

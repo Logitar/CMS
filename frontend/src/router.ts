@@ -57,12 +57,12 @@ const router = createRouter({
     {
       name: "FieldTypeList",
       path: "/field-types",
-      component: () => import("./views/fields/FieldTypeList.vue"),
+      component: () => import("./views/fieldTypes/FieldTypeList.vue"),
     },
     {
       name: "FieldTypeEdit",
       path: "/field-types/:id",
-      component: () => import("./views/fields/FieldTypeEdit.vue"),
+      component: () => import("./views/fieldTypes/FieldTypeEdit.vue"),
     },
     // Languages
     {
