@@ -12,6 +12,7 @@ const { orderBy } = arrayUtils;
 
 withDefaults(
   defineProps<{
+    disabled?: boolean | string;
     id?: string;
     modelValue?: string;
     required?: boolean | string;
@@ -57,6 +58,7 @@ onMounted(async () => {
 
 <template>
   <AppSelect
+    :disabled="disabled"
     floating
     :id="id"
     label="contentTypes.select.label"

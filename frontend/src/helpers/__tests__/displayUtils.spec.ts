@@ -2,10 +2,11 @@ import { describe, it, expect } from "vitest";
 import { nanoid } from "nanoid";
 
 import type { Actor } from "@/types/actor";
+import type { ContentItem } from "@/types/contents";
 import type { ContentType } from "@/types/contentTypes";
 import type { FieldType } from "@/types/fieldTypes";
 import type { Language } from "@/types/languages";
-import { formatContentType, formatFieldType, formatLanguage } from "../displayUtils";
+import { formatContentItem, formatContentType, formatFieldType, formatLanguage } from "../displayUtils";
 
 const actor: Actor = {
   id: nanoid(),
@@ -14,6 +15,38 @@ const actor: Actor = {
   displayName: "admin",
 };
 const now: string = new Date().toISOString();
+
+describe("formatContent", () => {
+  it.concurrent("should return the formatted content item", () => {
+    const contentItem: ContentItem = {
+      id: nanoid(),
+      version: 1,
+      createdBy: actor,
+      updatedBy: actor,
+      createdOn: now,
+      updatedOn: now,
+      contentType: {
+        id: nanoid(),
+        version: 1,
+        createdBy: actor,
+        createdOn: now,
+        updatedBy: actor,
+        updatedOn: now,
+        isInvariant: false,
+        uniqueName: "BlogArticle",
+      },
+      invariant: {
+        uniqueName: "prolongez-lete-avec-une-acura-nsx-coupe",
+        createdBy: actor,
+        createdOn: now,
+        updatedBy: actor,
+        updatedOn: now,
+      },
+      locales: [],
+    };
+    expect(formatContentItem(contentItem)).toBe(contentItem.invariant.uniqueName);
+  });
+});
 
 describe("formatContentType", () => {
   it.concurrent("should return the formatted content type without display name", () => {

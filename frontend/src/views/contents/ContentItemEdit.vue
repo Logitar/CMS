@@ -6,8 +6,11 @@ import { useRoute, useRouter } from "vue-router";
 import AppBackButton from "@/components/shared/AppBackButton.vue";
 import AppDelete from "@/components/shared/AppDelete.vue";
 import AppSaveButton from "@/components/shared/AppSaveButton.vue";
+import ContentTypeSelect from "@/components/contentTypes/ContentTypeSelect.vue";
+import StatusDetail from "@/components/shared/StatusDetail.vue";
 import type { ApiError } from "@/types/api";
 import type { ContentItem } from "@/types/contents";
+import { formatContentItem } from "@/helpers/displayUtils";
 import { handleErrorKey } from "@/inject/App";
 import { readContent } from "@/api/contents";
 import { useToastStore } from "@/stores/toast";
@@ -20,7 +23,7 @@ const toasts = useToastStore();
 const content = ref<ContentItem>();
 const isDeleting = ref<boolean>(false);
 
-const formatted = computed<string>(() => /*content.value ? formatContent(content.value) :*/ ""); // TODO(fpion): implement
+const formatted = computed<string>(() => (content.value ? formatContentItem(content.value) : ""));
 const hasChanges = computed<boolean>(() => Boolean(content.value) && false); // TODO(fpion): implement
 
 function setModel(model: ContentItem): void {
@@ -41,8 +44,19 @@ const onSubmit = handleSubmit(async () => {
 });
 
 function onDelete(hideModal: () => void): void {
-  alert("Deleting contents is not implemented.");
-  hideModal();
+  if (content.value && !isDeleting.value) {
+    isDeleting.value = true;
+    try {
+      // await deleteContent(content.value.id); // ISSUE: https://github.com/Logitar/CMS/issues/26
+      hideModal();
+      toasts.success("contents.deleted");
+      router.push({ name: "ContentItemList" });
+    } catch (e: unknown) {
+      handleError(e);
+    } finally {
+      isDeleting.value = false;
+    }
+  }
 }
 
 onMounted(async () => {
@@ -79,6 +93,7 @@ onMounted(async () => {
             @confirmed="onDelete"
           />
         </div>
+        <ContentTypeSelect disabled :model-value="content.contentType.id" />
         <!-- TODO(fpion): implement -->
       </form>
     </template>
