@@ -4,12 +4,16 @@ import { ref } from "vue";
 import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
+import ContentTypeSelect from "@/components/contentTypes/ContentTypeSelect.vue";
+import LanguageSelect from "@/components/languages/LanguageSelect.vue";
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
 import type { ContentItem, CreateContentPayload } from "@/types/contents";
+import type { ContentType } from "@/types/contentTypes";
 import { createContentItem } from "@/api/contents";
 
 const { t } = useI18n();
 
+const contentType = ref<ContentType>();
 const modalRef = ref<InstanceType<typeof TarModal> | null>(null);
 const payload = ref<CreateContentPayload>({ contentTypeId: "", uniqueName: "" });
 
@@ -33,6 +37,11 @@ const onSubmit = handleSubmit(async () => {
   }
 });
 
+function onContentTypeSelected(value?: ContentType) {
+  contentType.value = value;
+  payload.value.contentTypeId = value?.id ?? "";
+}
+
 function onCancel(): void {
   resetForm();
   hide();
@@ -44,8 +53,8 @@ function onCancel(): void {
     <TarButton icon="fas fa-plus" :text="t('actions.create')" variant="success" data-bs-toggle="modal" :data-bs-target="`#create-content-item`" />
     <TarModal :close="t('actions.close')" id="create-content-item" ref="modalRef" :title="t('contents.title.new')">
       <form @submit.prevent="onSubmit">
-        <!-- TODO(fpion): ContentTypeSelect -->
-        <!-- TODO(fpion): LanguageSelect -->
+        <ContentTypeSelect :model-value="payload.contentTypeId" required @selected="onContentTypeSelected" />
+        <LanguageSelect v-if="contentType?.isInvariant === false" required v-model="payload.languageId" />
         <UniqueNameInput required v-model="payload.uniqueName" />
       </form>
       <template #footer>

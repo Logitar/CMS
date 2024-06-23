@@ -1,7 +1,17 @@
 {
+  "created": "The content has been created.",
+  "delete": {
+    "confirm": "Do you really want to delete the following content?",
+    "success": "The content has been deleted.",
+    "title": "Delete content"
+  },
   "empty": "This list is empty.",
+  "sort": {
+    "options": {}
+  },
   "title": {
     "list": "Contents",
     "new": "New content"
-  }
+  },
+  "updated": "The content has been updated."
 }
