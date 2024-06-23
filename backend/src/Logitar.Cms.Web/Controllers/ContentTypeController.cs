@@ -60,4 +60,11 @@ public class ContentTypeController : ControllerBase
     SearchResults<ContentsType> contentTypes = await _pipeline.ExecuteAsync(new SearchContentTypesQuery(parameters.ToPayload()), cancellationToken);
     return Ok(contentTypes);
   }
+
+  [HttpPatch("{id}")]
+  public async Task<ActionResult<ContentsType>> UpdateAsync(Guid id, [FromBody] UpdateContentTypePayload payload, CancellationToken cancellationToken = default)
+  {
+    ContentsType? contentType = await _pipeline.ExecuteAsync(new UpdateContentTypeCommand(id, payload), cancellationToken);
+    return contentType == null ? NotFound() : Ok(contentType);
+  }
 }

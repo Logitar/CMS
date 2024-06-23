@@ -35,20 +35,17 @@ internal class UpdateFieldTypeCommandHandler : IRequestHandler<UpdateFieldTypeCo
     UpdateFieldTypePayload payload = command.Payload;
     new UpdateFieldTypeValidator(fieldType.DataType, uniqueNameSettings).ValidateAndThrow(payload);
 
-    UniqueNameUnit? uniqueName = UniqueNameUnit.TryCreate(uniqueNameSettings, payload.UniqueName);
-    if (uniqueName != null)
+    if (!string.IsNullOrWhiteSpace(payload.UniqueName))
     {
-      fieldType.UniqueName = uniqueName;
+      fieldType.UniqueName = new UniqueNameUnit(uniqueNameSettings, payload.UniqueName);
     }
-    DisplayNameUnit? displayName = DisplayNameUnit.TryCreate(payload.DisplayName?.Value);
-    if (displayName != null)
+    if (payload.DisplayName != null)
     {
-      fieldType.DisplayName = displayName;
+      fieldType.DisplayName = DisplayNameUnit.TryCreate(payload.DisplayName.Value);
     }
-    DescriptionUnit? description = DescriptionUnit.TryCreate(payload.Description?.Value);
-    if (description != null)
+    if (payload.Description != null)
     {
-      fieldType.Description = description;
+      fieldType.Description = DescriptionUnit.TryCreate(payload.Description.Value);
     }
 
     if (payload.BooleanProperties != null)
