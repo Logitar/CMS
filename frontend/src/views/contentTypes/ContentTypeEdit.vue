@@ -67,8 +67,19 @@ const onSubmit = handleSubmit(async () => {
 });
 
 function onDelete(hideModal: () => void): void {
-  alert("Deleting content types is not implemented.");
-  hideModal();
+  if (contentType.value && !isDeleting.value) {
+    isDeleting.value = true;
+    try {
+      // await deleteContentType(contentType.value.id); // ISSUE: https://github.com/Logitar/CMS/issues/23
+      hideModal();
+      toasts.success("contentTypes.deleted");
+      router.push({ name: "ContentTypeList" });
+    } catch (e: unknown) {
+      handleError(e);
+    } finally {
+      isDeleting.value = false;
+    }
+  }
 }
 
 onMounted(async () => {

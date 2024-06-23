@@ -2,9 +2,9 @@
   "created": "Le type de contenu a été créé.",
   "delete": {
     "confirm": "Désirez-vous vraiment supprimer le type de contenu suivant ?",
-    "success": "Le type de contenu a été supprimé.",
     "title": "Supprimer le type de contenu"
   },
+  "deleted": "Le type de contenu a été supprimé.",
   "empty": "Cette liste est vide.",
   "invariant": {
     "label": "Invariant",

@@ -2,9 +2,9 @@
   "created": "Le contenu a été créé.",
   "delete": {
     "confirm": "Désirez-vous vraiment supprimer le contenu suivant ?",
-    "success": "Le contenu a été supprimé.",
     "title": "Supprimer le contenu"
   },
+  "deleted": "Le contenu a été supprimé.",
   "empty": "Cette liste est vide.",
   "sort": {
     "options": {}
