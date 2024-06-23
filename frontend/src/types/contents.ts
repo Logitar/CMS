@@ -12,7 +12,7 @@ export type ContentItem = Aggregate & {
 
 export type ContentLocale = {
   uniqueName: string;
-  item: ContentItem;
+  item?: ContentItem;
   language?: Language;
   createdBy: Actor;
   createdOn: string;
