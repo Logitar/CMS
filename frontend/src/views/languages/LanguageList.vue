@@ -111,7 +111,7 @@ watch(
           query: isEmpty(query)
             ? {
                 search: "",
-                sort: "Locale",
+                sort: "Code",
                 isDescending: "false",
                 page: 1,
                 count: 10,
@@ -162,7 +162,7 @@ watch(
       <table class="table table-striped">
         <thead>
           <tr>
-            <th scope="col">{{ t("languages.sort.options.Locale") }}</th>
+            <th scope="col">{{ t("languages.sort.options.Code") }}</th>
             <th scope="col">{{ t("languages.displayNames") }}</th>
             <th scope="col">{{ t("languages.isDefault") }}</th>
             <th scope="col">{{ t("languages.sort.options.UpdatedOn") }}</th>

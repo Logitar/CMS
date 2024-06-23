@@ -3,19 +3,19 @@
   "default": "Par défaut",
   "delete": {
     "confirm": "Désirez-vous vraiment supprimer la langue suivante ?",
-    "success": "La langue a été supprimée.",
     "title": "Supprimer la langue"
   },
+  "deleted": "La langue a été supprimée.",
   "displayNames": "Noms d’affichage",
   "empty": "Cette liste est vide.",
   "englishFormat": "{englishName} (anglais)",
   "isDefault": "Par défaut ?",
-  "localeAlreadyUsed": "La langue sélectionnée est déjà utilisée.",
-  "nativeFormat": "{nativeName} (natif)",
   "locale": {
     "label": "Langue",
     "placeholder": "Sélectionnez une langue"
   },
+  "localeAlreadyUsed": "La langue sélectionnée est déjà utilisée.",
+  "nativeFormat": "{nativeName} (natif)",
   "select": {
     "label": "Language",
     "placeholder": "Sélectionnez une langue"
@@ -26,7 +26,10 @@
   },
   "sort": {
     "options": {
-      "Locale": "Langue",
+      "Code": "Langue",
+      "DisplayName": "Nom d’affichage",
+      "EnglishName": "Nom anglophone",
+      "NativeName": "Nom natif",
       "UpdatedOn": "Dernière modification"
     }
   },
