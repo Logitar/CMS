@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Logitar.Cms.Core.Contents.Commands;
 
 [Trait(Traits.Category, Categories.Integration)]
-public class SaveContentLocaleCommandTests : IntegrationTests
+public class UpdateContentLocaleCommandTests : IntegrationTests
 {
   private readonly IContentRepository _contentRepository;
   private readonly IContentTypeRepository _contentTypeRepository;
@@ -24,7 +24,7 @@ public class SaveContentLocaleCommandTests : IntegrationTests
   private readonly ContentAggregate _blogArticle;
   private readonly ContentAggregate _blogAuthor;
 
-  public SaveContentLocaleCommandTests() : base()
+  public UpdateContentLocaleCommandTests() : base()
   {
     _contentRepository = ServiceProvider.GetRequiredService<IContentRepository>();
     _contentTypeRepository = ServiceProvider.GetRequiredService<IContentTypeRepository>();
@@ -51,11 +51,85 @@ public class SaveContentLocaleCommandTests : IntegrationTests
     await _contentRepository.SaveAsync([_blogArticle, _blogAuthor]);
   }
 
-  [Fact(DisplayName = "It should create a new content locale.")]
-  public async Task It_should_create_a_new_content_locale()
+  [Fact(DisplayName = "It should return null when the content could not be found.")]
+  public async Task It_should_return_null_when_the_content_could_not_be_found()
   {
-    SaveContentLocalePayload payload = new("my-blog-article-fr");
-    SaveContentLocaleCommand command = new(_blogArticle.Id.ToGuid(), payload, _canadianFrench.Id.ToGuid());
+    UpdateContentLocalePayload payload = new()
+    {
+      UniqueName = "my-new-article"
+    };
+    UpdateContentLocaleCommand command = new(Id: Guid.NewGuid(), payload, LanguageId: null);
+    Assert.Null(await Pipeline.ExecuteAsync(command));
+  }
+
+  [Fact(DisplayName = "It should throw AggregateNotFoundException when the language could not be found.")]
+  public async Task It_should_throw_AggregateNotFoundException_when_the_language_could_not_be_found()
+  {
+    LanguageAggregate mexicanSpanish = new(new LocaleUnit("es-MX"), isDefault: false, ActorId);
+    UpdateContentLocalePayload payload = new()
+    {
+      UniqueName = "mi-blog-articulo"
+    };
+    UpdateContentLocaleCommand command = new(_blogArticle.Id.ToGuid(), payload, mexicanSpanish.Id.ToGuid());
+    var exception = await Assert.ThrowsAsync<AggregateNotFoundException<LanguageAggregate>>(async () => await Pipeline.ExecuteAsync(command));
+    Assert.Equal(mexicanSpanish.Id.Value, exception.Id);
+    Assert.Equal(nameof(command.LanguageId), exception.PropertyName);
+  }
+
+  [Fact(DisplayName = "It should throw ContentLocaleNotFoundException when the content locale could not be found.")]
+  public async Task It_should_throw_ContentLocaleNotFoundException_when_the_content_locale_could_not_be_found()
+  {
+    UpdateContentLocalePayload payload = new()
+    {
+      UniqueName = "my-blog-article-fr"
+    };
+    UpdateContentLocaleCommand command = new(_blogArticle.Id.ToGuid(), payload, _canadianFrench.Id.ToGuid());
+    var exception = await Assert.ThrowsAsync<ContentLocaleNotFoundException>(async () => await Pipeline.ExecuteAsync(command));
+    Assert.Equal(_blogArticle.Id.Value, exception.ContentId);
+    Assert.Equal(_canadianFrench.Id.Value, exception.LanguageId);
+    Assert.Equal(nameof(command.LanguageId), exception.PropertyName);
+  }
+
+  [Fact(DisplayName = "It should throw UniqueNameAlreadyUsedException when the unique name is already used.")]
+  public async Task It_should_throw_UniqueNameAlreadyUsedException_when_the_unique_name_is_already_used()
+  {
+    ContentAggregate blogArticle = new(_blogArticleType, new ContentLocaleUnit(new UniqueNameUnit(ContentAggregate.UniqueNameSettings, "other-blog-article")), ActorId);
+    blogArticle.SetLocale(_canadianEnglish, blogArticle.Invariant, ActorId);
+    await _contentRepository.SaveAsync(blogArticle);
+
+    UpdateContentLocalePayload payload = new()
+    {
+      UniqueName = blogArticle.Invariant.UniqueName.Value
+    };
+    UpdateContentLocaleCommand command = new(_blogArticle.Id.ToGuid(), payload, _canadianEnglish.Id.ToGuid());
+    var exception = await Assert.ThrowsAsync<UniqueNameAlreadyUsedException<ContentAggregate>>(async () => await Pipeline.ExecuteAsync(command));
+    Assert.Equal(_canadianEnglish.Id.Value, exception.LanguageId);
+    Assert.Equal(payload.UniqueName, exception.UniqueName);
+    Assert.Equal(nameof(payload.UniqueName), exception.PropertyName);
+  }
+
+  [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
+  public async Task It_should_throw_ValidationException_when_the_payload_is_not_valid()
+  {
+    UpdateContentLocalePayload payload = new()
+    {
+      UniqueName = "  My new article  "
+    };
+    UpdateContentLocaleCommand command = new(Guid.NewGuid(), payload, LanguageId: null);
+    var exception = await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await Pipeline.ExecuteAsync(command));
+    ValidationFailure failure = Assert.Single(exception.Errors);
+    Assert.Equal(nameof(AllowedCharactersValidator), failure.ErrorCode);
+    Assert.Equal("UniqueName", failure.PropertyName);
+  }
+
+  [Fact(DisplayName = "It should update an existing locale.")]
+  public async Task It_should_update_an_existing_locale()
+  {
+    UpdateContentLocalePayload payload = new()
+    {
+      UniqueName = "my-blog-article-en-ca"
+    };
+    UpdateContentLocaleCommand command = new(_blogArticle.Id.ToGuid(), payload, _canadianEnglish.Id.ToGuid());
     ContentItem? item = await Pipeline.ExecuteAsync(command);
     Assert.NotNull(item);
 
@@ -65,26 +139,29 @@ public class SaveContentLocaleCommandTests : IntegrationTests
     Assert.Equal(Actor, item.UpdatedBy);
     Assert.True(item.CreatedOn < item.UpdatedOn);
 
-    ContentLocale locale = Assert.Single(item.Locales.Where(l => l.Language != null && l.Language.Id == _canadianFrench.Id.ToGuid()));
+    ContentLocale locale = Assert.Single(item.Locales.Where(l => l.Language != null && l.Language.Id == _canadianEnglish.Id.ToGuid()));
     Assert.Equal(payload.UniqueName, locale.UniqueName);
     Assert.Same(item, locale.Item);
     Assert.NotNull(locale.Language);
-    Assert.Equal(_canadianFrench.Id.ToGuid(), locale.Language.Id);
-    Assert.Equal(Actor, locale.CreatedBy);
+    Assert.Equal(_canadianEnglish.Id.ToGuid(), locale.Language.Id);
+    Assert.Equal(Contracts.Actors.Actor.System, locale.CreatedBy);
     Assert.Equal(Actor, locale.UpdatedBy);
-    Assert.Equal(locale.CreatedOn, locale.UpdatedOn);
+    Assert.True(locale.CreatedOn < locale.UpdatedOn);
   }
 
-  [Fact(DisplayName = "It should replace an existing content locale.")]
-  public async Task It_should_replace_an_existing_content_locale()
+  [Fact(DisplayName = "It should update the invariant.")]
+  public async Task It_should_update_the_invariant()
   {
-    SaveContentLocalePayload payload = new("my-blog-author-2");
-    SaveContentLocaleCommand command = new(_blogAuthor.Id.ToGuid(), payload, LanguageId: null);
+    UpdateContentLocalePayload payload = new()
+    {
+      UniqueName = "my-blog-article-2"
+    };
+    UpdateContentLocaleCommand command = new(_blogArticle.Id.ToGuid(), payload, LanguageId: null);
     ContentItem? item = await Pipeline.ExecuteAsync(command);
     Assert.NotNull(item);
 
-    Assert.Equal(_blogAuthor.Id.ToGuid(), item.Id);
-    Assert.Equal(_blogAuthor.Version + 1, item.Version);
+    Assert.Equal(_blogArticle.Id.ToGuid(), item.Id);
+    Assert.Equal(_blogArticle.Version + 1, item.Version);
     Assert.Equal(Contracts.Actors.Actor.System, item.CreatedBy);
     Assert.Equal(Actor, item.UpdatedBy);
     Assert.True(item.CreatedOn < item.UpdatedOn);
@@ -96,60 +173,5 @@ public class SaveContentLocaleCommandTests : IntegrationTests
     Assert.Equal(Contracts.Actors.Actor.System, invariant.CreatedBy);
     Assert.Equal(Actor, invariant.UpdatedBy);
     Assert.True(invariant.CreatedOn < invariant.UpdatedOn);
-  }
-
-  [Fact(DisplayName = "It should return null when the content could not be found.")]
-  public async Task It_should_return_null_when_the_content_could_not_be_found()
-  {
-    SaveContentLocalePayload payload = new("my-new-article");
-    SaveContentLocaleCommand command = new(Id: Guid.NewGuid(), payload, LanguageId: null);
-    Assert.Null(await Pipeline.ExecuteAsync(command));
-  }
-
-  [Fact(DisplayName = "It should throw AggregateNotFoundException when the language could not be found.")]
-  public async Task It_should_throw_AggregateNotFoundException_when_the_language_could_not_be_found()
-  {
-    LanguageAggregate mexicanSpanish = new(new LocaleUnit("es-MX"), isDefault: false, ActorId);
-    SaveContentLocalePayload payload = new("mi-blog-articulo");
-    SaveContentLocaleCommand command = new(_blogArticle.Id.ToGuid(), payload, mexicanSpanish.Id.ToGuid());
-    var exception = await Assert.ThrowsAsync<AggregateNotFoundException<LanguageAggregate>>(async () => await Pipeline.ExecuteAsync(command));
-    Assert.Equal(mexicanSpanish.Id.Value, exception.Id);
-    Assert.Equal(nameof(command.LanguageId), exception.PropertyName);
-  }
-
-  [Fact(DisplayName = "It should throw CannotCreateInvariantLocaleException when creating a locale to an invariant content.")]
-  public async Task It_should_throw_CannotCreateInvariantLocaleException_when_creating_a_locale_to_an_invariant_content()
-  {
-    SaveContentLocalePayload payload = new(_blogAuthor.Invariant.UniqueName.Value);
-    SaveContentLocaleCommand command = new(_blogAuthor.Id.ToGuid(), payload, _canadianFrench.Id.ToGuid());
-    var exception = await Assert.ThrowsAsync<CannotCreateInvariantLocaleException>(async () => await Pipeline.ExecuteAsync(command));
-    Assert.Equal(_blogAuthor.Id.Value, exception.ContentId);
-    Assert.Equal(_blogAuthorType.Id.Value, exception.ContentTypeId);
-  }
-
-  [Fact(DisplayName = "It should throw UniqueNameAlreadyUsedException when the unique name is already used.")]
-  public async Task It_should_throw_UniqueNameAlreadyUsedException_when_the_unique_name_is_already_used()
-  {
-    ContentAggregate blogArticle = new(_blogArticleType, new ContentLocaleUnit(new UniqueNameUnit(ContentAggregate.UniqueNameSettings, "other-blog-article")), ActorId);
-    blogArticle.SetLocale(_canadianEnglish, blogArticle.Invariant, ActorId);
-    await _contentRepository.SaveAsync(blogArticle);
-
-    SaveContentLocalePayload payload = new(blogArticle.Invariant.UniqueName.Value);
-    SaveContentLocaleCommand command = new(_blogArticle.Id.ToGuid(), payload, _canadianEnglish.Id.ToGuid());
-    var exception = await Assert.ThrowsAsync<UniqueNameAlreadyUsedException<ContentAggregate>>(async () => await Pipeline.ExecuteAsync(command));
-    Assert.Equal(_canadianEnglish.Id.Value, exception.LanguageId);
-    Assert.Equal(payload.UniqueName, exception.UniqueName);
-    Assert.Equal(nameof(payload.UniqueName), exception.PropertyName);
-  }
-
-  [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
-  public async Task It_should_throw_ValidationException_when_the_payload_is_not_valid()
-  {
-    SaveContentLocalePayload payload = new("  My new article  ");
-    SaveContentLocaleCommand command = new(Guid.NewGuid(), payload, LanguageId: null);
-    var exception = await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await Pipeline.ExecuteAsync(command));
-    ValidationFailure failure = Assert.Single(exception.Errors);
-    Assert.Equal(nameof(AllowedCharactersValidator), failure.ErrorCode);
-    Assert.Equal("UniqueName", failure.PropertyName);
   }
 }
