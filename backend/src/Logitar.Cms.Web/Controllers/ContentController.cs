@@ -48,9 +48,9 @@ public class ContentController : ControllerBase
   }
 
   [HttpGet]
-  public async Task<ActionResult<SearchResults<ContentItem>>> SearchAsync([FromQuery] SearchContentsParameters parameters, CancellationToken cancellationToken)
+  public async Task<ActionResult<SearchResults<ContentLocale>>> SearchAsync([FromQuery] SearchContentsParameters parameters, CancellationToken cancellationToken)
   {
-    SearchResults<ContentItem> contentTypes = await _pipeline.ExecuteAsync(new SearchContentsQuery(parameters.ToPayload()), cancellationToken);
+    SearchResults<ContentLocale> contentTypes = await _pipeline.ExecuteAsync(new SearchContentsQuery(parameters.ToPayload()), cancellationToken);
     return Ok(contentTypes);
   }
 
