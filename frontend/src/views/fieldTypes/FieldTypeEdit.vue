@@ -127,8 +127,19 @@ const onSubmit = handleSubmit(async () => {
 });
 
 function onDelete(hideModal: () => void): void {
-  alert("Deleting field types is not implemented.");
-  hideModal();
+  if (fieldType.value && !isDeleting.value) {
+    isDeleting.value = true;
+    try {
+      // await deleteFieldType(fieldType.value.id); // ISSUE: https://github.com/Logitar/CMS/issues/22
+      hideModal();
+      toasts.success("fieldTypes.deleted");
+      router.push({ name: "FieldTypeList" });
+    } catch (e: unknown) {
+      handleError(e);
+    } finally {
+      isDeleting.value = false;
+    }
+  }
 }
 
 onMounted(async () => {

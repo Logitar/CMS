@@ -13,9 +13,9 @@
   },
   "delete": {
     "confirm": "Do you really want to delete the following field type?",
-    "success": "The field type has been deleted.",
     "title": "Delete field type"
   },
+  "deleted": "The field type has been deleted.",
   "empty": "This list is empty.",
   "properties": {
     "boolean": {
