@@ -2,15 +2,16 @@
 
 namespace Logitar.Cms.Infrastructure.Converters;
 
-public class ContentIdConverter : JsonConverter<ContentId?>
+public class ContentIdConverter : JsonConverter<ContentId>
 {
-  public override ContentId? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+  public override ContentId Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
   {
-    return ContentId.TryCreate(reader.GetString());
+    string? value = reader.GetString();
+    return value == null ? new ContentId() : new(value);
   }
 
-  public override void Write(Utf8JsonWriter writer, ContentId? contentId, JsonSerializerOptions options)
+  public override void Write(Utf8JsonWriter writer, ContentId contentId, JsonSerializerOptions options)
   {
-    writer.WriteStringValue(contentId?.Value);
+    writer.WriteStringValue(contentId.Value);
   }
 }

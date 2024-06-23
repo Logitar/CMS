@@ -37,4 +37,11 @@ public class ContentController : ControllerBase
     ContentItem? contentItem = await _pipeline.ExecuteAsync(new ReadContentQuery(id), cancellationToken);
     return contentItem == null ? NotFound() : Ok(contentItem);
   }
+
+  [HttpPut("{id}")]
+  public async Task<ActionResult<ContentItem>> SaveLocaleAsync(Guid id, [FromBody] SaveContentLocalePayload payload, Guid? languageId, CancellationToken cancellationToken)
+  {
+    ContentItem? contentItem = await _pipeline.ExecuteAsync(new SaveContentLocaleCommand(id, payload, languageId), cancellationToken);
+    return contentItem == null ? NotFound() : Ok(contentItem);
+  }
 }
