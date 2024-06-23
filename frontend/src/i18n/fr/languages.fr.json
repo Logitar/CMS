@@ -16,6 +16,10 @@
     "label": "Langue",
     "placeholder": "Sélectionnez une langue"
   },
+  "select": {
+    "label": "Language",
+    "placeholder": "Sélectionnez une langue"
+  },
   "setDefault": {
     "action": "Définir par défaut",
     "success": "La langue a été définie par défaut."

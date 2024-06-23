@@ -16,6 +16,10 @@
     "label": "Locale",
     "placeholder": "Select a locale"
   },
+  "select": {
+    "label": "Language",
+    "placeholder": "Select a language"
+  },
   "setDefault": {
     "action": "Set default",
     "success": "The language has been set default."

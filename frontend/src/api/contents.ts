@@ -16,6 +16,11 @@ export async function createContentItem(payload: CreateContentPayload): Promise<
   return (await post<CreateContentPayload, ContentItem>(url, payload)).data;
 }
 
+export async function readContent(id: string): Promise<ContentItem> {
+  const url: string = createUrlBuilder(id).buildRelative();
+  return (await get<ContentItem>(url)).data;
+}
+
 export async function searchContentItems(payload: SearchContentItemsPayload): Promise<SearchResults<ContentItem>> {
   const url: string = createUrlBuilder()
     .setQuery("ids", payload.ids ?? [])

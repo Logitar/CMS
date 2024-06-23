@@ -11,6 +11,10 @@
     "placeholder": "Select an option"
   },
   "isInvariant": "Is invariant?",
+  "select": {
+    "label": "Content Type",
+    "placeholder": "Select a content type"
+  },
   "sort": {
     "options": {
       "DisplayName": "Display name",
