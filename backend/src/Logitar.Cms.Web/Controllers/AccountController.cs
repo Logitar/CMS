@@ -43,23 +43,25 @@ public class AccountController : ControllerBase
 
   [Authorize]
   [HttpPost("sign/out")]
-  public async Task<ActionResult> SignOutAsync(CancellationToken cancellationToken)
+  public async Task<ActionResult> SignOutAsync(bool everywhere, CancellationToken cancellationToken)
   {
-    Guid? sessionId = HttpContext.GetSessionId();
-    if (sessionId.HasValue)
+    if (everywhere)
     {
-      _ = await _pipeline.ExecuteAsync(new SignOutSessionCommand(sessionId.Value), cancellationToken);
+      User? user = HttpContext.GetUser();
+      if (user != null)
+      {
+        _ = await _pipeline.ExecuteAsync(new SignOutUserCommand(User.Id), cancellationToken);
+      }
     }
-    HttpContext.SignOut();
+    else
+    {
+      Guid? sessionId = HttpContext.GetSessionId();
+      if (sessionId.HasValue)
+      {
+        _ = await _pipeline.ExecuteAsync(new SignOutSessionCommand(sessionId.Value), cancellationToken);
+      }
+    }
 
-    return NoContent();
-  }
-
-  [Authorize]
-  [HttpPost("sign/out/everywhere")]
-  public async Task<ActionResult> SignOutEverywhereAsync(CancellationToken cancellationToken)
-  {
-    _ = await _pipeline.ExecuteAsync(new SignOutUserCommand(User.Id), cancellationToken);
     HttpContext.SignOut();
 
     return NoContent();

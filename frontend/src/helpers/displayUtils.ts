@@ -1,6 +1,6 @@
-import type { ContentType } from "@/types/contents";
-import type { FieldType } from "@/types/fields";
-import type { Language } from "@/types/localization";
+import type { ContentType } from "@/types/contentTypes";
+import type { FieldType } from "@/types/fieldTypes";
+import type { Language } from "@/types/languages";
 
 export function formatContentType(contentType: ContentType): string {
   return contentType.displayName ? `${contentType.displayName} (${contentType.uniqueName})` : contentType.uniqueName;

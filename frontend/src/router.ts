@@ -32,38 +32,49 @@ const router = createRouter({
       path: "/sign-out",
       component: () => import("./views/account/SignOutView.vue"),
     },
-    // Contents
+    // Content Types
     {
       name: "ContentTypeList",
       path: "/content-types",
-      component: () => import("./views/contents/ContentTypeList.vue"),
+      component: () => import("./views/contentTypes/ContentTypeList.vue"),
     },
     {
       name: "ContentTypeEdit",
       path: "/content-types/:id",
-      component: () => import("./views/contents/ContentTypeEdit.vue"),
+      component: () => import("./views/contentTypes/ContentTypeEdit.vue"),
     },
-    // Fields
+    // Contents
+    {
+      name: "ContentItemList",
+      path: "/contents",
+      component: () => import("./views/contents/ContentItemList.vue"),
+    },
+    {
+      name: "ContentItemEdit",
+      path: "/contents/:id",
+      component: () => import("./views/contents/ContentItemEdit.vue"),
+    },
+    // Field Types
     {
       name: "FieldTypeList",
       path: "/field-types",
-      component: () => import("./views/fields/FieldTypeList.vue"),
+      component: () => import("./views/fieldTypes/FieldTypeList.vue"),
     },
     {
       name: "FieldTypeEdit",
       path: "/field-types/:id",
-      component: () => import("./views/fields/FieldTypeEdit.vue"),
+      component: () => import("./views/fieldTypes/FieldTypeEdit.vue"),
     },
     // Languages
     {
       name: "LanguageList",
       path: "/languages",
-      component: () => import("./views/localization/LanguageList.vue"),
+      component: () => import("./views/languages/LanguageList.vue"),
     },
     {
       name: "LanguageEdit",
       path: "/languages/:id",
-      component: () => import("./views/localization/LanguageEdit.vue"),
+      component: () => import("./views/languages/LanguageEdit.vue"),
     },
     // NotFound
     {

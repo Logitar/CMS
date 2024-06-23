@@ -98,19 +98,18 @@ watchEffect(() => {
           </li>
           <template v-if="user">
             <li class="nav-item">
-              <RouterLink :to="{ name: 'FieldTypeList' }" class="nav-link"
-                ><font-awesome-icon icon="fas fa-cog" /> {{ t("fields.types.title.list") }}</RouterLink
-              >
+              <RouterLink :to="{ name: 'FieldTypeList' }" class="nav-link"><font-awesome-icon icon="fas fa-cog" /> {{ t("fieldTypes.title.list") }}</RouterLink>
             </li>
             <li class="nav-item">
-              <RouterLink :to="{ name: 'LanguageList' }" class="nav-link"
-                ><font-awesome-icon icon="fas fa-cog" /> {{ t("localization.languages.title.list") }}</RouterLink
-              >
+              <RouterLink :to="{ name: 'LanguageList' }" class="nav-link"><font-awesome-icon icon="fas fa-cog" /> {{ t("languages.title.list") }}</RouterLink>
             </li>
             <li class="nav-item">
               <RouterLink :to="{ name: 'ContentTypeList' }" class="nav-link"
-                ><font-awesome-icon icon="fas fa-cog" /> {{ t("contents.types.title.list") }}</RouterLink
+                ><font-awesome-icon icon="fas fa-cog" /> {{ t("contentTypes.title.list") }}</RouterLink
               >
+            </li>
+            <li class="nav-item">
+              <RouterLink :to="{ name: 'ContentItemList' }" class="nav-link"><font-awesome-icon icon="fas fa-cog" /> {{ t("contents.title.list") }}</RouterLink>
             </li>
           </template>
         </ul>

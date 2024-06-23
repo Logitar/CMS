@@ -15,6 +15,8 @@ internal class LanguageEntity : AggregateEntity
     private set { }
   }
 
+  public List<ContentLocaleEntity> ContentLocales { get; private set; } = [];
+
   public LanguageEntity(LanguageCreatedEvent @event) : base(@event)
   {
     IsDefault = @event.IsDefault;

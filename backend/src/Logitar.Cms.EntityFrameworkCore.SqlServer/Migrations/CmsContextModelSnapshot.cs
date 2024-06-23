@@ -21,6 +21,127 @@ namespace Logitar.Cms.EntityFrameworkCore.SqlServer.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.ContentItemEntity", b =>
+                {
+                    b.Property<int>("ContentItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ContentItemId"));
+
+                    b.Property<string>("AggregateId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("ContentTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("Version")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("ContentItemId");
+
+                    b.HasIndex("AggregateId")
+                        .IsUnique();
+
+                    b.HasIndex("ContentTypeId");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("CreatedOn");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.HasIndex("UpdatedOn");
+
+                    b.HasIndex("Version");
+
+                    b.ToTable("ContentItems", (string)null);
+                });
+
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.ContentLocaleEntity", b =>
+                {
+                    b.Property<int>("ContentLocaleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ContentLocaleId"));
+
+                    b.Property<int>("ContentItemId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ContentTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("LanguageId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UniqueName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("UniqueNameNormalized")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ContentLocaleId");
+
+                    b.HasIndex("ContentItemId");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("CreatedOn");
+
+                    b.HasIndex("LanguageId");
+
+                    b.HasIndex("UniqueName");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.HasIndex("UpdatedOn");
+
+                    b.HasIndex("ContentTypeId", "LanguageId", "UniqueNameNormalized")
+                        .IsUnique()
+                        .HasFilter("[LanguageId] IS NOT NULL");
+
+                    b.ToTable("ContentLocales", (string)null);
+                });
+
             modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.ContentTypeEntity", b =>
                 {
                     b.Property<int>("ContentTypeId")
@@ -253,6 +374,50 @@ namespace Logitar.Cms.EntityFrameworkCore.SqlServer.Migrations
                     b.HasIndex("Version");
 
                     b.ToTable("Languages", (string)null);
+                });
+
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.ContentItemEntity", b =>
+                {
+                    b.HasOne("Logitar.Cms.EntityFrameworkCore.Entities.ContentTypeEntity", "ContentType")
+                        .WithMany("ContentItems")
+                        .HasForeignKey("ContentTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ContentType");
+                });
+
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.ContentLocaleEntity", b =>
+                {
+                    b.HasOne("Logitar.Cms.EntityFrameworkCore.Entities.ContentItemEntity", "ContentItem")
+                        .WithMany("Locales")
+                        .HasForeignKey("ContentItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Logitar.Cms.EntityFrameworkCore.Entities.LanguageEntity", "Language")
+                        .WithMany("ContentLocales")
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("ContentItem");
+
+                    b.Navigation("Language");
+                });
+
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.ContentItemEntity", b =>
+                {
+                    b.Navigation("Locales");
+                });
+
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.ContentTypeEntity", b =>
+                {
+                    b.Navigation("ContentItems");
+                });
+
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.LanguageEntity", b =>
+                {
+                    b.Navigation("ContentLocales");
                 });
 #pragma warning restore 612, 618
         }
