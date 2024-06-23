@@ -25,9 +25,9 @@ internal class ReadLanguageQueryHandler : IRequestHandler<ReadLanguageQuery, Lan
       }
     }
 
-    if (!string.IsNullOrWhiteSpace(query.Locale))
+    if (!string.IsNullOrWhiteSpace(query.Code))
     {
-      Language? language = await _languageQuerier.ReadAsync(query.Locale, cancellationToken);
+      Language? language = await _languageQuerier.ReadAsync(query.Code, cancellationToken);
       if (language != null)
       {
         languages[language.Id] = language;

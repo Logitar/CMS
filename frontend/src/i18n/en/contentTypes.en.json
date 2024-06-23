@@ -2,9 +2,9 @@
   "created": "The content type has been created.",
   "delete": {
     "confirm": "Do you really want to delete the following content type?",
-    "success": "The content type has been deleted.",
     "title": "Delete content type"
   },
+  "deleted": "The content type has been deleted.",
   "empty": "This list is empty.",
   "invariant": {
     "label": "Invariant",

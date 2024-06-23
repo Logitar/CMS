@@ -47,8 +47,19 @@ async function setDefault(): Promise<void> {
 }
 
 function onDelete(hideModal: () => void): void {
-  alert("Deleting languages is not implemented.");
-  hideModal();
+  if (language.value && !isDeleting.value) {
+    isDeleting.value = true;
+    try {
+      // await deleteLanguage(language.value.id); // ISSUE: https://github.com/Logitar/CMS/issues/21
+      hideModal();
+      toasts.success("languages.deleted");
+      router.push({ name: "LanguageList" });
+    } catch (e: unknown) {
+      handleError(e);
+    } finally {
+      isDeleting.value = false;
+    }
+  }
 }
 
 onMounted(async () => {

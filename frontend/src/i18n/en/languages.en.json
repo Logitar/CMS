@@ -3,19 +3,19 @@
   "default": "Default",
   "delete": {
     "confirm": "Do you really want to delete the following language?",
-    "success": "The language has been deleted.",
     "title": "Delete language"
   },
+  "deleted": "The language has been deleted.",
   "displayNames": "Display names",
   "empty": "This list is empty.",
   "englishFormat": "{englishName} (English)",
   "isDefault": "Is default?",
-  "localeAlreadyUsed": "The selected locale is already used.",
-  "nativeFormat": "{nativeName} (native)",
   "locale": {
     "label": "Locale",
     "placeholder": "Select a locale"
   },
+  "localeAlreadyUsed": "The selected locale is already used.",
+  "nativeFormat": "{nativeName} (native)",
   "select": {
     "label": "Language",
     "placeholder": "Select a language"
@@ -26,7 +26,10 @@
   },
   "sort": {
     "options": {
-      "Locale": "Locale",
+      "Code": "Locale",
+      "DisplayName": "Display name",
+      "EnglishName": "English name",
+      "NativeName": "Native name",
       "UpdatedOn": "Updated on"
     }
   },

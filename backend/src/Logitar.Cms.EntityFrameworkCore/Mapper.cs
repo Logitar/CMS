@@ -201,7 +201,7 @@ internal class Mapper
 
   public Language ToLanguage(LanguageEntity source)
   {
-    Language destination = new(new Locale(source.Locale))
+    Language destination = new(new Locale(source.Code))
     {
       IsDefault = source.IsDefault
     };

@@ -13,9 +13,9 @@
   },
   "delete": {
     "confirm": "Désirez-vous vraiment supprimer le type de champs suivant ?",
-    "success": "Le type de champs a été supprimé.",
     "title": "Supprimer le type de champs"
   },
+  "deleted": "Le type de champs a été supprimé.",
   "empty": "Cette liste est vide.",
   "properties": {
     "boolean": {

@@ -51,7 +51,7 @@ public class SearchLanguagesQueryTests : IntegrationTests
     {
       Ids = (await _languageRepository.LoadAsync()).Select(x => x.Id.ToGuid()).ToList(),
       Search = new TextSearch([new SearchTerm("en%")]),
-      Sort = [new LanguageSortOption(LanguageSort.Locale, isDescending: false)],
+      Sort = [new LanguageSortOption(LanguageSort.Code, isDescending: false)],
       Skip = 1,
       Limit = 1
     };

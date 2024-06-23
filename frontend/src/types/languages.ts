@@ -11,7 +11,7 @@ export type Language = Aggregate & {
   locale: Locale;
 };
 
-export type LanguageSort = "Locale" | "UpdatedOn";
+export type LanguageSort = "Code" | "DisplayName" | "EnglishName" | "NativeName" | "UpdatedOn";
 
 export type LanguageSortOption = SortOption & {
   field: LanguageSort;

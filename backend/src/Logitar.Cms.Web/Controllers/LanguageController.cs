@@ -36,21 +36,21 @@ public class LanguageController : ControllerBase
   [HttpGet("{id}")]
   public async Task<ActionResult<Language>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
-    Language? language = await _pipeline.ExecuteAsync(new ReadLanguageQuery(id, Locale: null, IsDefault: false), cancellationToken);
+    Language? language = await _pipeline.ExecuteAsync(new ReadLanguageQuery(id, Code: null, IsDefault: false), cancellationToken);
     return language == null ? NotFound() : Ok(language);
   }
 
-  [HttpGet("locale:{locale}")]
-  public async Task<ActionResult<Language>> ReadAsync(string locale, CancellationToken cancellationToken)
+  [HttpGet("code:{code}")]
+  public async Task<ActionResult<Language>> ReadAsync(string code, CancellationToken cancellationToken)
   {
-    Language? language = await _pipeline.ExecuteAsync(new ReadLanguageQuery(Id: null, locale, IsDefault: false), cancellationToken);
+    Language? language = await _pipeline.ExecuteAsync(new ReadLanguageQuery(Id: null, code, IsDefault: false), cancellationToken);
     return language == null ? NotFound() : Ok(language);
   }
 
   [HttpGet("default")]
   public async Task<ActionResult<Language>> ReadDefaultAsync(CancellationToken cancellationToken)
   {
-    Language? language = await _pipeline.ExecuteAsync(new ReadLanguageQuery(Id: null, Locale: null, IsDefault: true), cancellationToken);
+    Language? language = await _pipeline.ExecuteAsync(new ReadLanguageQuery(Id: null, Code: null, IsDefault: true), cancellationToken);
     return language == null ? NotFound() : Ok(language);
   }
 
