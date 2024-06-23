@@ -43,7 +43,7 @@ function onCancel(): void {
 <template>
   <span>
     <TarButton icon="fas fa-plus" :text="t('actions.create')" variant="success" data-bs-toggle="modal" :data-bs-target="`#create-content-type`" />
-    <TarModal :close="t('actions.close')" id="create-content-type" ref="modalRef" :title="t('contents.types.title.new')">
+    <TarModal :close="t('actions.close')" id="create-content-type" ref="modalRef" :title="t('contentTypes.title.new')">
       <form @submit.prevent="onSubmit">
         <InvariantCheckbox class="mb-3" v-model="payload.isInvariant" />
         <IdentifierInput required v-model="payload.uniqueName" />

@@ -59,7 +59,7 @@ const onSubmit = handleSubmit(async () => {
         contentType.value.version,
       );
       setModel(updatedContentType);
-      toasts.success("contents.types.updated");
+      toasts.success("contentTypes.updated");
     } catch (e: unknown) {
       handleError(e);
     }
@@ -98,10 +98,10 @@ onMounted(async () => {
           <AppBackButton class="mx-1" :has-changes="hasChanges" />
           <AppDelete
             class="ms-1"
-            confirm="contents.types.delete.confirm"
+            confirm="contentTypes.delete.confirm"
             :displayName="formatted"
             :loading="isDeleting"
-            title="contents.types.delete.title"
+            title="contentTypes.delete.title"
             @confirmed="onDelete"
           />
         </div>

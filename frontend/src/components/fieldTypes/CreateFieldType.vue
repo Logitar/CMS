@@ -53,7 +53,7 @@ function onCancel(): void {
 <template>
   <span>
     <TarButton icon="fas fa-plus" :text="t('actions.create')" variant="success" data-bs-toggle="modal" :data-bs-target="`#create-field-type`" />
-    <TarModal :close="t('actions.close')" id="create-field-type" ref="modalRef" :title="t('fields.types.title.new')">
+    <TarModal :close="t('actions.close')" id="create-field-type" ref="modalRef" :title="t('fieldTypes.title.new')">
       <form @submit.prevent="onSubmit">
         <DataTypeSelect required v-model="dataType" />
         <UniqueNameInput required v-model="uniqueName" />

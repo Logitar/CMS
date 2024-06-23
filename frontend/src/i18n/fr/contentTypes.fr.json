@@ -1,0 +1,26 @@
+{
+  "created": "Le type de contenu a été créé.",
+  "delete": {
+    "confirm": "Désirez-vous vraiment supprimer le type de contenu suivant ?",
+    "success": "Le type de contenu a été supprimé.",
+    "title": "Supprimer le type de contenu"
+  },
+  "empty": "Cette liste est vide.",
+  "invariant": {
+    "label": "Invariant",
+    "placeholder": "Sélectionnez une option"
+  },
+  "isInvariant": "Est invariant ?",
+  "sort": {
+    "options": {
+      "DisplayName": "Nom d’affichage",
+      "UniqueName": "Nom unique",
+      "UpdatedOn": "Dernière modification"
+    }
+  },
+  "title": {
+    "list": "Types de contenu",
+    "new": "Nouveau type de contenu"
+  },
+  "updated": "Le type de contenu a été enregistré."
+}

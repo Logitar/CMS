@@ -40,7 +40,7 @@ const sort = computed<string>(() => route.query.sort?.toString() ?? "");
 
 const sortOptions = computed<SelectOption[]>(() =>
   orderBy(
-    Object.entries(tm(rt("contents.types.sort.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
+    Object.entries(tm(rt("contentTypes.sort.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
     "text",
   ),
 );
@@ -78,7 +78,7 @@ async function refresh(): Promise<void> {
 }
 
 function onCreated(contentType: ContentType): void {
-  toasts.success("contents.types.created");
+  toasts.success("contentTypes.created");
   router.replace({ name: "ContentTypeEdit", params: { id: contentType.id } });
 }
 
@@ -129,7 +129,7 @@ watch(
 
 <template>
   <main class="container">
-    <h1>{{ t("contents.types.title.list") }}</h1>
+    <h1>{{ t("contentTypes.title.list") }}</h1>
     <div class="my-3">
       <TarButton
         class="me-1"
@@ -159,10 +159,10 @@ watch(
       <table class="table table-striped">
         <thead>
           <tr>
-            <th scope="col">{{ t("contents.types.sort.options.UniqueName") }}</th>
-            <th scope="col">{{ t("contents.types.sort.options.DisplayName") }}</th>
-            <th scope="col">{{ t("contents.types.isInvariant") }}</th>
-            <th scope="col">{{ t("contents.types.sort.options.UpdatedOn") }}</th>
+            <th scope="col">{{ t("contentTypes.sort.options.UniqueName") }}</th>
+            <th scope="col">{{ t("contentTypes.sort.options.DisplayName") }}</th>
+            <th scope="col">{{ t("contentTypes.isInvariant") }}</th>
+            <th scope="col">{{ t("contentTypes.sort.options.UpdatedOn") }}</th>
           </tr>
         </thead>
         <tbody>
@@ -183,6 +183,6 @@ watch(
       </table>
       <AppPagination :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event.toString())" />
     </template>
-    <p v-else>{{ t("contents.types.empty") }}</p>
+    <p v-else>{{ t("contentTypes.empty") }}</p>
   </main>
 </template>

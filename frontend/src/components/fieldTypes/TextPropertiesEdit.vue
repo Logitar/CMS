@@ -47,11 +47,11 @@ function setProperty(key: keyof TextProperties, value: string | undefined): void
         class="col-lg-6"
         floating
         :id="`${id}_minimum-length`"
-        label="fields.types.properties.text.minimumLength"
+        label="fieldTypes.properties.text.minimumLength"
         min="0"
         :max="modelValue.maximumLength ?? 0x7fffffff"
         :model-value="modelValue.minimumLength?.toString() ?? '0'"
-        placeholder="fields.types.properties.text.minimumLength"
+        placeholder="fieldTypes.properties.text.minimumLength"
         type="number"
         @update:model-value="setProperty('minimumLength', $event)"
       />
@@ -59,10 +59,10 @@ function setProperty(key: keyof TextProperties, value: string | undefined): void
         class="col-lg-6"
         floating
         :id="`${id}_maximum-length`"
-        label="fields.types.properties.text.maximumLength"
+        label="fieldTypes.properties.text.maximumLength"
         min="0"
         :model-value="modelValue.maximumLength?.toString() ?? '0'"
-        placeholder="fields.types.properties.text.maximumLength"
+        placeholder="fieldTypes.properties.text.maximumLength"
         type="number"
         @update:model-value="setProperty('maximumLength', $event)"
       />

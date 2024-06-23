@@ -11,5 +11,5 @@ defineProps<{
 </script>
 
 <template>
-  <div>{{ t("fields.types.properties.boolean.none") }}</div>
+  <div>{{ t("fieldTypes.properties.boolean.none") }}</div>
 </template>

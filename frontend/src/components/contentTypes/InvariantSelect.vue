@@ -38,10 +38,10 @@ defineEmits<{
   <AppSelect
     floating
     id="is-done"
-    label="contents.types.invariant.label"
+    label="contentTypes.invariant.label"
     :model-value="modelValue"
     :options="options"
-    placeholder="contents.types.invariant.placeholder"
+    placeholder="contentTypes.invariant.placeholder"
     show-status="never"
     @update:model-value="$emit('update:model-value', $event)"
   />

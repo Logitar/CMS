@@ -13,7 +13,7 @@ withDefaults(
   }>(),
   {
     id: "is-invariant",
-    label: "contents.types.isInvariant",
+    label: "contentTypes.isInvariant",
   },
 );
 

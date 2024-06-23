@@ -40,7 +40,7 @@ const sort = computed<string>(() => route.query.sort?.toString() ?? "");
 
 const sortOptions = computed<SelectOption[]>(() =>
   orderBy(
-    Object.entries(tm(rt("fields.types.sort.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
+    Object.entries(tm(rt("fieldTypes.sort.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
     "text",
   ),
 );
@@ -78,7 +78,7 @@ async function refresh(): Promise<void> {
 }
 
 function onCreated(fieldType: FieldType): void {
-  toasts.success("fields.types.created");
+  toasts.success("fieldTypes.created");
   router.replace({ name: "FieldTypeEdit", params: { id: fieldType.id } });
 }
 
@@ -128,7 +128,7 @@ watch(
 
 <template>
   <main class="container">
-    <h1>{{ t("fields.types.title.list") }}</h1>
+    <h1>{{ t("fieldTypes.title.list") }}</h1>
     <div class="my-3">
       <TarButton
         class="me-1"
@@ -158,10 +158,10 @@ watch(
       <table class="table table-striped">
         <thead>
           <tr>
-            <th scope="col">{{ t("fields.types.sort.options.UniqueName") }}</th>
-            <th scope="col">{{ t("fields.types.sort.options.DisplayName") }}</th>
-            <th scope="col">{{ t("fields.types.dataType.label") }}</th>
-            <th scope="col">{{ t("fields.types.sort.options.UpdatedOn") }}</th>
+            <th scope="col">{{ t("fieldTypes.sort.options.UniqueName") }}</th>
+            <th scope="col">{{ t("fieldTypes.sort.options.DisplayName") }}</th>
+            <th scope="col">{{ t("fieldTypes.dataType.label") }}</th>
+            <th scope="col">{{ t("fieldTypes.sort.options.UpdatedOn") }}</th>
           </tr>
         </thead>
         <tbody>
@@ -172,13 +172,13 @@ watch(
               </RouterLink>
             </td>
             <td>{{ fieldType.displayName ?? "—" }}</td>
-            <td>{{ t(`fields.types.dataType.options.${fieldType.dataType}`) }}</td>
+            <td>{{ t(`fieldTypes.dataType.options.${fieldType.dataType}`) }}</td>
             <td><StatusBlock :actor="fieldType.updatedBy" :date="fieldType.updatedOn" /></td>
           </tr>
         </tbody>
       </table>
       <AppPagination :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event.toString())" />
     </template>
-    <p v-else>{{ t("fields.types.empty") }}</p>
+    <p v-else>{{ t("fieldTypes.empty") }}</p>
   </main>
 </template>

@@ -36,7 +36,7 @@ function setProperty(key: keyof DateTimeProperties, value: Date | undefined): vo
         class="col-lg-6"
         floating
         :id="`${id}_minimum-value`"
-        label="fields.types.properties.dateTime.minimumValue"
+        label="fieldTypes.properties.dateTime.minimumValue"
         :max="modelValue.maximumValue ? new Date(modelValue.maximumValue) : defaultMaximum"
         :model-value="modelValue.minimumValue ? new Date(modelValue.minimumValue) : undefined"
         @update:model-value="setProperty('minimumValue', $event)"
@@ -45,7 +45,7 @@ function setProperty(key: keyof DateTimeProperties, value: Date | undefined): vo
         class="col-lg-6"
         floating
         :id="`${id}_maximum-value`"
-        label="fields.types.properties.dateTime.maximumValue"
+        label="fieldTypes.properties.dateTime.maximumValue"
         :max="defaultMaximum"
         :model-value="modelValue.maximumValue ? new Date(modelValue.maximumValue) : undefined"
         @update:model-value="setProperty('maximumValue', $event)"

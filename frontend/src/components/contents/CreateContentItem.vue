@@ -42,7 +42,7 @@ function onCancel(): void {
 <template>
   <span>
     <TarButton icon="fas fa-plus" :text="t('actions.create')" variant="success" data-bs-toggle="modal" :data-bs-target="`#create-content-item`" />
-    <TarModal :close="t('actions.close')" id="create-content-item" ref="modalRef" :title="t('contents.items.title.new')">
+    <TarModal :close="t('actions.close')" id="create-content-item" ref="modalRef" :title="t('contents.title.new')">
       <form @submit.prevent="onSubmit">
         <!-- TODO(fpion): ContentTypeSelect -->
         <!-- TODO(fpion): LanguageSelect -->

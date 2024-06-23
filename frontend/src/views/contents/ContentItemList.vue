@@ -38,7 +38,7 @@ const sort = computed<string>(() => route.query.sort?.toString() ?? "");
 
 const sortOptions = computed<SelectOption[]>(() =>
   orderBy(
-    Object.entries(tm(rt("contents.items.sort.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
+    Object.entries(tm(rt("contents.sort.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
     "text",
   ),
 );
@@ -76,7 +76,7 @@ async function refresh(): Promise<void> {
 }
 
 function onCreated(content: ContentItem): void {
-  toasts.success("contents.items.created");
+  toasts.success("contents.created");
   router.replace({ name: "ContentItemEdit", params: { id: content.id } });
 }
 
@@ -126,7 +126,7 @@ watch(
 
 <template>
   <main class="container">
-    <h1>{{ t("contents.items.title.list") }}</h1>
+    <h1>{{ t("contents.title.list") }}</h1>
     <div class="my-3">
       <TarButton
         class="me-1"
@@ -155,9 +155,9 @@ watch(
       <table class="table table-striped">
         <thead>
           <tr>
-            <th scope="col">{{ t("contents.items.sort.options.UniqueName") }}</th>
-            <th scope="col">{{ t("contents.items.sort.options.DisplayName") }}</th>
-            <th scope="col">{{ t("contents.items.sort.options.UpdatedOn") }}</th>
+            <th scope="col">{{ t("contents.sort.options.UniqueName") }}</th>
+            <th scope="col">{{ t("contents.sort.options.DisplayName") }}</th>
+            <th scope="col">{{ t("contents.sort.options.UpdatedOn") }}</th>
           </tr>
         </thead>
         <tbody>
@@ -176,6 +176,6 @@ watch(
       </table>
       <AppPagination :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event.toString())" />
     </template>
-    <p v-else>{{ t("contents.items.empty") }}</p>
+    <p v-else>{{ t("contents.empty") }}</p>
   </main>
 </template>

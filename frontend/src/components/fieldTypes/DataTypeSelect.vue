@@ -22,7 +22,7 @@ withDefaults(
 
 const options = computed<SelectOption[]>(() =>
   orderBy(
-    Object.entries(tm(rt("fields.types.dataType.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
+    Object.entries(tm(rt("fieldTypes.dataType.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
     "text",
   ),
 );
@@ -36,10 +36,10 @@ defineEmits<{
   <TarSelect
     floating
     :id="id"
-    :label="t('fields.types.dataType.label')"
+    :label="t('fieldTypes.dataType.label')"
     :model-value="modelValue"
     :options="options"
-    :placeholder="t('fields.types.dataType.placeholder')"
+    :placeholder="t('fieldTypes.dataType.placeholder')"
     :required="required"
     @update:model-value="$emit('update:model-value', $event)"
   />

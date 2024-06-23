@@ -45,10 +45,10 @@ function setProperty(key: keyof NumberProperties, value: string | undefined): vo
         class="col-lg-6"
         floating
         :id="`${id}_minimum-value`"
-        label="fields.types.properties.number.minimumValue"
+        label="fieldTypes.properties.number.minimumValue"
         :max="modelValue.maximumValue ?? 1.7976931348623157e308"
         :model-value="modelValue.minimumValue?.toString()"
-        placeholder="fields.types.properties.number.minimumValue"
+        placeholder="fieldTypes.properties.number.minimumValue"
         type="number"
         @update:model-value="setProperty('minimumValue', $event)"
       />
@@ -56,10 +56,10 @@ function setProperty(key: keyof NumberProperties, value: string | undefined): vo
         class="col-lg-6"
         floating
         :id="`${id}_maximum-value`"
-        label="fields.types.properties.number.maximumValue"
+        label="fieldTypes.properties.number.maximumValue"
         :max="1.7976931348623157e308"
         :model-value="modelValue.maximumValue?.toString()"
-        placeholder="fields.types.properties.number.maximumValue"
+        placeholder="fieldTypes.properties.number.maximumValue"
         type="number"
         @update:model-value="setProperty('maximumValue', $event)"
       />
@@ -67,11 +67,11 @@ function setProperty(key: keyof NumberProperties, value: string | undefined): vo
     <AppInput
       floating
       :id="`${id}step`"
-      label="fields.types.properties.number.step"
+      label="fieldTypes.properties.number.step"
       :min="0"
       :max="modelValue.maximumValue ?? 1.7976931348623157e308"
       :model-value="modelValue.step?.toString()"
-      placeholder="fields.types.properties.number.step"
+      placeholder="fieldTypes.properties.number.step"
       type="number"
       @update:model-value="setProperty('step', $event)"
     />

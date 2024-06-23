@@ -119,7 +119,7 @@ const onSubmit = handleSubmit(async () => {
         fieldType.value.version,
       );
       setModel(updatedFieldType);
-      toasts.success("fields.types.updated");
+      toasts.success("fieldTypes.updated");
     } catch (e: unknown) {
       handleError(e);
     }
@@ -158,10 +158,10 @@ onMounted(async () => {
           <AppBackButton class="mx-1" :has-changes="hasChanges" />
           <AppDelete
             class="ms-1"
-            confirm="fields.types.delete.confirm"
+            confirm="fieldTypes.delete.confirm"
             :displayName="formatted"
             :loading="isDeleting"
-            title="fields.types.delete.title"
+            title="fieldTypes.delete.title"
             @confirmed="onDelete"
           />
         </div>
@@ -171,7 +171,7 @@ onMounted(async () => {
           <DisplayNameInput class="col-lg-6" v-model="displayName" />
         </div>
         <DescriptionTextarea v-model="description" />
-        <h3>{{ t("fields.types.properties.title") }}</h3>
+        <h3>{{ t("fieldTypes.properties.title") }}</h3>
         <BooleanPropertiesEdit v-if="fieldType.dataType === 'Boolean'" v-model="booleanProperties" />
         <DateTimePropertiesEdit v-else-if="fieldType.dataType === 'DateTime'" v-model="dateTimeProperties" />
         <NumberPropertiesEdit v-else-if="fieldType.dataType === 'Number'" v-model="numberProperties" />
