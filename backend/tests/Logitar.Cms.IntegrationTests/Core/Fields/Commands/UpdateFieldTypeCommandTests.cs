@@ -32,10 +32,7 @@ public class UpdateFieldTypeCommandTests : IntegrationTests
   [Fact(DisplayName = "It should return null when the field type could not be found.")]
   public async Task It_should_return_null_when_the_field_type_could_not_be_found()
   {
-    UpdateFieldTypePayload payload = new()
-    {
-      UniqueName = "SubTitle"
-    };
+    UpdateFieldTypePayload payload = new();
     UpdateFieldTypeCommand command = new(Id: Guid.NewGuid(), payload);
     Assert.Null(await Pipeline.ExecuteAsync(command));
   }
@@ -88,6 +85,7 @@ public class UpdateFieldTypeCommandTests : IntegrationTests
     UpdateFieldTypePayload payload = new()
     {
       DisplayName = new Modification<string>("  Sub-title  "),
+      Description = new Modification<string>("    "),
       StringProperties = new StringProperties
       {
         MinimumLength = 1,
@@ -107,7 +105,7 @@ public class UpdateFieldTypeCommandTests : IntegrationTests
 
     Assert.NotNull(payload.DisplayName.Value);
     Assert.Equal(payload.DisplayName.Value.CleanTrim(), fieldType.DisplayName);
-    Assert.Equal(_fieldType.Description.Value, fieldType.Description);
+    Assert.Null(fieldType.Description);
     Assert.Equal(_fieldType.DataType, fieldType.DataType);
     Assert.Equal(payload.StringProperties, fieldType.StringProperties);
     Assert.Null(fieldType.TextProperties);
