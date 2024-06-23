@@ -8,11 +8,11 @@ import AppBackButton from "@/components/shared/AppBackButton.vue";
 import AppDelete from "@/components/shared/AppDelete.vue";
 import LocaleSelect from "@/components/users/LocaleSelect.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
-import type { Language } from "@/types/localization";
 import type { ApiError } from "@/types/api";
+import type { Language } from "@/types/languages";
 import { formatLanguage } from "@/helpers/displayUtils";
 import { handleErrorKey } from "@/inject/App";
-import { readLanguage, setDefaultLanguage } from "@/api/localization";
+import { readLanguage, setDefaultLanguage } from "@/api/languages";
 import { useToastStore } from "@/stores/toast";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
@@ -37,7 +37,7 @@ async function setDefault(): Promise<void> {
     try {
       const updatedLanguage: Language = await setDefaultLanguage(language.value.id);
       setModel(updatedLanguage);
-      toasts.success("localization.languages.setDefault.success");
+      toasts.success("languages.setDefault.success");
     } catch (e: unknown) {
       handleError(e);
     } finally {
@@ -73,32 +73,27 @@ onMounted(async () => {
       <h1>{{ formatted }}</h1>
       <StatusDetail :aggregate="language" />
       <div class="mb-3">
-        <TarButton v-if="language.isDefault" class="me-1" disabled icon="fas fa-star" :text="t('localization.languages.default')" variant="info" />
+        <TarButton v-if="language.isDefault" class="me-1" disabled icon="fas fa-star" :text="t('languages.default')" variant="info" />
         <TarButton
           v-else
           class="me-1"
           icon="fas fa-star"
           :loading="isSettingDefault"
-          :text="t('localization.languages.setDefault.action')"
+          :text="t('languages.setDefault.action')"
           variant="warning"
           @click="setDefault"
         />
         <AppBackButton class="mx-1" />
         <AppDelete
           class="ms-1"
-          confirm="localization.languages.delete.confirm"
+          confirm="languages.delete.confirm"
           :displayName="formatted"
           :loading="isDeleting"
-          title="localization.languages.delete.title"
+          title="languages.delete.title"
           @confirmed="onDelete"
         />
       </div>
-      <LocaleSelect
-        disabled
-        label="localization.languages.locale.label"
-        :model-value="language.locale.code"
-        placeholder="localization.languages.locale.placeholder"
-      />
+      <LocaleSelect disabled label="languages.locale.label" :model-value="language.locale.code" placeholder="languages.locale.placeholder" />
     </template>
   </main>
 </template>

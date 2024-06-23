@@ -68,12 +68,12 @@ const router = createRouter({
     {
       name: "LanguageList",
       path: "/languages",
-      component: () => import("./views/localization/LanguageList.vue"),
+      component: () => import("./views/languages/LanguageList.vue"),
     },
     {
       name: "LanguageEdit",
       path: "/languages/:id",
-      component: () => import("./views/localization/LanguageEdit.vue"),
+      component: () => import("./views/languages/LanguageEdit.vue"),
     },
     // NotFound
     {

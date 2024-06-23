@@ -4,7 +4,7 @@ import { nanoid } from "nanoid";
 import type { Actor } from "@/types/actor";
 import type { ContentType } from "@/types/contents";
 import type { FieldType } from "@/types/fields";
-import type { Language } from "@/types/localization";
+import type { Language } from "@/types/languages";
 import { formatContentType, formatFieldType, formatLanguage } from "../displayUtils";
 
 const actor: Actor = {

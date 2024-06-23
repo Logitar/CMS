@@ -7,14 +7,14 @@ import { useRoute, useRouter } from "vue-router";
 
 import AppPagination from "@/components/shared/AppPagination.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
-import CreateLanguage from "@/components/localization/CreateLanguage.vue";
+import CreateLanguage from "@/components/languages/CreateLanguage.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
 import type { ApiError, Error } from "@/types/api";
-import type { Language, LanguageSort, SearchLanguagesPayload } from "@/types/localization";
+import type { Language, LanguageSort, SearchLanguagesPayload } from "@/types/languages";
 import { handleErrorKey } from "@/inject/App";
-import { searchLanguages } from "@/api/localization";
+import { searchLanguages } from "@/api/languages";
 import { useToastStore } from "@/stores/toast";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
@@ -39,7 +39,7 @@ const sort = computed<string>(() => route.query.sort?.toString() ?? "");
 
 const sortOptions = computed<SelectOption[]>(() =>
   orderBy(
-    Object.entries(tm(rt("localization.languages.sort.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
+    Object.entries(tm(rt("languages.sort.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
     "text",
   ),
 );
@@ -76,7 +76,7 @@ async function refresh(): Promise<void> {
 }
 
 function onCreated(language: Language): void {
-  toasts.success("localization.languages.created");
+  toasts.success("languages.created");
   router.replace({ name: "LanguageEdit", params: { id: language.id } });
 }
 
@@ -94,7 +94,7 @@ function setQuery(key: string, value: string): void {
 function onError(e: unknown): void {
   const { data, status } = e as ApiError;
   if (status === 409 && (data as Error)?.code === "LocaleAlreadyUsed") {
-    toasts.warning("localization.languages.localeAlreadyUsed");
+    toasts.warning("languages.localeAlreadyUsed");
   } else {
     handleError(e);
   }
@@ -133,7 +133,7 @@ watch(
 
 <template>
   <main class="container">
-    <h1>{{ t("localization.languages.title.list") }}</h1>
+    <h1>{{ t("languages.title.list") }}</h1>
     <div class="my-3">
       <TarButton
         class="me-1"
@@ -162,10 +162,10 @@ watch(
       <table class="table table-striped">
         <thead>
           <tr>
-            <th scope="col">{{ t("localization.languages.sort.options.Locale") }}</th>
-            <th scope="col">{{ t("localization.languages.displayNames") }}</th>
-            <th scope="col">{{ t("localization.languages.isDefault") }}</th>
-            <th scope="col">{{ t("localization.languages.sort.options.UpdatedOn") }}</th>
+            <th scope="col">{{ t("languages.sort.options.Locale") }}</th>
+            <th scope="col">{{ t("languages.displayNames") }}</th>
+            <th scope="col">{{ t("languages.isDefault") }}</th>
+            <th scope="col">{{ t("languages.sort.options.UpdatedOn") }}</th>
           </tr>
         </thead>
         <tbody>
@@ -176,12 +176,12 @@ watch(
               </RouterLink>
             </td>
             <td>
-              {{ language.locale.displayName }}, {{ t("localization.languages.englishFormat", { englishName: language.locale.englishName }) }}
+              {{ language.locale.displayName }}, {{ t("languages.englishFormat", { englishName: language.locale.englishName }) }}
               <br />
-              {{ t("localization.languages.nativeFormat", { nativeName: language.locale.nativeName }) }}
+              {{ t("languages.nativeFormat", { nativeName: language.locale.nativeName }) }}
             </td>
             <td>
-              <TarBadge v-if="language.isDefault" variant="info"><font-awesome-icon icon="fas fa-star" /> {{ t("localization.languages.default") }}</TarBadge>
+              <TarBadge v-if="language.isDefault" variant="info"><font-awesome-icon icon="fas fa-star" /> {{ t("languages.default") }}</TarBadge>
               <template v-else>{{ "—" }}</template>
             </td>
             <td><StatusBlock :actor="language.updatedBy" :date="language.updatedOn" /></td>
@@ -190,6 +190,6 @@ watch(
       </table>
       <AppPagination :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event.toString())" />
     </template>
-    <p v-else>{{ t("localization.languages.empty") }}</p>
+    <p v-else>{{ t("languages.empty") }}</p>
   </main>
 </template>

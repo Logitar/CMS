@@ -11,7 +11,7 @@ import CreateContentItem from "@/components/contents/CreateContentItem.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
-import type { ContentItem, ContentItemSort, SearchContentItemsPayload } from "@/types/contents";
+import type { ContentItem, SearchContentItemsPayload } from "@/types/contents";
 import { handleErrorKey } from "@/inject/App";
 import { searchContentItems } from "@/api/contents";
 import { useToastStore } from "@/stores/toast";
@@ -53,7 +53,7 @@ async function refresh(): Promise<void> {
         .map((term) => ({ value: `%${term}%` })),
       operator: "And",
     },
-    sort: sort.value ? [{ field: sort.value as ContentItemSort, isDescending: isDescending.value }] : undefined,
+    // sort: sort.value ? [{ field: sort.value as ContentItemSort, isDescending: isDescending.value }] : undefined, // TODO(fpion): sorting
     skip: (page.value - 1) * count.value,
     limit: count.value,
   };
@@ -164,10 +164,12 @@ watch(
           <tr v-for="contentItem in contentItems" :key="contentItem.id">
             <td>
               <RouterLink :to="{ name: 'ContentItemEdit', params: { id: contentItem.id } }">
-                <font-awesome-icon icon="fas fa-edit" />{{ contentItem.uniqueName }}
+                <font-awesome-icon icon="fas fa-edit" /><!-- TODO(fpion): {{ contentItem.uniqueName }} -->
               </RouterLink>
             </td>
-            <td>{{ contentItem.displayName ?? "—" }}</td>
+            <td>
+              <!-- TODO(fpion): {{ contentItem.displayName ?? "—" }} -->
+            </td>
             <td><StatusBlock :actor="contentItem.updatedBy" :date="contentItem.updatedOn" /></td>
           </tr>
         </tbody>

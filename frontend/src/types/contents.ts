@@ -1,6 +1,6 @@
 import type { Actor } from "./actor";
 import type { Aggregate } from "./aggregate";
-import type { Language } from "./localization";
+import type { Language } from "./languages";
 import type { SearchPayload, SortOption } from "./search";
 
 export type ContentItem = Aggregate & {
