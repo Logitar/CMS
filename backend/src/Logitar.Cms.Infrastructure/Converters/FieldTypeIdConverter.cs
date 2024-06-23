@@ -2,15 +2,16 @@
 
 namespace Logitar.Cms.Infrastructure.Converters;
 
-public class FieldTypeIdConverter : JsonConverter<FieldTypeId?>
+public class FieldTypeIdConverter : JsonConverter<FieldTypeId>
 {
-  public override FieldTypeId? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+  public override FieldTypeId Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
   {
-    return FieldTypeId.TryCreate(reader.GetString());
+    string? value = reader.GetString();
+    return value == null ? new FieldTypeId() : new(value);
   }
 
-  public override void Write(Utf8JsonWriter writer, FieldTypeId? fieldTypeId, JsonSerializerOptions options)
+  public override void Write(Utf8JsonWriter writer, FieldTypeId fieldTypeId, JsonSerializerOptions options)
   {
-    writer.WriteStringValue(fieldTypeId?.Value);
+    writer.WriteStringValue(fieldTypeId.Value);
   }
 }
