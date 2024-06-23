@@ -32,6 +32,17 @@ const router = createRouter({
       path: "/sign-out",
       component: () => import("./views/account/SignOutView.vue"),
     },
+    // Content Types
+    {
+      name: "ContentTypeList",
+      path: "/content-types",
+      component: () => import("./views/contentTypes/ContentTypeList.vue"),
+    },
+    {
+      name: "ContentTypeEdit",
+      path: "/content-types/:id",
+      component: () => import("./views/contentTypes/ContentTypeEdit.vue"),
+    },
     // Contents
     {
       name: "ContentItemList",
@@ -43,17 +54,7 @@ const router = createRouter({
       path: "/contents/:id",
       component: () => import("./views/contents/ContentItemEdit.vue"),
     },
-    {
-      name: "ContentTypeList",
-      path: "/content-types",
-      component: () => import("./views/contents/ContentTypeList.vue"),
-    },
-    {
-      name: "ContentTypeEdit",
-      path: "/content-types/:id",
-      component: () => import("./views/contents/ContentTypeEdit.vue"),
-    },
-    // Fields
+    // Field Types
     {
       name: "FieldTypeList",
       path: "/field-types",

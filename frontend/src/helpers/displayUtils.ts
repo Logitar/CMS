@@ -1,4 +1,4 @@
-import type { ContentType } from "@/types/contents";
+import type { ContentType } from "@/types/contentTypes";
 import type { FieldType } from "@/types/fieldTypes";
 import type { Language } from "@/types/languages";
 

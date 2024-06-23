@@ -6,8 +6,8 @@ import { useI18n } from "vue-i18n";
 
 import IdentifierInput from "@/components/shared/IdentifierInput.vue";
 import InvariantCheckbox from "./InvariantCheckbox.vue";
-import type { ContentType, CreateContentTypePayload } from "@/types/contents";
-import { createContentType } from "@/api/contents";
+import type { ContentType, CreateContentTypePayload } from "@/types/contentTypes";
+import { createContentType } from "@/api/contentTypes";
 
 const { t } = useI18n();
 

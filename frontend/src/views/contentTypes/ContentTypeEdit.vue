@@ -8,14 +8,14 @@ import AppDelete from "@/components/shared/AppDelete.vue";
 import AppSaveButton from "@/components/shared/AppSaveButton.vue";
 import DescriptionTextarea from "@/components/shared/DescriptionTextarea.vue";
 import DisplayNameInput from "@/components/shared/DisplayNameInput.vue";
-import InvariantCheckbox from "@/components/contents/InvariantCheckbox.vue";
+import InvariantCheckbox from "@/components/contentTypes/InvariantCheckbox.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
 import type { ApiError } from "@/types/api";
-import type { ContentType } from "@/types/contents";
+import type { ContentType } from "@/types/contentTypes";
 import { formatContentType } from "@/helpers/displayUtils";
 import { handleErrorKey } from "@/inject/App";
-import { readContentType, replaceContentType } from "@/api/contents";
+import { readContentType, replaceContentType } from "@/api/contentTypes";
 import { useToastStore } from "@/stores/toast";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
@@ -23,9 +23,9 @@ const route = useRoute();
 const router = useRouter();
 const toasts = useToastStore();
 
+const contentType = ref<ContentType>();
 const description = ref<string>("");
 const displayName = ref<string>("");
-const contentType = ref<ContentType>();
 const isDeleting = ref<boolean>(false);
 const uniqueName = ref<string>("");
 

@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { nanoid } from "nanoid";
 
 import type { Actor } from "@/types/actor";
-import type { ContentType } from "@/types/contents";
+import type { ContentType } from "@/types/contentTypes";
 import type { FieldType } from "@/types/fieldTypes";
 import type { Language } from "@/types/languages";
 import { formatContentType, formatFieldType, formatLanguage } from "../displayUtils";

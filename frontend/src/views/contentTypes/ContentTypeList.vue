@@ -7,14 +7,14 @@ import { useRoute, useRouter } from "vue-router";
 
 import AppPagination from "@/components/shared/AppPagination.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
-import CreateContentType from "@/components/contents/CreateContentType.vue";
-import InvariantSelect from "@/components/contents/InvariantSelect.vue";
+import CreateContentType from "@/components/contentTypes/CreateContentType.vue";
+import InvariantSelect from "@/components/contentTypes/InvariantSelect.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
-import type { ContentType, ContentTypeSort, SearchContentTypesPayload } from "@/types/contents";
+import type { ContentType, ContentTypeSort, SearchContentTypesPayload } from "@/types/contentTypes";
 import { handleErrorKey } from "@/inject/App";
-import { searchContentTypes } from "@/api/contents";
+import { searchContentTypes } from "@/api/contentTypes";
 import { useToastStore } from "@/stores/toast";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
