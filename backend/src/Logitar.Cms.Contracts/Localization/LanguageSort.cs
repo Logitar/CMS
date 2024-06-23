@@ -2,6 +2,9 @@
 
 public enum LanguageSort
 {
-  Locale,
+  Code,
+  DisplayName,
+  EnglishName,
+  NativeName,
   UpdatedOn
 }

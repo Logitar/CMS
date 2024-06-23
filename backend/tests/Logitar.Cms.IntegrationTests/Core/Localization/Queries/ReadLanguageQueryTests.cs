@@ -30,7 +30,7 @@ public class ReadLanguageQueryTests : IntegrationTests
   [Fact(DisplayName = "It should return null when the language is not found.")]
   public async Task It_should_return_null_when_the_language_is_not_found()
   {
-    ReadLanguageQuery query = new(Id: Guid.NewGuid(), Locale: "de", IsDefault: false);
+    ReadLanguageQuery query = new(Id: Guid.NewGuid(), Code: "de", IsDefault: false);
     Assert.Null(await Pipeline.ExecuteAsync(query));
   }
 
@@ -39,7 +39,7 @@ public class ReadLanguageQueryTests : IntegrationTests
   {
     LanguageAggregate @default = await _languageRepository.LoadDefaultAsync();
 
-    ReadLanguageQuery query = new(Id: null, Locale: null, IsDefault: true);
+    ReadLanguageQuery query = new(Id: null, Code: null, IsDefault: true);
     Language? language = await Pipeline.ExecuteAsync(query);
     Assert.NotNull(language);
     Assert.Equal(@default.Id.ToGuid(), language.Id);
@@ -48,7 +48,7 @@ public class ReadLanguageQueryTests : IntegrationTests
   [Fact(DisplayName = "It should return the language found by ID.")]
   public async Task It_should_return_the_language_found_by_Id()
   {
-    ReadLanguageQuery query = new(_spanish.Id.ToGuid(), Locale: null, IsDefault: false);
+    ReadLanguageQuery query = new(_spanish.Id.ToGuid(), Code: null, IsDefault: false);
     Language? language = await Pipeline.ExecuteAsync(query);
     Assert.NotNull(language);
     Assert.Equal(_spanish.Id.ToGuid(), language.Id);

@@ -45,12 +45,12 @@ internal class LanguageQuerier : ILanguageQuerier
     return language == null ? null : await MapAsync(language, cancellationToken);
   }
 
-  public async Task<Language?> ReadAsync(string locale, CancellationToken cancellationToken)
+  public async Task<Language?> ReadAsync(string code, CancellationToken cancellationToken)
   {
-    string localeNormalized = CmsDb.Normalize(locale);
+    string codeNormalized = CmsDb.Normalize(code);
 
     LanguageEntity? language = await _languages.AsNoTracking()
-      .SingleOrDefaultAsync(x => x.LocaleNormalized == localeNormalized, cancellationToken);
+      .SingleOrDefaultAsync(x => x.CodeNormalized == codeNormalized, cancellationToken);
 
     return language == null ? null : await MapAsync(language, cancellationToken);
   }
@@ -68,7 +68,7 @@ internal class LanguageQuerier : ILanguageQuerier
   {
     IQueryBuilder builder = _sqlHelper.QueryFrom(CmsDb.Languages.Table).SelectAll(CmsDb.Languages.Table)
       .ApplyIdInFilter(CmsDb.Languages.AggregateId, payload);
-    _searchHelper.ApplyTextSearch(builder, payload.Search, CmsDb.Languages.Locale);
+    _searchHelper.ApplyTextSearch(builder, payload.Search, CmsDb.Languages.Code, CmsDb.Languages.DisplayName, CmsDb.Languages.EnglishName, CmsDb.Languages.NativeName);
 
     IQueryable<LanguageEntity> query = _languages.FromQuery(builder).AsNoTracking();
 
@@ -81,10 +81,25 @@ internal class LanguageQuerier : ILanguageQuerier
       {
         switch (sort.Field)
         {
-          case LanguageSort.Locale:
+          case LanguageSort.Code:
             ordered = (ordered == null)
-              ? (sort.IsDescending ? query.OrderByDescending(x => x.Locale) : query.OrderBy(x => x.Locale))
-              : (sort.IsDescending ? ordered.ThenByDescending(x => x.Locale) : ordered.ThenBy(x => x.Locale));
+              ? (sort.IsDescending ? query.OrderByDescending(x => x.Code) : query.OrderBy(x => x.Code))
+              : (sort.IsDescending ? ordered.ThenByDescending(x => x.Code) : ordered.ThenBy(x => x.Code));
+            break;
+          case LanguageSort.DisplayName:
+            ordered = (ordered == null)
+              ? (sort.IsDescending ? query.OrderByDescending(x => x.DisplayName) : query.OrderBy(x => x.DisplayName))
+              : (sort.IsDescending ? ordered.ThenByDescending(x => x.DisplayName) : ordered.ThenBy(x => x.DisplayName));
+            break;
+          case LanguageSort.EnglishName:
+            ordered = (ordered == null)
+              ? (sort.IsDescending ? query.OrderByDescending(x => x.EnglishName) : query.OrderBy(x => x.EnglishName))
+              : (sort.IsDescending ? ordered.ThenByDescending(x => x.EnglishName) : ordered.ThenBy(x => x.EnglishName));
+            break;
+          case LanguageSort.NativeName:
+            ordered = (ordered == null)
+              ? (sort.IsDescending ? query.OrderByDescending(x => x.NativeName) : query.OrderBy(x => x.NativeName))
+              : (sort.IsDescending ? ordered.ThenByDescending(x => x.NativeName) : ordered.ThenBy(x => x.NativeName));
             break;
           case LanguageSort.UpdatedOn:
             ordered = (ordered == null)

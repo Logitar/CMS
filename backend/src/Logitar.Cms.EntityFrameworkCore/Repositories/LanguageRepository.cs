@@ -36,7 +36,7 @@ internal class LanguageRepository : EventSourcing.EntityFrameworkCore.Relational
       .Join(CmsDb.Languages.AggregateId, EventDb.Events.AggregateId,
         new OperatorCondition(EventDb.Events.AggregateType, Operators.IsEqualTo(AggregateType))
       )
-      .Where(CmsDb.Languages.LocaleNormalized, Operators.IsEqualTo(CmsDb.Normalize(locale.Code)))
+      .Where(CmsDb.Languages.CodeNormalized, Operators.IsEqualTo(CmsDb.Normalize(locale.Code)))
       .Build();
 
     EventEntity[] events = await EventContext.Events.FromQuery(query)
