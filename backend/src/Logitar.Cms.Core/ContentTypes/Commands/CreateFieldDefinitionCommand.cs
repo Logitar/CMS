@@ -3,4 +3,4 @@ using MediatR;
 
 namespace Logitar.Cms.Core.ContentTypes.Commands;
 
-public record CreateFieldDefinitionCommand(CreateFieldDefinitionPayload Payload) : Activity, IRequest<ContentsType>;
+public record CreateFieldDefinitionCommand(Guid ContentTypeId, CreateFieldDefinitionPayload Payload) : Activity, IRequest<ContentsType?>;

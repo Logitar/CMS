@@ -7,7 +7,7 @@ using MediatR;
 
 namespace Logitar.Cms.Core.ContentTypes.Commands;
 
-internal class CreateFieldDefinitionCommandHandler : IRequestHandler<CreateFieldDefinitionCommand, ContentsType>
+internal class CreateFieldDefinitionCommandHandler : IRequestHandler<CreateFieldDefinitionCommand, ContentsType?>
 {
   private readonly IContentTypeQuerier _contentTypeQuerier;
   private readonly IContentTypeRepository _contentTypeRepository;
@@ -21,14 +21,17 @@ internal class CreateFieldDefinitionCommandHandler : IRequestHandler<CreateField
     _fieldTypeRepository = fieldTypeRepository;
   }
 
-  public async Task<ContentsType> Handle(CreateFieldDefinitionCommand command, CancellationToken cancellationToken)
+  public async Task<ContentsType?> Handle(CreateFieldDefinitionCommand command, CancellationToken cancellationToken)
   {
     CreateFieldDefinitionPayload payload = command.Payload;
     new CreateFieldDefinitionValidator().ValidateAndThrow(payload);
 
-    ContentTypeId contentTypeId = new(payload.ContentTypeId);
-    ContentTypeAggregate contentType = await _contentTypeRepository.LoadAsync(contentTypeId, cancellationToken)
-      ?? throw new AggregateNotFoundException<ContentTypeAggregate>(contentTypeId.AggregateId, nameof(payload.ContentTypeId));
+    ContentTypeId contentTypeId = new(command.ContentTypeId);
+    ContentTypeAggregate? contentType = await _contentTypeRepository.LoadAsync(contentTypeId, cancellationToken);
+    if (contentType == null)
+    {
+      return null;
+    }
 
     FieldTypeId fieldTypeId = new(payload.FieldTypeId);
     FieldTypeAggregate fieldType = await _fieldTypeRepository.LoadAsync(fieldTypeId, cancellationToken)

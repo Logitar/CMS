@@ -8,8 +8,6 @@ internal class CreateFieldDefinitionValidator : AbstractValidator<CreateFieldDef
 {
   public CreateFieldDefinitionValidator()
   {
-    RuleFor(x => x.ContentTypeId).NotEmpty();
-
     RuleFor(x => x.FieldTypeId).NotEmpty();
 
     RuleFor(x => x.UniqueName).SetValidator(new IdentifierValidator());
