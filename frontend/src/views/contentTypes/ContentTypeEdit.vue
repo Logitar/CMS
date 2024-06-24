@@ -8,9 +8,9 @@ import AppDelete from "@/components/shared/AppDelete.vue";
 import AppSaveButton from "@/components/shared/AppSaveButton.vue";
 import DescriptionTextarea from "@/components/shared/DescriptionTextarea.vue";
 import DisplayNameInput from "@/components/shared/DisplayNameInput.vue";
+import IdentifierInput from "@/components/shared/IdentifierInput.vue";
 import InvariantCheckbox from "@/components/contentTypes/InvariantCheckbox.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
-import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
 import type { ApiError } from "@/types/api";
 import type { ContentType } from "@/types/contentTypes";
 import { formatContentType } from "@/helpers/displayUtils";
@@ -118,7 +118,7 @@ onMounted(async () => {
         </div>
         <InvariantCheckbox class="mb-3" disabled :model-value="contentType.isInvariant" />
         <div class="row">
-          <UniqueNameInput class="col-lg-6" required v-model="uniqueName" />
+          <IdentifierInput class="col-lg-6" required v-model="uniqueName" />
           <DisplayNameInput class="col-lg-6" v-model="displayName" />
         </div>
         <DescriptionTextarea v-model="description" />
