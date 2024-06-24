@@ -6,9 +6,14 @@ namespace Logitar.Cms.Core.ContentTypes.Validators;
 
 internal class CreateFieldDefinitionValidator : AbstractValidator<CreateFieldDefinitionPayload>
 {
-  public CreateFieldDefinitionValidator()
+  public CreateFieldDefinitionValidator(bool isInvariant)
   {
     RuleFor(x => x.FieldTypeId).NotEmpty();
+
+    if (isInvariant)
+    {
+      RuleFor(x => x.IsInvariant).Equal(true).WithMessage("'{PropertyName}' must be false when the content type is invariant.");
+    }
 
     RuleFor(x => x.UniqueName).SetValidator(new IdentifierValidator());
     When(x => !string.IsNullOrWhiteSpace(x.DisplayName), () => RuleFor(x => x.DisplayName!).SetValidator(new DisplayNameValidator()));

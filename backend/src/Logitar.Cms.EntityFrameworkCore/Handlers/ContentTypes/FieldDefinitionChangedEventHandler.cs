@@ -21,19 +21,11 @@ internal class FieldDefinitionChangedEventHandler : INotificationHandler<FieldDe
       .SingleOrDefaultAsync(x => x.AggregateId == @event.AggregateId.Value, cancellationToken)
       ?? throw new InvalidOperationException($"The content type entity (AggregateId={@event.AggregateId}) could not be found.");
 
-    FieldDefinitionEntity? fieldDefinition = contentType.FieldDefinitions.SingleOrDefault(field => field.Id == @event.FieldId);
-    if (fieldDefinition == null)
-    {
-      FieldTypeEntity fieldType = await _context.FieldTypes
-        .SingleOrDefaultAsync(x => x.AggregateId == @event.FieldDefinition.FieldTypeId.Value, cancellationToken)
-        ?? throw new InvalidOperationException($"The field type entity (AggregateId={@event.FieldDefinition.FieldTypeId.AggregateId}) could not be found.");
+    FieldTypeEntity fieldType = await _context.FieldTypes
+      .SingleOrDefaultAsync(x => x.AggregateId == @event.FieldDefinition.FieldTypeId.Value, cancellationToken)
+      ?? throw new InvalidOperationException($"The field type entity (AggregateId={@event.FieldDefinition.FieldTypeId.AggregateId}) could not be found.");
 
-      contentType.AddFieldDefinition(fieldType, @event);
-    }
-    else
-    {
-      fieldDefinition.Update(@event);
-    }
+    contentType.SetFieldDefinition(fieldType, @event);
 
     await _context.SaveChangesAsync(cancellationToken);
   }

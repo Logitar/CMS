@@ -40,6 +40,7 @@ internal class ContentTypeQuerier : IContentTypeQuerier
     string aggregateId = new AggregateId(id).Value;
 
     ContentTypeEntity? contentType = await _contentTypes.AsNoTracking()
+      .Include(x => x.FieldDefinitions).ThenInclude(x => x.FieldType)
       .SingleOrDefaultAsync(x => x.AggregateId == aggregateId, cancellationToken);
 
     return contentType == null ? null : await MapAsync(contentType, cancellationToken);
@@ -50,6 +51,7 @@ internal class ContentTypeQuerier : IContentTypeQuerier
     string uniqueNameNormalized = CmsDb.Normalize(uniqueName);
 
     ContentTypeEntity? contentType = await _contentTypes.AsNoTracking()
+      .Include(x => x.FieldDefinitions).ThenInclude(x => x.FieldType)
       .SingleOrDefaultAsync(x => x.UniqueNameNormalized == uniqueNameNormalized, cancellationToken);
 
     return contentType == null ? null : await MapAsync(contentType, cancellationToken);

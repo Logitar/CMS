@@ -23,15 +23,15 @@ internal class CreateFieldDefinitionCommandHandler : IRequestHandler<CreateField
 
   public async Task<ContentsType?> Handle(CreateFieldDefinitionCommand command, CancellationToken cancellationToken)
   {
-    CreateFieldDefinitionPayload payload = command.Payload;
-    new CreateFieldDefinitionValidator().ValidateAndThrow(payload);
-
     ContentTypeId contentTypeId = new(command.ContentTypeId);
     ContentTypeAggregate? contentType = await _contentTypeRepository.LoadAsync(contentTypeId, cancellationToken);
     if (contentType == null)
     {
       return null;
     }
+
+    CreateFieldDefinitionPayload payload = command.Payload;
+    new CreateFieldDefinitionValidator(contentType.IsInvariant).ValidateAndThrow(payload);
 
     FieldTypeId fieldTypeId = new(payload.FieldTypeId);
     FieldTypeAggregate fieldType = await _fieldTypeRepository.LoadAsync(fieldTypeId, cancellationToken)

@@ -32,11 +32,6 @@ internal class ContentTypeEntity : AggregateEntity
   {
   }
 
-  public void AddFieldDefinition(FieldTypeEntity fieldType, FieldDefinitionChangedEvent @event)
-  {
-    FieldDefinitions.Add(new FieldDefinitionEntity(this, fieldType, @event));
-  }
-
   public override IEnumerable<ActorId> GetActorIds()
   {
     List<ActorId> actorIds = [];
@@ -48,6 +43,22 @@ internal class ContentTypeEntity : AggregateEntity
     }
 
     return actorIds.AsReadOnly();
+  }
+
+  public void SetFieldDefinition(FieldTypeEntity fieldType, FieldDefinitionChangedEvent @event)
+  {
+    Update(@event);
+
+    FieldDefinitionEntity? fieldDefinition = FieldDefinitions.SingleOrDefault(field => field.Id == @event.FieldId);
+    if (fieldDefinition == null)
+    {
+      fieldDefinition = new(this, fieldType, @event);
+      FieldDefinitions.Add(fieldDefinition);
+    }
+    else
+    {
+      fieldDefinition.Update(@event);
+    }
   }
 
   public void Update(ContentTypeUpdatedEvent @event)

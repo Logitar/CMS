@@ -133,6 +133,11 @@ internal class Mapper
       Description = source.Description
     };
 
+    foreach (FieldDefinitionEntity fieldDefinition in source.FieldDefinitions)
+    {
+      destination.Fields.Add(ToFieldDefinition(fieldDefinition, destination));
+    }
+
     MapAggregate(source, destination);
 
     return destination;
