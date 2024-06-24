@@ -1,8 +1,10 @@
 ﻿using Logitar.Cms.Contracts.Contents;
+using Logitar.Cms.Contracts.Search;
 using Logitar.Cms.Core;
 using Logitar.Cms.Core.Contents.Commands;
 using Logitar.Cms.Core.Contents.Queries;
 using Logitar.Cms.Web.Extensions;
+using Logitar.Cms.Web.Models.Contents;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -43,6 +45,13 @@ public class ContentController : ControllerBase
   {
     ContentItem? contentItem = await _pipeline.ExecuteAsync(new SaveContentLocaleCommand(id, payload, languageId), cancellationToken);
     return contentItem == null ? NotFound() : Ok(contentItem);
+  }
+
+  [HttpGet]
+  public async Task<ActionResult<SearchResults<ContentLocale>>> SearchAsync([FromQuery] SearchContentsParameters parameters, CancellationToken cancellationToken)
+  {
+    SearchResults<ContentLocale> contentTypes = await _pipeline.ExecuteAsync(new SearchContentsQuery(parameters.ToPayload()), cancellationToken);
+    return Ok(contentTypes);
   }
 
   [HttpPatch("{id}")]

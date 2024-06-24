@@ -89,6 +89,18 @@ internal class Mapper
     return destination;
   }
 
+  public ContentLocale ToContentLocale(ContentLocaleEntity source)
+  {
+    if (source.ContentItem == null)
+    {
+      throw new ArgumentException($"The {nameof(source.ContentItem)} is required.", nameof(source));
+    }
+
+    ContentItem item = ToContentItem(source.ContentItem);
+
+    return item.Locales.SingleOrDefault() ?? item.Invariant;
+  }
+
   private ContentLocale ToContentLocale(ContentLocaleEntity source, ContentItem item)
   {
     if (source.LanguageId.HasValue && source.Language == null)
