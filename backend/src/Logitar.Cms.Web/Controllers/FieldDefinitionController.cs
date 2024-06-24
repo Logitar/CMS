@@ -19,9 +19,16 @@ public class FieldDefinitionController : ControllerBase
   }
 
   [HttpPost]
-  public async Task<ActionResult<FieldDefinition>> CreateAsync(Guid contentTypeId, [FromBody] CreateFieldDefinitionPayload payload, CancellationToken cancellationToken)
+  public async Task<ActionResult<ContentsType>> CreateAsync(Guid contentTypeId, [FromBody] CreateFieldDefinitionPayload payload, CancellationToken cancellationToken)
   {
     ContentsType? contentType = await _pipeline.ExecuteAsync(new CreateFieldDefinitionCommand(contentTypeId, payload), cancellationToken);
+    return contentType == null ? NotFound() : Ok(contentType);
+  }
+
+  [HttpPut("{fieldId}")]
+  public async Task<ActionResult<ContentsType>> ReplaceAsync(Guid contentTypeId, Guid fieldId, [FromBody] ReplaceFieldDefinitionPayload payload, long? version, CancellationToken cancellationToken)
+  {
+    ContentsType? contentType = await _pipeline.ExecuteAsync(new ReplaceFieldDefinitionCommand(contentTypeId, fieldId, payload, version), cancellationToken);
     return contentType == null ? NotFound() : Ok(contentType);
   }
 }

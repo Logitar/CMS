@@ -54,6 +54,7 @@ public class ContentTypeAggregate : AggregateRoot
   }
 
   private readonly Dictionary<Guid, FieldDefinitionUnit> _fieldDefinitionByIds = [];
+  public IReadOnlyDictionary<Guid, FieldDefinitionUnit> FieldDefinitionByIds => _fieldDefinitionByIds.AsReadOnly();
   private readonly Dictionary<string, Guid> _fieldIdByUniqueNames = [];
   private readonly List<Guid> _orderedFieldIds = [];
   public IReadOnlyCollection<FieldDefinitionUnit> FieldDefinitions
