@@ -54,14 +54,14 @@ public class ContentTypeAggregate : AggregateRoot
   }
 
   private readonly Dictionary<Guid, FieldDefinitionUnit> _fieldDefinitionByIds = [];
-  private readonly Dictionary<string, Guid> _fieldDefinitionIdByUniqueNames = [];
-  private readonly Guid[] _orderedFieldDefinitionIds = [];
+  private readonly Dictionary<string, Guid> _fieldIdByUniqueNames = [];
+  private readonly List<Guid> _orderedFieldIds = [];
   public IReadOnlyCollection<FieldDefinitionUnit> FieldDefinitions
   {
     get
     {
-      List<FieldDefinitionUnit> fieldDefinitions = new(capacity: _orderedFieldDefinitionIds.Length);
-      foreach (Guid id in _orderedFieldDefinitionIds)
+      List<FieldDefinitionUnit> fieldDefinitions = new(capacity: _orderedFieldIds.Count);
+      foreach (Guid id in _orderedFieldIds)
       {
         fieldDefinitions.Add(_fieldDefinitionByIds[id]);
       }
@@ -70,7 +70,7 @@ public class ContentTypeAggregate : AggregateRoot
   }
   public FieldDefinitionUnit? TryGetFieldDefinition(Guid id) => _fieldDefinitionByIds.TryGetValue(id, out FieldDefinitionUnit? value) ? value : null;
   public FieldDefinitionUnit? TryGetFieldDefinition(IdentifierUnit uniqueName)
-    => _fieldDefinitionIdByUniqueNames.TryGetValue(Normalize(uniqueName), out Guid id) ? _fieldDefinitionByIds[id] : null;
+    => _fieldIdByUniqueNames.TryGetValue(Normalize(uniqueName), out Guid id) ? _fieldDefinitionByIds[id] : null;
   public FieldDefinitionUnit GetFieldDefinition(Guid id) => TryGetFieldDefinition(id) ?? throw new InvalidOperationException($"The field definition 'Id={id}' could not be found.");
   public FieldDefinitionUnit GetFieldDefinition(IdentifierUnit uniqueName) => TryGetFieldDefinition(uniqueName) ?? throw new InvalidOperationException($"The field definition 'UniqueName={uniqueName}' could not be found.");
 
@@ -93,7 +93,7 @@ public class ContentTypeAggregate : AggregateRoot
   public void AddFieldDefinition(FieldDefinitionUnit fieldDefinition, ActorId actorId = default) => SetFieldDefinition(Guid.NewGuid(), fieldDefinition, actorId);
   public void SetFieldDefinition(Guid id, FieldDefinitionUnit fieldDefinition, ActorId actorId = default)
   {
-    if (_fieldDefinitionIdByUniqueNames.TryGetValue(Normalize(fieldDefinition.UniqueName), out Guid existingId) && existingId != id)
+    if (_fieldIdByUniqueNames.TryGetValue(Normalize(fieldDefinition.UniqueName), out Guid existingId) && existingId != id)
     {
       throw new UniqueNameAlreadyUsedException<FieldDefinitionUnit>(fieldDefinition.UniqueName, nameof(fieldDefinition.UniqueName));
     }
@@ -101,7 +101,8 @@ public class ContentTypeAggregate : AggregateRoot
     FieldDefinitionUnit? existingFieldDefinition = TryGetFieldDefinition(id);
     if (existingFieldDefinition == null)
     {
-      Raise(new FieldDefinitionChangedEvent(id, fieldDefinition, order: _orderedFieldDefinitionIds.Length), actorId);
+      int order = _orderedFieldIds.Count;
+      Raise(new FieldDefinitionChangedEvent(id, fieldDefinition, order), actorId);
     }
     else if (fieldDefinition != existingFieldDefinition)
     {
@@ -112,21 +113,21 @@ public class ContentTypeAggregate : AggregateRoot
   {
     if (_fieldDefinitionByIds.TryGetValue(@event.FieldId, out FieldDefinitionUnit? fieldDefinition))
     {
-      _fieldDefinitionIdByUniqueNames.Remove(Normalize(fieldDefinition.UniqueName));
+      _fieldIdByUniqueNames.Remove(Normalize(fieldDefinition.UniqueName));
     }
 
     _fieldDefinitionByIds[@event.FieldId] = @event.FieldDefinition;
-    _fieldDefinitionIdByUniqueNames[Normalize(@event.FieldDefinition.UniqueName)] = @event.FieldId;
+    _fieldIdByUniqueNames[Normalize(@event.FieldDefinition.UniqueName)] = @event.FieldId;
 
     if (@event.Order.HasValue)
     {
-      if (@event.Order.Value > _orderedFieldDefinitionIds.Length)
+      if (@event.Order.Value == _orderedFieldIds.Count)
       {
-        // TODO(fpion): implement
+        _orderedFieldIds.Add(@event.FieldId);
       }
       else
       {
-        _orderedFieldDefinitionIds[@event.Order.Value] = @event.FieldId;
+        _orderedFieldIds[@event.Order.Value] = @event.FieldId;
       }
     }
   }

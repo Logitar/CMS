@@ -1,4 +1,5 @@
 ﻿using Logitar.Cms.Core.ContentTypes.Events;
+using Logitar.EventSourcing;
 using Logitar.Identity.EntityFrameworkCore.Relational.Entities;
 
 namespace Logitar.Cms.EntityFrameworkCore.Entities;
@@ -29,6 +30,35 @@ internal class ContentTypeEntity : AggregateEntity
 
   private ContentTypeEntity() : base()
   {
+  }
+
+  public override IEnumerable<ActorId> GetActorIds()
+  {
+    List<ActorId> actorIds = [];
+    actorIds.AddRange(base.GetActorIds());
+
+    foreach (FieldDefinitionEntity fieldDefinition in FieldDefinitions)
+    {
+      actorIds.AddRange(fieldDefinition.GetActorIds());
+    }
+
+    return actorIds.AsReadOnly();
+  }
+
+  public void SetFieldDefinition(FieldTypeEntity fieldType, FieldDefinitionChangedEvent @event)
+  {
+    Update(@event);
+
+    FieldDefinitionEntity? fieldDefinition = FieldDefinitions.SingleOrDefault(field => field.Id == @event.FieldId);
+    if (fieldDefinition == null)
+    {
+      fieldDefinition = new(this, fieldType, @event);
+      FieldDefinitions.Add(fieldDefinition);
+    }
+    else
+    {
+      fieldDefinition.Update(@event);
+    }
   }
 
   public void Update(ContentTypeUpdatedEvent @event)

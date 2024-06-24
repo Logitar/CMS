@@ -220,6 +220,134 @@ namespace Logitar.Cms.EntityFrameworkCore.PostgreSQL.Migrations
                     b.ToTable("ContentTypes", (string)null);
                 });
 
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.FieldDefinitionEntity", b =>
+                {
+                    b.Property<int>("FieldDefinitionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("FieldDefinitionId"));
+
+                    b.Property<int>("ContentTypeId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ContentTypeName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("DisplayName")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("FieldDataType")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<int>("FieldTypeId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("FieldTypeName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsIndexed")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsInvariant")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsRequired")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsUnique")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Placeholder")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("UniqueName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("UniqueNameNormalized")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("FieldDefinitionId");
+
+                    b.HasIndex("ContentTypeName");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("CreatedOn");
+
+                    b.HasIndex("DisplayName");
+
+                    b.HasIndex("FieldDataType");
+
+                    b.HasIndex("FieldTypeId");
+
+                    b.HasIndex("FieldTypeName");
+
+                    b.HasIndex("IsIndexed");
+
+                    b.HasIndex("IsInvariant");
+
+                    b.HasIndex("IsRequired");
+
+                    b.HasIndex("IsUnique");
+
+                    b.HasIndex("Placeholder");
+
+                    b.HasIndex("UniqueName");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.HasIndex("UpdatedOn");
+
+                    b.HasIndex("ContentTypeId", "Id")
+                        .IsUnique();
+
+                    b.HasIndex("ContentTypeId", "Order")
+                        .IsUnique();
+
+                    b.HasIndex("ContentTypeId", "UniqueNameNormalized")
+                        .IsUnique();
+
+                    b.ToTable("FieldDefinitions", (string)null);
+                });
+
             modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.FieldTypeEntity", b =>
                 {
                     b.Property<int>("FieldTypeId")
@@ -318,6 +446,16 @@ namespace Logitar.Cms.EntityFrameworkCore.PostgreSQL.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
+
+                    b.Property<string>("CodeNormalized")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
+
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -326,18 +464,26 @@ namespace Logitar.Cms.EntityFrameworkCore.PostgreSQL.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("EnglishName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
                     b.Property<bool>("IsDefault")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("Locale")
-                        .IsRequired()
-                        .HasMaxLength(16)
-                        .HasColumnType("character varying(16)");
+                    b.Property<int>("LCID")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("LocaleNormalized")
+                    b.Property<string>("NativeName")
                         .IsRequired()
-                        .HasMaxLength(16)
-                        .HasColumnType("character varying(16)");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("UpdatedBy")
                         .IsRequired()
@@ -355,16 +501,25 @@ namespace Logitar.Cms.EntityFrameworkCore.PostgreSQL.Migrations
                     b.HasIndex("AggregateId")
                         .IsUnique();
 
+                    b.HasIndex("Code");
+
+                    b.HasIndex("CodeNormalized")
+                        .IsUnique();
+
                     b.HasIndex("CreatedBy");
 
                     b.HasIndex("CreatedOn");
 
+                    b.HasIndex("DisplayName");
+
+                    b.HasIndex("EnglishName");
+
                     b.HasIndex("IsDefault");
 
-                    b.HasIndex("Locale");
-
-                    b.HasIndex("LocaleNormalized")
+                    b.HasIndex("LCID")
                         .IsUnique();
+
+                    b.HasIndex("NativeName");
 
                     b.HasIndex("UpdatedBy");
 
@@ -404,6 +559,25 @@ namespace Logitar.Cms.EntityFrameworkCore.PostgreSQL.Migrations
                     b.Navigation("Language");
                 });
 
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.FieldDefinitionEntity", b =>
+                {
+                    b.HasOne("Logitar.Cms.EntityFrameworkCore.Entities.ContentTypeEntity", "ContentType")
+                        .WithMany("FieldDefinitions")
+                        .HasForeignKey("ContentTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Logitar.Cms.EntityFrameworkCore.Entities.FieldTypeEntity", "FieldType")
+                        .WithMany("FieldDefinitions")
+                        .HasForeignKey("FieldTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ContentType");
+
+                    b.Navigation("FieldType");
+                });
+
             modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.ContentItemEntity", b =>
                 {
                     b.Navigation("Locales");
@@ -412,6 +586,13 @@ namespace Logitar.Cms.EntityFrameworkCore.PostgreSQL.Migrations
             modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.ContentTypeEntity", b =>
                 {
                     b.Navigation("ContentItems");
+
+                    b.Navigation("FieldDefinitions");
+                });
+
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.FieldTypeEntity", b =>
+                {
+                    b.Navigation("FieldDefinitions");
                 });
 
             modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.LanguageEntity", b =>

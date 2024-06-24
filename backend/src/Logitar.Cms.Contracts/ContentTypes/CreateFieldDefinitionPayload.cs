@@ -2,8 +2,6 @@
 
 public record CreateFieldDefinitionPayload
 {
-  public Guid ContentTypeId { get; set; }
-
   public Guid FieldTypeId { get; set; }
 
   public bool IsInvariant { get; set; }
@@ -16,13 +14,12 @@ public record CreateFieldDefinitionPayload
   public string? Description { get; set; }
   public string? Placeholder { get; set; }
 
-  public CreateFieldDefinitionPayload() : this(Guid.Empty, Guid.Empty, string.Empty)
+  public CreateFieldDefinitionPayload() : this(Guid.Empty, string.Empty)
   {
   }
 
-  public CreateFieldDefinitionPayload(Guid contentTypeId, Guid fieldTypeId, string uniqueName)
+  public CreateFieldDefinitionPayload(Guid fieldTypeId, string uniqueName)
   {
-    ContentTypeId = contentTypeId;
     FieldTypeId = fieldTypeId;
     UniqueName = uniqueName;
   }
