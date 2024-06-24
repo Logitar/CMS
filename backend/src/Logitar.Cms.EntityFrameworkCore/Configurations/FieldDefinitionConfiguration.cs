@@ -18,7 +18,7 @@ internal class FieldDefinitionConfiguration : IEntityTypeConfiguration<FieldDefi
 
     builder.HasIndex(x => new { x.ContentTypeId, x.Id }).IsUnique();
     builder.HasIndex(x => x.ContentTypeName);
-    builder.HasIndex(x => x.Order);
+    builder.HasIndex(x => new { x.ContentTypeId, x.Order }).IsUnique();
     builder.HasIndex(x => x.FieldTypeName);
     builder.HasIndex(x => x.FieldDataType);
     builder.HasIndex(x => x.IsInvariant);
@@ -43,5 +43,8 @@ internal class FieldDefinitionConfiguration : IEntityTypeConfiguration<FieldDefi
     builder.Property(x => x.Placeholder).HasMaxLength(PlaceholderUnit.MaximumLength);
     builder.Property(x => x.CreatedBy).HasMaxLength(ActorId.MaximumLength);
     builder.Property(x => x.UpdatedBy).HasMaxLength(ActorId.MaximumLength);
+
+    builder.HasOne(x => x.ContentType).WithMany(x => x.FieldDefinitions).OnDelete(DeleteBehavior.Cascade);
+    builder.HasOne(x => x.FieldType).WithMany(x => x.FieldDefinitions).OnDelete(DeleteBehavior.Restrict);
   }
 }

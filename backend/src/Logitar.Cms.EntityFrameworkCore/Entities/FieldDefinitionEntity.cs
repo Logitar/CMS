@@ -1,4 +1,7 @@
 ﻿using Logitar.Cms.Contracts.Fields;
+using Logitar.Cms.Core.ContentTypes;
+using Logitar.Cms.Core.ContentTypes.Events;
+using Logitar.EventSourcing;
 
 namespace Logitar.Cms.EntityFrameworkCore.Entities;
 
@@ -38,8 +41,10 @@ internal class FieldDefinitionEntity
   public string UpdatedBy { get; set; } = string.Empty;
   public DateTime UpdatedOn { get; set; }
 
-  public FieldDefinitionEntity(ContentTypeEntity contentType, FieldTypeEntity fieldType)
+  public FieldDefinitionEntity(ContentTypeEntity contentType, FieldTypeEntity fieldType, FieldDefinitionChangedEvent @event)
   {
+    Id = @event.FieldId;
+
     ContentType = contentType;
     ContentTypeId = contentType.ContentTypeId;
     ContentTypeName = contentType.UniqueName;
@@ -48,9 +53,42 @@ internal class FieldDefinitionEntity
     FieldTypeId = fieldType.FieldTypeId;
     FieldTypeName = fieldType.UniqueName;
     FieldDataType = fieldType.DataType;
+
+    CreatedBy = @event.ActorId.Value;
+    CreatedOn = @event.OccurredOn.ToUniversalTime();
+
+    Update(@event);
   }
 
   private FieldDefinitionEntity()
   {
+  }
+
+  public IEnumerable<ActorId> GetActorIds() => [new(CreatedBy), new(UpdatedBy)];
+
+  public void Update(FieldDefinitionChangedEvent @event)
+  {
+    if (@event.Order.HasValue)
+    {
+      Order = @event.Order.Value;
+    }
+
+    SetFieldDefinition(@event.FieldDefinition);
+
+    UpdatedBy = @event.ActorId.Value;
+    UpdatedOn = @event.OccurredOn.ToUniversalTime();
+  }
+
+  private void SetFieldDefinition(FieldDefinitionUnit fieldDefinition)
+  {
+    IsInvariant = fieldDefinition.IsInvariant;
+    IsRequired = fieldDefinition.IsRequired;
+    IsIndexed = fieldDefinition.IsIndexed;
+    IsUnique = fieldDefinition.IsUnique;
+
+    UniqueName = fieldDefinition.UniqueName.Value;
+    DisplayName = fieldDefinition.DisplayName?.Value;
+    Description = fieldDefinition.Description?.Value;
+    Placeholder = fieldDefinition.Placeholder?.Value;
   }
 }
