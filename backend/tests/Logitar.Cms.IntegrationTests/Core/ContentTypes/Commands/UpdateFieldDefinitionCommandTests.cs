@@ -1,0 +1,148 @@
+﻿using FluentValidation.Results;
+using Logitar.Cms.Contracts.ContentTypes;
+using Logitar.Cms.Core.Fields;
+using Logitar.Cms.Core.Fields.Properties;
+using Logitar.Identity.Contracts;
+using Logitar.Identity.Contracts.Settings;
+using Logitar.Identity.Domain.Shared;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Logitar.Cms.Core.ContentTypes.Commands;
+
+[Trait(Traits.Category, Categories.Integration)]
+public class UpdateFieldDefinitionCommandTests : IntegrationTests
+{
+  private readonly IContentTypeRepository _contentTypeRepository;
+  private readonly IFieldTypeRepository _fieldTypeRepository;
+
+  private readonly FieldTypeAggregate _contents;
+  private readonly FieldTypeAggregate _subTitle;
+
+  private readonly ContentTypeAggregate _blogArticle;
+  private readonly ContentTypeAggregate _blogAuthor;
+
+  public UpdateFieldDefinitionCommandTests() : base()
+  {
+    _contentTypeRepository = ServiceProvider.GetRequiredService<IContentTypeRepository>();
+    _fieldTypeRepository = ServiceProvider.GetRequiredService<IFieldTypeRepository>();
+
+    IUniqueNameSettings uniqueNameSettings = FieldTypeAggregate.UniqueNameSettings;
+    _contents = new(new UniqueNameUnit(uniqueNameSettings, "Contents"), new ReadOnlyTextProperties(), ActorId);
+    _subTitle = new(new UniqueNameUnit(uniqueNameSettings, "SubTitle"), new ReadOnlyStringProperties(minimumLength: null, maximumLength: 128, pattern: null), ActorId);
+
+    _blogArticle = new(new IdentifierUnit("BlogArticle"), isInvariant: false, ActorId);
+    _blogArticle.AddFieldDefinition(new FieldDefinitionUnit(_contents.Id, new IdentifierUnit("Contents")), ActorId);
+    _blogArticle.AddFieldDefinition(new FieldDefinitionUnit(_subTitle.Id, new IdentifierUnit("SubTitle"), isIndexed: true), ActorId);
+    _blogAuthor = new(new IdentifierUnit("BlogAuthor"), isInvariant: true, ActorId);
+  }
+
+  public override async Task InitializeAsync()
+  {
+    await base.InitializeAsync();
+
+    await _fieldTypeRepository.SaveAsync([_contents, _subTitle]);
+    await _contentTypeRepository.SaveAsync([_blogArticle, _blogAuthor]);
+  }
+
+  [Fact(DisplayName = "It should return null when the content type could not be found.")]
+  public async Task It_should_return_null_when_the_content_type_could_not_be_found()
+  {
+    UpdateFieldDefinitionPayload payload = new();
+    UpdateFieldDefinitionCommand command = new(Guid.NewGuid(), Guid.NewGuid(), payload);
+    Assert.Null(await Pipeline.ExecuteAsync(command));
+  }
+
+  [Fact(DisplayName = "It should throw FieldDefinitionNotFoundException when the field definition could not be found.")]
+  public async Task It_should_throw_FieldDefinitionNotFoundException_when_the_field_definition_could_not_be_found()
+  {
+    UpdateFieldDefinitionPayload payload = new();
+    UpdateFieldDefinitionCommand command = new(_blogArticle.Id.ToGuid(), Guid.NewGuid(), payload);
+    var exception = await Assert.ThrowsAsync<FieldDefinitionNotFoundException>(async () => await Pipeline.ExecuteAsync(command));
+    Assert.Equal(_blogArticle.Id.Value, exception.ContentTypeId);
+    Assert.Equal(command.FieldId, exception.FieldId);
+    Assert.Equal("FieldId", exception.PropertyName);
+  }
+
+  [Fact(DisplayName = "It should throw UniqueNameAlreadyUsedException when the unique name is already used.")]
+  public async Task It_should_throw_UniqueNameAlreadyUsedException_when_the_unique_name_is_already_used()
+  {
+    Guid contentsId = _blogArticle.FieldDefinitionByIds.Single(x => x.Value.UniqueName.Value == "Contents").Key;
+
+    UpdateFieldDefinitionPayload payload = new()
+    {
+      UniqueName = "SubTitle"
+    };
+    UpdateFieldDefinitionCommand command = new(_blogArticle.Id.ToGuid(), contentsId, payload);
+    var exception = await Assert.ThrowsAsync<UniqueNameAlreadyUsedException<FieldDefinitionUnit>>(async () => await Pipeline.ExecuteAsync(command));
+    Assert.Null(exception.LanguageId);
+    Assert.Equal(payload.UniqueName, exception.UniqueName);
+    Assert.Equal(nameof(payload.UniqueName), exception.PropertyName);
+  }
+
+  [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
+  public async Task It_should_throw_ValidationException_when_the_payload_is_not_valid()
+  {
+    UpdateFieldDefinitionPayload payload = new()
+    {
+      UniqueName = "123_JobTitle"
+    };
+    UpdateFieldDefinitionCommand command = new(_blogAuthor.Id.ToGuid(), Guid.NewGuid(), payload);
+    var exception = await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await Pipeline.ExecuteAsync(command));
+    ValidationFailure error = Assert.Single(exception.Errors);
+    Assert.Equal(nameof(IdentifierValidator), error.ErrorCode);
+    Assert.Equal("UniqueName", error.PropertyName);
+  }
+
+  [Fact(DisplayName = "It should update a field definition with version.")]
+  public async Task It_should_update_a_field_definition_with_version()
+  {
+    Guid subTitleId = Guid.Empty;
+    DescriptionUnit description = new("This is the field for the sub-title, which will appear under the main title, over the main picture.");
+    foreach (KeyValuePair<Guid, FieldDefinitionUnit> fieldById in _blogArticle.FieldDefinitionByIds)
+    {
+      if (fieldById.Value.UniqueName.Value == "SubTitle")
+      {
+        subTitleId = fieldById.Key;
+
+        FieldDefinitionUnit fieldDefinition = new(fieldById.Value.FieldTypeId, fieldById.Value.UniqueName, fieldById.Value.DisplayName, description,
+          fieldById.Value.Placeholder, fieldById.Value.IsInvariant, fieldById.Value.IsRequired, fieldById.Value.IsIndexed, fieldById.Value.IsUnique);
+
+        _blogArticle.SetFieldDefinition(subTitleId, fieldDefinition, ActorId);
+        await _contentTypeRepository.SaveAsync(_blogArticle);
+
+        break;
+      }
+    }
+
+    UpdateFieldDefinitionPayload payload = new()
+    {
+      UniqueName = "SubTitle",
+      DisplayName = new Modification<string>("  Sub-title  "),
+      Placeholder = new Modification<string>(" Enter your article sub-title ")
+    };
+    UpdateFieldDefinitionCommand command = new(_blogArticle.Id.ToGuid(), subTitleId, payload);
+    ContentsType? type = await Pipeline.ExecuteAsync(command);
+    Assert.NotNull(type);
+
+    Assert.Equal(_blogArticle.Id.ToGuid(), type.Id);
+    Assert.Equal(_blogArticle.Version + 1, type.Version);
+    Assert.Equal(Contracts.Actors.Actor.System, type.CreatedBy);
+    Assert.Equal(Actor, type.UpdatedBy);
+    Assert.True(type.CreatedOn < type.UpdatedOn);
+
+    FieldDefinition field = Assert.Single(type.Fields, field => field.Id == subTitleId);
+    Assert.Same(type, field.ContentType);
+    Assert.Equal(1, field.Order);
+    Assert.True(field.IsInvariant);
+    Assert.False(field.IsRequired);
+    Assert.True(field.IsIndexed);
+    Assert.False(field.IsUnique);
+    Assert.Equal(payload.UniqueName, field.UniqueName);
+    Assert.Equal(payload.DisplayName.Value?.CleanTrim(), field.DisplayName);
+    Assert.Equal(description.Value, field.Description);
+    Assert.Equal(payload.Placeholder.Value?.CleanTrim(), field.Placeholder);
+    Assert.Equal(Contracts.Actors.Actor.System, field.CreatedBy);
+    Assert.Equal(Actor, field.UpdatedBy);
+    Assert.True(type.CreatedOn < field.UpdatedOn);
+  }
+}

@@ -31,4 +31,11 @@ public class FieldDefinitionController : ControllerBase
     ContentsType? contentType = await _pipeline.ExecuteAsync(new ReplaceFieldDefinitionCommand(contentTypeId, fieldId, payload, version), cancellationToken);
     return contentType == null ? NotFound() : Ok(contentType);
   }
+
+  [HttpPatch("{fieldId}")]
+  public async Task<ActionResult<ContentsType>> UpdateAsync(Guid contentTypeId, Guid fieldId, [FromBody] UpdateFieldDefinitionPayload payload, CancellationToken cancellationToken)
+  {
+    ContentsType? contentType = await _pipeline.ExecuteAsync(new UpdateFieldDefinitionCommand(contentTypeId, fieldId, payload), cancellationToken);
+    return contentType == null ? NotFound() : Ok(contentType);
+  }
 }
