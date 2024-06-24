@@ -8,6 +8,8 @@ public class ContentsType : Aggregate
   public string? DisplayName { get; set; }
   public string? Description { get; set; }
 
+  public List<FieldDefinition> Fields { get; set; }
+
   public ContentsType() : this(string.Empty)
   {
   }
@@ -15,6 +17,7 @@ public class ContentsType : Aggregate
   public ContentsType(string uniqueName)
   {
     UniqueName = uniqueName;
+    Fields = [];
   }
 
   public override string ToString() => $"{DisplayName ?? UniqueName} | {base.ToString()}";

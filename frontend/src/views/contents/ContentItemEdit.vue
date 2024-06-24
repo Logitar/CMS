@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { TarTab, TarTabs, type TabOptions, type TabContainerOptions } from "logitar-vue3-ui";
 import { computed, inject, onMounted, ref } from "vue";
 import { useForm } from "vee-validate";
 import { useRoute, useRouter } from "vue-router";
@@ -8,8 +9,10 @@ import AppDelete from "@/components/shared/AppDelete.vue";
 import AppSaveButton from "@/components/shared/AppSaveButton.vue";
 import ContentTypeSelect from "@/components/contentTypes/ContentTypeSelect.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
+import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
 import type { ApiError } from "@/types/api";
 import type { ContentItem } from "@/types/contents";
+import type { ContentType } from "@/types/contentTypes";
 import { formatContentItem } from "@/helpers/displayUtils";
 import { handleErrorKey } from "@/inject/App";
 import { readContent } from "@/api/contents";
@@ -22,12 +25,15 @@ const toasts = useToastStore();
 
 const content = ref<ContentItem>();
 const isDeleting = ref<boolean>(false);
+const uniqueName = ref<string>("");
 
+const contentType = computed<ContentType | undefined>(() => content.value?.contentType);
 const formatted = computed<string>(() => (content.value ? formatContentItem(content.value) : ""));
-const hasChanges = computed<boolean>(() => Boolean(content.value) && false); // TODO(fpion): implement
+const hasChanges = computed<boolean>(() => Boolean(content.value) && uniqueName.value !== (content.value?.invariant.uniqueName ?? ""));
 
 function setModel(model: ContentItem): void {
   content.value = model;
+  uniqueName.value = model.invariant.uniqueName;
 }
 
 const { handleSubmit, isSubmitting } = useForm();
@@ -77,25 +83,30 @@ onMounted(async () => {
 
 <template>
   <main class="container">
-    <template v-if="content">
+    <template v-if="content && contentType">
       <h1>{{ formatted }}</h1>
       <StatusDetail :aggregate="content" />
-      <form @submit.prevent="onSubmit">
-        <div class="mb-3">
-          <AppSaveButton class="me-1" :disabled="isSubmitting || !hasChanges" exists :loading="isSubmitting" />
-          <AppBackButton class="mx-1" :has-changes="hasChanges" />
-          <AppDelete
-            class="ms-1"
-            confirm="contentTypes.delete.confirm"
-            :displayName="formatted"
-            :loading="isDeleting"
-            title="contentTypes.delete.title"
-            @confirmed="onDelete"
-          />
-        </div>
-        <ContentTypeSelect disabled :model-value="content.contentType.id" />
+      <ContentTypeSelect disabled :model-value="contentType.id" />
+      <div v-if="contentType.isInvariant">
+        <form @submit.prevent="onSubmit">
+          <div class="mb-3">
+            <AppSaveButton class="me-1" :disabled="isSubmitting || !hasChanges" exists :loading="isSubmitting" />
+            <AppBackButton class="mx-1" :has-changes="hasChanges" />
+            <AppDelete
+              class="ms-1"
+              confirm="contentTypes.delete.confirm"
+              :displayName="formatted"
+              :loading="isDeleting"
+              title="contentTypes.delete.title"
+              @confirmed="onDelete"
+            />
+          </div>
+          <UniqueNameInput required v-model="uniqueName" />
+        </form>
+      </div>
+      <div v-else>
         <!-- TODO(fpion): implement -->
-      </form>
+      </div>
     </template>
   </main>
 </template>

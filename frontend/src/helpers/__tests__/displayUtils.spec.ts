@@ -37,6 +37,7 @@ describe("formatContent", () => {
       },
       invariant: {
         uniqueName: "prolongez-lete-avec-une-acura-nsx-coupe",
+        item: {} as unknown as ContentItem,
         createdBy: actor,
         createdOn: now,
         updatedBy: actor,
@@ -44,6 +45,7 @@ describe("formatContent", () => {
       },
       locales: [],
     };
+    contentItem.invariant.item = contentItem;
     expect(formatContentItem(contentItem)).toBe(contentItem.invariant.uniqueName);
   });
 });

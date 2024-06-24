@@ -7,7 +7,10 @@
   "deleted": "Le contenu a été supprimé.",
   "empty": "Cette liste est vide.",
   "sort": {
-    "options": {}
+    "options": {
+      "UniqueName": "Nom unique",
+      "UpdatedOn": "Dernière modification"
+    }
   },
   "title": {
     "list": "Contenus",

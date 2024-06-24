@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { TarSelect, type SelectOption } from "logitar-vue3-ui";
+import type { SelectOption } from "logitar-vue3-ui";
 import { arrayUtils } from "logitar-js";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
+import AppSelect from "@/components/shared/AppSelect.vue";
 import type { ContentType } from "@/types/fieldTypes";
 
 const { orderBy } = arrayUtils;
-const { rt, t, tm } = useI18n();
+const { rt, tm } = useI18n();
 
 withDefaults(
   defineProps<{
@@ -33,13 +34,13 @@ defineEmits<{
 </script>
 
 <template>
-  <TarSelect
+  <AppSelect
     floating
     :id="id"
-    :label="t('fieldTypes.properties.text.contentType.label')"
+    label="fieldTypes.properties.text.contentType.label"
     :model-value="modelValue"
     :options="options"
-    :placeholder="t('fieldTypes.properties.text.contentType.placeholder')"
+    placeholder="fieldTypes.properties.text.contentType.placeholder"
     :required="required"
     @update:model-value="$emit('update:model-value', $event)"
   />

@@ -9,6 +9,7 @@
   "displayNames": "Display names",
   "empty": "This list is empty.",
   "englishFormat": "{englishName} (English)",
+  "invariant": "Invariant",
   "isDefault": "Is default?",
   "locale": {
     "label": "Locale",

@@ -66,6 +66,7 @@ onMounted(async () => {
     :options="options"
     placeholder="contentTypes.select.placeholder"
     :required="required"
+    :show-status="required ? 'touched' : 'never'"
     @update:model-value="onModelValueUpdate"
   />
 </template>

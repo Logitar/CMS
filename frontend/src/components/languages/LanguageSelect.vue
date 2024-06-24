@@ -13,11 +13,15 @@ const { orderBy } = arrayUtils;
 withDefaults(
   defineProps<{
     id?: string;
+    label?: string;
     modelValue?: string;
+    placeholder?: string;
     required?: boolean | string;
   }>(),
   {
     id: "language",
+    label: "languages.select.label",
+    placeholder: "languages.select.placeholder",
   },
 );
 
@@ -59,11 +63,12 @@ onMounted(async () => {
   <AppSelect
     floating
     :id="id"
-    label="languages.select.label"
+    :label="label"
     :model-value="modelValue"
     :options="options"
-    placeholder="languages.select.placeholder"
+    :placeholder="placeholder"
     :required="required"
+    :show-status="required ? 'touched' : 'never'"
     @update:model-value="onModelValueUpdate"
   />
 </template>
