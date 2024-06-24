@@ -138,6 +138,33 @@ internal class Mapper
     return destination;
   }
 
+  private FieldDefinition ToFieldDefinition(FieldDefinitionEntity source, ContentsType contentType)
+  {
+    if (source.FieldType == null)
+    {
+      throw new ArgumentException($"The {nameof(source.FieldType)} is required.", nameof(source));
+    }
+
+    FieldType fieldType = ToFieldType(source.FieldType);
+
+    return new FieldDefinition(contentType, fieldType, source.UniqueName)
+    {
+      Id = source.Id,
+      Order = source.Order,
+      IsInvariant = source.IsInvariant,
+      IsRequired = source.IsRequired,
+      IsIndexed = source.IsIndexed,
+      IsUnique = source.IsUnique,
+      DisplayName = source.DisplayName,
+      Description = source.Description,
+      Placeholder = source.Placeholder,
+      CreatedBy = FindActor(source.CreatedBy),
+      CreatedOn = AsUniversalTime(source.CreatedOn),
+      UpdatedBy = FindActor(source.UpdatedBy),
+      UpdatedOn = AsUniversalTime(source.UpdatedOn)
+    };
+  }
+
   public FieldType ToFieldType(FieldTypeEntity source)
   {
     FieldType destination = new(source.UniqueName)

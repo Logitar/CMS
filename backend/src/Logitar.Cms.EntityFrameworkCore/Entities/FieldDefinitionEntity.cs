@@ -11,7 +11,6 @@ internal class FieldDefinitionEntity
   public ContentTypeEntity? ContentType { get; private set; }
   public int ContentTypeId { get; private set; }
   public string ContentTypeName { get; private set; } = string.Empty;
-
   public int Order { get; private set; }
 
   public FieldTypeEntity? FieldType { get; private set; }
