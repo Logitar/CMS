@@ -43,38 +43,60 @@ public class ReplaceFieldDefinitionCommandTests : IntegrationTests
     await _contentTypeRepository.SaveAsync([_blogArticle, _blogAuthor]);
   }
 
-  //[Fact(DisplayName = "It should create a new field definition.")]
-  //public async Task It_should_create_a_new_field_definition()
-  //{
-  //  ReplaceFieldDefinitionPayload payload = new(_contents.Id.ToGuid(), "Contents");
-  //  ReplaceFieldDefinitionCommand command = new(_blogArticle.Id.ToGuid(), payload);
-  //  ContentsType? type = await Pipeline.ExecuteAsync(command);
-  //  Assert.NotNull(type);
+  [Fact(DisplayName = "It should replace a field definition with version.")]
+  public async Task It_should_replace_a_field_definition_with_version()
+  {
+    long version = _blogArticle.Version;
 
-  //  Assert.Equal(_blogArticle.Id.ToGuid(), type.Id);
-  //  Assert.Equal(_blogArticle.Version + 1, type.Version);
-  //  Assert.Equal(Contracts.Actors.Actor.System, type.ReplacedBy);
-  //  Assert.Equal(Actor, type.UpdatedBy);
-  //  Assert.True(type.ReplacedOn < type.UpdatedOn);
+    Guid subTitleId = Guid.Empty;
+    DescriptionUnit description = new("This is the field for the sub-title, which will appear under the main title, over the main picture.");
+    foreach (KeyValuePair<Guid, FieldDefinitionUnit> fieldById in _blogArticle.FieldDefinitionByIds)
+    {
+      if (fieldById.Value.UniqueName.Value == "SubTitle")
+      {
+        subTitleId = fieldById.Key;
 
-  //  Assert.Equal(2, type.Fields.Count);
-  //  FieldDefinition field = Assert.Single(type.Fields, field => field.UniqueName == "Contents");
-  //  Assert.NotEqual(Guid.Empty, field.Id);
-  //  Assert.Same(type, field.ContentType);
-  //  Assert.Equal(1, field.Order);
-  //  Assert.Equal(_contents.Id.ToGuid(), field.FieldType.Id);
-  //  Assert.Equal(payload.IsInvariant, field.IsInvariant);
-  //  Assert.Equal(payload.IsRequired, field.IsRequired);
-  //  Assert.Equal(payload.IsIndexed, field.IsIndexed);
-  //  Assert.Equal(payload.IsUnique, field.IsUnique);
-  //  Assert.Equal(payload.UniqueName, field.UniqueName);
-  //  Assert.Equal(payload.DisplayName, field.DisplayName);
-  //  Assert.Equal(payload.Description, field.Description);
-  //  Assert.Equal(payload.Placeholder, field.Placeholder);
-  //  Assert.Equal(Actor, field.ReplacedBy);
-  //  Assert.Equal(Actor, field.UpdatedBy);
-  //  Assert.Equal(field.ReplacedOn, field.UpdatedOn);
-  //}
+        FieldDefinitionUnit fieldDefinition = new(fieldById.Value.FieldTypeId, fieldById.Value.UniqueName, fieldById.Value.DisplayName, description,
+          fieldById.Value.Placeholder, fieldById.Value.IsInvariant, fieldById.Value.IsRequired, fieldById.Value.IsIndexed, fieldById.Value.IsUnique);
+
+        _blogArticle.SetFieldDefinition(subTitleId, fieldDefinition, ActorId);
+        await _contentTypeRepository.SaveAsync(_blogArticle);
+
+        break;
+      }
+    }
+
+    ReplaceFieldDefinitionPayload payload = new("SubTitle")
+    {
+      DisplayName = "  Sub-title  ",
+      Description = "    ",
+      Placeholder = " Enter your article sub-title "
+    };
+    ReplaceFieldDefinitionCommand command = new(_blogArticle.Id.ToGuid(), subTitleId, payload, version);
+    ContentsType? type = await Pipeline.ExecuteAsync(command);
+    Assert.NotNull(type);
+
+    Assert.Equal(_blogArticle.Id.ToGuid(), type.Id);
+    Assert.Equal(_blogArticle.Version + 1, type.Version);
+    Assert.Equal(Contracts.Actors.Actor.System, type.CreatedBy);
+    Assert.Equal(Actor, type.UpdatedBy);
+    Assert.True(type.CreatedOn < type.UpdatedOn);
+
+    FieldDefinition field = Assert.Single(type.Fields, field => field.Id == subTitleId);
+    Assert.Same(type, field.ContentType);
+    Assert.Equal(1, field.Order);
+    Assert.True(field.IsInvariant);
+    Assert.False(field.IsRequired);
+    Assert.True(field.IsIndexed);
+    Assert.False(field.IsUnique);
+    Assert.Equal(payload.UniqueName, field.UniqueName);
+    Assert.Equal(payload.DisplayName?.CleanTrim(), field.DisplayName);
+    Assert.Equal(description.Value, field.Description);
+    Assert.Equal(payload.Placeholder?.CleanTrim(), field.Placeholder);
+    Assert.Equal(Contracts.Actors.Actor.System, field.CreatedBy);
+    Assert.Equal(Actor, field.UpdatedBy);
+    Assert.True(type.CreatedOn < field.UpdatedOn);
+  }
 
   [Fact(DisplayName = "It should replace a field definition without version.")]
   public async Task It_should_replace_a_field_definition_without_version()

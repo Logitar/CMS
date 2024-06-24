@@ -28,32 +28,47 @@ internal class ReplaceFieldDefinitionCommandHandler : IRequestHandler<ReplaceFie
     {
       return null;
     }
+
     FieldDefinitionUnit fieldDefinition = contentType.TryGetFieldDefinition(command.FieldId)
       ?? throw new FieldDefinitionNotFoundException(contentType, command.FieldId, nameof(command.FieldId));
 
+    IdentifierUnit uniqueName = new(payload.UniqueName);
+    DisplayNameUnit? displayName = DisplayNameUnit.TryCreate(payload.DisplayName);
+    DescriptionUnit? description = DescriptionUnit.TryCreate(payload.Description);
+    PlaceholderUnit? placeholder = PlaceholderUnit.TryCreate(payload.Placeholder);
+
     if (command.Version.HasValue)
     {
-      ContentTypeAggregate? contentTypeReference = await _contentTypeRepository.LoadAsync(contentType.Id, command.Version, cancellationToken);
-      if (contentTypeReference == null)
+      ContentTypeAggregate? referenceContentType = await _contentTypeRepository.LoadAsync(contentType.Id, command.Version.Value, cancellationToken);
+      if (referenceContentType != null)
       {
-        // TODO(fpion): implement
-      }
-      else
-      {
-        // TODO(fpion): implement
+        FieldDefinitionUnit? reference = referenceContentType?.TryGetFieldDefinition(command.FieldId);
+        if (reference != null)
+        {
+          if (uniqueName == reference.UniqueName)
+          {
+            uniqueName = fieldDefinition.UniqueName;
+          }
+          if (displayName == reference.DisplayName)
+          {
+            displayName = fieldDefinition.DisplayName;
+          }
+          if (description == reference.Description)
+          {
+            description = fieldDefinition.Description;
+          }
+          if (placeholder == reference.Placeholder)
+          {
+            placeholder = fieldDefinition.Placeholder;
+          }
+        }
       }
     }
-    else
-    {
-      IdentifierUnit uniqueName = new(payload.UniqueName);
-      DisplayNameUnit? displayName = DisplayNameUnit.TryCreate(payload.DisplayName);
-      DescriptionUnit? description = DescriptionUnit.TryCreate(payload.Description);
-      PlaceholderUnit? placeholder = PlaceholderUnit.TryCreate(payload.Placeholder);
-      fieldDefinition = new(fieldDefinition.FieldTypeId, uniqueName, displayName, description, placeholder,
-        fieldDefinition.IsInvariant, fieldDefinition.IsRequired, fieldDefinition.IsIndexed, fieldDefinition.IsUnique);
 
-      contentType.SetFieldDefinition(command.FieldId, fieldDefinition, command.ActorId);
-    }
+    fieldDefinition = new(fieldDefinition.FieldTypeId, uniqueName, displayName, description, placeholder,
+      fieldDefinition.IsInvariant, fieldDefinition.IsRequired, fieldDefinition.IsIndexed, fieldDefinition.IsUnique);
+
+    contentType.SetFieldDefinition(command.FieldId, fieldDefinition, command.ActorId);
 
     await _contentTypeRepository.SaveAsync(contentType, cancellationToken);
 
