@@ -19,10 +19,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Logitar.Net" Version="6.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Logitar.Cms.Core\Logitar.Cms.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Using Include="System.Text.Json" />
     <Using Include="System.Text.Json.Serialization" />
   </ItemGroup>
 
