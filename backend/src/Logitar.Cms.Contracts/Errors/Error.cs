@@ -16,4 +16,6 @@ public record Error
     Message = message;
     Data = data?.ToList() ?? [];
   }
+
+  public void Add(ErrorData data) => Data.Add(data);
 }
