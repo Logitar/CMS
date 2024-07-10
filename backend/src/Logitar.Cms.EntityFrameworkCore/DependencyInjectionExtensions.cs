@@ -1,5 +1,6 @@
 ﻿using Logitar.Cms.Core.Configurations;
 using Logitar.Cms.Core.Languages;
+using Logitar.Cms.Core.Logging;
 using Logitar.Cms.EntityFrameworkCore.Actors;
 using Logitar.Cms.EntityFrameworkCore.Queriers;
 using Logitar.Cms.EntityFrameworkCore.Repositories;
@@ -32,6 +33,7 @@ public static class DependencyInjectionExtensions
   {
     return services
       .AddTransient<IConfigurationRepository, ConfigurationRepository>()
-      .AddTransient<ILanguageRepository, LanguageRepository>();
+      .AddTransient<ILanguageRepository, LanguageRepository>()
+      .AddTransient<ILogRepository, LogRepository>();
   }
 }
