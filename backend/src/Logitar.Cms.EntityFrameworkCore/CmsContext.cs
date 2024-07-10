@@ -10,6 +10,9 @@ public class CmsContext : DbContext
   }
 
   internal DbSet<LanguageEntity> Languages { get; private set; }
+  internal DbSet<LogEventEntity> LogEvents { get; private set; }
+  internal DbSet<LogExceptionEntity> LogExceptions { get; private set; }
+  internal DbSet<LogEntity> Logs { get; private set; }
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {

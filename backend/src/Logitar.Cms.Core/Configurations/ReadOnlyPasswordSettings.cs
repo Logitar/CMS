@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
+using Logitar.Cms.Contracts.Configurations;
 using Logitar.Cms.Core.Configurations.Validators;
 using Logitar.Identity.Contracts.Settings;
-using Logitar.Identity.Domain.Settings;
 
 namespace Logitar.Cms.Core.Configurations;
 

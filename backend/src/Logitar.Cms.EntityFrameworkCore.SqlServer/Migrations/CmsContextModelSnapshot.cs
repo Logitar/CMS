@@ -123,6 +123,228 @@ namespace Logitar.Cms.EntityFrameworkCore.SqlServer.Migrations
 
                     b.ToTable("Languages", (string)null);
                 });
+
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.LogEntity", b =>
+                {
+                    b.Property<long>("LogId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("LogId"));
+
+                    b.Property<string>("ActivityData")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ActivityType")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("ActorId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("AdditionalInformation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ApiKeyId")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("CorrelationId")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Destination")
+                        .HasMaxLength(2048)
+                        .HasColumnType("nvarchar(2048)");
+
+                    b.Property<TimeSpan?>("Duration")
+                        .HasColumnType("time");
+
+                    b.Property<DateTime?>("EndedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("HasErrors")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Level")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Method")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("OperationName")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("OperationType")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("SessionId")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Source")
+                        .HasMaxLength(2048)
+                        .HasColumnType("nvarchar(2048)");
+
+                    b.Property<DateTime>("StartedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("StatusCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TenantId")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<Guid>("UniqueId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("LogId");
+
+                    b.HasIndex("ActivityType");
+
+                    b.HasIndex("ActorId");
+
+                    b.HasIndex("ApiKeyId");
+
+                    b.HasIndex("CorrelationId");
+
+                    b.HasIndex("Duration");
+
+                    b.HasIndex("EndedOn");
+
+                    b.HasIndex("HasErrors");
+
+                    b.HasIndex("IsCompleted");
+
+                    b.HasIndex("Level");
+
+                    b.HasIndex("OperationName");
+
+                    b.HasIndex("OperationType");
+
+                    b.HasIndex("SessionId");
+
+                    b.HasIndex("StartedOn");
+
+                    b.HasIndex("StatusCode");
+
+                    b.HasIndex("TenantId");
+
+                    b.HasIndex("UniqueId")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Logs", (string)null);
+                });
+
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.LogEventEntity", b =>
+                {
+                    b.Property<string>("EventId")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<long>("LogId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("EventId");
+
+                    b.HasIndex("LogId");
+
+                    b.ToTable("LogEvents", (string)null);
+                });
+
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.LogExceptionEntity", b =>
+                {
+                    b.Property<long>("LogExceptionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("LogExceptionId"));
+
+                    b.Property<string>("DataSerialized")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Data");
+
+                    b.Property<int>("HResult")
+                        .HasColumnType("int");
+
+                    b.Property<string>("HelpLink")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("LogId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Source")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StackTrace")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TargetSite")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("LogExceptionId");
+
+                    b.HasIndex("LogId");
+
+                    b.HasIndex("Type");
+
+                    b.ToTable("LogExceptions", (string)null);
+                });
+
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.LogEventEntity", b =>
+                {
+                    b.HasOne("Logitar.Cms.EntityFrameworkCore.Entities.LogEntity", "Log")
+                        .WithMany("Events")
+                        .HasForeignKey("LogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Log");
+                });
+
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.LogExceptionEntity", b =>
+                {
+                    b.HasOne("Logitar.Cms.EntityFrameworkCore.Entities.LogEntity", "Log")
+                        .WithMany("Exceptions")
+                        .HasForeignKey("LogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Log");
+                });
+
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.LogEntity", b =>
+                {
+                    b.Navigation("Events");
+
+                    b.Navigation("Exceptions");
+                });
 #pragma warning restore 612, 618
         }
     }

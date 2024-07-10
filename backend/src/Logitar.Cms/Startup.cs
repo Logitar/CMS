@@ -3,6 +3,7 @@ using Logitar.Cms.EntityFrameworkCore.PostgreSQL;
 using Logitar.Cms.EntityFrameworkCore.SqlServer;
 using Logitar.Cms.Extensions;
 using Logitar.Cms.Infrastructure;
+using Logitar.Cms.MongoDB;
 using Logitar.Cms.Settings;
 using Logitar.Cms.Web;
 using Logitar.Cms.Web.Middlewares;
@@ -59,6 +60,7 @@ internal class Startup : StartupBase
       default:
         throw new DatabaseProviderNotSupportedException(databaseProvider);
     }
+    services.AddLogitarCmsWithMongoDB(_configuration); // NOTE(fpion): needs to be placed after the relational database to override the LogRepository if MongoDB settings are provided.
   }
 
   public override void Configure(IApplicationBuilder builder)
@@ -71,7 +73,7 @@ internal class Startup : StartupBase
     builder.UseHttpsRedirection();
     builder.UseCors();
     builder.UseStaticFiles();
-    //builder.UseMiddleware<Logging>(); // TODO(fpion): Logging
+    builder.UseMiddleware<Logging>();
     builder.UseMiddleware<RedirectNotFound>();
 
     if (builder is WebApplication application)
