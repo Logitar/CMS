@@ -4,6 +4,7 @@ namespace Logitar.Cms.Core.Languages;
 
 public interface ILanguageRepository
 {
+  Task<IReadOnlyCollection<LanguageAggregate>> LoadAsync(CancellationToken cancellationToken = default);
   Task<LanguageAggregate?> LoadAsync(LanguageId id, CancellationToken cancellationToken = default);
   Task<LanguageAggregate?> LoadAsync(LocaleUnit locale, CancellationToken cancellationToken = default);
   Task<LanguageAggregate> LoadDefaultAsync(CancellationToken cancellationToken = default);

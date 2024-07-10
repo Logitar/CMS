@@ -20,6 +20,11 @@ internal class LanguageRepository : EventSourcing.EntityFrameworkCore.Relational
     _sqlHelper = sqlHelper;
   }
 
+  public async Task<IReadOnlyCollection<LanguageAggregate>> LoadAsync(CancellationToken cancellationToken)
+  {
+    return (await base.LoadAsync<LanguageAggregate>(cancellationToken)).ToArray();
+  }
+
   public async Task<LanguageAggregate?> LoadAsync(LanguageId id, CancellationToken cancellationToken)
   {
     return await base.LoadAsync<LanguageAggregate>(id.AggregateId, cancellationToken);
