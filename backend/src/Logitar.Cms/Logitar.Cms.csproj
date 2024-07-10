@@ -39,6 +39,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Logitar.Cms.EntityFrameworkCore.PostgreSQL\Logitar.Cms.EntityFrameworkCore.PostgreSQL.csproj" />
     <ProjectReference Include="..\Logitar.Cms.EntityFrameworkCore.SqlServer\Logitar.Cms.EntityFrameworkCore.SqlServer.csproj" />
+    <ProjectReference Include="..\Logitar.Cms.MongoDB\Logitar.Cms.MongoDB.csproj" />
     <ProjectReference Include="..\Logitar.Cms.Web\Logitar.Cms.Web.csproj" />
   </ItemGroup>
 

@@ -42,6 +42,7 @@ services:
     restart: unless-stopped
     environment:
       ASPNETCORE_Environment: Development
+      MongoDB:ConnectionString: mongodb://cms:PbsBwp2TM9Fy5A6g@cms_mongo:27017/
       POSTGRESQLCONNSTR_Cms: "User ID=postgres;Password=kzXnZxLf9s8WQ3vh;Host=cms_postgres;Port=5432;Database=Cms;"
       SQLCONNSTR_Cms: "Server=cms_mssql;Database=Cms;User Id=SA;Password=hMe5CJmF2SVLDtvN;Persist Security Info=False;Encrypt=False;"
     ports:
