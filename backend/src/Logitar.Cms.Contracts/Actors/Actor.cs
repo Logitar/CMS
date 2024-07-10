@@ -1,4 +1,7 @@
-﻿namespace Logitar.Cms.Contracts.Actors;
+﻿using Logitar.Cms.Contracts.ApiKeys;
+using Logitar.Cms.Contracts.Users;
+
+namespace Logitar.Cms.Contracts.Actors;
 
 public class Actor
 {
@@ -14,6 +17,21 @@ public class Actor
 
   public Actor() : this(string.Empty)
   {
+  }
+
+  public Actor(ApiKey apiKey) : this(apiKey.DisplayName)
+  {
+    Id = apiKey.Id;
+    Type = ActorType.ApiKey;
+  }
+
+  public Actor(User user) : this(user.FullName ?? user.UniqueName)
+  {
+    Id = user.Id;
+    Type = ActorType.ApiKey;
+
+    EmailAddress = user.Email?.Address;
+    PictureUrl = user.Picture;
   }
 
   public Actor(string displayName)

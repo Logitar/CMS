@@ -14,5 +14,10 @@ public record ValidationError : Error
     Errors = errors?.ToList() ?? [];
   }
 
-  public void Add(PropertyError error) => Errors.Add(error);
+  public ValidationError Add(PropertyError error)
+  {
+    Errors.Add(error);
+
+    return this;
+  }
 }

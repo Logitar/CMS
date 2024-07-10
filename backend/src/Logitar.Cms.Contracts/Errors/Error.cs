@@ -17,5 +17,10 @@ public record Error
     Data = data?.ToList() ?? [];
   }
 
-  public void Add(ErrorData data) => Data.Add(data);
+  public Error Add(ErrorData data)
+  {
+    Data.Add(data);
+
+    return this;
+  }
 }

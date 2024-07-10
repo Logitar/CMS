@@ -26,7 +26,8 @@ public static class DependencyInjectionExtensions
   public static IServiceCollection AddQueriers(this IServiceCollection services)
   {
     return services
-      .AddTransient<IConfigurationQuerier, ConfigurationQuerier>();
+      .AddTransient<IConfigurationQuerier, ConfigurationQuerier>()
+      .AddTransient<ILanguageQuerier, LanguageQuerier>();
   }
 
   public static IServiceCollection AddRepositories(this IServiceCollection services)
