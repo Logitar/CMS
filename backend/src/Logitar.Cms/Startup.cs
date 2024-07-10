@@ -27,7 +27,7 @@ internal class Startup : StartupBase
   {
     base.ConfigureServices(services);
 
-    services.AddLogitarCmsWeb();
+    services.AddLogitarCmsWeb(_configuration);
 
     CorsSettings corsSettings = _configuration.GetSection(CorsSettings.SectionKey).Get<CorsSettings>() ?? new();
     services.AddSingleton(corsSettings);
@@ -73,6 +73,7 @@ internal class Startup : StartupBase
     builder.UseHttpsRedirection();
     builder.UseCors();
     builder.UseStaticFiles();
+    builder.UseSession();
     builder.UseMiddleware<Logging>();
     builder.UseMiddleware<RedirectNotFound>();
 
