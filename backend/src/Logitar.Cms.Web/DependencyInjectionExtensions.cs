@@ -6,7 +6,7 @@ namespace Logitar.Cms.Web;
 
 public static class DependencyInjectionExtensions
 {
-  public static IServiceCollection AddLogitarCmsWeb(this IServiceCollection services)
+  public static IServiceCollection AddLogitarCmsWeb(this IServiceCollection services, IConfiguration configuration)
   {
     services
       .AddControllersWithViews(options =>
@@ -20,15 +20,17 @@ public static class DependencyInjectionExtensions
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
       });
 
+    CookiesSettings cookiesSettings = configuration.GetSection(CookiesSettings.SectionKey).Get<CookiesSettings>() ?? new();
+    services.AddSingleton(cookiesSettings);
+    services.AddSession(options =>
+    {
+      options.Cookie.SameSite = cookiesSettings.Session.SameSite;
+      options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    });
+    services.AddDistributedMemoryCache();
+
     return services
       .AddLogitarCmsCore()
-      .AddSingleton(GetCookiesSettings)
       .AddSingleton<IActivityContextResolver, HttpActivityContextResolver>();
-  }
-
-  public static CookiesSettings GetCookiesSettings(this IServiceProvider serviceProvider)
-  {
-    IConfiguration configuration = serviceProvider.GetRequiredService<IConfiguration>();
-    return configuration.GetSection(CookiesSettings.SectionKey).Get<CookiesSettings>() ?? new();
   }
 }
