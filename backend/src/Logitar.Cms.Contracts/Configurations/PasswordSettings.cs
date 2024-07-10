@@ -12,12 +12,30 @@ public record PasswordSettings : IPasswordSettings
   public bool RequireDigit { get; set; }
   public string HashingStrategy { get; set; }
 
-  public PasswordSettings() : this(string.Empty)
+  public PasswordSettings() : this(new PasswordSettings())
   {
   }
 
-  public PasswordSettings(string hashingStrategy)
+  public PasswordSettings(IPasswordSettings password)
+    : this(password.RequiredLength, password.RequiredUniqueChars, password.RequireNonAlphanumeric, password.RequireLowercase, password.RequireUppercase, password.RequireDigit, password.HashingStrategy)
   {
+  }
+
+  public PasswordSettings(
+    int requiredLength,
+    int requiredUniqueChars,
+    bool requireNonAlphanumeric,
+    bool requireLowercase,
+    bool requireUppercase,
+    bool requireDigit,
+    string hashingStrategy)
+  {
+    RequiredLength = requiredLength;
+    RequiredUniqueChars = requiredUniqueChars;
+    RequireNonAlphanumeric = requireNonAlphanumeric;
+    RequireLowercase = requireLowercase;
+    RequireUppercase = requireUppercase;
+    RequireDigit = requireDigit;
     HashingStrategy = hashingStrategy;
   }
 }
