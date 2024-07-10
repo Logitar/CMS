@@ -11,7 +11,7 @@ internal record RefreshToken
   public SessionId Id { get; }
   public string Secret { get; }
 
-  private RefreshToken(SessionId id, string secret)
+  public RefreshToken(SessionId id, string secret)
   {
     if (Convert.FromBase64String(secret).Length != SecretLength)
     {
@@ -34,7 +34,8 @@ internal record RefreshToken
     string secret = values[2].FromUriSafeBase64();
     return new RefreshToken(id, secret);
   }
-  public static string Encode(SessionAggregate session, string secret) => new RefreshToken(session.Id, secret).Encode();
+  public static string Encode(SessionAggregate session, string secret) => Encode(session.Id, secret);
+  public static string Encode(SessionId id, string secret) => new RefreshToken(id, secret).Encode();
 
   public string Encode() => string.Join(Separator, Prefix, Id.Value, Secret.ToUriSafeBase64());
 }

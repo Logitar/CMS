@@ -2,6 +2,9 @@
 using Logitar.Cms.Contracts.Actors;
 using Logitar.Cms.Contracts.Configurations;
 using Logitar.Cms.Contracts.Languages;
+using Logitar.Cms.Contracts.Roles;
+using Logitar.Cms.Contracts.Sessions;
+using Logitar.Cms.Contracts.Users;
 using Logitar.Cms.Core;
 using Logitar.Cms.Core.Configurations;
 using Logitar.Cms.EntityFrameworkCore.Entities;
@@ -42,7 +45,7 @@ internal class Mapper
     {
       UniqueNameSettings = new(source.UniqueNameSettings),
       PasswordSettings = new(source.PasswordSettings),
-      RequireUniqueName = source.RequireUniqueEmail,
+      RequireUniqueEmail = source.RequireUniqueEmail,
       LoggingSettings = new(source.LoggingSettings)
     };
 
@@ -57,6 +60,76 @@ internal class Mapper
     {
       IsDefault = source.IsDefault
     };
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public Role ToRole(RoleEntity source)
+  {
+    Role destination = new(source.UniqueName)
+    {
+      DisplayName = source.DisplayName,
+      Description = source.Description
+    };
+
+    foreach (KeyValuePair<string, string> customAttribute in source.CustomAttributes)
+    {
+      destination.CustomAttributes.Add(new CustomAttribute(customAttribute));
+    }
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public Session ToSession(SessionEntity source)
+  {
+    if (source.User == null)
+    {
+      throw new ArgumentException($"The {nameof(source.User)} is required.", nameof(source));
+    }
+
+    Session destination = new(ToUser(source.User))
+    {
+      IsPersistent = source.IsPersistent,
+      IsActive = source.IsActive,
+      SignedOutBy = TryFindActor(source.SignedOutBy),
+      SignedOutOn = source.SignedOutOn?.AsUniversalTime(),
+    };
+
+    foreach (KeyValuePair<string, string> customAttribute in source.CustomAttributes)
+    {
+      destination.CustomAttributes.Add(new CustomAttribute(customAttribute));
+    }
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public User ToUser(UserEntity source)
+  {
+    User destination = new(source.UniqueName)
+    {
+      // TODO(fpion): fill
+    };
+
+    foreach (RoleEntity role in source.Roles)
+    {
+      destination.Roles.Add(ToRole(role));
+    }
+
+    foreach (KeyValuePair<string, string> customAttribute in source.CustomAttributes)
+    {
+      destination.CustomAttributes.Add(new CustomAttribute(customAttribute));
+    }
+
+    foreach (UserIdentifierEntity identifier in source.Identifiers)
+    {
+      destination.CustomIdentifiers.Add(new CustomIdentifier(identifier.Key, identifier.Value));
+    }
 
     MapAggregate(source, destination);
 
@@ -84,4 +157,5 @@ internal class Mapper
 
   private Actor FindActor(string id) => FindActor(new ActorId(id));
   private Actor FindActor(ActorId id) => _actors.TryGetValue(id, out Actor? actor) ? actor : Actor.System;
+  private Actor? TryFindActor(string? id) => id == null ? null : FindActor(id);
 }
