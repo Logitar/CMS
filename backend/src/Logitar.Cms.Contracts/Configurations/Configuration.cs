@@ -6,7 +6,7 @@ public class Configuration : Aggregate
 
   public UniqueNameSettings UniqueNameSettings { get; set; }
   public PasswordSettings PasswordSettings { get; set; }
-  public bool RequireUniqueName { get; set; }
+  public bool RequireUniqueEmail { get; set; }
 
   public LoggingSettings LoggingSettings { get; set; }
 
