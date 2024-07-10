@@ -123,6 +123,228 @@ namespace Logitar.Cms.EntityFrameworkCore.PostgreSQL.Migrations
 
                     b.ToTable("Languages", (string)null);
                 });
+
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.LogEntity", b =>
+                {
+                    b.Property<long>("LogId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("LogId"));
+
+                    b.Property<string>("ActivityData")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ActivityType")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("ActorId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("AdditionalInformation")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ApiKeyId")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("CorrelationId")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Destination")
+                        .HasMaxLength(2048)
+                        .HasColumnType("character varying(2048)");
+
+                    b.Property<TimeSpan?>("Duration")
+                        .HasColumnType("interval");
+
+                    b.Property<DateTime?>("EndedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("HasErrors")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Level")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Method")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("OperationName")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("OperationType")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("SessionId")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Source")
+                        .HasMaxLength(2048)
+                        .HasColumnType("character varying(2048)");
+
+                    b.Property<DateTime>("StartedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("StatusCode")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("TenantId")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<Guid>("UniqueId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("UserId")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.HasKey("LogId");
+
+                    b.HasIndex("ActivityType");
+
+                    b.HasIndex("ActorId");
+
+                    b.HasIndex("ApiKeyId");
+
+                    b.HasIndex("CorrelationId");
+
+                    b.HasIndex("Duration");
+
+                    b.HasIndex("EndedOn");
+
+                    b.HasIndex("HasErrors");
+
+                    b.HasIndex("IsCompleted");
+
+                    b.HasIndex("Level");
+
+                    b.HasIndex("OperationName");
+
+                    b.HasIndex("OperationType");
+
+                    b.HasIndex("SessionId");
+
+                    b.HasIndex("StartedOn");
+
+                    b.HasIndex("StatusCode");
+
+                    b.HasIndex("TenantId");
+
+                    b.HasIndex("UniqueId")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Logs", (string)null);
+                });
+
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.LogEventEntity", b =>
+                {
+                    b.Property<string>("EventId")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<long>("LogId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("EventId");
+
+                    b.HasIndex("LogId");
+
+                    b.ToTable("LogEvents", (string)null);
+                });
+
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.LogExceptionEntity", b =>
+                {
+                    b.Property<long>("LogExceptionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("LogExceptionId"));
+
+                    b.Property<string>("DataSerialized")
+                        .HasColumnType("text")
+                        .HasColumnName("Data");
+
+                    b.Property<int>("HResult")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("HelpLink")
+                        .HasColumnType("text");
+
+                    b.Property<long>("LogId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Source")
+                        .HasColumnType("text");
+
+                    b.Property<string>("StackTrace")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TargetSite")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.HasKey("LogExceptionId");
+
+                    b.HasIndex("LogId");
+
+                    b.HasIndex("Type");
+
+                    b.ToTable("LogExceptions", (string)null);
+                });
+
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.LogEventEntity", b =>
+                {
+                    b.HasOne("Logitar.Cms.EntityFrameworkCore.Entities.LogEntity", "Log")
+                        .WithMany("Events")
+                        .HasForeignKey("LogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Log");
+                });
+
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.LogExceptionEntity", b =>
+                {
+                    b.HasOne("Logitar.Cms.EntityFrameworkCore.Entities.LogEntity", "Log")
+                        .WithMany("Exceptions")
+                        .HasForeignKey("LogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Log");
+                });
+
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.LogEntity", b =>
+                {
+                    b.Navigation("Events");
+
+                    b.Navigation("Exceptions");
+                });
 #pragma warning restore 612, 618
         }
     }
