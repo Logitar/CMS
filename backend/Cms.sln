@@ -12,23 +12,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.Contracts", "src\Logitar.Cms.Contracts\Logitar.Cms.Contracts.csproj", "{6A08D4DD-8E86-43AE-B391-BB10ABAEC4AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms.Contracts", "src\Logitar.Cms.Contracts\Logitar.Cms.Contracts.csproj", "{6A08D4DD-8E86-43AE-B391-BB10ABAEC4AD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms.Core", "src\Logitar.Cms.Core\Logitar.Cms.Core.csproj", "{E98B3291-3F8F-4B80-8463-3873A51FDB22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.Infrastructure", "src\Logitar.Cms.Infrastructure\Logitar.Cms.Infrastructure.csproj", "{4784DFE3-5E0B-4628-A3F6-56A6ED11D185}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms.Infrastructure", "src\Logitar.Cms.Infrastructure\Logitar.Cms.Infrastructure.csproj", "{4784DFE3-5E0B-4628-A3F6-56A6ED11D185}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.MongoDB", "src\Logitar.Cms.MongoDB\Logitar.Cms.MongoDB.csproj", "{FEF28D87-7237-4EC0-A957-DF7BC7FF7572}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms.MongoDB", "src\Logitar.Cms.MongoDB\Logitar.Cms.MongoDB.csproj", "{FEF28D87-7237-4EC0-A957-DF7BC7FF7572}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.EntityFrameworkCore", "src\Logitar.Cms.EntityFrameworkCore\Logitar.Cms.EntityFrameworkCore.csproj", "{F14DA8F7-103B-4E37-8842-292F8B1954C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms.EntityFrameworkCore", "src\Logitar.Cms.EntityFrameworkCore\Logitar.Cms.EntityFrameworkCore.csproj", "{F14DA8F7-103B-4E37-8842-292F8B1954C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.EntityFrameworkCore.SqlSever", "src\Logitar.Cms.EntityFrameworkCore.SqlSever\Logitar.Cms.EntityFrameworkCore.SqlSever.csproj", "{8F7BE431-41ED-4E6C-A7B5-3B1A7B963F44}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms.EntityFrameworkCore.PostgreSQL", "src\Logitar.Cms.EntityFrameworkCore.PostgreSQL\Logitar.Cms.EntityFrameworkCore.PostgreSQL.csproj", "{79D2A438-4BD9-417E-89F2-28664B50533D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.EntityFrameworkCore.PostgreSQL", "src\Logitar.Cms.EntityFrameworkCore.PostgreSQL\Logitar.Cms.EntityFrameworkCore.PostgreSQL.csproj", "{79D2A438-4BD9-417E-89F2-28664B50533D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms.Web", "src\Logitar.Cms.Web\Logitar.Cms.Web.csproj", "{4E2791D8-6D64-425C-A18B-0E70519D63FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.Web", "src\Logitar.Cms.Web\Logitar.Cms.Web.csproj", "{4E2791D8-6D64-425C-A18B-0E70519D63FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms", "src\Logitar.Cms\Logitar.Cms.csproj", "{8580B630-EECA-457F-B342-58B8B362CD98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms", "src\Logitar.Cms\Logitar.Cms.csproj", "{8580B630-EECA-457F-B342-58B8B362CD98}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.EntityFrameworkCore.SqlServer", "src\Logitar.Cms.EntityFrameworkCore.SqlServer\Logitar.Cms.EntityFrameworkCore.SqlServer.csproj", "{01AE8019-93B4-4C51-ACEE-943F114B9ABF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,10 +56,6 @@ Global
 		{F14DA8F7-103B-4E37-8842-292F8B1954C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F14DA8F7-103B-4E37-8842-292F8B1954C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F14DA8F7-103B-4E37-8842-292F8B1954C2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8F7BE431-41ED-4E6C-A7B5-3B1A7B963F44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8F7BE431-41ED-4E6C-A7B5-3B1A7B963F44}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8F7BE431-41ED-4E6C-A7B5-3B1A7B963F44}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8F7BE431-41ED-4E6C-A7B5-3B1A7B963F44}.Release|Any CPU.Build.0 = Release|Any CPU
 		{79D2A438-4BD9-417E-89F2-28664B50533D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{79D2A438-4BD9-417E-89F2-28664B50533D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79D2A438-4BD9-417E-89F2-28664B50533D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -72,6 +68,10 @@ Global
 		{8580B630-EECA-457F-B342-58B8B362CD98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8580B630-EECA-457F-B342-58B8B362CD98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8580B630-EECA-457F-B342-58B8B362CD98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01AE8019-93B4-4C51-ACEE-943F114B9ABF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01AE8019-93B4-4C51-ACEE-943F114B9ABF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01AE8019-93B4-4C51-ACEE-943F114B9ABF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01AE8019-93B4-4C51-ACEE-943F114B9ABF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
