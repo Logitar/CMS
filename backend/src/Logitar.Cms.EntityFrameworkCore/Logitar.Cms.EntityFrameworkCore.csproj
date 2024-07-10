@@ -15,7 +15,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Logitar.Identity.EntityFrameworkCore.Relational" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Logitar.Cms.Infrastructure\Logitar.Cms.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="System.Globalization" />
+    <Using Include="System.Reflection" />
   </ItemGroup>
 
 </Project>
