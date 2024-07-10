@@ -12,7 +12,8 @@ public record PasswordSettings : IPasswordSettings
   public bool RequireDigit { get; set; }
   public string HashingStrategy { get; set; }
 
-  public PasswordSettings() : this(new PasswordSettings())
+  public PasswordSettings()
+    : this(requiredLength: 8, requiredUniqueChars: 8, requireNonAlphanumeric: true, requireLowercase: true, requireUppercase: true, requireDigit: true, hashingStrategy: "PBKDF2")
   {
   }
 

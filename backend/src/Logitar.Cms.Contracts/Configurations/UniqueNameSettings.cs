@@ -6,7 +6,7 @@ public record UniqueNameSettings : IUniqueNameSettings
 {
   public string? AllowedCharacters { get; set; }
 
-  public UniqueNameSettings() : this(allowedCharacters: null)
+  public UniqueNameSettings() : this(allowedCharacters: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+")
   {
   }
 
