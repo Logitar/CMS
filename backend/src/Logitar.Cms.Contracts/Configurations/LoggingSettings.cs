@@ -2,10 +2,10 @@
 
 public record LoggingSettings : ILoggingSettings
 {
-  public LoggingExtent Extent { get; set; } = LoggingExtent.ActivityOnly;
+  public LoggingExtent Extent { get; set; }
   public bool OnlyErrors { get; set; }
 
-  public LoggingSettings() : this(LoggingExtent.ActivityOnly, onlyErrors: false)
+  public LoggingSettings() : this(LoggingExtent.None, onlyErrors: false)
   {
   }
 
