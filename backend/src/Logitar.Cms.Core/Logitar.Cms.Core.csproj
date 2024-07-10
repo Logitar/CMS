@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
@@ -14,7 +15,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Logitar.Identity.Domain" Version="2.0.0" />
+    <PackageReference Include="MediatR" Version="12.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Logitar.Cms.Contracts\Logitar.Cms.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="System.Reflection" />
+    <Using Include="System.Text.Json.Serialization" />
   </ItemGroup>
 
 </Project>
