@@ -18,8 +18,28 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <Content Remove="secrets.example.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="secrets.example.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="8.0.7" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Logitar.Cms.EntityFrameworkCore.PostgreSQL\Logitar.Cms.EntityFrameworkCore.PostgreSQL.csproj" />
+    <ProjectReference Include="..\Logitar.Cms.EntityFrameworkCore.SqlServer\Logitar.Cms.EntityFrameworkCore.SqlServer.csproj" />
+    <ProjectReference Include="..\Logitar.Cms.Web\Logitar.Cms.Web.csproj" />
   </ItemGroup>
 
 </Project>
