@@ -11,6 +11,10 @@ public class LanguageAggregate : AggregateRoot
   private LocaleUnit? _locale = null;
   public LocaleUnit Locale => _locale ?? throw new InvalidOperationException($"The {nameof(Locale)} has not been initialized yet.");
 
+  public LanguageAggregate() : base()
+  {
+  }
+
   public LanguageAggregate(LocaleUnit locale, bool isDefault = false, ActorId actorId = default, LanguageId? id = null)
     : base((id ?? LanguageId.NewId()).AggregateId)
   {

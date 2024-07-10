@@ -19,14 +19,20 @@ public record ReadOnlyPasswordSettings : IPasswordSettings
   {
   }
 
-  public ReadOnlyPasswordSettings(IPasswordSettings password) : this(password.RequiredLength, password.RequiredUniqueChars,
-    password.RequireNonAlphanumeric, password.RequireLowercase, password.RequireUppercase, password.RequireDigit, password.HashingStrategy)
+  public ReadOnlyPasswordSettings(IPasswordSettings password)
+    : this(password.RequiredLength, password.RequiredUniqueChars, password.RequireNonAlphanumeric, password.RequireLowercase, password.RequireUppercase, password.RequireDigit, password.HashingStrategy)
   {
   }
 
   [JsonConstructor]
-  public ReadOnlyPasswordSettings(int requiredLength, int requiredUniqueChars, bool requireNonAlphanumeric,
-    bool requireLowercase, bool requireUppercase, bool requireDigit, string hashingStrategy)
+  public ReadOnlyPasswordSettings(
+    int requiredLength,
+    int requiredUniqueChars,
+    bool requireNonAlphanumeric,
+    bool requireLowercase,
+    bool requireUppercase,
+    bool requireDigit,
+    string hashingStrategy)
   {
     RequiredLength = requiredLength;
     RequiredUniqueChars = requiredUniqueChars;
