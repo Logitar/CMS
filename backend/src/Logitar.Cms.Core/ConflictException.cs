@@ -2,7 +2,8 @@
 
 public abstract class ConflictException : ErrorException
 {
-  public ConflictException(string? message = null, Exception? innerException = null) : base(message, innerException)
+  public ConflictException(string? message = null, Exception? innerException = null)
+    : base(message, innerException)
   {
   }
 }
