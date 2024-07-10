@@ -22,6 +22,11 @@ public class ExceptionHandling : ExceptionFilterAttribute
       context.Result = new BadRequestObjectResult(error);
       context.ExceptionHandled = true;
     }
+    else if (context.Exception is BadRequestException badRequest)
+    {
+      context.Result = new BadRequestObjectResult(badRequest.Error);
+      context.ExceptionHandled = true;
+    }
     else if (context.Exception is ConflictException conflict)
     {
       context.Result = new ConflictObjectResult(conflict.Error);
