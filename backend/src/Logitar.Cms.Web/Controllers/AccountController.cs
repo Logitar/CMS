@@ -1,7 +1,9 @@
 ﻿using Logitar.Cms.Contracts.Account;
 using Logitar.Cms.Contracts.Sessions;
+using Logitar.Cms.Contracts.Users;
 using Logitar.Cms.Core;
 using Logitar.Cms.Core.Sessions.Commands;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Logitar.Cms.Web.Controllers;
@@ -15,6 +17,14 @@ public class AccountController : ControllerBase
   public AccountController(IRequestPipeline pipeline)
   {
     _pipeline = pipeline;
+  }
+
+  [Authorize] // TODO(fpion): will fail when using API keys
+  [HttpGet("profile")]
+  public ActionResult<User> GetProfile() // TODO(fpion): other return type
+  {
+    User user = HttpContext.GetUser() ?? throw new InvalidOperationException("An authenticated user is required.");
+    return Ok(user);
   }
 
   [HttpPost("sign/in")]
