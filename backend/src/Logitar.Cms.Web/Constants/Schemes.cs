@@ -2,6 +2,7 @@
 
 public static class Schemes
 {
+  public const string Basic = nameof(Basic);
   public const string Session = nameof(Session);
 
   public static string[] GetEnabled(IConfiguration configuration)
@@ -13,10 +14,10 @@ public static class Schemes
       Session
     };
 
-    //if (configuration.GetValue<bool>("EnableBasicAuthentication"))
-    //{
-    //  schemes.Add(Basic);
-    //} // TODO(fpion): Basic
+    if (configuration.GetValue<bool>("EnableBasicAuthentication"))
+    {
+      schemes.Add(Basic);
+    }
 
     return [.. schemes];
   }

@@ -28,5 +28,6 @@ public class SignInSessionCommandHandlerTests : IntegrationTests
     Assert.True(session.IsActive);
     Assert.Empty(session.CustomAttributes);
     Assert.Equal(UsernameString, session.User.UniqueName);
+    Assert.NotNull(session.User.AuthenticatedOn);
   }
 }

@@ -113,8 +113,59 @@ internal class Mapper
   {
     User destination = new(source.UniqueName)
     {
-      // TODO(fpion): fill
+      HasPassword = source.HasPassword,
+      PasswordChangedBy = TryFindActor(source.PasswordChangedBy),
+      PasswordChangedOn = source.PasswordChangedOn?.AsUniversalTime(),
+      DisabledBy = TryFindActor(source.DisabledBy),
+      DisabledOn = source.DisabledOn?.AsUniversalTime(),
+      IsDisabled = source.IsDisabled,
+      IsConfirmed = source.IsConfirmed,
+      FirstName = source.FirstName,
+      MiddleName = source.MiddleName,
+      LastName = source.LastName,
+      FullName = source.FullName,
+      Nickname = source.Nickname,
+      Birthdate = source.Birthdate?.AsUniversalTime(),
+      Gender = source.Gender,
+      TimeZone = source.TimeZone,
+      Picture = source.Picture,
+      Profile = source.Profile,
+      Website = source.Website,
+      AuthenticatedOn = source.AuthenticatedOn?.AsUniversalTime()
     };
+
+    if (source.AddressStreet != null && source.AddressLocality != null && source.AddressCountry != null && source.AddressFormatted != null)
+    {
+      destination.Address = new Address(source.AddressStreet, source.AddressLocality, source.AddressPostalCode, source.AddressRegion, source.AddressCountry, source.AddressFormatted)
+      {
+        IsVerified = source.IsAddressVerified,
+        VerifiedBy = TryFindActor(source.AddressVerifiedBy),
+        VerifiedOn = source.AddressVerifiedOn?.AsUniversalTime()
+      };
+    }
+    if (source.EmailAddress != null)
+    {
+      destination.Email = new Email(source.EmailAddress)
+      {
+        IsVerified = source.IsEmailVerified,
+        VerifiedBy = TryFindActor(source.EmailVerifiedBy),
+        VerifiedOn = source.EmailVerifiedOn?.AsUniversalTime()
+      };
+    }
+    if (source.PhoneNumber != null && source.PhoneE164Formatted != null)
+    {
+      destination.Phone = new Phone(source.PhoneCountryCode, source.PhoneNumber, source.PhoneExtension, source.PhoneE164Formatted)
+      {
+        IsVerified = source.IsPhoneVerified,
+        VerifiedBy = TryFindActor(source.PhoneVerifiedBy),
+        VerifiedOn = source.PhoneVerifiedOn?.AsUniversalTime()
+      };
+    }
+
+    if (source.Locale != null)
+    {
+      destination.Locale = new Locale(source.Locale);
+    }
 
     foreach (RoleEntity role in source.Roles)
     {
