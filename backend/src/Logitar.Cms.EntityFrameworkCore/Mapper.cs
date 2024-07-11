@@ -2,6 +2,7 @@
 using Logitar.Cms.Contracts.Actors;
 using Logitar.Cms.Contracts.ApiKeys;
 using Logitar.Cms.Contracts.Configurations;
+using Logitar.Cms.Contracts.ContentTypes;
 using Logitar.Cms.Contracts.FieldTypes;
 using Logitar.Cms.Contracts.FieldTypes.Properties;
 using Logitar.Cms.Contracts.Languages;
@@ -75,6 +76,20 @@ internal class Mapper
       PasswordSettings = new(source.PasswordSettings),
       RequireUniqueEmail = source.RequireUniqueEmail,
       LoggingSettings = new(source.LoggingSettings)
+    };
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public CmsContentType ToContentType(ContentTypeEntity source)
+  {
+    CmsContentType destination = new(source.UniqueName)
+    {
+      IsInvariant = source.IsInvariant,
+      DisplayName = source.DisplayName,
+      Description = source.Description
     };
 
     MapAggregate(source, destination);
