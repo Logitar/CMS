@@ -1,4 +1,5 @@
-﻿using Logitar.Cms.Core.Configurations;
+﻿using Logitar.Cms.Core.ApiKeys;
+using Logitar.Cms.Core.Configurations;
 using Logitar.Cms.Core.Languages;
 using Logitar.Cms.Core.Logging;
 using Logitar.Cms.Core.Sessions;
@@ -28,6 +29,7 @@ public static class DependencyInjectionExtensions
   public static IServiceCollection AddQueriers(this IServiceCollection services)
   {
     return services
+      .AddTransient<IApiKeyQuerier, ApiKeyQuerier>()
       .AddTransient<IConfigurationQuerier, ConfigurationQuerier>()
       .AddTransient<ILanguageQuerier, LanguageQuerier>()
       .AddTransient<ISessionQuerier, SessionQuerier>()

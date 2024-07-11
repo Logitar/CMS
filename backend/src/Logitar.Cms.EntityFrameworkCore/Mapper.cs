@@ -1,5 +1,6 @@
 ﻿using Logitar.Cms.Contracts;
 using Logitar.Cms.Contracts.Actors;
+using Logitar.Cms.Contracts.ApiKeys;
 using Logitar.Cms.Contracts.Configurations;
 using Logitar.Cms.Contracts.Languages;
 using Logitar.Cms.Contracts.Roles;
@@ -38,6 +39,30 @@ internal class Mapper
     EmailAddress = source.EmailAddress,
     PictureUrl = source.PictureUrl
   };
+
+  public ApiKey ToApiKey(ApiKeyEntity source)
+  {
+    ApiKey destination = new(source.DisplayName)
+    {
+      Description = source.Description,
+      ExpiresOn = source.ExpiresOn?.AsUniversalTime(),
+      AuthenticatedOn = source.AuthenticatedOn?.AsUniversalTime()
+    };
+
+    foreach (RoleEntity role in source.Roles)
+    {
+      destination.Roles.Add(ToRole(role));
+    }
+
+    foreach (KeyValuePair<string, string> customAttribute in source.CustomAttributes)
+    {
+      destination.CustomAttributes.Add(new CustomAttribute(customAttribute));
+    }
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
 
   public Configuration ToConfiguration(ConfigurationAggregate source)
   {

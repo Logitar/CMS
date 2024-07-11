@@ -1,8 +1,8 @@
 ﻿using Logitar.Identity.Domain.Passwords;
 
-namespace Logitar.Cms.Core;
+namespace Logitar.Cms;
 
-internal record PasswordMock : Password
+public record PasswordMock : Password
 {
   private readonly string _password;
 
