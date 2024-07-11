@@ -1,5 +1,6 @@
 ﻿using Logitar.Cms.Core;
 using Logitar.Cms.Web.Authentication;
+using Logitar.Cms.Web.Authorization;
 using Logitar.Cms.Web.Constants;
 using Logitar.Cms.Web.Filters;
 using Logitar.Cms.Web.Settings;
@@ -40,7 +41,12 @@ public static class DependencyInjectionExtensions
     services.AddTransient<IOpenAuthenticationService, OpenAuthenticationService>();
 
     services.AddAuthorizationBuilder()
-      .SetDefaultPolicy(new AuthorizationPolicyBuilder(authenticationSchemes).RequireAuthenticatedUser().Build());
+      .SetDefaultPolicy(new AuthorizationPolicyBuilder(authenticationSchemes).RequireAuthenticatedUser().Build())
+      .AddPolicy(Policies.User, new AuthorizationPolicyBuilder(authenticationSchemes)
+        .RequireAuthenticatedUser()
+        .AddRequirements(new UserAuthorizationRequirement())
+        .Build());
+    services.AddSingleton<IAuthorizationHandler, UserAuthorizationHandler>();
 
     CookiesSettings cookiesSettings = configuration.GetSection(CookiesSettings.SectionKey).Get<CookiesSettings>() ?? new();
     services.AddSingleton(cookiesSettings);
