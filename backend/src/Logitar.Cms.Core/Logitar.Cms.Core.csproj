@@ -35,4 +35,8 @@
     <InternalsVisibleTo Include="Logitar.Cms.Core.UnitTests" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="FieldTypes\Queries\" />
+  </ItemGroup>
+
 </Project>
