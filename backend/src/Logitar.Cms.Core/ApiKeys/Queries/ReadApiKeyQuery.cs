@@ -3,4 +3,4 @@ using MediatR;
 
 namespace Logitar.Cms.Core.ApiKeys.Queries;
 
-public record ReadApiKeyQuery(Guid Id) : IRequest<ApiKey?>;
+public record ReadApiKeyQuery(Guid Id) : Activity, IRequest<ApiKey?>;

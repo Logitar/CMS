@@ -27,7 +27,7 @@ public static class DependencyInjectionExtensions
     string[] authenticationSchemes = Schemes.GetEnabled(configuration);
 
     AuthenticationBuilder authenticationBuilder = services.AddAuthentication()
-      //.AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(Schemes.ApiKey, options => { }) // TODO(fpion): X-API-Key
+      .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(Schemes.ApiKey, options => { })
       .AddScheme<BearerAuthenticationOptions, BearerAuthenticationHandler>(Schemes.Bearer, options => { })
       .AddScheme<SessionAuthenticationOptions, SessionAuthenticationHandler>(Schemes.Session, options => { });
     if (authenticationSchemes.Contains(Schemes.Basic))
