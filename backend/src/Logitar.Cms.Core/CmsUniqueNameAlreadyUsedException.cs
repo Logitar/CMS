@@ -25,23 +25,35 @@ public class CmsUniqueNameAlreadyUsedException : ConflictException
 
   public override Error Error => new PropertyError(this.GetErrorCode(), ErrorMessage, PropertyName, UniqueName);
 
-  public CmsUniqueNameAlreadyUsedException(Type type, UniqueNameUnit uniqueName, string? propertyName = null)
-    : base(BuildMessage(type, uniqueName, propertyName))
+  public CmsUniqueNameAlreadyUsedException(Type type, IdentifierUnit uniqueName, string? propertyName = null)
+    : base(BuildMessage(type, uniqueName.Value, propertyName))
   {
     TypeName = type.GetNamespaceQualifiedName();
     UniqueName = uniqueName.Value;
     PropertyName = propertyName;
   }
 
-  private static string BuildMessage(Type type, UniqueNameUnit uniqueName, string? propertyName) => new ErrorMessageBuilder(ErrorMessage)
+  public CmsUniqueNameAlreadyUsedException(Type type, UniqueNameUnit uniqueName, string? propertyName = null)
+    : base(BuildMessage(type, uniqueName.Value, propertyName))
+  {
+    TypeName = type.GetNamespaceQualifiedName();
+    UniqueName = uniqueName.Value;
+    PropertyName = propertyName;
+  }
+
+  private static string BuildMessage(Type type, string uniqueName, string? propertyName) => new ErrorMessageBuilder(ErrorMessage)
     .AddData(nameof(TypeName), type.GetNamespaceQualifiedName())
-    .AddData(nameof(UniqueName), uniqueName.Value)
+    .AddData(nameof(UniqueName), uniqueName)
     .AddData(nameof(PropertyName), propertyName, "<null>")
     .Build();
 }
 
 public class CmsUniqueNameAlreadyUsedException<T> : CmsUniqueNameAlreadyUsedException
 {
+  public CmsUniqueNameAlreadyUsedException(IdentifierUnit uniqueName, string? propertyName = null)
+    : base(typeof(T), uniqueName, propertyName)
+  {
+  }
   public CmsUniqueNameAlreadyUsedException(UniqueNameUnit uniqueName, string? propertyName = null)
     : base(typeof(T), uniqueName, propertyName)
   {
