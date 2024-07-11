@@ -5,6 +5,7 @@ using Logitar.Cms.Contracts.Sessions;
 using Logitar.Cms.Contracts.Users;
 using Logitar.Cms.Core;
 using Logitar.Cms.Core.Sessions.Commands;
+using Logitar.Cms.Core.Users.Commands;
 using Logitar.Cms.Web.Authentication;
 using Logitar.Cms.Web.Constants;
 using Microsoft.AspNetCore.Authorization;
@@ -19,6 +20,8 @@ public class AccountController : ControllerBase
   private readonly IOpenAuthenticationService _openAuthenticationService;
   private readonly IRequestPipeline _pipeline;
 
+  private new User User => HttpContext.GetUser() ?? throw new InvalidOperationException("An authenticated user is required.");
+
   public AccountController(IOpenAuthenticationService openAuthenticationService, IRequestPipeline pipeline)
   {
     _openAuthenticationService = openAuthenticationService;
@@ -29,8 +32,7 @@ public class AccountController : ControllerBase
   [HttpGet("profile")]
   public ActionResult<UserProfile> GetProfile()
   {
-    User user = HttpContext.GetUser() ?? throw new InvalidOperationException("An authenticated user is required.");
-    UserProfile profile = new(user);
+    UserProfile profile = new(User);
     return Ok(profile);
   }
 
@@ -43,6 +45,28 @@ public class AccountController : ControllerBase
     HttpContext.SignIn(session);
 
     return Ok(new CurrentUser(session));
+  }
+
+  [Authorize(Policy = Policies.User)]
+  [HttpPost("sign/out")]
+  public async Task<ActionResult> SignOutAsync(bool everywhere, CancellationToken cancellationToken)
+  {
+    if (everywhere)
+    {
+      await _pipeline.ExecuteAsync(new SignOutUserCommand(User.Id), cancellationToken);
+    }
+    else
+    {
+      Guid? sessionId = HttpContext.GetSessionId();
+      if (sessionId.HasValue)
+      {
+        await _pipeline.ExecuteAsync(new SignOutSessionCommand(sessionId.Value), cancellationToken);
+      }
+    }
+
+    HttpContext.SignOut();
+
+    return NoContent();
   }
 
   [HttpPost("token")]
