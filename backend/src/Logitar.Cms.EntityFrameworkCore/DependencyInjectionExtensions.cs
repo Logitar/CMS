@@ -1,5 +1,6 @@
 ﻿using Logitar.Cms.Core.ApiKeys;
 using Logitar.Cms.Core.Configurations;
+using Logitar.Cms.Core.FieldTypes;
 using Logitar.Cms.Core.Languages;
 using Logitar.Cms.Core.Logging;
 using Logitar.Cms.Core.Sessions;
@@ -31,6 +32,7 @@ public static class DependencyInjectionExtensions
     return services
       .AddTransient<IApiKeyQuerier, ApiKeyQuerier>()
       .AddTransient<IConfigurationQuerier, ConfigurationQuerier>()
+      .AddTransient<IFieldTypeQuerier, FieldTypeQuerier>()
       .AddTransient<ILanguageQuerier, LanguageQuerier>()
       .AddTransient<ISessionQuerier, SessionQuerier>()
       .AddTransient<IUserQuerier, UserQuerier>();
@@ -40,6 +42,7 @@ public static class DependencyInjectionExtensions
   {
     return services
       .AddTransient<IConfigurationRepository, ConfigurationRepository>()
+      .AddTransient<IFieldTypeRepository, FieldTypeRepository>()
       .AddTransient<ILanguageRepository, LanguageRepository>()
       .AddTransient<ILogRepository, LogRepository>();
   }
