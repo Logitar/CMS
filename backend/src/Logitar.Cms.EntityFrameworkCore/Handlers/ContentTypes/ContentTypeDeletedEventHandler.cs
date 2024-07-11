@@ -16,11 +16,11 @@ internal class ContentTypeDeletedEventHandler : INotificationHandler<ContentType
 
   public async Task Handle(ContentTypeDeletedEvent @event, CancellationToken cancellationToken)
   {
-    ContentTypeEntity? fieldType = await _context.ContentTypes
+    ContentTypeEntity? contentType = await _context.ContentTypes
       .SingleOrDefaultAsync(x => x.AggregateId == @event.AggregateId.Value, cancellationToken);
-    if (fieldType != null)
+    if (contentType != null)
     {
-      _context.ContentTypes.Remove(fieldType);
+      _context.ContentTypes.Remove(contentType);
 
       await _context.SaveChangesAsync(cancellationToken);
     }
