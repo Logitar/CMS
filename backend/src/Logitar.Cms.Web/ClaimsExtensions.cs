@@ -8,6 +8,65 @@ namespace Logitar.Cms.Web;
 
 public static class ClaimsExtensions
 {
+  public static ClaimsIdentity CreateAccessTokenIdentity(this Session session, string? authenticationType = null)
+  {
+    ClaimsIdentity identity = new(authenticationType);
+
+    identity.AddClaim(new(Rfc7519ClaimNames.SessionId, session.Id.ToString()));
+
+    User user = session.User;
+    identity.AddClaim(new(Rfc7519ClaimNames.Subject, user.Id.ToString()));
+    identity.AddClaim(new(Rfc7519ClaimNames.Username, user.UniqueName));
+
+    if (user.Email != null)
+    {
+      identity.AddClaim(new(Rfc7519ClaimNames.EmailAddress, user.Email.Address));
+      identity.AddClaim(new(Rfc7519ClaimNames.IsEmailVerified, user.Email.IsVerified.ToString().ToLower(), ClaimValueTypes.Boolean));
+    }
+
+    if (user.FullName != null)
+    {
+      identity.AddClaim(new(Rfc7519ClaimNames.FullName, user.FullName));
+
+      if (user.FirstName != null)
+      {
+        identity.AddClaim(new(Rfc7519ClaimNames.FirstName, user.FirstName));
+      }
+
+      if (user.MiddleName != null)
+      {
+        identity.AddClaim(new(Rfc7519ClaimNames.MiddleName, user.MiddleName));
+      }
+
+      if (user.LastName != null)
+      {
+        identity.AddClaim(new(Rfc7519ClaimNames.LastName, user.LastName));
+      }
+    }
+
+    if (user.Locale != null)
+    {
+      identity.AddClaim(new(Rfc7519ClaimNames.Locale, user.Locale.Code));
+    }
+
+    if (user.Picture != null)
+    {
+      identity.AddClaim(new(Rfc7519ClaimNames.Picture, user.Picture));
+    }
+
+    if (user.AuthenticatedOn.HasValue)
+    {
+      identity.AddClaim(ClaimHelper.Create(Rfc7519ClaimNames.AuthenticationTime, user.AuthenticatedOn.Value));
+    }
+
+    foreach (Role role in user.Roles)
+    {
+      identity.AddClaim(new(Rfc7519ClaimNames.Roles, role.UniqueName));
+    }
+
+    return identity;
+  }
+
   public static ClaimsIdentity CreateClaimsIdentity(this ApiKey apiKey, string? authenticationType = null)
   {
     ClaimsIdentity identity = new(authenticationType);

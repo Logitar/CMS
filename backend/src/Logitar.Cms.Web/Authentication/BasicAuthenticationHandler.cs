@@ -5,7 +5,6 @@ using Logitar.Cms.Web.Constants;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
-using System.Text;
 
 namespace Logitar.Cms.Web.Authentication;
 
