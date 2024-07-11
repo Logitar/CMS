@@ -47,7 +47,7 @@ public class FieldTypeAggregate : AggregateRoot
   }
 
   public DataType DataType { get; private set; }
-  private readonly FieldTypeProperties? _properties = null;
+  private FieldTypeProperties? _properties = null;
   public FieldTypeProperties Properties => _properties ?? throw new InvalidOperationException($"The {nameof(Properties)} have not been initialized yet.");
 
   public FieldTypeAggregate() : base()
@@ -94,6 +94,10 @@ public class FieldTypeAggregate : AggregateRoot
     {
       Raise(new StringPropertiesChangedEvent(properties), actorId);
     }
+  }
+  protected virtual void Apply(StringPropertiesChangedEvent @event)
+  {
+    _properties = @event.Properties;
   }
 
   public void Update(ActorId actorId = default)

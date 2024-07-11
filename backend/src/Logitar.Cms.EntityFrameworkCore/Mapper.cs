@@ -112,12 +112,12 @@ internal class Mapper
     {
       destination.MinimumLength = minimumLength;
     }
-    if (source.TryGetValue(nameof(IStringProperties.MinimumLength), out string? maximumLengthValue)
+    if (source.TryGetValue(nameof(IStringProperties.MaximumLength), out string? maximumLengthValue)
       && int.TryParse(maximumLengthValue, out int maximumLength))
     {
       destination.MaximumLength = maximumLength;
     }
-    if (source.TryGetValue(nameof(IStringProperties.MinimumLength), out string? pattern))
+    if (source.TryGetValue(nameof(IStringProperties.Pattern), out string? pattern))
     {
       destination.Pattern = pattern;
     }

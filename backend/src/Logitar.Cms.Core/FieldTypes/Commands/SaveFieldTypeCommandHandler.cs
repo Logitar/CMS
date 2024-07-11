@@ -1,6 +1,5 @@
 ﻿using Logitar.Cms.Core.FieldTypes.Events;
 using Logitar.EventSourcing;
-using Logitar.Identity.Domain.Shared;
 using MediatR;
 
 namespace Logitar.Cms.Core.FieldTypes.Commands;
@@ -32,7 +31,7 @@ internal class SaveFieldTypeCommandHandler : IRequestHandler<SaveFieldTypeComman
       FieldTypeAggregate? other = await _fieldTypeRepository.LoadAsync(fieldType.UniqueName, cancellationToken);
       if (other != null && !other.Equals(fieldType))
       {
-        throw new UniqueNameAlreadyUsedException<FieldTypeAggregate>(tenantId: null, fieldType.UniqueName); // TODO(fpion): refactor
+        throw new CmsUniqueNameAlreadyUsedException<FieldTypeAggregate>(fieldType.UniqueName, nameof(fieldType.UniqueName));
       }
     }
 

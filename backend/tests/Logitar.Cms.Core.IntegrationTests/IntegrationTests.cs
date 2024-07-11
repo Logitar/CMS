@@ -89,6 +89,7 @@ public abstract class IntegrationTests : IAsyncLifetime
     await sender.Send(new InitializeDatabaseCommand());
 
     StringBuilder statement = new();
+    statement.AppendLine(SqlServerDeleteBuilder.From(CmsDb.FieldTypes.Table).Build().Text);
     statement.AppendLine(SqlServerDeleteBuilder.From(CmsDb.Languages.Table).Build().Text);
     statement.AppendLine(SqlServerDeleteBuilder.From(IdentityDb.TokenBlacklist.Table).Build().Text);
     statement.AppendLine(SqlServerDeleteBuilder.From(IdentityDb.OneTimePasswords.Table).Build().Text);
