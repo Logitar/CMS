@@ -32,12 +32,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Logitar.Cms.Core\Logitar.Cms.Core.csproj" />
     <ProjectReference Include="..\Logitar.Cms.Tests\Logitar.Cms.Tests.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Using Include="System.Text" />
     <Using Include="Xunit" />
   </ItemGroup>
 

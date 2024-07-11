@@ -31,6 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="Logitar.Cms.Core.IntegrationTests" />
     <InternalsVisibleTo Include="Logitar.Cms.Core.UnitTests" />
   </ItemGroup>
 

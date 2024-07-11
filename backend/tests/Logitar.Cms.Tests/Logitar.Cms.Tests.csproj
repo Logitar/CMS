@@ -34,6 +34,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Logitar.Cms.Core\Logitar.Cms.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="System.Text" />
     <Using Include="Xunit" />
   </ItemGroup>
 

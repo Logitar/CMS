@@ -1,4 +1,5 @@
-﻿using Logitar.Cms.Contracts.Actors;
+﻿using Bogus;
+using Logitar.Cms.Contracts.Actors;
 using Logitar.Cms.Core.Configurations.Commands;
 using Logitar.Cms.EntityFrameworkCore;
 using Logitar.Cms.EntityFrameworkCore.PostgreSQL;
@@ -22,6 +23,7 @@ public abstract class IntegrationTests : IAsyncLifetime
   protected const string UsernameString = "admin";
   protected const string PasswordString = "P@s$W0rD";
 
+  protected Faker Faker { get; } = new();
   private readonly TestContext _context = new();
 
   protected IConfiguration Configuration { get; }

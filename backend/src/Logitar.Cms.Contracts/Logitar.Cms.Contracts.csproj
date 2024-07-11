@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <PackageReference Include="Logitar.Identity.Contracts" Version="1.1.0" />
+    <PackageReference Include="System.Text.Json" Version="8.0.4" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,6 +25,7 @@
     <Using Include="System.Globalization" />
     <Using Include="System.Linq" />
     <Using Include="System.Text" />
+    <Using Include="System.Text.Json.Serialization" />
   </ItemGroup>
 
 </Project>

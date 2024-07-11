@@ -75,7 +75,10 @@ internal class Startup : StartupBase
     builder.UseStaticFiles();
     builder.UseSession();
     builder.UseMiddleware<Logging>();
+    builder.UseMiddleware<RenewSession>();
     builder.UseMiddleware<RedirectNotFound>();
+    builder.UseAuthentication();
+    builder.UseAuthorization();
 
     if (builder is WebApplication application)
     {

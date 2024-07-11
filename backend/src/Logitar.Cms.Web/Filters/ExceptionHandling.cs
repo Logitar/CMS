@@ -2,6 +2,7 @@
 using FluentValidation.Results;
 using Logitar.Cms.Contracts.Errors;
 using Logitar.Cms.Core;
+using Logitar.Identity.Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -30,6 +31,11 @@ public class ExceptionHandling : ExceptionFilterAttribute
     else if (context.Exception is ConflictException conflict)
     {
       context.Result = new ConflictObjectResult(conflict.Error);
+      context.ExceptionHandled = true;
+    }
+    else if (context.Exception is InvalidCredentialsException)
+    {
+      context.Result = new BadRequestObjectResult(new InvalidCredentialsError());
       context.ExceptionHandled = true;
     }
     else
