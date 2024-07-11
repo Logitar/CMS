@@ -18,6 +18,22 @@ internal class OpenAuthenticationService : IOpenAuthenticationService
   private readonly OpenAuthenticationSettings _settings;
   private readonly ITokenManager _tokenManager;
 
+  private string? _baseUrl = null;
+  private string BaseUrl
+  {
+    get
+    {
+      if (_baseUrl == null)
+      {
+        HttpContext context = _httpContextAccessor.HttpContext ?? throw new InvalidOperationException($"The {nameof(_httpContextAccessor.HttpContext)} is required.");
+        _baseUrl = context.GetBaseUri().ToString();
+      }
+      return _baseUrl;
+    }
+  }
+
+  private Configuration Configuration => _cacheService.GetConfiguration();
+
   public OpenAuthenticationService(
     ICacheService cacheService,
     IHttpContextAccessor httpContextAccessor,
@@ -34,16 +50,13 @@ internal class OpenAuthenticationService : IOpenAuthenticationService
 
   public async Task<TokenResponse> GetTokenResponseAsync(Session session, CancellationToken cancellationToken)
   {
-    string baseUrl = _httpContextAccessor.HttpContext?.GetBaseUri().ToString() ?? throw new InvalidOperationException("The HttpContext is required."); // TODO(fpion): refactor
-    Configuration configuration = _cacheService.Configuration ?? throw new InvalidOperationException("The configuration was not found in the cache."); // TODO(fpion): refactor
-    int expiresIn = _settings.AccessToken.LifetimeSeconds;
-
     ClaimsIdentity subject = session.CreateAccessTokenIdentity();
-    CreatedToken access = await _tokenManager.CreateAsync(new CreateTokenParameters(subject, configuration.Secret)
+    int expiresIn = _settings.AccessToken.LifetimeSeconds;
+    CreatedToken access = await _tokenManager.CreateAsync(new CreateTokenParameters(subject, Configuration.Secret)
     {
-      Audience = baseUrl,
+      Audience = BaseUrl,
       Expires = DateTime.UtcNow.AddSeconds(expiresIn),
-      Issuer = baseUrl,
+      Issuer = BaseUrl,
       Type = _settings.AccessToken.Type
     }, cancellationToken);
 
@@ -56,23 +69,21 @@ internal class OpenAuthenticationService : IOpenAuthenticationService
 
   public async Task<Session> ValidateTokenAsync(string token, CancellationToken cancellationToken)
   {
-    string baseUrl = _httpContextAccessor.HttpContext?.GetBaseUri().ToString() ?? throw new InvalidOperationException("The HttpContext is required."); // TODO(fpion): refactor
-    Configuration configuration = _cacheService.Configuration ?? throw new InvalidOperationException("The configuration was not found in the cache."); // TODO(fpion): refactor
-
-    ValidatedToken validatedToken = await _tokenManager.ValidateAsync(new ValidateTokenParameters(token, configuration.Secret)
+    ValidatedToken validatedToken = await _tokenManager.ValidateAsync(new ValidateTokenParameters(token, Configuration.Secret)
     {
-      ValidAudiences = [baseUrl],
-      ValidIssuers = [baseUrl],
+      ValidAudiences = [BaseUrl],
+      ValidIssuers = [BaseUrl],
       ValidTypes = [_settings.AccessToken.Type]
     }, cancellationToken);
 
-    Claim[] claims = (validatedToken.ClaimsPrincipal.FindAll(Rfc7519ClaimNames.SessionId)).ToArray();
-    if (claims.Length != 1)
+    IEnumerable<Claim> claims = validatedToken.ClaimsPrincipal.FindAll(Rfc7519ClaimNames.SessionId);
+    int count = claims.Count();
+    var sessionId = count switch
     {
-      throw new InvalidOperationException($"The access token did contain {claims.Length} session identifier claims."); // TODO(fpion): implement
-    }
-
-    Guid sessionId = Guid.Parse(claims.Single().Value);
-    return await _sessionQuerier.ReadAsync(sessionId, cancellationToken) ?? throw new InvalidOperationException($"The session 'Id={sessionId}' could not be found."); // TODO(fpion): refactor
+      0 => throw new InvalidOperationException($"The access token did not contain any '{Rfc7519ClaimNames.SessionId}' claim."),
+      1 => Guid.Parse(claims.Single().Value),
+      _ => throw new InvalidOperationException($"The access token did contain many ({count}) '{Rfc7519ClaimNames.SessionId}' claims."),
+    };
+    return await _sessionQuerier.ReadAsync(sessionId, cancellationToken) ?? throw new InvalidOperationException($"The session 'Id={sessionId}' could not be found.");
   }
 }
