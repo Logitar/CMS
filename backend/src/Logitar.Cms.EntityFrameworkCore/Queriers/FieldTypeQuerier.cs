@@ -36,6 +36,16 @@ internal class FieldTypeQuerier : IFieldTypeQuerier
     return fieldType == null ? null : await MapAsync(fieldType, cancellationToken);
   }
 
+  public async Task<FieldType?> ReadAsync(string uniqueName, CancellationToken cancellationToken)
+  {
+    string uniqueNameNormalized = CmsDb.Normalize(uniqueName);
+
+    FieldTypeEntity? fieldType = await _fieldTypes.AsNoTracking()
+      .SingleOrDefaultAsync(x => x.UniqueNameNormalized == uniqueNameNormalized, cancellationToken);
+
+    return fieldType == null ? null : await MapAsync(fieldType, cancellationToken);
+  }
+
   private async Task<FieldType> MapAsync(FieldTypeEntity fieldType, CancellationToken cancellationToken)
     => (await MapAsync([fieldType], cancellationToken)).Single();
   private async Task<IReadOnlyCollection<FieldType>> MapAsync(IEnumerable<FieldTypeEntity> fieldTypes, CancellationToken cancellationToken)

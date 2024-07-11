@@ -1,7 +1,6 @@
-﻿using Logitar.Cms.Contracts;
-using Logitar.Cms.Contracts.Users;
+﻿using Logitar.Cms.Contracts.Users;
 
-namespace Logitar.Cms.Web.Controllers;
+namespace Logitar.Cms.Contracts.Account;
 
 public record UserProfile
 {
