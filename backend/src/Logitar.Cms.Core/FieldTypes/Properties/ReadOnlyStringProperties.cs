@@ -17,7 +17,7 @@ public record ReadOnlyStringProperties : FieldTypeProperties, IStringProperties
   {
   }
 
-  public ReadOnlyStringProperties(IStringProperties @string) : this(@string.MinimumLength, @string.MaximumLength, @string.Pattern)
+  public ReadOnlyStringProperties(IStringProperties @string) : this(@string.MinimumLength, @string.MaximumLength, @string.Pattern?.CleanTrim())
   {
   }
 

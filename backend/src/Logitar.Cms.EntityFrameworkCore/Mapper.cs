@@ -2,12 +2,15 @@
 using Logitar.Cms.Contracts.Actors;
 using Logitar.Cms.Contracts.ApiKeys;
 using Logitar.Cms.Contracts.Configurations;
+using Logitar.Cms.Contracts.FieldTypes;
+using Logitar.Cms.Contracts.FieldTypes.Properties;
 using Logitar.Cms.Contracts.Languages;
 using Logitar.Cms.Contracts.Roles;
 using Logitar.Cms.Contracts.Sessions;
 using Logitar.Cms.Contracts.Users;
 using Logitar.Cms.Core;
 using Logitar.Cms.Core.Configurations;
+using Logitar.Cms.Core.FieldTypes;
 using Logitar.Cms.EntityFrameworkCore.Entities;
 using Logitar.EventSourcing;
 using Logitar.Identity.EntityFrameworkCore.Relational.Entities;
@@ -76,6 +79,48 @@ internal class Mapper
 
     MapAggregate(source, destination);
 
+    return destination;
+  }
+
+  public FieldType ToFieldType(FieldTypeEntity source)
+  {
+    FieldType destination = new(source.UniqueName)
+    {
+      DisplayName = source.DisplayName,
+      Description = source.Description,
+      DataType = source.DataType
+    };
+
+    MapAggregate(source, destination);
+
+    switch (destination.DataType)
+    {
+      case DataType.String:
+        destination.StringProperties = GetStringProperties(source.Properties);
+        break;
+      default:
+        throw new DataTypeNotSupportedException(destination.DataType);
+    }
+
+    return destination;
+  }
+  private static StringProperties GetStringProperties(IReadOnlyDictionary<string, string> source)
+  {
+    StringProperties destination = new();
+    if (source.TryGetValue(nameof(IStringProperties.MinimumLength), out string? minimumLengthValue)
+      && int.TryParse(minimumLengthValue, out int minimumLength))
+    {
+      destination.MinimumLength = minimumLength;
+    }
+    if (source.TryGetValue(nameof(IStringProperties.MinimumLength), out string? maximumLengthValue)
+      && int.TryParse(maximumLengthValue, out int maximumLength))
+    {
+      destination.MaximumLength = maximumLength;
+    }
+    if (source.TryGetValue(nameof(IStringProperties.MinimumLength), out string? pattern))
+    {
+      destination.Pattern = pattern;
+    }
     return destination;
   }
 

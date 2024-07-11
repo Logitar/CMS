@@ -9,6 +9,7 @@ public class CmsContext : DbContext
   {
   }
 
+  internal DbSet<FieldTypeEntity> FieldTypes { get; private set; }
   internal DbSet<LanguageEntity> Languages { get; private set; }
   internal DbSet<LogEventEntity> LogEvents { get; private set; }
   internal DbSet<LogExceptionEntity> LogExceptions { get; private set; }
