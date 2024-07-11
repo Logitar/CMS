@@ -36,7 +36,9 @@ public static class DependencyInjectionExtensions
     converters.AddRange(serviceProvider.GetLogitarIdentityJsonConverters());
 
     converters.Add(new ConfigurationIdConverter());
+    converters.Add(new ContentTypeIdConverter());
     converters.Add(new FieldTypeIdConverter());
+    converters.Add(new IdentifierConverter());
     converters.Add(new JwtSecretConverter());
     converters.Add(new LanguageIdConverter());
 
