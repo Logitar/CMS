@@ -1,11 +1,12 @@
-﻿using Logitar.Cms.Contracts.Account;
+﻿using Logitar.Cms.Contracts;
+using Logitar.Cms.Contracts.Account;
+using Logitar.Cms.Contracts.Errors;
 using Logitar.Cms.Contracts.Sessions;
 using Logitar.Cms.Contracts.Users;
 using Logitar.Cms.Core;
 using Logitar.Cms.Core.Sessions.Commands;
 using Logitar.Cms.Web.Authentication;
 using Logitar.Cms.Web.Constants;
-using Logitar.Cms.Web.Models.Account;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -45,13 +46,30 @@ public class AccountController : ControllerBase
   }
 
   [HttpPost("token")]
-  public async Task<ActionResult<TokenResponse>> GetTokenAsync([FromBody] SignInPayload payload, CancellationToken cancellationToken)
+  public async Task<ActionResult<TokenResponse>> GetTokenAsync([FromBody] GetTokenPayload payload, CancellationToken cancellationToken)
   {
-    // TODO(fpion): Renew
+    string? refreshToken = string.IsNullOrWhiteSpace(payload.RefreshToken) ? null : payload.RefreshToken.Trim();
+    if ((payload.Credentials == null && refreshToken == null) || (payload.Credentials != null && refreshToken != null))
+    {
+      return BadRequest(new Error("Validation", $"Exactly one of the following must be provided: {nameof(payload.Credentials)}, {nameof(payload.RefreshToken)}."));
+    }
 
-    SignInSessionPayload signIn = new(payload.Username, payload.Password, isPersistent: true, HttpContext.GetSessionCustomAttributes());
-    SignInSessionCommand command = new(signIn);
-    Session session = await _pipeline.ExecuteAsync(command, cancellationToken);
+    IEnumerable<CustomAttribute> customAttributes = HttpContext.GetSessionCustomAttributes();
+    Session session;
+    if (payload.RefreshToken != null)
+    {
+      RenewSessionPayload renewPayload = new(payload.RefreshToken, customAttributes);
+      RenewSessionCommand command = new(renewPayload);
+      session = await _pipeline.ExecuteAsync(command, cancellationToken);
+    }
+    else
+    {
+      SignInPayload credentials = payload.Credentials ?? new SignInPayload();
+      SignInSessionPayload signInPayload = new(credentials.Username, credentials.Password, isPersistent: true, customAttributes);
+      SignInSessionCommand command = new(signInPayload);
+      session = await _pipeline.ExecuteAsync(command, cancellationToken);
+    }
+
     TokenResponse response = await _openAuthenticationService.GetTokenResponseAsync(session, cancellationToken);
 
     return Ok(response);

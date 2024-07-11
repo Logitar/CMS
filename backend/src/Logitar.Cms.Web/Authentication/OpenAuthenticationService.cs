@@ -1,9 +1,9 @@
-﻿using Logitar.Cms.Contracts.Configurations;
+﻿using Logitar.Cms.Contracts.Account;
+using Logitar.Cms.Contracts.Configurations;
 using Logitar.Cms.Contracts.Sessions;
 using Logitar.Cms.Core.Caching;
 using Logitar.Cms.Core.Sessions;
 using Logitar.Cms.Web.Constants;
-using Logitar.Cms.Web.Models.Account;
 using Logitar.Cms.Web.Settings;
 using Logitar.Identity.Domain.Tokens;
 using Logitar.Security.Claims;

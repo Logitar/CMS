@@ -1,5 +1,5 @@
-﻿using Logitar.Cms.Contracts.Sessions;
-using Logitar.Cms.Web.Models.Account;
+﻿using Logitar.Cms.Contracts.Account;
+using Logitar.Cms.Contracts.Sessions;
 
 namespace Logitar.Cms.Web.Authentication;
 

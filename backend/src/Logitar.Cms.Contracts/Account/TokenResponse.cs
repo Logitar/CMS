@@ -1,4 +1,4 @@
-﻿namespace Logitar.Cms.Web.Models.Account;
+﻿namespace Logitar.Cms.Contracts.Account;
 
 public record TokenResponse
 {

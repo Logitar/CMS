@@ -25,7 +25,7 @@ public class AuthenticateApiKeyCommandHandlerTests
   [Fact(DisplayName = "It should throw ApiKeyIsExpiredException when the API key is notexpired.")]
   public async Task It_should_throw_ApiKeyIsExpiredException_when_the_Api_key_is_expired()
   {
-    const int MillisecondsDelay = 10;
+    const int MillisecondsDelay = 100;
 
     string secret = RandomStringGenerator.GetBase64String(XApiKey.SecretLength, out _);
     ApiKeyAggregate apiKey = new(new DisplayNameUnit("Test"), new PasswordMock(secret));
