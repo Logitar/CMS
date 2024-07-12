@@ -21,6 +21,20 @@ public class CreateLanguageCommandHandlerTests
     _handler = new(_languageQuerier.Object, _sender.Object);
   }
 
+  [Theory(DisplayName = "It should create a new language.")]
+  [InlineData("fr")]
+  [InlineData("fr-CA")]
+  public async Task It_should_create_a_new_language(string locale)
+  {
+    CreateLanguagePayload payload = new(locale);
+    CreateLanguageCommand command = new(payload);
+    ActivityHelper.Contextualize(command);
+    await _handler.Handle(command, _cancellationToken);
+
+    _sender.Verify(x => x.Send(It.Is<SaveLanguageCommand>(y => y.Language.Locale.Code == locale && !y.Language.IsDeleted),
+      _cancellationToken), Times.Once);
+  }
+
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
   public async Task It_should_throw_ValidationException_when_the_payload_is_not_valid()
   {
