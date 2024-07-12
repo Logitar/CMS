@@ -239,6 +239,111 @@ namespace Logitar.Cms.EntityFrameworkCore.SqlServer.Migrations
                     b.ToTable("ContentTypes", (string)null);
                 });
 
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.FieldDefinitionEntity", b =>
+                {
+                    b.Property<int>("FieldDefinitionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FieldDefinitionId"));
+
+                    b.Property<int>("ContentTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DisplayName")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("FieldTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsIndexed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsInvariant")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRequired")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsUnique")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Placeholder")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<Guid>("UniqueId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UniqueName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("UniqueNameNormalized")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("FieldDefinitionId");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("CreatedOn");
+
+                    b.HasIndex("DisplayName");
+
+                    b.HasIndex("FieldTypeId");
+
+                    b.HasIndex("IsIndexed");
+
+                    b.HasIndex("IsInvariant");
+
+                    b.HasIndex("IsRequired");
+
+                    b.HasIndex("IsUnique");
+
+                    b.HasIndex("UniqueId")
+                        .IsUnique();
+
+                    b.HasIndex("UniqueName");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.HasIndex("UpdatedOn");
+
+                    b.HasIndex("ContentTypeId", "Order")
+                        .IsUnique();
+
+                    b.HasIndex("ContentTypeId", "UniqueNameNormalized")
+                        .IsUnique();
+
+                    b.ToTable("FieldDefinitions", (string)null);
+                });
+
             modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.FieldTypeEntity", b =>
                 {
                     b.Property<int>("FieldTypeId")
@@ -663,6 +768,25 @@ namespace Logitar.Cms.EntityFrameworkCore.SqlServer.Migrations
                     b.Navigation("Language");
                 });
 
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.FieldDefinitionEntity", b =>
+                {
+                    b.HasOne("Logitar.Cms.EntityFrameworkCore.Entities.ContentTypeEntity", "ContentType")
+                        .WithMany("FieldDefinitions")
+                        .HasForeignKey("ContentTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Logitar.Cms.EntityFrameworkCore.Entities.FieldTypeEntity", "FieldType")
+                        .WithMany("FieldDefinitions")
+                        .HasForeignKey("FieldTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ContentType");
+
+                    b.Navigation("FieldType");
+                });
+
             modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.LogEventEntity", b =>
                 {
                     b.HasOne("Logitar.Cms.EntityFrameworkCore.Entities.LogEntity", "Log")
@@ -695,6 +819,13 @@ namespace Logitar.Cms.EntityFrameworkCore.SqlServer.Migrations
                     b.Navigation("ContentItems");
 
                     b.Navigation("ContentLocales");
+
+                    b.Navigation("FieldDefinitions");
+                });
+
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.FieldTypeEntity", b =>
+                {
+                    b.Navigation("FieldDefinitions");
                 });
 
             modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.LanguageEntity", b =>
