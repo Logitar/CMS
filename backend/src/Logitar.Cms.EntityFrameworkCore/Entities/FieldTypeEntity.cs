@@ -42,6 +42,8 @@ internal class FieldTypeEntity : AggregateEntity
     }
   }
 
+  public List<FieldDefinitionEntity> FieldDefinitions { get; private set; } = [];
+
   public FieldTypeEntity(FieldTypeCreatedEvent @event) : base(@event)
   {
     UniqueId = @event.AggregateId.ToGuid();
