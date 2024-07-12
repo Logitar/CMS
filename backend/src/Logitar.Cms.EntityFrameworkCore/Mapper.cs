@@ -145,9 +145,39 @@ internal class Mapper
       Description = source.Description
     };
 
+    foreach (FieldDefinitionEntity fieldDefinition in source.FieldDefinitions)
+    {
+      destination.Fields.Add(ToFieldDefinition(fieldDefinition, destination));
+    }
+
     MapAggregate(source, destination);
 
     return destination;
+  }
+  private FieldDefinition ToFieldDefinition(FieldDefinitionEntity source, CmsContentType contentType)
+  {
+    if (source.FieldType == null)
+    {
+      throw new ArgumentException($"The {nameof(source.FieldType)} is required.", nameof(source));
+    }
+
+    FieldType fieldType = ToFieldType(source.FieldType);
+    return new FieldDefinition(contentType, fieldType, source.UniqueName)
+    {
+      Id = source.UniqueId,
+      Order = source.Order,
+      IsInvariant = source.IsInvariant,
+      IsRequired = source.IsRequired,
+      IsIndexed = source.IsIndexed,
+      IsUnique = source.IsUnique,
+      DisplayName = source.DisplayName,
+      Description = source.Description,
+      Placeholder = source.Placeholder,
+      CreatedBy = FindActor(source.CreatedBy),
+      CreatedOn = source.CreatedOn.AsUniversalTime(),
+      UpdatedBy = FindActor(source.UpdatedBy),
+      UpdatedOn = source.UpdatedOn.AsUniversalTime()
+    };
   }
 
   public FieldType ToFieldType(FieldTypeEntity source)
