@@ -42,6 +42,7 @@ public static class DependencyInjectionExtensions
     converters.Add(new IdentifierConverter());
     converters.Add(new JwtSecretConverter());
     converters.Add(new LanguageIdConverter());
+    converters.Add(new PlaceholderConverter());
 
     return converters.AsReadOnly();
   }
