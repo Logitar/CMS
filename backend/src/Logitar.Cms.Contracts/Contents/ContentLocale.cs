@@ -1,4 +1,5 @@
-﻿using Logitar.Cms.Contracts.Languages;
+﻿using Logitar.Cms.Contracts.Actors;
+using Logitar.Cms.Contracts.Languages;
 
 namespace Logitar.Cms.Contracts.Contents;
 
@@ -9,6 +10,12 @@ public class ContentLocale
   public Language? Language { get; set; }
 
   public string UniqueName { get; set; }
+
+  public Actor CreatedBy { get; set; } = new();
+  public DateTime CreatedOn { get; set; }
+
+  public Actor UpdatedBy { get; set; } = new();
+  public DateTime UpdatedOn { get; set; }
 
   public ContentLocale() : this(new ContentItem(), string.Empty)
   {

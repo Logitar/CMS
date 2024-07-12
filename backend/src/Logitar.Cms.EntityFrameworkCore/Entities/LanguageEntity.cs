@@ -23,6 +23,8 @@ internal class LanguageEntity : AggregateEntity
   public string EnglishName { get; private set; } = string.Empty;
   public string NativeName { get; private set; } = string.Empty;
 
+  public List<ContentLocaleEntity> ContentLocales { get; private set; } = [];
+
   public LanguageEntity(LanguageCreatedEvent @event) : base(@event)
   {
     UniqueId = @event.AggregateId.ToGuid();
