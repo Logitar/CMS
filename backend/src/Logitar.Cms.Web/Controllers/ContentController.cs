@@ -1,6 +1,7 @@
 ﻿using Logitar.Cms.Contracts.Contents;
 using Logitar.Cms.Core;
 using Logitar.Cms.Core.Contents.Commands;
+using Logitar.Cms.Core.Contents.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,10 +28,10 @@ public class ContentController : ControllerBase
     return Created(location, content);
   }
 
-  //[HttpGet("{id}")]
-  //public async Task<ActionResult<ContentItem>> ReadAsync(Guid id, CancellationToken cancellationToken)
-  //{
-  //  ContentItem? content = await _pipeline.ExecuteAsync(new ReadContentQuery(id, UniqueName: null), cancellationToken);
-  //  return content == null ? NotFound() : Ok(content);
-  //} // TODO(fpion): ReadContentQuery
+  [HttpGet("{id}")]
+  public async Task<ActionResult<ContentItem>> ReadAsync(Guid id, CancellationToken cancellationToken)
+  {
+    ContentItem? content = await _pipeline.ExecuteAsync(new ReadContentQuery(id), cancellationToken);
+    return content == null ? NotFound() : Ok(content);
+  }
 }
