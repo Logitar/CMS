@@ -31,6 +31,8 @@ internal class ContentQuerier : IContentQuerier
   public async Task<ContentItem?> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
     ContentItemEntity? content = await _contentItems.AsNoTracking()
+      .Include(x => x.ContentType)
+      .Include(x => x.Locales).ThenInclude(x => x.Language)
       .SingleOrDefaultAsync(x => x.UniqueId == id, cancellationToken);
 
     return content == null ? null : await MapAsync(content, cancellationToken);

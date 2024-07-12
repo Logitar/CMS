@@ -5,8 +5,9 @@ namespace Logitar.Cms.Contracts.Contents;
 
 public class ContentLocale
 {
-  public ContentItem Item { get; set; }
+  public Guid Id { get; set; }
 
+  public ContentItem Item { get; set; }
   public Language? Language { get; set; }
 
   public string UniqueName { get; set; }
@@ -17,8 +18,11 @@ public class ContentLocale
   public Actor UpdatedBy { get; set; } = new();
   public DateTime UpdatedOn { get; set; }
 
-  public ContentLocale() : this(new ContentItem(), string.Empty)
+  public ContentLocale()
   {
+    Item = new ContentItem();
+
+    UniqueName = string.Empty;
   }
 
   public ContentLocale(ContentItem item, string uniqueName)

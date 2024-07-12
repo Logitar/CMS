@@ -121,6 +121,7 @@ internal class Mapper
 
     ContentLocale destination = new(item, source.UniqueName)
     {
+      Id = source.UniqueId,
       CreatedBy = FindActor(source.CreatedBy),
       CreatedOn = source.CreatedOn.AsUniversalTime(),
       UpdatedBy = FindActor(source.CreatedBy),

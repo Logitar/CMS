@@ -9,8 +9,12 @@ public class ContentItem : Aggregate
   public ContentLocale Invariant { get; set; }
   public List<ContentLocale> Locales { get; set; }
 
-  public ContentItem() : this(new CmsContentType(), new ContentLocale())
+  public ContentItem()
   {
+    ContentType = new CmsContentType();
+
+    Invariant = new ContentLocale(this, string.Empty);
+    Locales = [];
   }
 
   public ContentItem(CmsContentType contentType, ContentLocale invariant)
