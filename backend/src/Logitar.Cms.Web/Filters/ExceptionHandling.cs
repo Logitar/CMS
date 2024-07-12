@@ -28,6 +28,11 @@ public class ExceptionHandling : ExceptionFilterAttribute
       context.Result = new BadRequestObjectResult(badRequest.Error);
       context.ExceptionHandled = true;
     }
+    else if (context.Exception is NotFoundException notFound)
+    {
+      context.Result = new NotFoundObjectResult(notFound.Error);
+      context.ExceptionHandled = true;
+    }
     else if (context.Exception is ConflictException conflict)
     {
       context.Result = new ConflictObjectResult(conflict.Error);

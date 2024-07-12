@@ -19,6 +19,9 @@ internal class ContentTypeEntity : AggregateEntity
   public string? DisplayName { get; private set; }
   public string? Description { get; private set; }
 
+  public List<ContentItemEntity> ContentItems { get; private set; } = [];
+  public List<ContentLocaleEntity> ContentLocales { get; private set; } = [];
+
   public ContentTypeEntity(ContentTypeCreatedEvent @event) : base(@event)
   {
     UniqueId = @event.AggregateId.ToGuid();

@@ -2,6 +2,7 @@
 using Logitar.Cms.Contracts.Actors;
 using Logitar.Cms.Contracts.ApiKeys;
 using Logitar.Cms.Contracts.Configurations;
+using Logitar.Cms.Contracts.Contents;
 using Logitar.Cms.Contracts.ContentTypes;
 using Logitar.Cms.Contracts.FieldTypes;
 using Logitar.Cms.Contracts.FieldTypes.Properties;
@@ -79,6 +80,58 @@ internal class Mapper
     };
 
     MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public ContentItem ToContentItem(ContentItemEntity source)
+  {
+    if (source.ContentType == null)
+    {
+      throw new ArgumentException($"The {nameof(source.ContentType)} is required.", nameof(source));
+    }
+
+    ContentItem destination = new()
+    {
+      ContentType = ToContentType(source.ContentType)
+    };
+
+    foreach (ContentLocaleEntity locale in source.Locales)
+    {
+      if (locale.LanguageId.HasValue)
+      {
+        destination.Locales.Add(ToContentLocale(locale, destination));
+      }
+      else
+      {
+        destination.Invariant = ToContentLocale(locale, destination);
+      }
+    }
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+  private ContentLocale ToContentLocale(ContentLocaleEntity source, ContentItem item)
+  {
+    if (source.LanguageId != null && source.Language == null)
+    {
+      throw new ArgumentException($"The {nameof(source.Language)} is required.", nameof(source));
+    }
+
+    ContentLocale destination = new(item, source.UniqueName)
+    {
+      Id = source.UniqueId,
+      CreatedBy = FindActor(source.CreatedBy),
+      CreatedOn = source.CreatedOn.AsUniversalTime(),
+      UpdatedBy = FindActor(source.CreatedBy),
+      UpdatedOn = source.CreatedOn.AsUniversalTime()
+    };
+
+    if (source.Language != null)
+    {
+      destination.Language = ToLanguage(source.Language);
+    }
 
     return destination;
   }

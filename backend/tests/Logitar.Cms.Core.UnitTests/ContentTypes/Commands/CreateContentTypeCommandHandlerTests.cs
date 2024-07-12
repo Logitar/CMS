@@ -21,6 +21,41 @@ public class CreateContentTypeCommandHandlerTests
     _handler = new(_contentTypeQuerier.Object, _sender.Object);
   }
 
+  [Fact(DisplayName = "It should create a new invariant content type.")]
+  public async Task It_should_create_a_new_invariant_content_type()
+  {
+    CreateContentTypePayload payload = new("BlogArticle")
+    {
+      IsInvariant = true,
+      DisplayName = " Blog Article ",
+      Description = "    "
+    };
+    CreateContentTypeCommand command = new(payload);
+    ActivityHelper.Contextualize(command);
+    await _handler.Handle(command, _cancellationToken);
+
+    _sender.Verify(x => x.Send(It.Is<SaveContentTypeCommand>(command => command.ContentType.IsInvariant
+      && command.ContentType.UniqueName.Value == payload.UniqueName
+      && command.ContentType.DisplayName != null && command.ContentType.DisplayName.Value == payload.DisplayName.Trim()
+      && command.ContentType.Description == null
+    ), _cancellationToken), Times.Once);
+  }
+
+  [Fact(DisplayName = "It should create a new variant content type.")]
+  public async Task It_should_create_a_new_variant_content_type()
+  {
+    CreateContentTypePayload payload = new("BlogAuthor");
+    CreateContentTypeCommand command = new(payload);
+    ActivityHelper.Contextualize(command);
+    await _handler.Handle(command, _cancellationToken);
+
+    _sender.Verify(x => x.Send(It.Is<SaveContentTypeCommand>(command => !command.ContentType.IsInvariant
+      && command.ContentType.UniqueName.Value == payload.UniqueName
+      && command.ContentType.DisplayName == null
+      && command.ContentType.Description == null
+    ), _cancellationToken), Times.Once);
+  }
+
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
   public async Task It_should_throw_ValidationException_when_the_payload_is_not_valid()
   {

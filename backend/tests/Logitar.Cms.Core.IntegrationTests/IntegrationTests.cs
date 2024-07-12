@@ -1,5 +1,7 @@
 ﻿using Bogus;
+using Logitar.Cms.Contracts;
 using Logitar.Cms.Contracts.Actors;
+using Logitar.Cms.Contracts.Users;
 using Logitar.Cms.Core.Configurations.Commands;
 using Logitar.Cms.EntityFrameworkCore;
 using Logitar.Cms.EntityFrameworkCore.PostgreSQL;
@@ -9,6 +11,7 @@ using Logitar.Cms.Infrastructure.Commands;
 using Logitar.Data.SqlServer;
 using Logitar.EventSourcing;
 using Logitar.EventSourcing.EntityFrameworkCore.Relational;
+using Logitar.Identity.Domain.Users;
 using Logitar.Identity.EntityFrameworkCore.Relational;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -89,6 +92,7 @@ public abstract class IntegrationTests : IAsyncLifetime
     await sender.Send(new InitializeDatabaseCommand());
 
     StringBuilder statement = new();
+    statement.AppendLine(SqlServerDeleteBuilder.From(CmsDb.ContentItems.Table).Build().Text);
     statement.AppendLine(SqlServerDeleteBuilder.From(CmsDb.ContentTypes.Table).Build().Text);
     statement.AppendLine(SqlServerDeleteBuilder.From(CmsDb.FieldTypes.Table).Build().Text);
     statement.AppendLine(SqlServerDeleteBuilder.From(CmsDb.Languages.Table).Build().Text);
@@ -104,6 +108,30 @@ public abstract class IntegrationTests : IAsyncLifetime
     await CmsContext.Database.ExecuteSqlRawAsync(statement.ToString());
 
     await sender.Send(new InitializeConfigurationCommand(DefaultLocale, UsernameString, PasswordString));
+
+    IUserRepository userRepository = ServiceProvider.GetRequiredService<IUserRepository>();
+    UserAggregate user = Assert.Single(await userRepository.LoadAsync());
+    Assert.True(user.HasPassword);
+    Assert.NotNull(user.Locale);
+
+    Actor actor = new(user.UniqueName.Value)
+    {
+      Id = user.Id.ToGuid(),
+      Type = Contracts.Actors.ActorType.User
+    };
+    _context.User = new User(user.UniqueName.Value)
+    {
+      Id = user.Id.ToGuid(),
+      Version = user.Version,
+      CreatedBy = actor,
+      CreatedOn = user.CreatedOn.AsUniversalTime(),
+      UpdatedBy = actor,
+      UpdatedOn = user.UpdatedOn.AsUniversalTime(),
+      HasPassword = true,
+      PasswordChangedBy = actor,
+      PasswordChangedOn = user.UpdatedOn.AsUniversalTime(),
+      Locale = new Locale(user.Locale.Code)
+    };
   }
 
   public virtual Task DisposeAsync() => Task.CompletedTask;

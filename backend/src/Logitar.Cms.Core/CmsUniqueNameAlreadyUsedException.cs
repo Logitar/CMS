@@ -1,4 +1,5 @@
 ﻿using Logitar.Cms.Contracts.Errors;
+using Logitar.Cms.Core.Languages;
 using Logitar.Identity.Domain.Shared;
 
 namespace Logitar.Cms.Core;
@@ -12,6 +13,11 @@ public class CmsUniqueNameAlreadyUsedException : ConflictException
     get => (string)Data[nameof(TypeName)]!;
     private set => Data[nameof(TypeName)] = value;
   }
+  public string? LanguageId
+  {
+    get => (string?)Data[nameof(LanguageId)];
+    private set => Data[nameof(LanguageId)] = value;
+  }
   public string UniqueName
   {
     get => (string)Data[nameof(UniqueName)]!;
@@ -23,10 +29,21 @@ public class CmsUniqueNameAlreadyUsedException : ConflictException
     private set => Data[nameof(PropertyName)] = value;
   }
 
-  public override Error Error => new PropertyError(this.GetErrorCode(), ErrorMessage, PropertyName, UniqueName);
+  public override Error Error
+  {
+    get
+    {
+      PropertyError error = new(this.GetErrorCode(), ErrorMessage, PropertyName, UniqueName);
+      if (LanguageId != null)
+      {
+        error.Add(new ErrorData(nameof(LanguageId), new LanguageId(LanguageId).ToGuid().ToString()));
+      }
+      return error;
+    }
+  }
 
   public CmsUniqueNameAlreadyUsedException(Type type, IdentifierUnit uniqueName, string? propertyName = null)
-    : base(BuildMessage(type, uniqueName.Value, propertyName))
+    : base(BuildMessage(type, languageId: null, uniqueName.Value, propertyName))
   {
     TypeName = type.GetNamespaceQualifiedName();
     UniqueName = uniqueName.Value;
@@ -34,15 +51,21 @@ public class CmsUniqueNameAlreadyUsedException : ConflictException
   }
 
   public CmsUniqueNameAlreadyUsedException(Type type, UniqueNameUnit uniqueName, string? propertyName = null)
-    : base(BuildMessage(type, uniqueName.Value, propertyName))
+    : this(type, languageId: null, uniqueName, propertyName)
+  {
+  }
+  public CmsUniqueNameAlreadyUsedException(Type type, LanguageId? languageId, UniqueNameUnit uniqueName, string? propertyName = null)
+  : base(BuildMessage(type, languageId, uniqueName.Value, propertyName))
   {
     TypeName = type.GetNamespaceQualifiedName();
+    LanguageId = languageId?.Value;
     UniqueName = uniqueName.Value;
     PropertyName = propertyName;
   }
 
-  private static string BuildMessage(Type type, string uniqueName, string? propertyName) => new ErrorMessageBuilder(ErrorMessage)
+  private static string BuildMessage(Type type, LanguageId? languageId, string uniqueName, string? propertyName) => new ErrorMessageBuilder(ErrorMessage)
     .AddData(nameof(TypeName), type.GetNamespaceQualifiedName())
+    .AddData(nameof(LanguageId), languageId?.Value, "<null>")
     .AddData(nameof(UniqueName), uniqueName)
     .AddData(nameof(PropertyName), propertyName, "<null>")
     .Build();
@@ -56,6 +79,10 @@ public class CmsUniqueNameAlreadyUsedException<T> : CmsUniqueNameAlreadyUsedExce
   }
   public CmsUniqueNameAlreadyUsedException(UniqueNameUnit uniqueName, string? propertyName = null)
     : base(typeof(T), uniqueName, propertyName)
+  {
+  }
+  public CmsUniqueNameAlreadyUsedException(LanguageId? languageId, UniqueNameUnit uniqueName, string? propertyName = null)
+    : base(typeof(T), languageId, uniqueName, propertyName)
   {
   }
 }

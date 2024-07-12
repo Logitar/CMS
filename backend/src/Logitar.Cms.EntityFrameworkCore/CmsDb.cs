@@ -7,6 +7,40 @@ public static class CmsDb
 {
   public static string Normalize(string value) => value.Trim().ToUpperInvariant();
 
+  public static class ContentItems
+  {
+    public static readonly TableId Table = new(nameof(CmsContext.ContentItems));
+
+    public static readonly ColumnId AggregateId = new(nameof(ContentItemEntity.AggregateId), Table);
+    public static readonly ColumnId CreatedBy = new(nameof(ContentItemEntity.CreatedBy), Table);
+    public static readonly ColumnId CreatedOn = new(nameof(ContentItemEntity.CreatedOn), Table);
+    public static readonly ColumnId UpdatedBy = new(nameof(ContentItemEntity.UpdatedBy), Table);
+    public static readonly ColumnId UpdatedOn = new(nameof(ContentItemEntity.UpdatedOn), Table);
+    public static readonly ColumnId Version = new(nameof(ContentItemEntity.Version), Table);
+
+    public static readonly ColumnId ContentItemId = new(nameof(ContentItemEntity.ContentItemId), Table);
+    public static readonly ColumnId ContentTypeId = new(nameof(ContentItemEntity.ContentTypeId), Table);
+    public static readonly ColumnId UniqueId = new(nameof(ContentItemEntity.UniqueId), Table);
+  }
+
+  public static class ContentLocales
+  {
+    public static readonly TableId Table = new(nameof(CmsContext.ContentLocales));
+
+    public static readonly ColumnId CreatedBy = new(nameof(ContentLocaleEntity.CreatedBy), Table);
+    public static readonly ColumnId CreatedOn = new(nameof(ContentLocaleEntity.CreatedOn), Table);
+    public static readonly ColumnId UpdatedBy = new(nameof(ContentLocaleEntity.UpdatedBy), Table);
+    public static readonly ColumnId UpdatedOn = new(nameof(ContentLocaleEntity.UpdatedOn), Table);
+
+    public static readonly ColumnId ContentItemId = new(nameof(ContentLocaleEntity.ContentItemId), Table);
+    public static readonly ColumnId ContentLocaleId = new(nameof(ContentLocaleEntity.ContentLocaleId), Table);
+    public static readonly ColumnId ContentTypeId = new(nameof(ContentLocaleEntity.ContentTypeId), Table);
+    public static readonly ColumnId LanguageId = new(nameof(ContentLocaleEntity.LanguageId), Table);
+    public static readonly ColumnId UniqueId = new(nameof(ContentLocaleEntity.UniqueId), Table);
+    public static readonly ColumnId UniqueName = new(nameof(ContentLocaleEntity.UniqueName), Table);
+    public static readonly ColumnId UniqueNameNormalized = new(nameof(ContentLocaleEntity.UniqueNameNormalized), Table);
+  }
+
   public static class ContentTypes
   {
     public static readonly TableId Table = new(nameof(CmsContext.ContentTypes));
