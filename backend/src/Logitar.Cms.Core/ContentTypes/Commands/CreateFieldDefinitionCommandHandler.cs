@@ -40,7 +40,6 @@ internal class CreateFieldDefinitionCommandHandler : IRequestHandler<CreateField
     FieldDefinitionUnit fieldDefinition = new(fieldType.Id, payload.IsInvariant, payload.IsRequired, payload.IsIndexed, payload.IsUnique,
       uniqueName, displayName, description, placeholder);
     contentType.AddFieldDefinition(fieldDefinition, command.ActorId);
-    // CmsUniqueNameAlreadyUsedException
 
     await _contentTypeRepository.SaveAsync(contentType, cancellationToken);
 
