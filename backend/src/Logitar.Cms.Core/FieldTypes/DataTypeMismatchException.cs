@@ -31,7 +31,7 @@ public class DataTypeMismatchException : Exception
   }
 
   private static string BuildMessage(FieldTypeAggregate fieldType, DataType actualType) => new ErrorMessageBuilder(ErrorMessage)
-    .AddData(nameof(FieldTypeId), fieldType.Id.Value)
+    .AddData(nameof(FieldTypeId), fieldType.Id)
     .AddData(nameof(ExpectedType), fieldType.DataType)
     .AddData(nameof(ActualType), actualType)
     .Build();
