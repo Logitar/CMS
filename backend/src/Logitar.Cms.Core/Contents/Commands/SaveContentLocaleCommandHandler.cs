@@ -46,7 +46,7 @@ internal class SaveContentLocaleCommandHandler : IRequestHandler<SaveContentLoca
     }
 
     ContentTypeAggregate contentType = await _contentTypeRepository.LoadAsync(content.ContentTypeId, cancellationToken)
-      ?? throw new InvalidOperationException($"The content type aggregate 'Id={content.ContentTypeId.Value}' could not be found.");
+      ?? throw new InvalidOperationException($"The content type aggregate 'Id={content.ContentTypeId}' could not be found.");
 
     Unit unit = await _sender.Send(new ValidateFieldValuesCommand(
       payload.Fields,
