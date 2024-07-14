@@ -27,7 +27,7 @@ public class CannotCreateInvariantLocaleException : BadRequestException
   }
 
   private static string BuildMessage(ContentAggregate content) => new ErrorMessageBuilder(ErrorMessage)
-    .AddData(nameof(ContentId), content.Id.Value)
+    .AddData(nameof(ContentId), content.Id)
     .AddData(nameof(ContentTypeId), content.ContentTypeId)
     .Build();
 }
