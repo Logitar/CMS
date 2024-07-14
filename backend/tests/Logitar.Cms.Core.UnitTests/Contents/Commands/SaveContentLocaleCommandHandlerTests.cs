@@ -92,6 +92,7 @@ public class SaveContentLocaleCommandHandlerTests
   public async Task It_should_replace_the_content_invariant()
   {
     _contentRepository.Setup(x => x.LoadAsync(_article.Id, _cancellationToken)).ReturnsAsync(_article);
+    _contentTypeRepository.Setup(x => x.LoadAsync(_articleType.Id, _cancellationToken)).ReturnsAsync(_articleType);
 
     SaveContentLocalePayload payload = new("rendered-lego-acura-models-2");
     SaveContentLocaleCommand command = new(_article.Id.ToGuid(), LanguageId: null, payload);

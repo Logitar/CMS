@@ -45,12 +45,20 @@ internal class SaveContentLocaleCommandHandler : IRequestHandler<SaveContentLoca
       return null;
     }
 
+    ContentTypeAggregate contentType = await _contentTypeRepository.LoadAsync(content.ContentTypeId, cancellationToken)
+      ?? throw new InvalidOperationException($"The content type aggregate 'Id={content.ContentTypeId.Value}' could not be found.");
+
+    Unit unit = await _sender.Send(new ValidateFieldValuesCommand(
+      payload.Fields,
+      IsInvariant: command.LanguageId.HasValue,
+      contentType,
+      PropertyName: nameof(payload.Fields)
+    ), cancellationToken);
+    // TODO(fpion): add field values to content locale
     ContentLocaleUnit locale = new(new UniqueNameUnit(uniqueNameSettings, payload.UniqueName));
 
     if (command.LanguageId.HasValue)
     {
-      ContentTypeAggregate contentType = await _contentTypeRepository.LoadAsync(content.ContentTypeId, cancellationToken)
-        ?? throw new InvalidOperationException($"The content type aggregate 'Id={content.ContentTypeId.Value}' could not be found.");
       if (contentType.IsInvariant)
       {
         throw new CannotCreateInvariantLocaleException(content);
@@ -68,6 +76,8 @@ internal class SaveContentLocaleCommandHandler : IRequestHandler<SaveContentLoca
     }
 
     await _sender.Send(new SaveContentCommand(content), cancellationToken);
+    // TODO(fpion): update field indices (not unique & unique)
+    // TODO(fpion): add field values to Contracts ContentLocale
 
     return await _contentQuerier.ReadAsync(content, cancellationToken);
   }
