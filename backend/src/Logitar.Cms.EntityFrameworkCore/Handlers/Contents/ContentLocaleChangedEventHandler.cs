@@ -21,10 +21,10 @@ internal class ContentLocaleChangedEventHandler : INotificationHandler<ContentLo
       ?? throw new InvalidOperationException($"The content item entity 'AggregateId={@event.AggregateId}' could not be found.");
 
     LanguageEntity? language = null;
-    if (@event.LanguageId != null)
+    if (@event.LanguageId.HasValue)
     {
       language = await _context.Languages
-        .SingleOrDefaultAsync(x => x.AggregateId == @event.LanguageId.Value, cancellationToken)
+        .SingleOrDefaultAsync(x => x.AggregateId == @event.LanguageId.Value.Value, cancellationToken)
         ?? throw new InvalidOperationException($"The language entity 'AggregateId={@event.AggregateId}' could not be found.");
     }
 

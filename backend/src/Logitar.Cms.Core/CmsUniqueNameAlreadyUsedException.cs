@@ -65,7 +65,7 @@ public class CmsUniqueNameAlreadyUsedException : ConflictException
 
   private static string BuildMessage(Type type, LanguageId? languageId, string uniqueName, string? propertyName) => new ErrorMessageBuilder(ErrorMessage)
     .AddData(nameof(TypeName), type.GetNamespaceQualifiedName())
-    .AddData(nameof(LanguageId), languageId?.Value, "<null>")
+    .AddData(nameof(LanguageId), languageId, "<null>")
     .AddData(nameof(UniqueName), uniqueName)
     .AddData(nameof(PropertyName), propertyName, "<null>")
     .Build();
