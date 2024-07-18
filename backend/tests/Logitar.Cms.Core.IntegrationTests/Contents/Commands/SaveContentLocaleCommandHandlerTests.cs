@@ -18,6 +18,8 @@ public class SaveContentLocaleCommandHandlerTests : IntegrationTests
   private readonly Guid _titleId = Guid.Parse("53901ed4-2df4-4fd9-bcb3-178f22dc8b20");
   private readonly Guid _contentId = Guid.Parse("b271716a-c57c-4992-bcd9-b1a85ffc40c2");
   private readonly Guid _featuredId = Guid.Parse("f608e8be-c334-4f07-b02f-4f3acbf8dd86");
+  private readonly Guid _wordCountId = Guid.Parse("d7afce80-958f-43ac-b77f-f53725059562");
+  private readonly Guid _publishedOnId = Guid.Parse("a30fa923-37bb-45e6-9844-44a0e3d5f16c");
 
   private readonly IContentRepository _contentRepository;
   private readonly IContentTypeRepository _contentTypeRepository;
@@ -28,6 +30,8 @@ public class SaveContentLocaleCommandHandlerTests : IntegrationTests
   private readonly FieldTypeAggregate _titleType;
   private readonly FieldTypeAggregate _contentFieldType;
   private readonly FieldTypeAggregate _featuredType;
+  private readonly FieldTypeAggregate _wordCount;
+  private readonly FieldTypeAggregate _publishedOn;
   private readonly ContentTypeAggregate _contentType;
   private readonly ContentAggregate _content;
 
@@ -42,6 +46,8 @@ public class SaveContentLocaleCommandHandlerTests : IntegrationTests
     _titleType = new(new UniqueNameUnit(FieldTypeAggregate.UniqueNameSettings, "ArticleTitle"), new ReadOnlyStringProperties(minimumLength: 1, maximumLength: 100, pattern: null), ActorId);
     _contentFieldType = new(new UniqueNameUnit(FieldTypeAggregate.UniqueNameSettings, "ArticleContent"), new ReadOnlyTextProperties(TextProperties.ContentTypes.PlainText, minimumLength: 1, maximumLength: null), ActorId);
     _featuredType = new(new UniqueNameUnit(FieldTypeAggregate.UniqueNameSettings, "IsFeatured"), new ReadOnlyBooleanProperties(), ActorId);
+    _wordCount = new(new UniqueNameUnit(FieldTypeAggregate.UniqueNameSettings, "WordCount"), new ReadOnlyNumberProperties(minimumValue: 1, maximumValue: null, step: 1), ActorId);
+    _publishedOn = new(new UniqueNameUnit(FieldTypeAggregate.UniqueNameSettings, "PublishedOn"), new ReadOnlyDateTimeProperties(minimumValue: DateTime.UtcNow, maximumValue: null), ActorId);
 
     _contentType = new(new IdentifierUnit("BlogArticle"), isInvariant: false, ActorId);
     _contentType.SetFieldDefinition(_serialId, new FieldDefinitionUnit(_serialType.Id, IsInvariant: true, IsRequired: true, IsIndexed: true, IsUnique: true,
@@ -52,6 +58,10 @@ public class SaveContentLocaleCommandHandlerTests : IntegrationTests
       new IdentifierUnit("Content"), DisplayName: null, Description: null, Placeholder: null), ActorId);
     _contentType.SetFieldDefinition(_featuredId, new FieldDefinitionUnit(_featuredType.Id, IsInvariant: true, IsRequired: true, IsIndexed: true, IsUnique: false,
       new IdentifierUnit("IsFeatured"), DisplayName: null, Description: null, Placeholder: null), ActorId);
+    _contentType.SetFieldDefinition(_wordCountId, new FieldDefinitionUnit(_wordCount.Id, IsInvariant: false, IsRequired: false, IsIndexed: true, IsUnique: false,
+      new IdentifierUnit("WordCount"), DisplayName: null, Description: null, Placeholder: null), ActorId);
+    _contentType.SetFieldDefinition(_publishedOnId, new FieldDefinitionUnit(_publishedOn.Id, IsInvariant: false, IsRequired: false, IsIndexed: true, IsUnique: false,
+      new IdentifierUnit("PublishedOn"), DisplayName: null, Description: null, Placeholder: null), ActorId);
 
     _content = new(_contentType, new ContentLocaleUnit(new UniqueNameUnit(ContentAggregate.UniqueNameSettings, "article")), ActorId);
   }
@@ -60,7 +70,7 @@ public class SaveContentLocaleCommandHandlerTests : IntegrationTests
   {
     await base.InitializeAsync();
 
-    await _fieldTypeRepository.SaveAsync([_serialType, _titleType, _contentFieldType, _featuredType]);
+    await _fieldTypeRepository.SaveAsync([_serialType, _titleType, _contentFieldType, _featuredType, _wordCount, _publishedOn]);
     await _contentTypeRepository.SaveAsync(_contentType);
     await _contentRepository.SaveAsync(_content);
   }
@@ -109,6 +119,10 @@ public class SaveContentLocaleCommandHandlerTests : IntegrationTests
     Assert.Null(boolean.LanguageUid);
     Assert.Equal(bool.Parse(featured.Value), boolean.Value);
 
+    Assert.Empty(await CmsContext.DateTimeFieldIndex.AsNoTracking().ToArrayAsync());
+
+    Assert.Empty(await CmsContext.NumberFieldIndex.AsNoTracking().ToArrayAsync());
+
     StringFieldIndexEntity? @string = await CmsContext.StringFieldIndex.AsNoTracking().SingleOrDefaultAsync();
     Assert.NotNull(@string);
     Assert.Equal(_contentType.Id.ToGuid(), @string.ContentTypeUid);
@@ -154,6 +168,24 @@ public class SaveContentLocaleCommandHandlerTests : IntegrationTests
     Assert.Empty(await CmsContext.UniqueFieldIndex.AsNoTracking().ToArrayAsync());
 
     Assert.Empty(await CmsContext.BooleanFieldIndex.AsNoTracking().ToArrayAsync());
+
+    DateTimeFieldIndexEntity? dateTime = await CmsContext.DateTimeFieldIndex.AsNoTracking().SingleOrDefaultAsync();
+    Assert.NotNull(dateTime);
+    Assert.Equal(_contentType.Id.ToGuid(), dateTime.ContentTypeUid);
+    Assert.Equal(_publishedOn.Id.ToGuid(), dateTime.FieldTypeUid);
+    Assert.Equal(_publishedOnId, dateTime.FieldDefinitionUid);
+    Assert.Equal(_content.Id.ToGuid(), dateTime.ContentItemUid);
+    Assert.Equal(language.Id.ToGuid(), dateTime.LanguageUid);
+    Assert.Equal(publishedOn.Value, dateTime.Value);
+
+    NumberFieldIndexEntity? number = await CmsContext.NumberFieldIndex.AsNoTracking().SingleOrDefaultAsync();
+    Assert.NotNull(number);
+    Assert.Equal(_contentType.Id.ToGuid(), number.ContentTypeUid);
+    Assert.Equal(_wordCount.Id.ToGuid(), number.FieldTypeUid);
+    Assert.Equal(_wordCountId, number.FieldDefinitionUid);
+    Assert.Equal(_content.Id.ToGuid(), number.ContentItemUid);
+    Assert.Equal(language.Id.ToGuid(), number.LanguageUid);
+    Assert.Equal(wordCount.Value, number.Value);
 
     StringFieldIndexEntity? @string = await CmsContext.StringFieldIndex.AsNoTracking().SingleOrDefaultAsync();
     Assert.NotNull(@string);
