@@ -17,6 +17,7 @@ internal class ContentLocaleChangedEventHandler : INotificationHandler<ContentLo
   public async Task Handle(ContentLocaleChangedEvent @event, CancellationToken cancellationToken)
   {
     ContentItemEntity contentItem = await _context.ContentItems
+      .Include(x => x.Locales)
       .SingleOrDefaultAsync(x => x.AggregateId == @event.AggregateId.Value, cancellationToken)
       ?? throw new InvalidOperationException($"The content item entity 'AggregateId={@event.AggregateId}' could not be found.");
 
