@@ -186,8 +186,24 @@ public static class CmsDb
   {
     public static readonly TableId Table = new(nameof(CmsContext.StringFieldIndex));
 
+    public static readonly ColumnId ContentItemId = new(nameof(StringFieldIndexEntity.ContentItemId), Table);
+    public static readonly ColumnId ContentItemUid = new(nameof(StringFieldIndexEntity.ContentItemUid), Table);
+    public static readonly ColumnId ContentLocaleId = new(nameof(StringFieldIndexEntity.ContentLocaleId), Table);
+    public static readonly ColumnId ContentLocaleName = new(nameof(StringFieldIndexEntity.ContentLocaleName), Table);
+    public static readonly ColumnId ContentLocaleUid = new(nameof(StringFieldIndexEntity.ContentLocaleUid), Table);
+    public static readonly ColumnId ContentTypeId = new(nameof(StringFieldIndexEntity.ContentTypeId), Table);
+    public static readonly ColumnId ContentTypeName = new(nameof(StringFieldIndexEntity.ContentTypeName), Table);
+    public static readonly ColumnId ContentTypeUid = new(nameof(StringFieldIndexEntity.ContentTypeUid), Table);
+    public static readonly ColumnId FieldDefinitionId = new(nameof(StringFieldIndexEntity.FieldDefinitionId), Table);
+    public static readonly ColumnId FieldDefinitionName = new(nameof(StringFieldIndexEntity.FieldDefinitionName), Table);
+    public static readonly ColumnId FieldDefinitionUid = new(nameof(StringFieldIndexEntity.FieldDefinitionUid), Table);
+    public static readonly ColumnId FieldTypeId = new(nameof(StringFieldIndexEntity.FieldTypeId), Table);
+    public static readonly ColumnId FieldTypeName = new(nameof(StringFieldIndexEntity.FieldTypeName), Table);
+    public static readonly ColumnId FieldTypeUid = new(nameof(StringFieldIndexEntity.FieldTypeUid), Table);
+    public static readonly ColumnId LanguageCode = new(nameof(StringFieldIndexEntity.LanguageCode), Table);
+    public static readonly ColumnId LanguageId = new(nameof(StringFieldIndexEntity.LanguageId), Table);
+    public static readonly ColumnId LanguageUid = new(nameof(StringFieldIndexEntity.LanguageUid), Table);
     public static readonly ColumnId StringFieldIndexId = new(nameof(StringFieldIndexId), Table);
-
-    // TODO(fpion): Columns
+    public static readonly ColumnId Value = new(nameof(StringFieldIndexEntity.Value), Table);
   }
 }
