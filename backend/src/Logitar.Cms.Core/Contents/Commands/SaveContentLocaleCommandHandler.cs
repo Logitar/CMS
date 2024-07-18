@@ -85,5 +85,4 @@ internal class SaveContentLocaleCommandHandler : IRequestHandler<SaveContentLoca
   }
 }
 
-// TODO(fpion): unit tests
 // TODO(fpion): integration tests

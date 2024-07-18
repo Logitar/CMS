@@ -46,16 +46,25 @@ public class SaveContentLocaleCommandHandlerTests
     _languageRepository.Setup(x => x.LoadAsync(_english.Id, _cancellationToken)).ReturnsAsync(_english);
 
     SaveContentLocalePayload payload = new("rendered-lego-acura-models");
+    FieldValue field = new(Guid.NewGuid(), "Rendered: LEGO Acura Models");
+    payload.Fields.Add(field);
     SaveContentLocaleCommand command = new(_article.Id.ToGuid(), _english.Id.ToGuid(), payload);
     ActivityHelper.Contextualize(command);
 
     await _handler.Handle(command, _cancellationToken);
 
+    _sender.Verify(x => x.Send(It.Is<ValidateFieldValuesCommand>(y => y.Fields.Single().Equals(field)
+      && y.ContentType.Equals(_articleType) && y.Content.Equals(_article) && y.Language != null && y.Language.Equals(_english)
+      && y.PropertyName == "Fields" && y.ThrowOnFailure), _cancellationToken), Times.Once);
     _sender.Verify(x => x.Send(It.Is<SaveContentCommand>(y => y.Content.Equals(_article)), _cancellationToken), Times.Once);
 
     ContentLocaleUnit? locale = _article.TryGetLocale(_english);
     Assert.NotNull(locale);
     Assert.Equal(payload.UniqueName, locale.UniqueName.Value);
+
+    KeyValuePair<Guid, string> fieldValue = Assert.Single(locale.FieldValues);
+    Assert.Equal(field.Id, fieldValue.Key);
+    Assert.Equal(field.Value, fieldValue.Value);
   }
 
   [Fact(DisplayName = "It should return null when the content cannot be found.")]
@@ -76,16 +85,25 @@ public class SaveContentLocaleCommandHandlerTests
     _languageRepository.Setup(x => x.LoadAsync(_english.Id, _cancellationToken)).ReturnsAsync(_english);
 
     SaveContentLocalePayload payload = new("rendered-lego-acura-models-2");
+    FieldValue field = new(Guid.NewGuid(), "Rendered: LEGO Acura Models");
+    payload.Fields.Add(field);
     SaveContentLocaleCommand command = new(_article.Id.ToGuid(), _english.Id.ToGuid(), payload);
     ActivityHelper.Contextualize(command);
 
     await _handler.Handle(command, _cancellationToken);
 
+    _sender.Verify(x => x.Send(It.Is<ValidateFieldValuesCommand>(y => y.Fields.Single().Equals(field)
+      && y.ContentType.Equals(_articleType) && y.Content.Equals(_article) && y.Language != null && y.Language.Equals(_english)
+      && y.PropertyName == "Fields" && y.ThrowOnFailure), _cancellationToken), Times.Once);
     _sender.Verify(x => x.Send(It.Is<SaveContentCommand>(y => y.Content.Equals(_article)), _cancellationToken), Times.Once);
 
     ContentLocaleUnit? locale = _article.TryGetLocale(_english);
     Assert.NotNull(locale);
     Assert.Equal(payload.UniqueName, locale.UniqueName.Value);
+
+    KeyValuePair<Guid, string> fieldValue = Assert.Single(locale.FieldValues);
+    Assert.Equal(field.Id, fieldValue.Key);
+    Assert.Equal(field.Value, fieldValue.Value);
   }
 
   [Fact(DisplayName = "It should replace the content invariant.")]
@@ -95,14 +113,23 @@ public class SaveContentLocaleCommandHandlerTests
     _contentTypeRepository.Setup(x => x.LoadAsync(_articleType.Id, _cancellationToken)).ReturnsAsync(_articleType);
 
     SaveContentLocalePayload payload = new("rendered-lego-acura-models-2");
+    FieldValue field = new(Guid.NewGuid(), Guid.NewGuid().ToString());
+    payload.Fields.Add(field);
     SaveContentLocaleCommand command = new(_article.Id.ToGuid(), LanguageId: null, payload);
     ActivityHelper.Contextualize(command);
 
     await _handler.Handle(command, _cancellationToken);
 
+    _sender.Verify(x => x.Send(It.Is<ValidateFieldValuesCommand>(y => y.Fields.Single().Equals(field)
+      && y.ContentType.Equals(_articleType) && y.Content.Equals(_article) && y.Language == null
+      && y.PropertyName == "Fields" && y.ThrowOnFailure), _cancellationToken), Times.Once);
     _sender.Verify(x => x.Send(It.Is<SaveContentCommand>(y => y.Content.Equals(_article)), _cancellationToken), Times.Once);
 
     Assert.Equal(payload.UniqueName, _article.Invariant.UniqueName.Value);
+
+    KeyValuePair<Guid, string> fieldValue = Assert.Single(_article.Invariant.FieldValues);
+    Assert.Equal(field.Id, fieldValue.Key);
+    Assert.Equal(field.Value, fieldValue.Value);
   }
 
   [Fact(DisplayName = "It should throw AggregateNotFoundException when the language cannot be found.")]
