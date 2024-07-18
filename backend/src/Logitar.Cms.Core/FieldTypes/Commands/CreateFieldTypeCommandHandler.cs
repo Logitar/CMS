@@ -42,11 +42,19 @@ internal class CreateFieldTypeCommandHandler : IRequestHandler<CreateFieldTypeCo
 
   private static FieldTypeProperties GetProperties(CreateFieldTypePayload payload)
   {
-    List<FieldTypeProperties> properties = new(capacity: 3);
+    List<FieldTypeProperties> properties = new(capacity: 5);
 
     if (payload.BooleanProperties != null)
     {
       properties.Add(new ReadOnlyBooleanProperties(payload.BooleanProperties));
+    }
+    if (payload.DateTimeProperties != null)
+    {
+      properties.Add(new ReadOnlyDateTimeProperties(payload.DateTimeProperties));
+    }
+    if (payload.NumberProperties != null)
+    {
+      properties.Add(new ReadOnlyNumberProperties(payload.NumberProperties));
     }
     if (payload.StringProperties != null)
     {

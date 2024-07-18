@@ -201,6 +201,12 @@ internal class Mapper
       case DataType.Boolean:
         destination.BooleanProperties = GetBooleanProperties(source.Properties);
         break;
+      case DataType.DateTime:
+        destination.DateTimeProperties = GetDateTimeProperties(source.Properties);
+        break;
+      case DataType.Number:
+        destination.NumberProperties = GetNumberProperties(source.Properties);
+        break;
       case DataType.String:
         destination.StringProperties = GetStringProperties(source.Properties);
         break;
@@ -214,6 +220,41 @@ internal class Mapper
     return destination;
   }
   private static BooleanProperties GetBooleanProperties(IReadOnlyDictionary<string, string> _) => new();
+  private static DateTimeProperties GetDateTimeProperties(IReadOnlyDictionary<string, string> source)
+  {
+    DateTimeProperties destination = new();
+    if (source.TryGetValue(nameof(IDateTimeProperties.MinimumValue), out string? minimumValueValue)
+      && DateTime.TryParse(minimumValueValue, out DateTime minimumValue))
+    {
+      destination.MinimumValue = minimumValue;
+    }
+    if (source.TryGetValue(nameof(IDateTimeProperties.MaximumValue), out string? maximumValueValue)
+      && DateTime.TryParse(maximumValueValue, out DateTime maximumValue))
+    {
+      destination.MaximumValue = maximumValue;
+    }
+    return destination;
+  }
+  private static NumberProperties GetNumberProperties(IReadOnlyDictionary<string, string> source)
+  {
+    NumberProperties destination = new();
+    if (source.TryGetValue(nameof(INumberProperties.MinimumValue), out string? minimumValueValue)
+      && double.TryParse(minimumValueValue, out double minimumValue))
+    {
+      destination.MinimumValue = minimumValue;
+    }
+    if (source.TryGetValue(nameof(INumberProperties.MaximumValue), out string? maximumValueValue)
+      && double.TryParse(maximumValueValue, out double maximumValue))
+    {
+      destination.MaximumValue = maximumValue;
+    }
+    if (source.TryGetValue(nameof(INumberProperties.Step), out string? stepValue)
+      && double.TryParse(stepValue, out double step))
+    {
+      destination.Step = step;
+    }
+    return destination;
+  }
   private static StringProperties GetStringProperties(IReadOnlyDictionary<string, string> source)
   {
     StringProperties destination = new();

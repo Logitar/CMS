@@ -44,6 +44,48 @@ public class CreateFieldTypeCommandHandlerTests
     ), _cancellationToken), Times.Once());
   }
 
+  [Fact(DisplayName = "It should create a new DateTime field type.")]
+  public async Task It_should_create_a_new_DateTime_field_type()
+  {
+    CreateFieldTypePayload payload = new("PublishedOn")
+    {
+      DisplayName = " Published on ",
+      Description = "    ",
+      DateTimeProperties = new DateTimeProperties(minimumValue: DateTime.UtcNow, maximumValue: null)
+    };
+    CreateFieldTypeCommand command = new(payload);
+    ActivityHelper.Contextualize(command);
+    await _handler.Handle(command, _cancellationToken);
+
+    _sender.Verify(x => x.Send(It.Is<SaveFieldTypeCommand>(y => y.FieldType.UniqueName.Value == payload.UniqueName
+      && y.FieldType.DisplayName != null && y.FieldType.DisplayName.Value == payload.DisplayName.Trim()
+      && y.FieldType.Description == null
+      && y.FieldType.DataType == DataType.DateTime
+      && y.FieldType.Properties is ReadOnlyDateTimeProperties
+    ), _cancellationToken), Times.Once());
+  }
+
+  [Fact(DisplayName = "It should create a new Number field type.")]
+  public async Task It_should_create_a_new_Number_field_type()
+  {
+    CreateFieldTypePayload payload = new("Price")
+    {
+      DisplayName = " Price ",
+      Description = "    ",
+      NumberProperties = new NumberProperties(minimumValue: 0.01, maximumValue: null, step: 0.01)
+    };
+    CreateFieldTypeCommand command = new(payload);
+    ActivityHelper.Contextualize(command);
+    await _handler.Handle(command, _cancellationToken);
+
+    _sender.Verify(x => x.Send(It.Is<SaveFieldTypeCommand>(y => y.FieldType.UniqueName.Value == payload.UniqueName
+      && y.FieldType.DisplayName != null && y.FieldType.DisplayName.Value == payload.DisplayName.Trim()
+      && y.FieldType.Description == null
+      && y.FieldType.DataType == DataType.Number
+      && y.FieldType.Properties is ReadOnlyNumberProperties
+    ), _cancellationToken), Times.Once());
+  }
+
   [Fact(DisplayName = "It should create a new String field type.")]
   public async Task It_should_create_a_new_String_field_type()
   {

@@ -1,5 +1,6 @@
 ﻿using Logitar.Cms.Contracts.FieldTypes;
 using Logitar.Cms.Contracts.FieldTypes.Properties;
+using Logitar.Cms.Core;
 using Logitar.Cms.Core.FieldTypes.Events;
 using Logitar.Identity.EntityFrameworkCore.Relational.Entities;
 
@@ -62,6 +63,40 @@ internal class FieldTypeEntity : AggregateEntity
     Update(@event);
 
     Properties.Clear();
+  }
+  public void SetProperties(DateTimePropertiesChangedEvent @event)
+  {
+    Update(@event);
+
+    Properties.Clear();
+
+    if (@event.Properties.MinimumValue.HasValue)
+    {
+      Properties[nameof(IDateTimeProperties.MinimumValue)] = @event.Properties.MinimumValue.Value.ToISOString();
+    }
+    if (@event.Properties.MaximumValue.HasValue)
+    {
+      Properties[nameof(IDateTimeProperties.MaximumValue)] = @event.Properties.MaximumValue.Value.ToISOString();
+    }
+  }
+  public void SetProperties(NumberPropertiesChangedEvent @event)
+  {
+    Update(@event);
+
+    Properties.Clear();
+
+    if (@event.Properties.MinimumValue.HasValue)
+    {
+      Properties[nameof(INumberProperties.MinimumValue)] = @event.Properties.MinimumValue.Value.ToString();
+    }
+    if (@event.Properties.MaximumValue.HasValue)
+    {
+      Properties[nameof(INumberProperties.MaximumValue)] = @event.Properties.MaximumValue.Value.ToString();
+    }
+    if (@event.Properties.Step != null)
+    {
+      Properties[nameof(INumberProperties.Step)] = @event.Properties.Step.Value.ToString();
+    }
   }
   public void SetProperties(StringPropertiesChangedEvent @event)
   {
