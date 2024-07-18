@@ -7,6 +7,15 @@ public class NumberFieldValueValidator : AbstractValidator<double>
 {
   public NumberFieldValueValidator(INumberProperties properties)
   {
-    // TODO(fpion): implement
+    if (properties.MinimumValue.HasValue)
+    {
+      RuleFor(x => x).GreaterThanOrEqualTo(properties.MinimumValue.Value);
+    }
+    if (properties.MaximumValue.HasValue)
+    {
+      RuleFor(x => x).LessThanOrEqualTo(properties.MaximumValue.Value);
+    }
+
+    // ISSUE: https://github.com/Logitar/CMS/issues/28
   }
 }

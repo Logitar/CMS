@@ -7,6 +7,13 @@ public class DateTimeFieldValueValidator : AbstractValidator<DateTime>
 {
   public DateTimeFieldValueValidator(IDateTimeProperties properties)
   {
-    // TODO(fpion): implement
+    if (properties.MinimumValue.HasValue)
+    {
+      RuleFor(x => x).GreaterThanOrEqualTo(properties.MinimumValue.Value);
+    }
+    if (properties.MaximumValue.HasValue)
+    {
+      RuleFor(x => x).LessThanOrEqualTo(properties.MaximumValue.Value);
+    }
   }
 }
