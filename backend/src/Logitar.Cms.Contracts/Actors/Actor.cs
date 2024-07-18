@@ -28,7 +28,7 @@ public class Actor
   public Actor(User user) : this(user.FullName ?? user.UniqueName)
   {
     Id = user.Id;
-    Type = ActorType.ApiKey;
+    Type = ActorType.User;
 
     EmailAddress = user.Email?.Address;
     PictureUrl = user.Picture;

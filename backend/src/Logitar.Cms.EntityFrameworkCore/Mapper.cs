@@ -124,7 +124,7 @@ internal class Mapper
       Id = source.UniqueId,
       CreatedBy = FindActor(source.CreatedBy),
       CreatedOn = source.CreatedOn.AsUniversalTime(),
-      UpdatedBy = FindActor(source.CreatedBy),
+      UpdatedBy = FindActor(source.UpdatedBy),
       UpdatedOn = source.CreatedOn.AsUniversalTime()
     };
 
