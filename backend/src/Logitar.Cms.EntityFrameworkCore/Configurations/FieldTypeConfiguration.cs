@@ -29,6 +29,6 @@ internal class FieldTypeConfiguration : AggregateConfiguration<FieldTypeEntity>,
     builder.Property(x => x.UniqueNameNormalized).HasMaxLength(UniqueNameUnit.MaximumLength);
     builder.Property(x => x.DisplayName).HasMaxLength(DisplayNameUnit.MaximumLength);
     builder.Property(x => x.DataType).HasMaxLength(byte.MaxValue).HasConversion(new EnumToStringConverter<DataType>());
-    builder.Property(x => x.PropertiesSerialized).HasColumnName(nameof(FieldTypeEntity.Properties));
+    builder.Property(x => x.PropertiesSerialized).HasColumnName(CmsDb.FieldTypes.Properties.Name);
   }
 }

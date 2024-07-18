@@ -10,5 +10,7 @@ public class SaveContentLocaleValidator : AbstractValidator<SaveContentLocalePay
   public SaveContentLocaleValidator(IUniqueNameSettings uniqueNameSettings)
   {
     RuleFor(x => x.UniqueName).SetValidator(new UniqueNameValidator(uniqueNameSettings));
+
+    RuleForEach(x => x.Fields).SetValidator(new FieldValueValidator());
   }
 }

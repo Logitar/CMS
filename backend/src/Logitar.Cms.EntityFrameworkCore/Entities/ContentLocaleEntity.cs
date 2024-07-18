@@ -25,6 +25,28 @@ internal class ContentLocaleEntity
     private set { }
   }
 
+  public Dictionary<Guid, string> Fields { get; private set; } = [];
+  public string? FieldsSerialized
+  {
+    get => Fields.Count == 0 ? null : JsonSerializer.Serialize(Fields);
+    private set
+    {
+      Fields.Clear();
+
+      if (value != null)
+      {
+        Dictionary<Guid, string>? fields = JsonSerializer.Deserialize<Dictionary<Guid, string>>(value);
+        if (fields != null)
+        {
+          foreach (KeyValuePair<Guid, string> field in fields)
+          {
+            Fields[field.Key] = field.Value;
+          }
+        }
+      }
+    }
+  }
+
   public string CreatedBy { get; private set; } = string.Empty;
   public DateTime CreatedOn { get; private set; }
 
@@ -59,6 +81,12 @@ internal class ContentLocaleEntity
   public void Update(ContentLocaleUnit locale, DomainEvent @event)
   {
     UniqueName = locale.UniqueName.Value;
+
+    Fields.Clear();
+    foreach (KeyValuePair<Guid, string> field in locale.FieldValues)
+    {
+      Fields[field.Key] = field.Value;
+    }
 
     UpdatedBy = @event.ActorId.Value;
     UpdatedOn = @event.OccurredOn.AsUniversalTime();

@@ -4,9 +4,10 @@ namespace Logitar.Cms.Infrastructure.Converters;
 
 public class LanguageIdConverter : JsonConverter<LanguageId>
 {
-  public override LanguageId? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+  public override LanguageId Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
   {
-    return LanguageId.TryCreate(reader.GetString());
+    string? value = reader.GetString();
+    return value == null ? new LanguageId() : new(value);
   }
 
   public override void Write(Utf8JsonWriter writer, LanguageId languageId, JsonSerializerOptions options)

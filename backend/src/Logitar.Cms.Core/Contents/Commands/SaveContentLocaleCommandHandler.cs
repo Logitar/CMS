@@ -45,26 +45,38 @@ internal class SaveContentLocaleCommandHandler : IRequestHandler<SaveContentLoca
       return null;
     }
 
-    ContentLocaleUnit locale = new(new UniqueNameUnit(uniqueNameSettings, payload.UniqueName));
+    ContentTypeAggregate contentType = await _contentTypeRepository.LoadAsync(content.ContentTypeId, cancellationToken)
+      ?? throw new InvalidOperationException($"The content type aggregate 'Id={content.ContentTypeId}' could not be found.");
 
+    LanguageAggregate? language = null;
     if (command.LanguageId.HasValue)
     {
-      ContentTypeAggregate contentType = await _contentTypeRepository.LoadAsync(content.ContentTypeId, cancellationToken)
-        ?? throw new InvalidOperationException($"The content type aggregate 'Id={content.ContentTypeId.Value}' could not be found.");
       if (contentType.IsInvariant)
       {
         throw new CannotCreateInvariantLocaleException(content);
       }
 
       LanguageId languageId = new(command.LanguageId.Value);
-      LanguageAggregate language = await _languageRepository.LoadAsync(languageId, cancellationToken)
+      language = await _languageRepository.LoadAsync(languageId, cancellationToken)
         ?? throw new AggregateNotFoundException<LanguageAggregate>(languageId.AggregateId, nameof(command.LanguageId));
+    }
 
-      content.SetLocale(language, locale, command.ActorId);
+    ValidateFieldValuesCommand validateFieldValues = new(payload.Fields, contentType, content, language, PropertyName: nameof(payload.Fields));
+    await _sender.Send(validateFieldValues, cancellationToken);
+    Dictionary<Guid, string> fieldValues = new(capacity: payload.Fields.Count);
+    foreach (FieldValue field in payload.Fields)
+    {
+      fieldValues[field.Id] = field.Value;
+    }
+    ContentLocaleUnit locale = new(new UniqueNameUnit(uniqueNameSettings, payload.UniqueName), fieldValues);
+
+    if (language == null)
+    {
+      content.SetInvariant(locale, command.ActorId);
     }
     else
     {
-      content.SetInvariant(locale, command.ActorId);
+      content.SetLocale(language, locale, command.ActorId);
     }
 
     await _sender.Send(new SaveContentCommand(content), cancellationToken);
@@ -72,3 +84,5 @@ internal class SaveContentLocaleCommandHandler : IRequestHandler<SaveContentLoca
     return await _contentQuerier.ReadAsync(content, cancellationToken);
   }
 }
+
+// TODO(fpion): integration tests

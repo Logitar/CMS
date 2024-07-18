@@ -1,5 +1,6 @@
 ﻿using Logitar.Cms.Core.FieldTypes;
 using Logitar.Data;
+using Logitar.EventSourcing;
 using Logitar.EventSourcing.EntityFrameworkCore.Relational;
 using Logitar.EventSourcing.Infrastructure;
 using Logitar.Identity.Domain.Shared;
@@ -23,6 +24,12 @@ internal class FieldTypeRepository : EventSourcing.EntityFrameworkCore.Relationa
   public async Task<FieldTypeAggregate?> LoadAsync(FieldTypeId id, CancellationToken cancellationToken)
   {
     return await base.LoadAsync<FieldTypeAggregate>(id.AggregateId, cancellationToken);
+  }
+
+  public async Task<IReadOnlyCollection<FieldTypeAggregate>> LoadAsync(IEnumerable<FieldTypeId> ids, CancellationToken cancellationToken)
+  {
+    IEnumerable<AggregateId> aggregateIds = ids.Select(id => id.AggregateId);
+    return (await base.LoadAsync<FieldTypeAggregate>(aggregateIds, cancellationToken)).ToArray();
   }
 
   public async Task<FieldTypeAggregate?> LoadAsync(UniqueNameUnit uniqueName, CancellationToken cancellationToken)

@@ -33,7 +33,7 @@ internal class SaveContentCommandHandler : IRequestHandler<SaveContentCommand>
 
     foreach (LanguageId? languageId in changedLocales)
     {
-      ContentLocaleUnit locale = languageId == null ? content.Invariant : content.GetLocale(languageId);
+      ContentLocaleUnit locale = languageId.HasValue ? content.GetLocale(languageId.Value) : content.Invariant;
       ContentAggregate? other = await _contentRepository.LoadAsync(content.ContentTypeId, languageId, locale.UniqueName, cancellationToken);
       if (other != null && !other.Equals(content))
       {

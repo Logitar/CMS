@@ -24,7 +24,7 @@ public class ContentAggregate : AggregateRoot
   public bool HasLocale(LanguageAggregate language) => HasLocale(language.Id);
   public bool HasLocale(LanguageId languageId) => _locales.ContainsKey(languageId);
   public ContentLocaleUnit GetLocale(LanguageAggregate language) => GetLocale(language.Id);
-  public ContentLocaleUnit GetLocale(LanguageId languageId) => TryGetLocale(languageId) ?? throw new InvalidOperationException($"The content has no locale for language 'Id={languageId.Value}'.");
+  public ContentLocaleUnit GetLocale(LanguageId languageId) => TryGetLocale(languageId) ?? throw new InvalidOperationException($"The content has no locale for language 'Id={languageId}'.");
   public ContentLocaleUnit? TryGetLocale(LanguageAggregate language) => TryGetLocale(language.Id);
   public ContentLocaleUnit? TryGetLocale(LanguageId languageId) => _locales.TryGetValue(languageId, out ContentLocaleUnit? locale) ? locale : null;
 
@@ -69,13 +69,13 @@ public class ContentAggregate : AggregateRoot
   }
   protected virtual void Apply(ContentLocaleChangedEvent @event)
   {
-    if (@event.LanguageId == null)
+    if (@event.LanguageId.HasValue)
     {
-      _invariant = @event.Locale;
+      _locales[@event.LanguageId.Value] = @event.Locale;
     }
     else
     {
-      _locales[@event.LanguageId] = @event.Locale;
+      _invariant = @event.Locale;
     }
   }
 

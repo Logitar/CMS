@@ -37,7 +37,7 @@ internal class ContentRepository : EventSourcing.EntityFrameworkCore.Relational.
       .Join(CmsDb.ContentLocales.ContentItemId, CmsDb.ContentItems.ContentItemId)
       .LeftJoin(CmsDb.Languages.LanguageId, CmsDb.ContentLocales.LanguageId)
       .Where(CmsDb.ContentTypes.AggregateId, Operators.IsEqualTo(contentTypeId.Value))
-      .Where(CmsDb.Languages.AggregateId, languageId == null ? Operators.IsNull() : Operators.IsEqualTo(languageId.Value))
+      .Where(CmsDb.Languages.AggregateId, languageId.HasValue ? Operators.IsEqualTo(languageId.Value.Value) : Operators.IsNull())
       .Where(CmsDb.ContentLocales.UniqueNameNormalized, Operators.IsEqualTo(CmsDb.Normalize(uniqueName.Value)))
       .Build();
 
