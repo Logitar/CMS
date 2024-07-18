@@ -64,7 +64,7 @@ internal class SaveContentLocaleCommandHandler : IRequestHandler<SaveContentLoca
     ValidateFieldValuesCommand validateFieldValues = new(payload.Fields, contentType, content, language, PropertyName: nameof(payload.Fields));
     await _sender.Send(validateFieldValues, cancellationToken);
     Dictionary<Guid, string> fieldValues = new(capacity: payload.Fields.Count);
-    foreach (FieldValuePayload field in payload.Fields)
+    foreach (FieldValue field in payload.Fields)
     {
       fieldValues[field.Id] = field.Value;
     }

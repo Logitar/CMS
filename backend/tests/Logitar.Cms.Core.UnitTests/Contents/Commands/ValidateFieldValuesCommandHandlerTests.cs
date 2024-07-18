@@ -90,7 +90,7 @@ public class ValidateFieldValuesCommandHandlerTests
     _fieldTypeRepository.Setup(x => x.LoadAsync(It.Is<IEnumerable<FieldTypeId>>(y => y.Single() == _articleTitleType.Id), _cancellationToken))
       .ReturnsAsync([_articleTitleType]);
 
-    FieldValuePayload[] fields =
+    FieldValue[] fields =
     [
       new(_articleTitleId, "Rendered: LEGO Acura Models"),
       new(_authorSlugId, "ryan-hucks")
@@ -112,7 +112,7 @@ public class ValidateFieldValuesCommandHandlerTests
     _fieldTypeRepository.Setup(x => x.LoadAsync(It.Is<IEnumerable<FieldTypeId>>(y => y.Single() == _slugType.Id), _cancellationToken))
       .ReturnsAsync([_slugType]);
 
-    FieldValuePayload field = new(_authorSlugId, "ryan-hucks");
+    FieldValue field = new(_authorSlugId, "ryan-hucks");
     _sender.Setup(x => x.Send(It.Is<FindFieldValueConflictsCommand>(y => y.FieldValues.Single().Equals(field) && y.Content.Equals(_author2) && y.Language == null),
       _cancellationToken)).ReturnsAsync([new FieldValueConflict(_authorSlugId, _author1.Id)]);
 
@@ -150,7 +150,7 @@ public class ValidateFieldValuesCommandHandlerTests
     _fieldTypeRepository.Setup(x => x.LoadAsync(It.Is<IEnumerable<FieldTypeId>>(y => y.Single() == _articleTitleType.Id), _cancellationToken))
       .ReturnsAsync([_articleTitleType]);
 
-    FieldValuePayload[] fields =
+    FieldValue[] fields =
     [
       new(_articleAuthorId, "47b3dd76-2b03-4c0b-8caa-09ea283836ef"),
       new(_articleTitleId, "Rendered: LEGO Acura Models")
@@ -172,7 +172,7 @@ public class ValidateFieldValuesCommandHandlerTests
     _fieldTypeRepository.Setup(x => x.LoadAsync(It.Is<IEnumerable<FieldTypeId>>(y => y.Single() == _authorIdType.Id), _cancellationToken))
       .ReturnsAsync([_authorIdType]);
 
-    FieldValuePayload field = new(_articleAuthorId, "ryan-hucks-_________________________");
+    FieldValue field = new(_articleAuthorId, "ryan-hucks-_________________________");
     ValidateFieldValuesCommand command = new([field], _articleType, _article, Language: null, PropertyName, ThrowOnFailure: false);
     ValidationResult result = await _handler.Handle(command, _cancellationToken);
 
@@ -190,7 +190,7 @@ public class ValidateFieldValuesCommandHandlerTests
     _fieldTypeRepository.Setup(x => x.LoadAsync(It.Is<IEnumerable<FieldTypeId>>(y => y.Single() == _articleTitleType.Id), _cancellationToken))
       .ReturnsAsync([_articleTitleType]);
 
-    FieldValuePayload field = new(_articleTitleId, "Rendered: LEGO Acura Models");
+    FieldValue field = new(_articleTitleId, "Rendered: LEGO Acura Models");
     ValidateFieldValuesCommand command = new([field], _articleType, _article, _english, PropertyName, ThrowOnFailure: false);
     ValidationResult result = await _handler.Handle(command, _cancellationToken);
 

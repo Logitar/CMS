@@ -7,7 +7,7 @@ using MediatR;
 namespace Logitar.Cms.Core.Contents.Commands;
 
 public record ValidateFieldValuesCommand(
-  IReadOnlyCollection<FieldValuePayload> Fields,
+  IReadOnlyCollection<FieldValue> Fields,
   ContentTypeAggregate ContentType,
   ContentAggregate Content,
   LanguageAggregate? Language,

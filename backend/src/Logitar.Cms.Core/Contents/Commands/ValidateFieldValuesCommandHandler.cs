@@ -22,7 +22,7 @@ internal class ValidateFieldValuesCommandHandler : IRequestHandler<ValidateField
 
   public async Task<ValidationResult> Handle(ValidateFieldValuesCommand command, CancellationToken cancellationToken)
   {
-    IReadOnlyCollection<FieldValuePayload> fields = command.Fields;
+    IReadOnlyCollection<FieldValue> fields = command.Fields;
     ContentTypeAggregate contentType = command.ContentType;
     ContentAggregate content = command.Content;
     LanguageAggregate? language = command.Language;
@@ -49,9 +49,9 @@ internal class ValidateFieldValuesCommandHandler : IRequestHandler<ValidateField
       .ToDictionary(f => f.Id, f => f);
 
     List<ValidationFailure> errors = new(capacity: fields.Count);
-    List<FieldValuePayload> uniqueValues = new(capacity: fields.Count);
+    List<FieldValue> uniqueValues = new(capacity: fields.Count);
 
-    foreach (FieldValuePayload field in fields)
+    foreach (FieldValue field in fields)
     {
       missingFieldIds.Remove(field.Id);
 
