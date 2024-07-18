@@ -16,7 +16,7 @@ public record ReadOnlyDateTimeProperties : FieldTypeProperties, IDateTimePropert
   {
   }
 
-  public ReadOnlyDateTimeProperties(IDateTimeProperties number) : this(number.MinimumValue, number.MaximumValue)
+  public ReadOnlyDateTimeProperties(IDateTimeProperties dateTime) : this(dateTime.MinimumValue, dateTime.MaximumValue)
   {
   }
 
