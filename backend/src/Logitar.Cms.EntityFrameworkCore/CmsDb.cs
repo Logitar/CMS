@@ -181,4 +181,13 @@ public static class CmsDb
     public static readonly ColumnId UniqueId = new(nameof(LogEntity.UniqueId));
     public static readonly ColumnId UserId = new(nameof(LogEntity.UserId));
   }
+
+  public static class StringFieldIndex
+  {
+    public static readonly TableId Table = new(nameof(CmsContext.StringFieldIndex));
+
+    public static readonly ColumnId StringFieldIndexId = new(nameof(StringFieldIndexId), Table);
+
+    // TODO(fpion): Columns
+  }
 }
