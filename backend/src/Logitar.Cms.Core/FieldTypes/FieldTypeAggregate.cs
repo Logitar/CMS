@@ -211,13 +211,42 @@ public class FieldTypeAggregate : AggregateRoot
 
   public ValidationResult Validate(string value) => DataType switch
   {
-    DataType.Boolean => _booleanValueValidator.Validate(value),
-    DataType.DateTime => _dateTimeValueValidator.Validate(value),
-    DataType.Number => _numberValueValidator.Validate(value),
-    DataType.String => _stringValueValidator.Validate(value),
-    DataType.Text => _textValueValidator.Validate(value),
+    DataType.Boolean => ValidateBoolean(value),
+    DataType.DateTime => ValidateDateTime(value),
+    DataType.Number => ValidateNumber(value),
+    DataType.String => ValidateString(value),
+    DataType.Text => ValidateText(value),
     _ => throw new DataTypeNotSupportedException(DataType),
   };
+  private ValidationResult ValidateBoolean(string value)
+  {
+    if (bool.TryParse(value, out bool boolean))
+    {
+      return _booleanValueValidator.Validate(boolean);
+    }
+
+    throw new NotImplementedException(); // TODO(fpion): implement
+  }
+  private ValidationResult ValidateDateTime(string value)
+  {
+    if (DateTime.TryParse(value, out DateTime dateTime))
+    {
+      return _dateTimeValueValidator.Validate(dateTime);
+    }
+
+    throw new NotImplementedException(); // TODO(fpion): implement
+  }
+  private ValidationResult ValidateNumber(string value)
+  {
+    if (double.TryParse(value, out double number))
+    {
+      return _numberValueValidator.Validate(number);
+    }
+
+    throw new NotImplementedException(); // TODO(fpion): implement
+  }
+  private ValidationResult ValidateString(string value) => _stringValueValidator.Validate(value);
+  private ValidationResult ValidateText(string value) => _textValueValidator.Validate(value);
 
   public override string ToString() => $"{DisplayName?.Value ?? UniqueName.Value} | {base.ToString()}";
 }

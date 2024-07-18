@@ -2,8 +2,6 @@
 
 internal class BooleanFieldIndexEntity : FieldIndexEntity<bool>
 {
-  public const int MaximumLength = byte.MaxValue;
-
   public BooleanFieldIndexEntity(ContentLocaleEntity contentLocale, FieldDefinitionEntity fieldDefinition, bool value)
     : base(contentLocale, fieldDefinition, value)
   {

@@ -47,7 +47,7 @@ public class SaveContentLocaleCommandHandlerTests : IntegrationTests
     _contentFieldType = new(new UniqueNameUnit(FieldTypeAggregate.UniqueNameSettings, "ArticleContent"), new ReadOnlyTextProperties(TextProperties.ContentTypes.PlainText, minimumLength: 1, maximumLength: null), ActorId);
     _featuredType = new(new UniqueNameUnit(FieldTypeAggregate.UniqueNameSettings, "IsFeatured"), new ReadOnlyBooleanProperties(), ActorId);
     _wordCount = new(new UniqueNameUnit(FieldTypeAggregate.UniqueNameSettings, "WordCount"), new ReadOnlyNumberProperties(minimumValue: 1, maximumValue: null, step: 1), ActorId);
-    _publishedOn = new(new UniqueNameUnit(FieldTypeAggregate.UniqueNameSettings, "PublishedOn"), new ReadOnlyDateTimeProperties(minimumValue: DateTime.UtcNow, maximumValue: null), ActorId);
+    _publishedOn = new(new UniqueNameUnit(FieldTypeAggregate.UniqueNameSettings, "PublishedOn"), new ReadOnlyDateTimeProperties(), ActorId);
 
     _contentType = new(new IdentifierUnit("BlogArticle"), isInvariant: false, ActorId);
     _contentType.SetFieldDefinition(_serialId, new FieldDefinitionUnit(_serialType.Id, IsInvariant: true, IsRequired: true, IsIndexed: true, IsUnique: true,
@@ -143,7 +143,9 @@ public class SaveContentLocaleCommandHandlerTests : IntegrationTests
     SaveContentLocalePayload payload = new("rendered-lego-acura-models");
     FieldValue title = new(_titleId, "Rendered: LEGO Acura Models");
     FieldValue contents = new(_contentId, "I loved my LEGO as a kid. I can vividly remember the LEGO sets I owned: the motor speedway from the 80s, a huge castle set, and a space “M-Tron” set, just to name a few. […]");
-    payload.Fields.AddRange([title, contents]);
+    FieldValue wordCount = new(_wordCountId, "36");
+    FieldValue publishedOn = new(_publishedOnId, "2023-11-24T00:00:00Z");
+    payload.Fields.AddRange([title, contents, wordCount, publishedOn]);
     SaveContentLocaleCommand command = new(_content.Id.ToGuid(), language.Id.ToGuid(), payload);
     ContentItem? content = await Pipeline.ExecuteAsync(command);
     Assert.NotNull(content);
@@ -176,7 +178,7 @@ public class SaveContentLocaleCommandHandlerTests : IntegrationTests
     Assert.Equal(_publishedOnId, dateTime.FieldDefinitionUid);
     Assert.Equal(_content.Id.ToGuid(), dateTime.ContentItemUid);
     Assert.Equal(language.Id.ToGuid(), dateTime.LanguageUid);
-    Assert.Equal(publishedOn.Value, dateTime.Value);
+    Assert.Equal(DateTime.Parse(publishedOn.Value), dateTime.Value);
 
     NumberFieldIndexEntity? number = await CmsContext.NumberFieldIndex.AsNoTracking().SingleOrDefaultAsync();
     Assert.NotNull(number);
@@ -185,7 +187,7 @@ public class SaveContentLocaleCommandHandlerTests : IntegrationTests
     Assert.Equal(_wordCountId, number.FieldDefinitionUid);
     Assert.Equal(_content.Id.ToGuid(), number.ContentItemUid);
     Assert.Equal(language.Id.ToGuid(), number.LanguageUid);
-    Assert.Equal(wordCount.Value, number.Value);
+    Assert.Equal(double.Parse(wordCount.Value), number.Value);
 
     StringFieldIndexEntity? @string = await CmsContext.StringFieldIndex.AsNoTracking().SingleOrDefaultAsync();
     Assert.NotNull(@string);

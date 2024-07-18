@@ -87,6 +87,31 @@ public static class CmsDb
     public static readonly ColumnId UniqueNameNormalized = new(nameof(ContentTypeEntity.UniqueNameNormalized), Table);
   }
 
+  public static class DateTimeFieldIndex
+  {
+    public static readonly TableId Table = new(nameof(CmsContext.DateTimeFieldIndex));
+
+    public static readonly ColumnId ContentItemId = new(nameof(DateTimeFieldIndexEntity.ContentItemId), Table);
+    public static readonly ColumnId ContentItemUid = new(nameof(DateTimeFieldIndexEntity.ContentItemUid), Table);
+    public static readonly ColumnId ContentLocaleId = new(nameof(DateTimeFieldIndexEntity.ContentLocaleId), Table);
+    public static readonly ColumnId ContentLocaleName = new(nameof(DateTimeFieldIndexEntity.ContentLocaleName), Table);
+    public static readonly ColumnId ContentLocaleUid = new(nameof(DateTimeFieldIndexEntity.ContentLocaleUid), Table);
+    public static readonly ColumnId ContentTypeId = new(nameof(DateTimeFieldIndexEntity.ContentTypeId), Table);
+    public static readonly ColumnId ContentTypeName = new(nameof(DateTimeFieldIndexEntity.ContentTypeName), Table);
+    public static readonly ColumnId ContentTypeUid = new(nameof(DateTimeFieldIndexEntity.ContentTypeUid), Table);
+    public static readonly ColumnId FieldDefinitionId = new(nameof(DateTimeFieldIndexEntity.FieldDefinitionId), Table);
+    public static readonly ColumnId FieldDefinitionName = new(nameof(DateTimeFieldIndexEntity.FieldDefinitionName), Table);
+    public static readonly ColumnId FieldDefinitionUid = new(nameof(DateTimeFieldIndexEntity.FieldDefinitionUid), Table);
+    public static readonly ColumnId FieldTypeId = new(nameof(DateTimeFieldIndexEntity.FieldTypeId), Table);
+    public static readonly ColumnId FieldTypeName = new(nameof(DateTimeFieldIndexEntity.FieldTypeName), Table);
+    public static readonly ColumnId FieldTypeUid = new(nameof(DateTimeFieldIndexEntity.FieldTypeUid), Table);
+    public static readonly ColumnId LanguageCode = new(nameof(DateTimeFieldIndexEntity.LanguageCode), Table);
+    public static readonly ColumnId LanguageId = new(nameof(DateTimeFieldIndexEntity.LanguageId), Table);
+    public static readonly ColumnId LanguageUid = new(nameof(DateTimeFieldIndexEntity.LanguageUid), Table);
+    public static readonly ColumnId DateTimeFieldIndexId = new(nameof(DateTimeFieldIndexId), Table);
+    public static readonly ColumnId Value = new(nameof(DateTimeFieldIndexEntity.Value), Table);
+  }
+
   public static class FieldDefinitions
   {
     public static readonly TableId Table = new(nameof(CmsContext.FieldDefinitions));
@@ -206,6 +231,31 @@ public static class CmsDb
     public static readonly ColumnId TenantId = new(nameof(LogEntity.TenantId));
     public static readonly ColumnId UniqueId = new(nameof(LogEntity.UniqueId));
     public static readonly ColumnId UserId = new(nameof(LogEntity.UserId));
+  }
+
+  public static class NumberFieldIndex
+  {
+    public static readonly TableId Table = new(nameof(CmsContext.NumberFieldIndex));
+
+    public static readonly ColumnId ContentItemId = new(nameof(NumberFieldIndexEntity.ContentItemId), Table);
+    public static readonly ColumnId ContentItemUid = new(nameof(NumberFieldIndexEntity.ContentItemUid), Table);
+    public static readonly ColumnId ContentLocaleId = new(nameof(NumberFieldIndexEntity.ContentLocaleId), Table);
+    public static readonly ColumnId ContentLocaleName = new(nameof(NumberFieldIndexEntity.ContentLocaleName), Table);
+    public static readonly ColumnId ContentLocaleUid = new(nameof(NumberFieldIndexEntity.ContentLocaleUid), Table);
+    public static readonly ColumnId ContentTypeId = new(nameof(NumberFieldIndexEntity.ContentTypeId), Table);
+    public static readonly ColumnId ContentTypeName = new(nameof(NumberFieldIndexEntity.ContentTypeName), Table);
+    public static readonly ColumnId ContentTypeUid = new(nameof(NumberFieldIndexEntity.ContentTypeUid), Table);
+    public static readonly ColumnId FieldDefinitionId = new(nameof(NumberFieldIndexEntity.FieldDefinitionId), Table);
+    public static readonly ColumnId FieldDefinitionName = new(nameof(NumberFieldIndexEntity.FieldDefinitionName), Table);
+    public static readonly ColumnId FieldDefinitionUid = new(nameof(NumberFieldIndexEntity.FieldDefinitionUid), Table);
+    public static readonly ColumnId FieldTypeId = new(nameof(NumberFieldIndexEntity.FieldTypeId), Table);
+    public static readonly ColumnId FieldTypeName = new(nameof(NumberFieldIndexEntity.FieldTypeName), Table);
+    public static readonly ColumnId FieldTypeUid = new(nameof(NumberFieldIndexEntity.FieldTypeUid), Table);
+    public static readonly ColumnId LanguageCode = new(nameof(NumberFieldIndexEntity.LanguageCode), Table);
+    public static readonly ColumnId LanguageId = new(nameof(NumberFieldIndexEntity.LanguageId), Table);
+    public static readonly ColumnId LanguageUid = new(nameof(NumberFieldIndexEntity.LanguageUid), Table);
+    public static readonly ColumnId NumberFieldIndexId = new(nameof(NumberFieldIndexId), Table);
+    public static readonly ColumnId Value = new(nameof(NumberFieldIndexEntity.Value), Table);
   }
 
   public static class StringFieldIndex
