@@ -16,7 +16,7 @@ internal class LogExceptionConfiguration : IEntityTypeConfiguration<LogException
     builder.Ignore(x => x.Data);
 
     builder.Property(x => x.Type).HasMaxLength(byte.MaxValue);
-    builder.Property(x => x.DataSerialized).HasColumnName(nameof(LogExceptionEntity.Data));
+    builder.Property(x => x.DataSerialized).HasColumnName(CmsDb.LogExceptions.Data.Name);
 
     builder.HasOne(x => x.Log).WithMany(x => x.Exceptions).OnDelete(DeleteBehavior.Cascade);
   }

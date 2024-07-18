@@ -21,8 +21,11 @@ internal class ContentLocaleConfiguration : IEntityTypeConfiguration<ContentLoca
     builder.HasIndex(x => x.UpdatedBy);
     builder.HasIndex(x => x.UpdatedOn);
 
+    builder.Ignore(x => x.Fields);
+
     builder.Property(x => x.UniqueName).HasMaxLength(UniqueNameUnit.MaximumLength);
     builder.Property(x => x.UniqueNameNormalized).HasMaxLength(UniqueNameUnit.MaximumLength);
+    builder.Property(x => x.FieldsSerialized).HasColumnName(CmsDb.ContentLocales.Fields.Name);
     builder.Property(x => x.CreatedBy).HasMaxLength(ActorId.MaximumLength);
     builder.Property(x => x.UpdatedBy).HasMaxLength(ActorId.MaximumLength);
 

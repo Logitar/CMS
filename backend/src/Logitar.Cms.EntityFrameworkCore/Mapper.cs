@@ -133,6 +133,11 @@ internal class Mapper
       destination.Language = ToLanguage(source.Language);
     }
 
+    foreach (KeyValuePair<Guid, string> field in source.Fields)
+    {
+      destination.Fields.Add(new FieldValue(field));
+    }
+
     return destination;
   }
 

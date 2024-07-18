@@ -104,6 +104,10 @@ namespace Logitar.Cms.EntityFrameworkCore.PostgreSQL.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("FieldsSerialized")
+                        .HasColumnType("text")
+                        .HasColumnName("Fields");
+
                     b.Property<int?>("LanguageId")
                         .HasColumnType("integer");
 

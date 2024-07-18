@@ -35,6 +35,7 @@ public static class CmsDb
     public static readonly ColumnId ContentItemId = new(nameof(ContentLocaleEntity.ContentItemId), Table);
     public static readonly ColumnId ContentLocaleId = new(nameof(ContentLocaleEntity.ContentLocaleId), Table);
     public static readonly ColumnId ContentTypeId = new(nameof(ContentLocaleEntity.ContentTypeId), Table);
+    public static readonly ColumnId Fields = new(nameof(ContentLocaleEntity.Fields), Table);
     public static readonly ColumnId LanguageId = new(nameof(ContentLocaleEntity.LanguageId), Table);
     public static readonly ColumnId UniqueId = new(nameof(ContentLocaleEntity.UniqueId), Table);
     public static readonly ColumnId UniqueName = new(nameof(ContentLocaleEntity.UniqueName), Table);

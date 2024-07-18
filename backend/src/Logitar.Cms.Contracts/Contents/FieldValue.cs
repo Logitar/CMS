@@ -9,6 +9,10 @@ public record FieldValue
   {
   }
 
+  public FieldValue(KeyValuePair<Guid, string> field) : this(field.Key, field.Value)
+  {
+  }
+
   public FieldValue(Guid id, string value)
   {
     Id = id;
