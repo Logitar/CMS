@@ -9,7 +9,7 @@ using MediatR;
 
 namespace Logitar.Cms.Core.Contents.Commands;
 
-internal class ValidateFieldValuesCommandHandler : IRequestHandler<ValidateFieldValuesCommand, IReadOnlyCollection<ValidationFailure>>
+internal class ValidateFieldValuesCommandHandler : IRequestHandler<ValidateFieldValuesCommand, ValidationResult>
 {
   private readonly IFieldTypeRepository _fieldTypeRepository;
   private readonly IIndexService _indexService;
@@ -20,7 +20,7 @@ internal class ValidateFieldValuesCommandHandler : IRequestHandler<ValidateField
     _indexService = indexService;
   }
 
-  public async Task<IReadOnlyCollection<ValidationFailure>> Handle(ValidateFieldValuesCommand command, CancellationToken cancellationToken)
+  public async Task<ValidationResult> Handle(ValidateFieldValuesCommand command, CancellationToken cancellationToken)
   {
     IReadOnlyCollection<FieldValuePayload> fields = command.Fields;
     ContentTypeAggregate contentType = command.ContentType;
@@ -67,8 +67,8 @@ internal class ValidateFieldValuesCommandHandler : IRequestHandler<ValidateField
       else if (definition.IsInvariant != isInvariant)
       {
         string errorMessage = isInvariant
-          ? "The field is invariant, but the current locale is not."
-          : "The field is not invariant, but the current locale is invariant.";
+          ? "The field is not invariant, but the current locale is invariant."
+          : "The field is invariant, but the current locale is not.";
         errors.Add(new ValidationFailure(propertyName, errorMessage, field.Id)
         {
           ErrorCode = "InvalidFieldLocale"
@@ -117,6 +117,6 @@ internal class ValidateFieldValuesCommandHandler : IRequestHandler<ValidateField
       throw new ValidationException(errors);
     }
 
-    return errors.AsReadOnly();
+    return new ValidationResult(errors);
   }
 }

@@ -12,4 +12,4 @@ public record ValidateFieldValuesCommand(
   ContentAggregate Content,
   LanguageAggregate? Language,
   string PropertyName,
-  bool ThrowOnFailure = true) : IRequest<IReadOnlyCollection<ValidationFailure>>;
+  bool ThrowOnFailure = true) : IRequest<ValidationResult>;
