@@ -17,6 +17,7 @@ public class FieldTypeAggregate : AggregateRoot
 
   private FieldTypeUpdatedEvent _updatedEvent = new();
 
+  private BooleanFieldValueValidator _booleanValueValidator = new(new ReadOnlyBooleanProperties());
   private StringFieldValueValidator _stringValueValidator = new(new ReadOnlyStringProperties());
   private TextFieldValueValidator _textValueValidator = new(new ReadOnlyTextProperties());
 
@@ -67,6 +68,9 @@ public class FieldTypeAggregate : AggregateRoot
 
     switch (dataType)
     {
+      case DataType.Boolean:
+        SetProperties((ReadOnlyBooleanProperties)properties, actorId);
+        break;
       case DataType.String:
         SetProperties((ReadOnlyStringProperties)properties, actorId);
         break;
@@ -90,6 +94,23 @@ public class FieldTypeAggregate : AggregateRoot
     {
       Raise(new FieldTypeDeletedEvent(), actorId);
     }
+  }
+
+  public void SetProperties(ReadOnlyBooleanProperties properties, ActorId actorId = default)
+  {
+    if (DataType != properties.DataType)
+    {
+      throw new DataTypeMismatchException(this, properties.DataType);
+    }
+    else if (_properties != properties)
+    {
+      Raise(new BooleanPropertiesChangedEvent(properties), actorId);
+    }
+  }
+  protected virtual void Apply(BooleanPropertiesChangedEvent @event)
+  {
+    _properties = @event.Properties;
+    _booleanValueValidator = new(@event.Properties);
   }
 
   public void SetProperties(ReadOnlyStringProperties properties, ActorId actorId = default)
@@ -148,6 +169,7 @@ public class FieldTypeAggregate : AggregateRoot
 
   public ValidationResult Validate(string value) => DataType switch
   {
+    DataType.Boolean => _booleanValueValidator.Validate(value),
     DataType.String => _stringValueValidator.Validate(value),
     DataType.Text => _textValueValidator.Validate(value),
     _ => throw new DataTypeNotSupportedException(DataType),

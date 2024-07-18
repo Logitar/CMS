@@ -198,6 +198,9 @@ internal class Mapper
 
     switch (destination.DataType)
     {
+      case DataType.Boolean:
+        destination.BooleanProperties = GetBooleanProperties(source.Properties);
+        break;
       case DataType.String:
         destination.StringProperties = GetStringProperties(source.Properties);
         break;
@@ -210,6 +213,7 @@ internal class Mapper
 
     return destination;
   }
+  private static BooleanProperties GetBooleanProperties(IReadOnlyDictionary<string, string> _) => new();
   private static StringProperties GetStringProperties(IReadOnlyDictionary<string, string> source)
   {
     StringProperties destination = new();

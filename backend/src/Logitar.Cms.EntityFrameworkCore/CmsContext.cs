@@ -9,6 +9,7 @@ public class CmsContext : DbContext
   {
   }
 
+  internal DbSet<BooleanFieldIndexEntity> BooleanFieldIndex { get; private set; }
   internal DbSet<ContentItemEntity> ContentItems { get; private set; }
   internal DbSet<ContentLocaleEntity> ContentLocales { get; private set; }
   internal DbSet<ContentTypeEntity> ContentTypes { get; private set; }

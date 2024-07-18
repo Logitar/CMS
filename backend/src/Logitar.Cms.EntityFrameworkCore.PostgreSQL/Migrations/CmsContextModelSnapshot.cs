@@ -21,6 +21,120 @@ namespace Logitar.Cms.EntityFrameworkCore.PostgreSQL.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.BooleanFieldIndexEntity", b =>
+                {
+                    b.Property<int>("FieldIndexId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("BooleanFieldIndexId");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("FieldIndexId"));
+
+                    b.Property<int>("ContentItemId")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("ContentItemUid")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("ContentLocaleId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ContentLocaleName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<Guid>("ContentLocaleUid")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("ContentTypeId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ContentTypeName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<Guid>("ContentTypeUid")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("FieldDefinitionId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("FieldDefinitionName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<Guid>("FieldDefinitionUid")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("FieldTypeId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("FieldTypeName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<Guid>("FieldTypeUid")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("LanguageCode")
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
+
+                    b.Property<int?>("LanguageId")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("LanguageUid")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("Value")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("FieldIndexId");
+
+                    b.HasIndex("ContentItemId");
+
+                    b.HasIndex("ContentItemUid");
+
+                    b.HasIndex("ContentLocaleId");
+
+                    b.HasIndex("ContentLocaleName");
+
+                    b.HasIndex("ContentLocaleUid");
+
+                    b.HasIndex("ContentTypeId");
+
+                    b.HasIndex("ContentTypeName");
+
+                    b.HasIndex("ContentTypeUid");
+
+                    b.HasIndex("FieldDefinitionName");
+
+                    b.HasIndex("FieldDefinitionUid");
+
+                    b.HasIndex("FieldTypeId");
+
+                    b.HasIndex("FieldTypeName");
+
+                    b.HasIndex("FieldTypeUid");
+
+                    b.HasIndex("LanguageCode");
+
+                    b.HasIndex("LanguageId");
+
+                    b.HasIndex("LanguageUid");
+
+                    b.HasIndex("Value");
+
+                    b.HasIndex("FieldDefinitionId", "ContentLocaleId")
+                        .IsUnique();
+
+                    b.ToTable("BooleanFieldIndex", (string)null);
+                });
+
             modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.ContentItemEntity", b =>
                 {
                     b.Property<int>("ContentItemId")
