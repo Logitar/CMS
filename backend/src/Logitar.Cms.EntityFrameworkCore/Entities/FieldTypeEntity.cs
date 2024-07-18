@@ -57,6 +57,12 @@ internal class FieldTypeEntity : AggregateEntity
   {
   }
 
+  public void SetProperties(BooleanPropertiesChangedEvent @event)
+  {
+    Update(@event);
+
+    Properties.Clear();
+  }
   public void SetProperties(StringPropertiesChangedEvent @event)
   {
     Update(@event);

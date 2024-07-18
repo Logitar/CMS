@@ -9,6 +9,7 @@ public class FieldType : Aggregate
   public string? Description { get; set; }
 
   public DataType DataType { get; set; }
+  public BooleanProperties? BooleanProperties { get; set; }
   public StringProperties? StringProperties { get; set; }
   public TextProperties? TextProperties { get; set; }
 

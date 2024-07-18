@@ -15,9 +15,10 @@ public class CreateFieldTypeValidator : AbstractValidator<CreateFieldTypePayload
 
     When(x => GetDataType(x) == null, () => RuleFor(x => x).Must(x => GetDataType(x) != null)
       .WithErrorCode(nameof(CreateFieldTypeValidator))
-      .WithMessage(x => $"Only one of the following must be provided: {nameof(x.StringProperties)}, {nameof(x.TextProperties)}."))
+      .WithMessage(x => $"Only one of the following must be provided: {nameof(x.BooleanProperties)}, {nameof(x.StringProperties)}, {nameof(x.TextProperties)}."))
       .Otherwise(() =>
       {
+        When(x => x.BooleanProperties != null, () => RuleFor(x => x.BooleanProperties!).SetValidator(new BooleanPropertiesValidator()));
         When(x => x.StringProperties != null, () => RuleFor(x => x.StringProperties!).SetValidator(new StringPropertiesValidator()));
         When(x => x.TextProperties != null, () => RuleFor(x => x.TextProperties!).SetValidator(new TextPropertiesValidator()));
       });
@@ -25,7 +26,11 @@ public class CreateFieldTypeValidator : AbstractValidator<CreateFieldTypePayload
 
   private static DataType? GetDataType(CreateFieldTypePayload payload)
   {
-    List<DataType> dataTypes = new(capacity: 2);
+    List<DataType> dataTypes = new(capacity: 3);
+    if (payload.BooleanProperties != null)
+    {
+      dataTypes.Add(DataType.Boolean);
+    }
     if (payload.StringProperties != null)
     {
       dataTypes.Add(DataType.String);

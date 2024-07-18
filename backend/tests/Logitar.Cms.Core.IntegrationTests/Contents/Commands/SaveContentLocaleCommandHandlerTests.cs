@@ -17,6 +17,7 @@ public class SaveContentLocaleCommandHandlerTests : IntegrationTests
   private readonly Guid _serialId = Guid.Parse("5753df17-ec04-4d60-bd25-948278f19f41");
   private readonly Guid _titleId = Guid.Parse("53901ed4-2df4-4fd9-bcb3-178f22dc8b20");
   private readonly Guid _contentId = Guid.Parse("b271716a-c57c-4992-bcd9-b1a85ffc40c2");
+  private readonly Guid _featuredId = Guid.Parse("f608e8be-c334-4f07-b02f-4f3acbf8dd86");
 
   private readonly IContentRepository _contentRepository;
   private readonly IContentTypeRepository _contentTypeRepository;
@@ -26,6 +27,7 @@ public class SaveContentLocaleCommandHandlerTests : IntegrationTests
   private readonly FieldTypeAggregate _serialType;
   private readonly FieldTypeAggregate _titleType;
   private readonly FieldTypeAggregate _contentFieldType;
+  private readonly FieldTypeAggregate _featuredType;
   private readonly ContentTypeAggregate _contentType;
   private readonly ContentAggregate _content;
 
@@ -39,6 +41,7 @@ public class SaveContentLocaleCommandHandlerTests : IntegrationTests
     _serialType = new(new UniqueNameUnit(FieldTypeAggregate.UniqueNameSettings, "ArticleSerial"), new ReadOnlyStringProperties(minimumLength: 10, maximumLength: 10, pattern: "^\\d{10}$"), ActorId);
     _titleType = new(new UniqueNameUnit(FieldTypeAggregate.UniqueNameSettings, "ArticleTitle"), new ReadOnlyStringProperties(minimumLength: 1, maximumLength: 100, pattern: null), ActorId);
     _contentFieldType = new(new UniqueNameUnit(FieldTypeAggregate.UniqueNameSettings, "ArticleContent"), new ReadOnlyTextProperties(TextProperties.ContentTypes.PlainText, minimumLength: 1, maximumLength: null), ActorId);
+    _featuredType = new(new UniqueNameUnit(FieldTypeAggregate.UniqueNameSettings, "IsFeatured"), new ReadOnlyBooleanProperties(), ActorId);
 
     _contentType = new(new IdentifierUnit("BlogArticle"), isInvariant: false, ActorId);
     _contentType.SetFieldDefinition(_serialId, new FieldDefinitionUnit(_serialType.Id, IsInvariant: true, IsRequired: true, IsIndexed: true, IsUnique: true,
@@ -47,6 +50,8 @@ public class SaveContentLocaleCommandHandlerTests : IntegrationTests
       new IdentifierUnit("Title"), DisplayName: null, Description: null, Placeholder: null), ActorId);
     _contentType.SetFieldDefinition(_contentId, new FieldDefinitionUnit(_contentFieldType.Id, IsInvariant: false, IsRequired: false, IsIndexed: true, IsUnique: false,
       new IdentifierUnit("Content"), DisplayName: null, Description: null, Placeholder: null), ActorId);
+    _contentType.SetFieldDefinition(_featuredId, new FieldDefinitionUnit(_featuredType.Id, IsInvariant: true, IsRequired: true, IsIndexed: true, IsUnique: false,
+      new IdentifierUnit("IsFeatured"), DisplayName: null, Description: null, Placeholder: null), ActorId);
 
     _content = new(_contentType, new ContentLocaleUnit(new UniqueNameUnit(ContentAggregate.UniqueNameSettings, "article")), ActorId);
   }
@@ -55,7 +60,7 @@ public class SaveContentLocaleCommandHandlerTests : IntegrationTests
   {
     await base.InitializeAsync();
 
-    await _fieldTypeRepository.SaveAsync([_serialType, _titleType, _contentFieldType]);
+    await _fieldTypeRepository.SaveAsync([_serialType, _titleType, _contentFieldType, _featuredType]);
     await _contentTypeRepository.SaveAsync(_contentType);
     await _contentRepository.SaveAsync(_content);
   }
@@ -64,8 +69,9 @@ public class SaveContentLocaleCommandHandlerTests : IntegrationTests
   public async Task It_should_save_a_content_invariant()
   {
     SaveContentLocalePayload payload = new("rendered-lego-acura-models");
-    FieldValue field = new(_serialId, "1826754308");
-    payload.Fields.Add(field);
+    FieldValue serial = new(_serialId, "1826754308");
+    FieldValue featured = new(_featuredId, bool.TrueString);
+    payload.Fields.AddRange([serial, featured]);
     SaveContentLocaleCommand command = new(_content.Id.ToGuid(), LanguageId: null, payload);
     ContentItem? content = await Pipeline.ExecuteAsync(command);
     Assert.NotNull(content);
@@ -92,7 +98,27 @@ public class SaveContentLocaleCommandHandlerTests : IntegrationTests
     Assert.Equal(_serialId, index.FieldDefinitionUid);
     Assert.Equal(_content.Id.ToGuid(), index.ContentItemUid);
     Assert.Null(index.LanguageUid);
-    Assert.Equal(field.Value, index.Value);
+    Assert.Equal(serial.Value, index.Value);
+
+    BooleanFieldIndexEntity? boolean = await CmsContext.BooleanFieldIndex.AsNoTracking().SingleOrDefaultAsync();
+    Assert.NotNull(boolean);
+    Assert.Equal(_contentType.Id.ToGuid(), boolean.ContentTypeUid);
+    Assert.Equal(_featuredType.Id.ToGuid(), boolean.FieldTypeUid);
+    Assert.Equal(_featuredId, boolean.FieldDefinitionUid);
+    Assert.Equal(_content.Id.ToGuid(), boolean.ContentItemUid);
+    Assert.Null(boolean.LanguageUid);
+    Assert.Equal(bool.Parse(featured.Value), boolean.Value);
+
+    StringFieldIndexEntity? @string = await CmsContext.StringFieldIndex.AsNoTracking().SingleOrDefaultAsync();
+    Assert.NotNull(@string);
+    Assert.Equal(_contentType.Id.ToGuid(), @string.ContentTypeUid);
+    Assert.Equal(_serialType.Id.ToGuid(), @string.FieldTypeUid);
+    Assert.Equal(_serialId, @string.FieldDefinitionUid);
+    Assert.Equal(_content.Id.ToGuid(), @string.ContentItemUid);
+    Assert.Null(@string.LanguageUid);
+    Assert.Equal(serial.Value, @string.Value);
+
+    Assert.Empty(await CmsContext.TextFieldIndex.AsNoTracking().ToArrayAsync());
   }
 
   [Fact(DisplayName = "It should save a content locale.")]
@@ -124,6 +150,10 @@ public class SaveContentLocaleCommandHandlerTests : IntegrationTests
     Assert.NotEqual(default, locale.CreatedOn);
     Assert.Equal(Actor, locale.UpdatedBy);
     Assert.Equal(locale.CreatedOn, locale.UpdatedOn);
+
+    Assert.Empty(await CmsContext.UniqueFieldIndex.AsNoTracking().ToArrayAsync());
+
+    Assert.Empty(await CmsContext.BooleanFieldIndex.AsNoTracking().ToArrayAsync());
 
     StringFieldIndexEntity? @string = await CmsContext.StringFieldIndex.AsNoTracking().SingleOrDefaultAsync();
     Assert.NotNull(@string);

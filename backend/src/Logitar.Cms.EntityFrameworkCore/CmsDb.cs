@@ -7,6 +7,31 @@ public static class CmsDb
 {
   public static string Normalize(string value) => value.Trim().ToUpperInvariant();
 
+  public static class BooleanFieldIndex
+  {
+    public static readonly TableId Table = new(nameof(CmsContext.BooleanFieldIndex));
+
+    public static readonly ColumnId ContentItemId = new(nameof(BooleanFieldIndexEntity.ContentItemId), Table);
+    public static readonly ColumnId ContentItemUid = new(nameof(BooleanFieldIndexEntity.ContentItemUid), Table);
+    public static readonly ColumnId ContentLocaleId = new(nameof(BooleanFieldIndexEntity.ContentLocaleId), Table);
+    public static readonly ColumnId ContentLocaleName = new(nameof(BooleanFieldIndexEntity.ContentLocaleName), Table);
+    public static readonly ColumnId ContentLocaleUid = new(nameof(BooleanFieldIndexEntity.ContentLocaleUid), Table);
+    public static readonly ColumnId ContentTypeId = new(nameof(BooleanFieldIndexEntity.ContentTypeId), Table);
+    public static readonly ColumnId ContentTypeName = new(nameof(BooleanFieldIndexEntity.ContentTypeName), Table);
+    public static readonly ColumnId ContentTypeUid = new(nameof(BooleanFieldIndexEntity.ContentTypeUid), Table);
+    public static readonly ColumnId FieldDefinitionId = new(nameof(BooleanFieldIndexEntity.FieldDefinitionId), Table);
+    public static readonly ColumnId FieldDefinitionName = new(nameof(BooleanFieldIndexEntity.FieldDefinitionName), Table);
+    public static readonly ColumnId FieldDefinitionUid = new(nameof(BooleanFieldIndexEntity.FieldDefinitionUid), Table);
+    public static readonly ColumnId FieldTypeId = new(nameof(BooleanFieldIndexEntity.FieldTypeId), Table);
+    public static readonly ColumnId FieldTypeName = new(nameof(BooleanFieldIndexEntity.FieldTypeName), Table);
+    public static readonly ColumnId FieldTypeUid = new(nameof(BooleanFieldIndexEntity.FieldTypeUid), Table);
+    public static readonly ColumnId LanguageCode = new(nameof(BooleanFieldIndexEntity.LanguageCode), Table);
+    public static readonly ColumnId LanguageId = new(nameof(BooleanFieldIndexEntity.LanguageId), Table);
+    public static readonly ColumnId LanguageUid = new(nameof(BooleanFieldIndexEntity.LanguageUid), Table);
+    public static readonly ColumnId BooleanFieldIndexId = new(nameof(BooleanFieldIndexId), Table);
+    public static readonly ColumnId Value = new(nameof(BooleanFieldIndexEntity.Value), Table);
+  }
+
   public static class ContentItems
   {
     public static readonly TableId Table = new(nameof(CmsContext.ContentItems));
