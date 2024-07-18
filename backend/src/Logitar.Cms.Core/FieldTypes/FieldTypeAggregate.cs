@@ -1,8 +1,10 @@
-﻿using Logitar.Cms.Contracts;
+﻿using FluentValidation.Results;
+using Logitar.Cms.Contracts;
 using Logitar.Cms.Contracts.FieldTypes;
 using Logitar.Cms.Core.Configurations;
 using Logitar.Cms.Core.FieldTypes.Events;
 using Logitar.Cms.Core.FieldTypes.Properties;
+using Logitar.Cms.Core.FieldTypes.Validators;
 using Logitar.EventSourcing;
 using Logitar.Identity.Contracts.Settings;
 using Logitar.Identity.Domain.Shared;
@@ -14,6 +16,8 @@ public class FieldTypeAggregate : AggregateRoot
   public static readonly IUniqueNameSettings UniqueNameSettings = new ReadOnlyUniqueNameSettings();
 
   private FieldTypeUpdatedEvent _updatedEvent = new();
+
+  private StringFieldValueValidator _stringValueValidator = new(new ReadOnlyStringProperties());
 
   public new FieldTypeId Id => new(base.Id);
 
@@ -98,6 +102,7 @@ public class FieldTypeAggregate : AggregateRoot
   protected virtual void Apply(StringPropertiesChangedEvent @event)
   {
     _properties = @event.Properties;
+    _stringValueValidator = new(@event.Properties);
   }
 
   public void Update(ActorId actorId = default)
@@ -119,6 +124,12 @@ public class FieldTypeAggregate : AggregateRoot
       _description = @event.Description.Value;
     }
   }
+
+  public ValidationResult Validate(string value) => DataType switch
+  {
+    DataType.String => _stringValueValidator.Validate(value),
+    _ => throw new DataTypeNotSupportedException(DataType),
+  };
 
   public override string ToString() => $"{DisplayName?.Value ?? UniqueName.Value} | {base.ToString()}";
 }

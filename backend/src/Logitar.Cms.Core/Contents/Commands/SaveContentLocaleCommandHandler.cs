@@ -48,15 +48,7 @@ internal class SaveContentLocaleCommandHandler : IRequestHandler<SaveContentLoca
     ContentTypeAggregate contentType = await _contentTypeRepository.LoadAsync(content.ContentTypeId, cancellationToken)
       ?? throw new InvalidOperationException($"The content type aggregate 'Id={content.ContentTypeId}' could not be found.");
 
-    Unit unit = await _sender.Send(new ValidateFieldValuesCommand(
-      payload.Fields,
-      IsInvariant: command.LanguageId.HasValue,
-      contentType,
-      PropertyName: nameof(payload.Fields)
-    ), cancellationToken);
-    // TODO(fpion): add field values to content locale
-    ContentLocaleUnit locale = new(new UniqueNameUnit(uniqueNameSettings, payload.UniqueName));
-
+    LanguageAggregate? language = null;
     if (command.LanguageId.HasValue)
     {
       if (contentType.IsInvariant)
@@ -65,14 +57,27 @@ internal class SaveContentLocaleCommandHandler : IRequestHandler<SaveContentLoca
       }
 
       LanguageId languageId = new(command.LanguageId.Value);
-      LanguageAggregate language = await _languageRepository.LoadAsync(languageId, cancellationToken)
+      language = await _languageRepository.LoadAsync(languageId, cancellationToken)
         ?? throw new AggregateNotFoundException<LanguageAggregate>(languageId.AggregateId, nameof(command.LanguageId));
+    }
 
-      content.SetLocale(language, locale, command.ActorId);
+    await _sender.Send(new ValidateFieldValuesCommand(
+      payload.Fields,
+      contentType,
+      content,
+      language,
+      PropertyName: nameof(payload.Fields)
+    ), cancellationToken);
+    // TODO(fpion): add field values to content locale
+    ContentLocaleUnit locale = new(new UniqueNameUnit(uniqueNameSettings, payload.UniqueName));
+
+    if (language == null)
+    {
+      content.SetInvariant(locale, command.ActorId);
     }
     else
     {
-      content.SetInvariant(locale, command.ActorId);
+      content.SetLocale(language, locale, command.ActorId);
     }
 
     await _sender.Send(new SaveContentCommand(content), cancellationToken);
