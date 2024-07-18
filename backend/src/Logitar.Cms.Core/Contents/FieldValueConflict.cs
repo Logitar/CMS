@@ -1,3 +1,3 @@
 ﻿namespace Logitar.Cms.Core.Contents;
 
-internal record FieldValueConflict(Guid FieldDefinitionId, ContentId ContentId);
+public record FieldValueConflict(Guid FieldDefinitionId, ContentId ContentId);

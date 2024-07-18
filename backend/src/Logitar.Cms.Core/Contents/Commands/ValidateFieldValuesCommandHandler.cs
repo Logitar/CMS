@@ -101,7 +101,7 @@ internal class ValidateFieldValuesCommandHandler : IRequestHandler<ValidateField
 
     if (uniqueValues.Count > 0)
     {
-      FindFieldValueConflictsCommand findFieldValueConflicts = new(fields, content, language);
+      FindFieldValueConflictsQuery findFieldValueConflicts = new(fields, content, language);
       IReadOnlyCollection<FieldValueConflict> conflicts = await _sender.Send(findFieldValueConflicts, cancellationToken);
       foreach (FieldValueConflict conflict in conflicts)
       {

@@ -113,7 +113,7 @@ public class ValidateFieldValuesCommandHandlerTests
       .ReturnsAsync([_slugType]);
 
     FieldValue field = new(_authorSlugId, "ryan-hucks");
-    _sender.Setup(x => x.Send(It.Is<FindFieldValueConflictsCommand>(y => y.FieldValues.Single().Equals(field) && y.Content.Equals(_author2) && y.Language == null),
+    _sender.Setup(x => x.Send(It.Is<FindFieldValueConflictsQuery>(y => y.FieldValues.Single().Equals(field) && y.Content.Equals(_author2) && y.Language == null),
       _cancellationToken)).ReturnsAsync([new FieldValueConflict(_authorSlugId, _author1.Id)]);
 
     ValidateFieldValuesCommand command = new([field], _authorType, _author2, Language: null, PropertyName, ThrowOnFailure: false);

@@ -4,5 +4,5 @@ using MediatR;
 
 namespace Logitar.Cms.Core.Contents.Queries;
 
-internal record FindFieldValueConflictsCommand(IEnumerable<FieldValue> FieldValues, ContentAggregate Content, LanguageAggregate? Language)
+public record FindFieldValueConflictsQuery(IEnumerable<FieldValue> FieldValues, ContentAggregate Content, LanguageAggregate? Language)
   : IRequest<IReadOnlyCollection<FieldValueConflict>>;
