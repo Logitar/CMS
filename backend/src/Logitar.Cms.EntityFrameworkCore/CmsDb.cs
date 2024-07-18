@@ -208,6 +208,31 @@ public static class CmsDb
     public static readonly ColumnId Value = new(nameof(StringFieldIndexEntity.Value), Table);
   }
 
+  public static class TextFieldIndex
+  {
+    public static readonly TableId Table = new(nameof(CmsContext.TextFieldIndex));
+
+    public static readonly ColumnId ContentItemId = new(nameof(TextFieldIndexEntity.ContentItemId), Table);
+    public static readonly ColumnId ContentItemUid = new(nameof(TextFieldIndexEntity.ContentItemUid), Table);
+    public static readonly ColumnId ContentLocaleId = new(nameof(TextFieldIndexEntity.ContentLocaleId), Table);
+    public static readonly ColumnId ContentLocaleName = new(nameof(TextFieldIndexEntity.ContentLocaleName), Table);
+    public static readonly ColumnId ContentLocaleUid = new(nameof(TextFieldIndexEntity.ContentLocaleUid), Table);
+    public static readonly ColumnId ContentTypeId = new(nameof(TextFieldIndexEntity.ContentTypeId), Table);
+    public static readonly ColumnId ContentTypeName = new(nameof(TextFieldIndexEntity.ContentTypeName), Table);
+    public static readonly ColumnId ContentTypeUid = new(nameof(TextFieldIndexEntity.ContentTypeUid), Table);
+    public static readonly ColumnId FieldDefinitionId = new(nameof(TextFieldIndexEntity.FieldDefinitionId), Table);
+    public static readonly ColumnId FieldDefinitionName = new(nameof(TextFieldIndexEntity.FieldDefinitionName), Table);
+    public static readonly ColumnId FieldDefinitionUid = new(nameof(TextFieldIndexEntity.FieldDefinitionUid), Table);
+    public static readonly ColumnId FieldTypeId = new(nameof(TextFieldIndexEntity.FieldTypeId), Table);
+    public static readonly ColumnId FieldTypeName = new(nameof(TextFieldIndexEntity.FieldTypeName), Table);
+    public static readonly ColumnId FieldTypeUid = new(nameof(TextFieldIndexEntity.FieldTypeUid), Table);
+    public static readonly ColumnId LanguageCode = new(nameof(TextFieldIndexEntity.LanguageCode), Table);
+    public static readonly ColumnId LanguageId = new(nameof(TextFieldIndexEntity.LanguageId), Table);
+    public static readonly ColumnId LanguageUid = new(nameof(TextFieldIndexEntity.LanguageUid), Table);
+    public static readonly ColumnId TextFieldIndexId = new(nameof(TextFieldIndexId), Table);
+    public static readonly ColumnId Value = new(nameof(TextFieldIndexEntity.Value), Table);
+  }
+
   public static class UniqueFieldIndex
   {
     public static readonly TableId Table = new(nameof(CmsContext.UniqueFieldIndex));

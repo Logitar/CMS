@@ -76,6 +76,22 @@ internal class FieldTypeEntity : AggregateEntity
       Properties[nameof(IStringProperties.Pattern)] = @event.Properties.Pattern;
     }
   }
+  public void SetProperties(TextPropertiesChangedEvent @event)
+  {
+    Update(@event);
+
+    Properties.Clear();
+
+    Properties[nameof(ITextProperties.ContentType)] = @event.Properties.ContentType;
+    if (@event.Properties.MinimumLength.HasValue)
+    {
+      Properties[nameof(ITextProperties.MinimumLength)] = @event.Properties.MinimumLength.Value.ToString();
+    }
+    if (@event.Properties.MaximumLength.HasValue)
+    {
+      Properties[nameof(ITextProperties.MaximumLength)] = @event.Properties.MaximumLength.Value.ToString();
+    }
+  }
 
   public void Update(FieldTypeUpdatedEvent @event)
   {

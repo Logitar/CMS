@@ -19,6 +19,7 @@ public class CmsContext : DbContext
   internal DbSet<LogExceptionEntity> LogExceptions { get; private set; }
   internal DbSet<LogEntity> Logs { get; private set; }
   internal DbSet<StringFieldIndexEntity> StringFieldIndex { get; private set; }
+  internal DbSet<TextFieldIndexEntity> TextFieldIndex { get; private set; }
   internal DbSet<UniqueFieldIndexEntity> UniqueFieldIndex { get; private set; }
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)

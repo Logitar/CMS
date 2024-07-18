@@ -26,9 +26,8 @@ internal class CreateFieldTypeCommandHandler : IRequestHandler<CreateFieldTypeCo
     CreateFieldTypePayload payload = command.Payload;
     new CreateFieldTypeValidator(uniqueNameSettings).ValidateAndThrow(payload);
 
-    ReadOnlyStringProperties properties = new(payload.StringProperties ?? new());
-
     UniqueNameUnit uniqueName = new(uniqueNameSettings, payload.UniqueName);
+    FieldTypeProperties properties = GetProperties(payload);
     FieldTypeAggregate fieldType = new(uniqueName, properties, command.ActorId)
     {
       DisplayName = DisplayNameUnit.TryCreate(payload.DisplayName),
@@ -39,5 +38,21 @@ internal class CreateFieldTypeCommandHandler : IRequestHandler<CreateFieldTypeCo
     await _sender.Send(new SaveFieldTypeCommand(fieldType), cancellationToken);
 
     return await _fieldTypeQuerier.ReadAsync(fieldType, cancellationToken);
+  }
+
+  private static FieldTypeProperties GetProperties(CreateFieldTypePayload payload)
+  {
+    List<FieldTypeProperties> properties = new(capacity: 2);
+
+    if (payload.StringProperties != null)
+    {
+      properties.Add(new ReadOnlyStringProperties(payload.StringProperties));
+    }
+    if (payload.TextProperties != null)
+    {
+      properties.Add(new ReadOnlyTextProperties(payload.TextProperties));
+    }
+
+    return properties.Single();
   }
 }

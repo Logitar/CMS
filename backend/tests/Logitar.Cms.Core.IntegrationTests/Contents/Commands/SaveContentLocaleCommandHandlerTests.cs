@@ -1,4 +1,5 @@
 ﻿using Logitar.Cms.Contracts.Contents;
+using Logitar.Cms.Contracts.FieldTypes.Properties;
 using Logitar.Cms.Core.ContentTypes;
 using Logitar.Cms.Core.FieldTypes;
 using Logitar.Cms.Core.FieldTypes.Properties;
@@ -15,6 +16,7 @@ public class SaveContentLocaleCommandHandlerTests : IntegrationTests
 {
   private readonly Guid _serialId = Guid.Parse("5753df17-ec04-4d60-bd25-948278f19f41");
   private readonly Guid _titleId = Guid.Parse("53901ed4-2df4-4fd9-bcb3-178f22dc8b20");
+  private readonly Guid _contentId = Guid.Parse("b271716a-c57c-4992-bcd9-b1a85ffc40c2");
 
   private readonly IContentRepository _contentRepository;
   private readonly IContentTypeRepository _contentTypeRepository;
@@ -23,6 +25,7 @@ public class SaveContentLocaleCommandHandlerTests : IntegrationTests
 
   private readonly FieldTypeAggregate _serialType;
   private readonly FieldTypeAggregate _titleType;
+  private readonly FieldTypeAggregate _contentFieldType;
   private readonly ContentTypeAggregate _contentType;
   private readonly ContentAggregate _content;
 
@@ -35,12 +38,15 @@ public class SaveContentLocaleCommandHandlerTests : IntegrationTests
 
     _serialType = new(new UniqueNameUnit(FieldTypeAggregate.UniqueNameSettings, "ArticleSerial"), new ReadOnlyStringProperties(minimumLength: 10, maximumLength: 10, pattern: "^\\d{10}$"), ActorId);
     _titleType = new(new UniqueNameUnit(FieldTypeAggregate.UniqueNameSettings, "ArticleTitle"), new ReadOnlyStringProperties(minimumLength: 1, maximumLength: 100, pattern: null), ActorId);
+    _contentFieldType = new(new UniqueNameUnit(FieldTypeAggregate.UniqueNameSettings, "ArticleContent"), new ReadOnlyTextProperties(TextProperties.ContentTypes.PlainText, minimumLength: 1, maximumLength: null), ActorId);
 
     _contentType = new(new IdentifierUnit("BlogArticle"), isInvariant: false, ActorId);
     _contentType.SetFieldDefinition(_serialId, new FieldDefinitionUnit(_serialType.Id, IsInvariant: true, IsRequired: true, IsIndexed: true, IsUnique: true,
       new IdentifierUnit("Serial"), DisplayName: null, Description: null, Placeholder: null), ActorId);
     _contentType.SetFieldDefinition(_titleId, new FieldDefinitionUnit(_titleType.Id, IsInvariant: false, IsRequired: true, IsIndexed: true, IsUnique: false,
       new IdentifierUnit("Title"), DisplayName: null, Description: null, Placeholder: null), ActorId);
+    _contentType.SetFieldDefinition(_contentId, new FieldDefinitionUnit(_contentFieldType.Id, IsInvariant: false, IsRequired: false, IsIndexed: true, IsUnique: false,
+      new IdentifierUnit("Content"), DisplayName: null, Description: null, Placeholder: null), ActorId);
 
     _content = new(_contentType, new ContentLocaleUnit(new UniqueNameUnit(ContentAggregate.UniqueNameSettings, "article")), ActorId);
   }
@@ -49,7 +55,7 @@ public class SaveContentLocaleCommandHandlerTests : IntegrationTests
   {
     await base.InitializeAsync();
 
-    await _fieldTypeRepository.SaveAsync([_serialType, _titleType]);
+    await _fieldTypeRepository.SaveAsync([_serialType, _titleType, _contentFieldType]);
     await _contentTypeRepository.SaveAsync(_contentType);
     await _contentRepository.SaveAsync(_content);
   }
@@ -95,8 +101,9 @@ public class SaveContentLocaleCommandHandlerTests : IntegrationTests
     LanguageAggregate language = Assert.Single(await _languageRepository.LoadAsync());
 
     SaveContentLocalePayload payload = new("rendered-lego-acura-models");
-    FieldValue field = new(_titleId, "Rendered: LEGO Acura Models");
-    payload.Fields.Add(field);
+    FieldValue title = new(_titleId, "Rendered: LEGO Acura Models");
+    FieldValue contents = new(_contentId, "I loved my LEGO as a kid. I can vividly remember the LEGO sets I owned: the motor speedway from the 80s, a huge castle set, and a space “M-Tron” set, just to name a few. […]");
+    payload.Fields.AddRange([title, contents]);
     SaveContentLocaleCommand command = new(_content.Id.ToGuid(), language.Id.ToGuid(), payload);
     ContentItem? content = await Pipeline.ExecuteAsync(command);
     Assert.NotNull(content);
@@ -118,13 +125,22 @@ public class SaveContentLocaleCommandHandlerTests : IntegrationTests
     Assert.Equal(Actor, locale.UpdatedBy);
     Assert.Equal(locale.CreatedOn, locale.UpdatedOn);
 
-    StringFieldIndexEntity? index = await CmsContext.StringFieldIndex.AsNoTracking().SingleOrDefaultAsync();
-    Assert.NotNull(index);
-    Assert.Equal(_contentType.Id.ToGuid(), index.ContentTypeUid);
-    Assert.Equal(_titleType.Id.ToGuid(), index.FieldTypeUid);
-    Assert.Equal(_titleId, index.FieldDefinitionUid);
-    Assert.Equal(_content.Id.ToGuid(), index.ContentItemUid);
-    Assert.Equal(language.Id.ToGuid(), index.LanguageUid);
-    Assert.Equal(field.Value, index.Value);
+    StringFieldIndexEntity? @string = await CmsContext.StringFieldIndex.AsNoTracking().SingleOrDefaultAsync();
+    Assert.NotNull(@string);
+    Assert.Equal(_contentType.Id.ToGuid(), @string.ContentTypeUid);
+    Assert.Equal(_titleType.Id.ToGuid(), @string.FieldTypeUid);
+    Assert.Equal(_titleId, @string.FieldDefinitionUid);
+    Assert.Equal(_content.Id.ToGuid(), @string.ContentItemUid);
+    Assert.Equal(language.Id.ToGuid(), @string.LanguageUid);
+    Assert.Equal(title.Value, @string.Value);
+
+    TextFieldIndexEntity? text = await CmsContext.TextFieldIndex.AsNoTracking().SingleOrDefaultAsync();
+    Assert.NotNull(text);
+    Assert.Equal(_contentType.Id.ToGuid(), text.ContentTypeUid);
+    Assert.Equal(_contentFieldType.Id.ToGuid(), text.FieldTypeUid);
+    Assert.Equal(_contentId, text.FieldDefinitionUid);
+    Assert.Equal(_content.Id.ToGuid(), text.ContentItemUid);
+    Assert.Equal(language.Id.ToGuid(), text.LanguageUid);
+    Assert.Equal(contents.Value, text.Value);
   }
 }

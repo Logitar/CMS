@@ -9,6 +9,7 @@ public record CreateFieldTypePayload
   public string? Description { get; set; }
 
   public StringProperties? StringProperties { get; set; }
+  public TextProperties? TextProperties { get; set; }
 
   public CreateFieldTypePayload() : this(string.Empty)
   {

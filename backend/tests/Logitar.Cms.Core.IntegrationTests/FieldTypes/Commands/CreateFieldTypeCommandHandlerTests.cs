@@ -38,5 +38,6 @@ public class CreateFieldTypeCommandHandlerTests : IntegrationTests
     Assert.Null(fieldType.Description);
     Assert.Equal(DataType.String, fieldType.DataType);
     Assert.Equal(payload.StringProperties, fieldType.StringProperties);
+    Assert.Null(fieldType.TextProperties);
   }
 }
