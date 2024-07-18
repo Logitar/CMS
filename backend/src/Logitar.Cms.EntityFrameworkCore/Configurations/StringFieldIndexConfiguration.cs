@@ -8,6 +8,8 @@ internal class StringFieldIndexConfiguration : FieldIndexConfiguration<StringFie
 {
   public override void Configure(EntityTypeBuilder<StringFieldIndexEntity> builder)
   {
+    base.Configure(builder);
+
     builder.ToTable(CmsDb.StringFieldIndex.Table.Table ?? string.Empty, CmsDb.StringFieldIndex.Table.Schema);
 
     builder.Property(x => x.FieldIndexId).HasColumnName(CmsDb.StringFieldIndex.StringFieldIndexId.Name);
