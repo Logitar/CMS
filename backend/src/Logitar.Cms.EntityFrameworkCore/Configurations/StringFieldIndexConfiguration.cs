@@ -12,6 +12,8 @@ internal class StringFieldIndexConfiguration : IEntityTypeConfiguration<StringFi
     builder.ToTable(CmsDb.StringFieldIndex.Table.Table ?? string.Empty, CmsDb.StringFieldIndex.Table.Schema);
     builder.HasKey(x => x.FieldIndexId);
 
+    // TODO(fpion): unique indices
+
     builder.HasIndex(x => x.ContentTypeId);
     builder.HasIndex(x => x.ContentTypeUid);
     builder.HasIndex(x => x.ContentTypeName);

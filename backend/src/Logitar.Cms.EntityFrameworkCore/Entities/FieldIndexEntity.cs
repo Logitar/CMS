@@ -27,7 +27,7 @@ internal abstract class FieldIndexEntity<T>
   public Guid? LanguageUid { get; private set; }
   public string? LanguageCode { get; private set; }
 
-  public T Value { get; private set; } = default!;
+  public T Value { get; set; } = default!;
 
   protected FieldIndexEntity()
   {
@@ -35,46 +35,41 @@ internal abstract class FieldIndexEntity<T>
 
   protected FieldIndexEntity(ContentLocaleEntity contentLocale, FieldDefinitionEntity fieldDefinition, T value)
   {
-    if (contentLocale.Item == null)
-    {
-      throw new ArgumentException($"The {nameof(contentLocale.Item)} is required.", nameof(contentLocale));
-    }
     if (contentLocale.LanguageId != null && contentLocale.Language == null)
     {
       throw new ArgumentException($"The {nameof(contentLocale.Language)} is required.", nameof(contentLocale));
     }
 
-    if (fieldDefinition.ContentType == null)
-    {
-      throw new ArgumentException($"The {nameof(fieldDefinition.ContentType)} is required.", nameof(fieldDefinition));
-    }
-    if (fieldDefinition.FieldType == null)
-    {
-      throw new ArgumentException($"The {nameof(fieldDefinition.FieldType)} is required.", nameof(fieldDefinition));
-    }
+    ContentItemEntity contentItem = contentLocale.Item ?? throw new ArgumentException($"The {nameof(contentLocale.Item)} is required.", nameof(contentLocale));
+    ContentTypeEntity contentType = contentItem.ContentType ?? throw new ArgumentException($"The {nameof(contentItem.ContentType)} is required.", nameof(contentLocale));
+    FieldTypeEntity fieldType = fieldDefinition.FieldType ?? throw new ArgumentException($"The {nameof(fieldDefinition.FieldType)} is required.", nameof(fieldDefinition));
+    LanguageEntity? language = contentLocale.Language;
 
-    ContentTypeId = fieldDefinition.ContentType.ContentTypeId;
-    ContentTypeUid = fieldDefinition.ContentType.UniqueId;
-    ContentTypeName = fieldDefinition.ContentType.UniqueName;
+    ContentTypeId = contentType.ContentTypeId;
+    ContentTypeUid = contentType.UniqueId;
+    ContentTypeName = contentType.UniqueName;
 
-    FieldTypeId = fieldDefinition.FieldType.FieldTypeId;
-    FieldTypeUid = fieldDefinition.FieldType.UniqueId;
-    FieldTypeName = fieldDefinition.FieldType.UniqueName;
+    FieldTypeId = fieldType.FieldTypeId;
+    FieldTypeUid = fieldType.UniqueId;
+    FieldTypeName = fieldType.UniqueName;
 
     FieldDefinitionId = fieldDefinition.FieldDefinitionId;
     FieldDefinitionUid = fieldDefinition.UniqueId;
     FieldDefinitionName = fieldDefinition.UniqueName;
 
-    ContentItemId = contentLocale.Item.ContentItemId;
-    ContentItemUid = contentLocale.Item.UniqueId;
+    ContentItemId = contentItem.ContentItemId;
+    ContentItemUid = contentItem.UniqueId;
 
     ContentLocaleId = contentLocale.ContentLocaleId;
     ContentLocaleUid = contentLocale.UniqueId;
     ContentLocaleName = contentLocale.UniqueName;
 
-    LanguageId = contentLocale.Language?.LanguageId;
-    LanguageUid = contentLocale.Language?.UniqueId;
-    LanguageCode = contentLocale.Language?.Code;
+    if (language != null)
+    {
+      LanguageId = language.LanguageId;
+      LanguageUid = language.UniqueId;
+      LanguageCode = language.Code;
+    }
 
     Value = value;
   }
