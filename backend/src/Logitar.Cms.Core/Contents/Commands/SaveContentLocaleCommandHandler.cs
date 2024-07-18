@@ -85,7 +85,7 @@ internal class SaveContentLocaleCommandHandler : IRequestHandler<SaveContentLoca
     }
 
     await _sender.Send(new SaveContentCommand(content), cancellationToken);
-    // TODO(fpion): update field indices (not unique & unique)
+    // TODO(fpion): update unique field index
     // TODO(fpion): add field values to Contracts ContentLocale
 
     return await _contentQuerier.ReadAsync(content, cancellationToken);
