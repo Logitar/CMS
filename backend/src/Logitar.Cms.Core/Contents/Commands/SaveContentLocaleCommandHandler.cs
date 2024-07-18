@@ -68,8 +68,12 @@ internal class SaveContentLocaleCommandHandler : IRequestHandler<SaveContentLoca
       language,
       PropertyName: nameof(payload.Fields)
     ), cancellationToken);
-    // TODO(fpion): add field values to content locale
-    ContentLocaleUnit locale = new(new UniqueNameUnit(uniqueNameSettings, payload.UniqueName));
+    Dictionary<Guid, string> fieldValues = new(capacity: payload.Fields.Count);
+    foreach (FieldValuePayload field in payload.Fields)
+    {
+      fieldValues[field.Id] = field.Value;
+    }
+    ContentLocaleUnit locale = new(new UniqueNameUnit(uniqueNameSettings, payload.UniqueName), fieldValues);
 
     if (language == null)
     {
