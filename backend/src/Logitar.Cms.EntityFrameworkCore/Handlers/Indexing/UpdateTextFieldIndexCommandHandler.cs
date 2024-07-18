@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Logitar.Cms.EntityFrameworkCore.Handlers.Indexing;
 
-internal class UpdateStringFieldIndexCommandHandler : INotificationHandler<UpdateFieldIndicesCommand>
+internal class UpdateTextFieldIndexCommandHandler : INotificationHandler<UpdateFieldIndicesCommand>
 {
   private readonly CmsContext _context;
 
-  public UpdateStringFieldIndexCommandHandler(CmsContext context)
+  public UpdateTextFieldIndexCommandHandler(CmsContext context)
   {
     _context = context;
   }
@@ -31,32 +31,32 @@ internal class UpdateStringFieldIndexCommandHandler : INotificationHandler<Updat
     Dictionary<Guid, FieldDefinitionEntity> fieldDefinitionsById = locale.Item.ContentType.FieldDefinitions
       .ToDictionary(f => f.UniqueId, f => f);
 
-    Dictionary<Guid, StringFieldIndexEntity> entities = (await _context.StringFieldIndex
+    Dictionary<Guid, TextFieldIndexEntity> entities = (await _context.TextFieldIndex
       .Where(x => x.ContentLocaleId == locale.ContentLocaleId)
       .ToArrayAsync(cancellationToken)
     ).ToDictionary(x => x.FieldDefinitionUid, x => x);
 
-    foreach (StringFieldIndexEntity entity in entities.Values)
+    foreach (TextFieldIndexEntity entity in entities.Values)
     {
       if (!fieldValues.ContainsKey(entity.FieldDefinitionUid))
       {
-        _context.StringFieldIndex.Remove(entity);
+        _context.TextFieldIndex.Remove(entity);
       }
     }
 
     foreach (KeyValuePair<Guid, string> fieldValue in fieldValues)
     {
-      if (entities.TryGetValue(fieldValue.Key, out StringFieldIndexEntity? entity))
+      if (entities.TryGetValue(fieldValue.Key, out TextFieldIndexEntity? entity))
       {
         entity.Value = fieldValue.Value;
       }
       else if (fieldDefinitionsById.TryGetValue(fieldValue.Key, out FieldDefinitionEntity? fieldDefinition)
-        && fieldDefinition.FieldType?.DataType == DataType.String && fieldDefinition.IsIndexed)
+        && fieldDefinition.FieldType?.DataType == DataType.Text && fieldDefinition.IsIndexed)
       {
         entity = new(locale, fieldDefinition, fieldValue.Value);
         entities[fieldValue.Key] = entity;
 
-        _context.StringFieldIndex.Add(entity);
+        _context.TextFieldIndex.Add(entity);
       }
     }
 

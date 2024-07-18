@@ -18,6 +18,7 @@ public class FieldTypeAggregate : AggregateRoot
   private FieldTypeUpdatedEvent _updatedEvent = new();
 
   private StringFieldValueValidator _stringValueValidator = new(new ReadOnlyStringProperties());
+  private TextFieldValueValidator _textValueValidator = new(new ReadOnlyTextProperties());
 
   public new FieldTypeId Id => new(base.Id);
 
@@ -69,6 +70,9 @@ public class FieldTypeAggregate : AggregateRoot
       case DataType.String:
         SetProperties((ReadOnlyStringProperties)properties, actorId);
         break;
+      case DataType.Text:
+        SetProperties((ReadOnlyTextProperties)properties, actorId);
+        break;
       default:
         throw new DataTypeNotSupportedException(dataType);
     }
@@ -105,6 +109,23 @@ public class FieldTypeAggregate : AggregateRoot
     _stringValueValidator = new(@event.Properties);
   }
 
+  public void SetProperties(ReadOnlyTextProperties properties, ActorId actorId = default)
+  {
+    if (DataType != properties.DataType)
+    {
+      throw new DataTypeMismatchException(this, properties.DataType);
+    }
+    else if (_properties != properties)
+    {
+      Raise(new TextPropertiesChangedEvent(properties), actorId);
+    }
+  }
+  protected virtual void Apply(TextPropertiesChangedEvent @event)
+  {
+    _properties = @event.Properties;
+    _textValueValidator = new(@event.Properties);
+  }
+
   public void Update(ActorId actorId = default)
   {
     if (_updatedEvent.HasChanges)
@@ -128,6 +149,7 @@ public class FieldTypeAggregate : AggregateRoot
   public ValidationResult Validate(string value) => DataType switch
   {
     DataType.String => _stringValueValidator.Validate(value),
+    DataType.Text => _textValueValidator.Validate(value),
     _ => throw new DataTypeNotSupportedException(DataType),
   };
 

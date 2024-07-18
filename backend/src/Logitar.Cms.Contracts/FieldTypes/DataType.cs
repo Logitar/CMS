@@ -2,5 +2,6 @@
 
 public enum DataType
 {
-  String = 0
+  String = 0,
+  Text = 1
 }

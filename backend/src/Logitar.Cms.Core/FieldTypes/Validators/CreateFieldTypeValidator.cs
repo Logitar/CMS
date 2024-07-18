@@ -13,7 +13,27 @@ public class CreateFieldTypeValidator : AbstractValidator<CreateFieldTypePayload
     When(x => !string.IsNullOrWhiteSpace(x.DisplayName), () => RuleFor(x => x.DisplayName!).SetValidator(new DisplayNameValidator()));
     When(x => !string.IsNullOrWhiteSpace(x.Description), () => RuleFor(x => x.Description!).SetValidator(new DescriptionValidator()));
 
-    When(x => x.StringProperties != null, () => RuleFor(x => x.StringProperties!).SetValidator(new StringPropertiesValidator()))
-      .Otherwise(() => RuleFor(x => x.StringProperties).NotNull());
+    When(x => GetDataType(x) == null, () => RuleFor(x => x).Must(x => GetDataType(x) != null)
+      .WithErrorCode(nameof(CreateFieldTypeValidator))
+      .WithMessage(x => $"Only one of the following must be provided: {nameof(x.StringProperties)}, {nameof(x.TextProperties)}."))
+      .Otherwise(() =>
+      {
+        When(x => x.StringProperties != null, () => RuleFor(x => x.StringProperties!).SetValidator(new StringPropertiesValidator()));
+        When(x => x.TextProperties != null, () => RuleFor(x => x.TextProperties!).SetValidator(new TextPropertiesValidator()));
+      });
+  }
+
+  private static DataType? GetDataType(CreateFieldTypePayload payload)
+  {
+    List<DataType> dataTypes = new(capacity: 2);
+    if (payload.StringProperties != null)
+    {
+      dataTypes.Add(DataType.String);
+    }
+    if (payload.TextProperties != null)
+    {
+      dataTypes.Add(DataType.Text);
+    }
+    return dataTypes.Count == 1 ? dataTypes.Single() : null;
   }
 }

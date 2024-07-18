@@ -44,6 +44,27 @@ public class CreateFieldTypeCommandHandlerTests
     ), _cancellationToken), Times.Once());
   }
 
+  [Fact(DisplayName = "It should create a new Text field type.")]
+  public async Task It_should_create_a_new_Text_field_type()
+  {
+    CreateFieldTypePayload payload = new("ArticleContent")
+    {
+      DisplayName = " Article Content ",
+      Description = "    ",
+      TextProperties = new TextProperties(TextProperties.ContentTypes.PlainText, minimumLength: 1, maximumLength: 10000)
+    };
+    CreateFieldTypeCommand command = new(payload);
+    ActivityHelper.Contextualize(command);
+    await _handler.Handle(command, _cancellationToken);
+
+    _sender.Verify(x => x.Send(It.Is<SaveFieldTypeCommand>(y => y.FieldType.UniqueName.Value == payload.UniqueName
+      && y.FieldType.DisplayName != null && y.FieldType.DisplayName.Value == payload.DisplayName.Trim()
+      && y.FieldType.Description == null
+      && y.FieldType.DataType == DataType.Text
+      && y.FieldType.Properties is ReadOnlyTextProperties
+    ), _cancellationToken), Times.Once());
+  }
+
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
   public async Task It_should_throw_ValidationException_when_the_payload_is_not_valid()
   {
@@ -51,7 +72,6 @@ public class CreateFieldTypeCommandHandlerTests
     CreateFieldTypeCommand command = new(payload);
     var exception = await Assert.ThrowsAsync<ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
     ValidationFailure error = Assert.Single(exception.Errors);
-    Assert.Equal("NotNullValidator", error.ErrorCode);
-    Assert.Equal("StringProperties", error.PropertyName);
+    Assert.Equal("CreateFieldTypeValidator", error.ErrorCode);
   }
 }

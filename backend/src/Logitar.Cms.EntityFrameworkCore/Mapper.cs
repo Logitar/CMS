@@ -201,6 +201,9 @@ internal class Mapper
       case DataType.String:
         destination.StringProperties = GetStringProperties(source.Properties);
         break;
+      case DataType.Text:
+        destination.TextProperties = GetTextProperties(source.Properties);
+        break;
       default:
         throw new DataTypeNotSupportedException(destination.DataType);
     }
@@ -223,6 +226,25 @@ internal class Mapper
     if (source.TryGetValue(nameof(IStringProperties.Pattern), out string? pattern))
     {
       destination.Pattern = pattern;
+    }
+    return destination;
+  }
+  private static TextProperties GetTextProperties(IReadOnlyDictionary<string, string> source)
+  {
+    TextProperties destination = new();
+    if (source.TryGetValue(nameof(ITextProperties.ContentType), out string? contentType))
+    {
+      destination.ContentType = contentType;
+    }
+    if (source.TryGetValue(nameof(ITextProperties.MinimumLength), out string? minimumLengthValue)
+      && int.TryParse(minimumLengthValue, out int minimumLength))
+    {
+      destination.MinimumLength = minimumLength;
+    }
+    if (source.TryGetValue(nameof(ITextProperties.MaximumLength), out string? maximumLengthValue)
+      && int.TryParse(maximumLengthValue, out int maximumLength))
+    {
+      destination.MaximumLength = maximumLength;
     }
     return destination;
   }

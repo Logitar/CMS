@@ -851,6 +851,121 @@ namespace Logitar.Cms.EntityFrameworkCore.SqlServer.Migrations
                     b.ToTable("StringFieldIndex", (string)null);
                 });
 
+            modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.TextFieldIndexEntity", b =>
+                {
+                    b.Property<int>("FieldIndexId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("TextFieldIndexId");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FieldIndexId"));
+
+                    b.Property<int>("ContentItemId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("ContentItemUid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ContentLocaleId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ContentLocaleName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<Guid>("ContentLocaleUid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ContentTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ContentTypeName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<Guid>("ContentTypeUid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("FieldDefinitionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FieldDefinitionName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<Guid>("FieldDefinitionUid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("FieldTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FieldTypeName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<Guid>("FieldTypeUid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("LanguageCode")
+                        .HasMaxLength(16)
+                        .HasColumnType("nvarchar(16)");
+
+                    b.Property<int?>("LanguageId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("LanguageUid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("FieldIndexId");
+
+                    b.HasIndex("ContentItemId");
+
+                    b.HasIndex("ContentItemUid");
+
+                    b.HasIndex("ContentLocaleId");
+
+                    b.HasIndex("ContentLocaleName");
+
+                    b.HasIndex("ContentLocaleUid");
+
+                    b.HasIndex("ContentTypeId");
+
+                    b.HasIndex("ContentTypeName");
+
+                    b.HasIndex("ContentTypeUid");
+
+                    b.HasIndex("FieldDefinitionName");
+
+                    b.HasIndex("FieldDefinitionUid");
+
+                    b.HasIndex("FieldTypeId");
+
+                    b.HasIndex("FieldTypeName");
+
+                    b.HasIndex("FieldTypeUid");
+
+                    b.HasIndex("LanguageCode");
+
+                    b.HasIndex("LanguageId");
+
+                    b.HasIndex("LanguageUid");
+
+                    b.HasIndex("Value");
+
+                    b.HasIndex("FieldDefinitionId", "ContentLocaleId")
+                        .IsUnique();
+
+                    b.ToTable("TextFieldIndex", (string)null);
+                });
+
             modelBuilder.Entity("Logitar.Cms.EntityFrameworkCore.Entities.UniqueFieldIndexEntity", b =>
                 {
                     b.Property<int>("FieldIndexId")

@@ -10,6 +10,7 @@ public class FieldType : Aggregate
 
   public DataType DataType { get; set; }
   public StringProperties? StringProperties { get; set; }
+  public TextProperties? TextProperties { get; set; }
 
   public FieldType() : this(string.Empty)
   {
