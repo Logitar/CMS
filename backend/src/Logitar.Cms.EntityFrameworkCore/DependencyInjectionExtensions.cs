@@ -3,13 +3,11 @@ using Logitar.Cms.Core.Configurations;
 using Logitar.Cms.Core.Contents;
 using Logitar.Cms.Core.ContentTypes;
 using Logitar.Cms.Core.FieldTypes;
-using Logitar.Cms.Core.Indexing;
 using Logitar.Cms.Core.Languages;
 using Logitar.Cms.Core.Logging;
 using Logitar.Cms.Core.Sessions;
 using Logitar.Cms.Core.Users;
 using Logitar.Cms.EntityFrameworkCore.Actors;
-using Logitar.Cms.EntityFrameworkCore.Indexing;
 using Logitar.Cms.EntityFrameworkCore.Queriers;
 using Logitar.Cms.EntityFrameworkCore.Repositories;
 using Logitar.Cms.Infrastructure;
@@ -28,8 +26,7 @@ public static class DependencyInjectionExtensions
       .AddMediatR(config => config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()))
       .AddQueriers()
       .AddRepositories()
-      .AddTransient<IActorService, ActorService>()
-      .AddTransient<IIndexService, IndexService>();
+      .AddTransient<IActorService, ActorService>();
   }
 
   public static IServiceCollection AddQueriers(this IServiceCollection services)

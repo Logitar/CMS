@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
 using Logitar.Cms.Contracts.Contents;
+using Logitar.Cms.Core.Contents.Queries;
 using Logitar.Cms.Core.ContentTypes;
 using Logitar.Cms.Core.FieldTypes;
-using Logitar.Cms.Core.Indexing;
 using Logitar.Cms.Core.Languages;
 using MediatR;
 
@@ -12,12 +12,12 @@ namespace Logitar.Cms.Core.Contents.Commands;
 internal class ValidateFieldValuesCommandHandler : IRequestHandler<ValidateFieldValuesCommand, ValidationResult>
 {
   private readonly IFieldTypeRepository _fieldTypeRepository;
-  private readonly IIndexService _indexService;
+  private readonly ISender _sender;
 
-  public ValidateFieldValuesCommandHandler(IFieldTypeRepository fieldTypeRepository, IIndexService indexService)
+  public ValidateFieldValuesCommandHandler(IFieldTypeRepository fieldTypeRepository, ISender sender)
   {
     _fieldTypeRepository = fieldTypeRepository;
-    _indexService = indexService;
+    _sender = sender;
   }
 
   public async Task<ValidationResult> Handle(ValidateFieldValuesCommand command, CancellationToken cancellationToken)
@@ -101,11 +101,12 @@ internal class ValidateFieldValuesCommandHandler : IRequestHandler<ValidateField
 
     if (uniqueValues.Count > 0)
     {
-      IReadOnlyCollection<FieldValueConflict> conflicts = await _indexService.GetConflictsAsync(uniqueValues, content.Id, language?.Id, cancellationToken);
+      FindFieldValueConflictsCommand findFieldValueConflicts = new(fields, content, language);
+      IReadOnlyCollection<FieldValueConflict> conflicts = await _sender.Send(findFieldValueConflicts, cancellationToken);
       foreach (FieldValueConflict conflict in conflicts)
       {
         string errorMessage = $"The field value is already used by the content 'Id={conflict.ContentId.ToGuid()}'.";
-        errors.Add(new ValidationFailure(propertyName, errorMessage, conflict.FieldId)
+        errors.Add(new ValidationFailure(propertyName, errorMessage, conflict.FieldDefinitionId)
         {
           ErrorCode = "FieldValueConflict"
         });

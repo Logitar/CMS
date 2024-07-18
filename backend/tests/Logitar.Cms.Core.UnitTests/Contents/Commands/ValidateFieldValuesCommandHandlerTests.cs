@@ -1,11 +1,12 @@
 ﻿using FluentValidation.Results;
 using Logitar.Cms.Contracts.Contents;
+using Logitar.Cms.Core.Contents.Queries;
 using Logitar.Cms.Core.ContentTypes;
 using Logitar.Cms.Core.FieldTypes;
 using Logitar.Cms.Core.FieldTypes.Properties;
-using Logitar.Cms.Core.Indexing;
 using Logitar.Cms.Core.Languages;
 using Logitar.Identity.Domain.Shared;
+using MediatR;
 using Moq;
 
 namespace Logitar.Cms.Core.Contents.Commands;
@@ -22,7 +23,7 @@ public class ValidateFieldValuesCommandHandlerTests
   private readonly Guid _authorSlugId = Guid.Parse("77d29a5d-0c6c-4ad1-a1c3-a91504d70ca2");
 
   private readonly Mock<IFieldTypeRepository> _fieldTypeRepository = new();
-  private readonly Mock<IIndexService> _indexService = new();
+  private readonly Mock<ISender> _sender = new();
 
   private readonly ValidateFieldValuesCommandHandler _handler;
 
@@ -41,7 +42,7 @@ public class ValidateFieldValuesCommandHandlerTests
 
   public ValidateFieldValuesCommandHandlerTests()
   {
-    _handler = new(_fieldTypeRepository.Object, _indexService.Object);
+    _handler = new(_fieldTypeRepository.Object, _sender.Object);
 
     _english = new(new LocaleUnit("en"), isDefault: true);
 
@@ -112,8 +113,8 @@ public class ValidateFieldValuesCommandHandlerTests
       .ReturnsAsync([_slugType]);
 
     FieldValuePayload field = new(_authorSlugId, "ryan-hucks");
-    _indexService.Setup(x => x.GetConflictsAsync(It.Is<IEnumerable<FieldValuePayload>>(y => y.Single().Equals(field)), _author2.Id, null, _cancellationToken))
-      .ReturnsAsync([new FieldValueConflict(_authorSlugId, _author1.Id)]);
+    _sender.Setup(x => x.Send(It.Is<FindFieldValueConflictsCommand>(y => y.FieldValues.Single().Equals(field) && y.Content.Equals(_author2) && y.Language == null),
+      _cancellationToken)).ReturnsAsync([new FieldValueConflict(_authorSlugId, _author1.Id)]);
 
     ValidateFieldValuesCommand command = new([field], _authorType, _author2, Language: null, PropertyName, ThrowOnFailure: false);
     ValidationResult result = await _handler.Handle(command, _cancellationToken);

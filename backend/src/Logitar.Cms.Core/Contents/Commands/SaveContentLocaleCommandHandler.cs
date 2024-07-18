@@ -61,13 +61,8 @@ internal class SaveContentLocaleCommandHandler : IRequestHandler<SaveContentLoca
         ?? throw new AggregateNotFoundException<LanguageAggregate>(languageId.AggregateId, nameof(command.LanguageId));
     }
 
-    await _sender.Send(new ValidateFieldValuesCommand(
-      payload.Fields,
-      contentType,
-      content,
-      language,
-      PropertyName: nameof(payload.Fields)
-    ), cancellationToken);
+    ValidateFieldValuesCommand validateFieldValues = new(payload.Fields, contentType, content, language, PropertyName: nameof(payload.Fields));
+    await _sender.Send(validateFieldValues, cancellationToken);
     Dictionary<Guid, string> fieldValues = new(capacity: payload.Fields.Count);
     foreach (FieldValuePayload field in payload.Fields)
     {
