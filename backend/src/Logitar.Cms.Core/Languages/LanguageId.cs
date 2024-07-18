@@ -1,5 +1,4 @@
 ﻿using Logitar.EventSourcing;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Logitar.Cms.Core.Languages;
 
