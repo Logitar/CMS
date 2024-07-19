@@ -209,44 +209,56 @@ public class FieldTypeAggregate : AggregateRoot
     }
   }
 
-  public ValidationResult Validate(string value) => DataType switch
+  public ValidationResult Validate(string value, string propertyName) => DataType switch
   {
-    DataType.Boolean => ValidateBoolean(value),
-    DataType.DateTime => ValidateDateTime(value),
-    DataType.Number => ValidateNumber(value),
-    DataType.String => ValidateString(value),
-    DataType.Text => ValidateText(value),
+    DataType.Boolean => ValidateBoolean(value, propertyName),
+    DataType.DateTime => ValidateDateTime(value, propertyName),
+    DataType.Number => ValidateNumber(value, propertyName),
+    DataType.String => ValidateString(value, propertyName),
+    DataType.Text => ValidateText(value, propertyName),
     _ => throw new DataTypeNotSupportedException(DataType),
   };
-  private ValidationResult ValidateBoolean(string value)
+  private ValidationResult ValidateBoolean(string value, string propertyName)
   {
     if (bool.TryParse(value, out bool boolean))
     {
-      return _booleanValueValidator.Validate(boolean);
+      return _booleanValueValidator.Validate(boolean); // ISSUE: https://github.com/Logitar/CMS/issues/3
     }
 
-    throw new NotImplementedException(); // TODO(fpion): implement
+    ValidationFailure error = new(propertyName, "The value is not a valid boolean.", value)
+    {
+      ErrorCode = "BooleanParsing"
+    };
+    return new ValidationResult([error]);
   }
-  private ValidationResult ValidateDateTime(string value)
+  private ValidationResult ValidateDateTime(string value, string propertyName)
   {
     if (DateTime.TryParse(value, out DateTime dateTime))
     {
-      return _dateTimeValueValidator.Validate(dateTime);
+      return _dateTimeValueValidator.Validate(dateTime); // ISSUE: https://github.com/Logitar/CMS/issues/3
     }
 
-    throw new NotImplementedException(); // TODO(fpion): implement
+    ValidationFailure error = new(propertyName, "The value is not a valid DateTime.", value)
+    {
+      ErrorCode = "DateTimeParsing"
+    };
+    return new ValidationResult([error]);
   }
-  private ValidationResult ValidateNumber(string value)
+  private ValidationResult ValidateNumber(string value, string propertyName)
   {
     if (double.TryParse(value, out double number))
     {
-      return _numberValueValidator.Validate(number);
+      return _numberValueValidator.Validate(number); // ISSUE: https://github.com/Logitar/CMS/issues/3
     }
 
-    throw new NotImplementedException(); // TODO(fpion): implement
+    ValidationFailure error = new(propertyName, "The value is not a valid number.", value)
+    {
+      ErrorCode = "NumberParsing"
+    };
+    return new ValidationResult([error]);
   }
-  private ValidationResult ValidateString(string value) => _stringValueValidator.Validate(value);
-  private ValidationResult ValidateText(string value) => _textValueValidator.Validate(value);
+  private ValidationResult ValidateString(string value, string propertyName) => _stringValueValidator.Validate(value); // ISSUE: https://github.com/Logitar/CMS/issues/3
+  private ValidationResult ValidateText(string value, string propertyName) => _textValueValidator.Validate(value); // ISSUE: https://github.com/Logitar/CMS/issues/3
 
   public override string ToString() => $"{DisplayName?.Value ?? UniqueName.Value} | {base.ToString()}";
 }
