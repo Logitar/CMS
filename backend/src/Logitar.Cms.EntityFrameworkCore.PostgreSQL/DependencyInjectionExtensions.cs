@@ -27,6 +27,7 @@ public static class DependencyInjectionExtensions
     return services
       .AddLogitarIdentityWithEntityFrameworkCorePostgreSQL(connectionString)
       .AddLogitarCmsWithEntityFrameworkCore()
-      .AddDbContext<CmsContext>(options => options.UseNpgsql(connectionString, b => b.MigrationsAssembly("Logitar.Cms.EntityFrameworkCore.PostgreSQL")));
+      .AddDbContext<CmsContext>(options => options.UseNpgsql(connectionString, b => b.MigrationsAssembly("Logitar.Cms.EntityFrameworkCore.PostgreSQL")))
+      .AddSingleton<ISearchHelper, PostgresSearchHelper>();
   }
 }

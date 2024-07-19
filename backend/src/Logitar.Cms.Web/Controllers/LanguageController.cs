@@ -1,7 +1,9 @@
 ﻿using Logitar.Cms.Contracts.Languages;
+using Logitar.Cms.Contracts.Search;
 using Logitar.Cms.Core;
 using Logitar.Cms.Core.Languages.Commands;
 using Logitar.Cms.Core.Languages.Queries;
+using Logitar.Cms.Web.Models.Languages;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -47,6 +49,13 @@ public class LanguageController : ControllerBase
   {
     Language? language = await _pipeline.ExecuteAsync(new ReadLanguageQuery(Id: null, Locale: null, IsDefault: true), cancellationToken);
     return language == null ? NotFound() : Ok(language);
+  }
+
+  [HttpGet]
+  public async Task<ActionResult<SearchResults<Language>>> SearchAsync([FromQuery] SearchLanguagesParameters parameters, CancellationToken cancellationToken)
+  {
+    SearchResults<Language> languages = await _pipeline.ExecuteAsync(new SearchLanguagesQuery(parameters.ToPayload()), cancellationToken);
+    return Ok(languages);
   }
 
   [HttpPatch("{id}/default")]

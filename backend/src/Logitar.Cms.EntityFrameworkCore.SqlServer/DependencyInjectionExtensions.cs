@@ -27,6 +27,7 @@ public static class DependencyInjectionExtensions
     return services
       .AddLogitarIdentityWithEntityFrameworkCoreSqlServer(connectionString)
       .AddLogitarCmsWithEntityFrameworkCore()
-      .AddDbContext<CmsContext>(options => options.UseSqlServer(connectionString, b => b.MigrationsAssembly("Logitar.Cms.EntityFrameworkCore.SqlServer")));
+      .AddDbContext<CmsContext>(options => options.UseSqlServer(connectionString, b => b.MigrationsAssembly("Logitar.Cms.EntityFrameworkCore.SqlServer")))
+      .AddSingleton<ISearchHelper, SqlServerSearchHelper>();
   }
 }
