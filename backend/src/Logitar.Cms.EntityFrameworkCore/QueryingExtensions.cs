@@ -12,7 +12,7 @@ internal static class QueryingExtensions
       return builder;
     }
 
-    Guid[] uniqueIds = payload.IdIn.Distinct().ToArray();
+    string[] uniqueIds = payload.IdIn.Distinct().Select(id => id.ToString()).ToArray();
 
     return builder.Where(column, Operators.IsIn(uniqueIds));
   }
