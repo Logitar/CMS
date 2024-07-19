@@ -13,12 +13,14 @@ public class CmsContext : DbContext
   internal DbSet<ContentItemEntity> ContentItems { get; private set; }
   internal DbSet<ContentLocaleEntity> ContentLocales { get; private set; }
   internal DbSet<ContentTypeEntity> ContentTypes { get; private set; }
+  internal DbSet<DateTimeFieldIndexEntity> DateTimeFieldIndex { get; private set; }
   internal DbSet<FieldDefinitionEntity> FieldDefinitions { get; private set; }
   internal DbSet<FieldTypeEntity> FieldTypes { get; private set; }
   internal DbSet<LanguageEntity> Languages { get; private set; }
   internal DbSet<LogEventEntity> LogEvents { get; private set; }
   internal DbSet<LogExceptionEntity> LogExceptions { get; private set; }
   internal DbSet<LogEntity> Logs { get; private set; }
+  internal DbSet<NumberFieldIndexEntity> NumberFieldIndex { get; private set; }
   internal DbSet<StringFieldIndexEntity> StringFieldIndex { get; private set; }
   internal DbSet<TextFieldIndexEntity> TextFieldIndex { get; private set; }
   internal DbSet<UniqueFieldIndexEntity> UniqueFieldIndex { get; private set; }

@@ -77,7 +77,7 @@ internal class ValidateFieldValuesCommandHandler : IRequestHandler<ValidateField
       }
 
       FieldTypeAggregate fieldType = fieldTypes[definition.FieldTypeId];
-      ValidationResult result = fieldType.Validate(field.Value);
+      ValidationResult result = fieldType.Validate(field.Value, propertyName); // ISSUE: https://github.com/Logitar/CMS/issues/3 (FieldId)
       if (result.IsValid)
       {
         if (definition.IsUnique)

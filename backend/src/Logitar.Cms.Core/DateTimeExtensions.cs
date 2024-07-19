@@ -9,4 +9,6 @@ public static class DateTimeExtensions // ISSUE: https://github.com/Logitar/CMS/
     DateTimeKind.Utc => value,
     _ => throw new ArgumentException($"The date time kind '{value.Kind}' is not supported.", nameof(value)),
   };
+
+  public static string ToISOString(this DateTime value) => value.AsUniversalTime().ToString("O", CultureInfo.InvariantCulture);
 }

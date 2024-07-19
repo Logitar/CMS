@@ -26,10 +26,18 @@ public class CreateFieldTypeValidator : AbstractValidator<CreateFieldTypePayload
 
   private static DataType? GetDataType(CreateFieldTypePayload payload)
   {
-    List<DataType> dataTypes = new(capacity: 3);
+    List<DataType> dataTypes = new(capacity: 5);
     if (payload.BooleanProperties != null)
     {
       dataTypes.Add(DataType.Boolean);
+    }
+    if (payload.DateTimeProperties != null)
+    {
+      dataTypes.Add(DataType.DateTime);
+    }
+    if (payload.NumberProperties != null)
+    {
+      dataTypes.Add(DataType.Number);
     }
     if (payload.StringProperties != null)
     {

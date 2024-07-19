@@ -10,6 +10,8 @@ public class FieldType : Aggregate
 
   public DataType DataType { get; set; }
   public BooleanProperties? BooleanProperties { get; set; }
+  public DateTimeProperties? DateTimeProperties { get; set; }
+  public NumberProperties? NumberProperties { get; set; }
   public StringProperties? StringProperties { get; set; }
   public TextProperties? TextProperties { get; set; }
 
