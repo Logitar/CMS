@@ -1,7 +1,9 @@
 ﻿using Logitar.Cms.Contracts.FieldTypes;
+using Logitar.Cms.Contracts.Search;
 using Logitar.Cms.Core;
 using Logitar.Cms.Core.FieldTypes.Commands;
 using Logitar.Cms.Core.FieldTypes.Queries;
+using Logitar.Cms.Web.Models.FieldTypes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,5 +42,12 @@ public class FieldTypeController : ControllerBase
   {
     FieldType? fieldType = await _pipeline.ExecuteAsync(new ReadFieldTypeQuery(Id: null, uniqueName), cancellationToken);
     return fieldType == null ? NotFound() : Ok(fieldType);
+  }
+
+  [HttpGet]
+  public async Task<ActionResult<SearchResults<FieldType>>> SearchAsync([FromQuery] SearchFieldTypesParameters parameters, CancellationToken cancellationToken)
+  {
+    SearchResults<FieldType> fieldTypes = await _pipeline.ExecuteAsync(new SearchFieldTypesQuery(parameters.ToPayload()), cancellationToken);
+    return Ok(fieldTypes);
   }
 }

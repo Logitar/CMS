@@ -21,6 +21,11 @@ internal class FieldTypeRepository : EventSourcing.EntityFrameworkCore.Relationa
     _sqlHelper = sqlHelper;
   }
 
+  public async Task<IReadOnlyCollection<FieldTypeAggregate>> LoadAsync(CancellationToken cancellationToken)
+  {
+    return (await base.LoadAsync<FieldTypeAggregate>(cancellationToken)).ToArray();
+  }
+
   public async Task<FieldTypeAggregate?> LoadAsync(FieldTypeId id, CancellationToken cancellationToken)
   {
     return await base.LoadAsync<FieldTypeAggregate>(id.AggregateId, cancellationToken);
