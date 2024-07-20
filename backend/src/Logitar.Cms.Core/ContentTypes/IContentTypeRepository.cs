@@ -2,6 +2,7 @@
 
 public interface IContentTypeRepository
 {
+  Task<IReadOnlyCollection<ContentTypeAggregate>> LoadAsync(CancellationToken cancellationToken = default);
   Task<ContentTypeAggregate?> LoadAsync(ContentTypeId id, CancellationToken cancellationToken = default);
   Task<ContentTypeAggregate?> LoadAsync(IdentifierUnit uniqueName, CancellationToken cancellationToken = default);
 

@@ -1,7 +1,9 @@
 ﻿using Logitar.Cms.Contracts.ContentTypes;
+using Logitar.Cms.Contracts.Search;
 using Logitar.Cms.Core;
 using Logitar.Cms.Core.ContentTypes.Commands;
 using Logitar.Cms.Core.ContentTypes.Queries;
+using Logitar.Cms.Web.Models.ContentTypes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,5 +42,12 @@ public class ContentTypeController : ControllerBase
   {
     CmsContentType? contentType = await _pipeline.ExecuteAsync(new ReadContentTypeQuery(Id: null, uniqueName), cancellationToken);
     return contentType == null ? NotFound() : Ok(contentType);
+  }
+
+  [HttpGet]
+  public async Task<ActionResult<SearchResults<CmsContentType>>> SearchAsync([FromQuery] SearchContentTypesParameters parameters, CancellationToken cancellationToken)
+  {
+    SearchResults<CmsContentType> contentTypes = await _pipeline.ExecuteAsync(new SearchContentTypesQuery(parameters.ToPayload()), cancellationToken);
+    return Ok(contentTypes);
   }
 }
