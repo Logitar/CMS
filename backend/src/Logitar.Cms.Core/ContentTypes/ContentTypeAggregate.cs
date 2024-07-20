@@ -1,16 +1,12 @@
 ﻿using Logitar.Cms.Contracts;
-using Logitar.Cms.Core.Configurations;
 using Logitar.Cms.Core.ContentTypes.Events;
 using Logitar.EventSourcing;
-using Logitar.Identity.Contracts.Settings;
 using Logitar.Identity.Domain.Shared;
 
 namespace Logitar.Cms.Core.ContentTypes;
 
 public class ContentTypeAggregate : AggregateRoot
 {
-  public static readonly IUniqueNameSettings UniqueNameSettings = new ReadOnlyUniqueNameSettings();
-
   private ContentTypeUpdatedEvent _updatedEvent = new();
 
   public new ContentTypeId Id => new(base.Id);
