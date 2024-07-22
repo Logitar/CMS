@@ -24,8 +24,8 @@ public class ReplaceFieldTypeCommandHandlerTests
     _handler = new(_fieldTypeQuerier.Object, _fieldTypeRepository.Object, _sender.Object);
   }
 
-  [Fact(DisplayName = "It should replace a new Boolean field type.")]
-  public async Task It_should_replace_a_new_Boolean_field_type()
+  [Fact(DisplayName = "It should replace an existing Boolean field type.")]
+  public async Task It_should_replace_an_existing_Boolean_field_type()
   {
     FieldTypeAggregate fieldType = new(new UniqueNameUnit(FieldTypeAggregate.UniqueNameSettings, "Featured"), new ReadOnlyBooleanProperties());
     _fieldTypeRepository.Setup(x => x.LoadAsync(fieldType.Id, _cancellationToken)).ReturnsAsync(fieldType);
@@ -49,8 +49,8 @@ public class ReplaceFieldTypeCommandHandlerTests
     ), _cancellationToken), Times.Once());
   }
 
-  [Fact(DisplayName = "It should replace a new DateTime field type.")]
-  public async Task It_should_replace_a_new_DateTime_field_type()
+  [Fact(DisplayName = "It should replace an existing DateTime field type.")]
+  public async Task It_should_replace_an_existing_DateTime_field_type()
   {
     FieldTypeAggregate fieldType = new(new UniqueNameUnit(FieldTypeAggregate.UniqueNameSettings, "Published"), new ReadOnlyDateTimeProperties());
     _fieldTypeRepository.Setup(x => x.LoadAsync(fieldType.Id, _cancellationToken)).ReturnsAsync(fieldType);
@@ -74,8 +74,8 @@ public class ReplaceFieldTypeCommandHandlerTests
     ), _cancellationToken), Times.Once());
   }
 
-  [Fact(DisplayName = "It should replace a new Number field type.")]
-  public async Task It_should_replace_a_new_Number_field_type()
+  [Fact(DisplayName = "It should replace an existing Number field type.")]
+  public async Task It_should_replace_an_existing_Number_field_type()
   {
     FieldTypeAggregate fieldType = new(new UniqueNameUnit(FieldTypeAggregate.UniqueNameSettings, "WordCount"), new ReadOnlyNumberProperties());
     _fieldTypeRepository.Setup(x => x.LoadAsync(fieldType.Id, _cancellationToken)).ReturnsAsync(fieldType);
@@ -99,8 +99,8 @@ public class ReplaceFieldTypeCommandHandlerTests
     ), _cancellationToken), Times.Once());
   }
 
-  [Fact(DisplayName = "It should replace a new String field type.")]
-  public async Task It_should_replace_a_new_String_field_type()
+  [Fact(DisplayName = "It should replace an existing String field type.")]
+  public async Task It_should_replace_an_existing_String_field_type()
   {
     FieldTypeAggregate fieldType = new(new UniqueNameUnit(FieldTypeAggregate.UniqueNameSettings, "BlogTitle"), new ReadOnlyStringProperties());
     _fieldTypeRepository.Setup(x => x.LoadAsync(fieldType.Id, _cancellationToken)).ReturnsAsync(fieldType);
@@ -124,8 +124,8 @@ public class ReplaceFieldTypeCommandHandlerTests
     ), _cancellationToken), Times.Once());
   }
 
-  [Fact(DisplayName = "It should replace a new Text field type.")]
-  public async Task It_should_replace_a_new_Text_field_type()
+  [Fact(DisplayName = "It should replace an existing Text field type.")]
+  public async Task It_should_replace_an_existing_Text_field_type()
   {
     FieldTypeAggregate fieldType = new(new UniqueNameUnit(FieldTypeAggregate.UniqueNameSettings, "BlogContent"), new ReadOnlyTextProperties());
     _fieldTypeRepository.Setup(x => x.LoadAsync(fieldType.Id, _cancellationToken)).ReturnsAsync(fieldType);

@@ -57,4 +57,11 @@ public class FieldTypeController : ControllerBase
     SearchResults<FieldType> fieldTypes = await _pipeline.ExecuteAsync(new SearchFieldTypesQuery(parameters.ToPayload()), cancellationToken);
     return Ok(fieldTypes);
   }
+
+  [HttpPatch("{id}")]
+  public async Task<ActionResult<FieldType>> UpdateAsync(Guid id, [FromBody] UpdateFieldTypePayload payload, CancellationToken cancellationToken)
+  {
+    FieldType? fieldType = await _pipeline.ExecuteAsync(new UpdateFieldTypeCommand(id, payload), cancellationToken);
+    return fieldType == null ? NotFound() : Ok(fieldType);
+  }
 }
