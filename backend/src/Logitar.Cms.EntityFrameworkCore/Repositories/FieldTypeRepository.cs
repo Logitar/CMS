@@ -30,6 +30,10 @@ internal class FieldTypeRepository : EventSourcing.EntityFrameworkCore.Relationa
   {
     return await base.LoadAsync<FieldTypeAggregate>(id.AggregateId, cancellationToken);
   }
+  public async Task<FieldTypeAggregate?> LoadAsync(FieldTypeId id, long? version, CancellationToken cancellationToken)
+  {
+    return await base.LoadAsync<FieldTypeAggregate>(id.AggregateId, version, cancellationToken);
+  }
 
   public async Task<IReadOnlyCollection<FieldTypeAggregate>> LoadAsync(IEnumerable<FieldTypeId> ids, CancellationToken cancellationToken)
   {

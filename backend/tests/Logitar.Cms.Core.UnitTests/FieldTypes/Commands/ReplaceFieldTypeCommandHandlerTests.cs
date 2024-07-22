@@ -36,7 +36,7 @@ public class ReplaceFieldTypeCommandHandlerTests
       Description = "    ",
       BooleanProperties = new BooleanProperties()
     };
-    ReplaceFieldTypeCommand command = new(fieldType.Id.ToGuid(), payload);
+    ReplaceFieldTypeCommand command = new(fieldType.Id.ToGuid(), payload, Version: null);
     ActivityHelper.Contextualize(command);
     await _handler.Handle(command, _cancellationToken);
 
@@ -61,7 +61,7 @@ public class ReplaceFieldTypeCommandHandlerTests
       Description = "    ",
       DateTimeProperties = new DateTimeProperties(minimumValue: DateTime.UtcNow, maximumValue: null)
     };
-    ReplaceFieldTypeCommand command = new(fieldType.Id.ToGuid(), payload);
+    ReplaceFieldTypeCommand command = new(fieldType.Id.ToGuid(), payload, Version: null);
     ActivityHelper.Contextualize(command);
     await _handler.Handle(command, _cancellationToken);
 
@@ -86,7 +86,7 @@ public class ReplaceFieldTypeCommandHandlerTests
       Description = "    ",
       NumberProperties = new NumberProperties(minimumValue: 0.01, maximumValue: null, step: 0.01)
     };
-    ReplaceFieldTypeCommand command = new(fieldType.Id.ToGuid(), payload);
+    ReplaceFieldTypeCommand command = new(fieldType.Id.ToGuid(), payload, Version: null);
     ActivityHelper.Contextualize(command);
     await _handler.Handle(command, _cancellationToken);
 
@@ -111,7 +111,7 @@ public class ReplaceFieldTypeCommandHandlerTests
       Description = "    ",
       StringProperties = new StringProperties(minimumLength: 1, maximumLength: 100, pattern: null)
     };
-    ReplaceFieldTypeCommand command = new(fieldType.Id.ToGuid(), payload);
+    ReplaceFieldTypeCommand command = new(fieldType.Id.ToGuid(), payload, Version: null);
     ActivityHelper.Contextualize(command);
     await _handler.Handle(command, _cancellationToken);
 
@@ -136,7 +136,7 @@ public class ReplaceFieldTypeCommandHandlerTests
       Description = "    ",
       TextProperties = new TextProperties(TextProperties.ContentTypes.PlainText, minimumLength: 1, maximumLength: 10000)
     };
-    ReplaceFieldTypeCommand command = new(fieldType.Id.ToGuid(), payload);
+    ReplaceFieldTypeCommand command = new(fieldType.Id.ToGuid(), payload, Version: null);
     ActivityHelper.Contextualize(command);
     await _handler.Handle(command, _cancellationToken);
 
@@ -153,7 +153,7 @@ public class ReplaceFieldTypeCommandHandlerTests
   public async Task It_should_return_null_when_the_field_type_is_not_found()
   {
     ReplaceFieldTypePayload payload = new();
-    ReplaceFieldTypeCommand command = new(Guid.Empty, payload);
+    ReplaceFieldTypeCommand command = new(Guid.Empty, payload, Version: null);
     Assert.Null(await _handler.Handle(command, _cancellationToken));
   }
 
@@ -168,7 +168,7 @@ public class ReplaceFieldTypeCommandHandlerTests
       StringProperties = new StringProperties(),
       TextProperties = new TextProperties()
     };
-    ReplaceFieldTypeCommand command = new(fieldType.Id.ToGuid(), payload);
+    ReplaceFieldTypeCommand command = new(fieldType.Id.ToGuid(), payload, Version: null);
     var exception = await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
     ValidationFailure error = Assert.Single(exception.Errors);
     Assert.Equal("NullValidator", error.ErrorCode);

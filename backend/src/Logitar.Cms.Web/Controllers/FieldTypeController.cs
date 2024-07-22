@@ -45,9 +45,9 @@ public class FieldTypeController : ControllerBase
   }
 
   [HttpPut("{id}")]
-  public async Task<ActionResult<FieldType>> ReplaceAsync(Guid id, [FromBody] ReplaceFieldTypePayload payload, CancellationToken cancellationToken)
+  public async Task<ActionResult<FieldType>> ReplaceAsync(Guid id, [FromBody] ReplaceFieldTypePayload payload, long? version, CancellationToken cancellationToken)
   {
-    FieldType? fieldType = await _pipeline.ExecuteAsync(new ReplaceFieldTypeCommand(id, payload), cancellationToken);
+    FieldType? fieldType = await _pipeline.ExecuteAsync(new ReplaceFieldTypeCommand(id, payload, version), cancellationToken);
     return fieldType == null ? NotFound() : Ok(fieldType);
   }
 

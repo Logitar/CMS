@@ -35,30 +35,68 @@ internal class ReplaceFieldTypeCommandHandler : IRequestHandler<ReplaceFieldType
     ReplaceFieldTypePayload payload = command.Payload;
     new ReplaceFieldTypeValidator(uniqueNameSettings, fieldType.DataType).ValidateAndThrow(payload);
 
-    fieldType.UniqueName = new UniqueNameUnit(uniqueNameSettings, payload.UniqueName);
-    fieldType.DisplayName = DisplayNameUnit.TryCreate(payload.DisplayName);
-    fieldType.Description = DescriptionUnit.TryCreate(payload.Description);
+    FieldTypeAggregate? reference = null;
+    if (command.Version.HasValue)
+    {
+      reference = await _fieldTypeRepository.LoadAsync(id, command.Version.Value, cancellationToken);
+    }
+
+    UniqueNameUnit uniqueName = new(uniqueNameSettings, payload.UniqueName);
+    DisplayNameUnit? displayName = DisplayNameUnit.TryCreate(payload.DisplayName);
+    DescriptionUnit? description = DescriptionUnit.TryCreate(payload.Description);
+    if (reference == null || uniqueName != reference.UniqueName)
+    {
+      fieldType.UniqueName = uniqueName;
+    }
+    if (reference == null || displayName != reference.DisplayName)
+    {
+      fieldType.DisplayName = displayName;
+    }
+    if (reference == null || description != reference.Description)
+    {
+      fieldType.Description = description;
+    }
     fieldType.Update(command.ActorId);
 
     if (payload.BooleanProperties != null)
     {
-      fieldType.SetProperties(new ReadOnlyBooleanProperties(payload.BooleanProperties), command.ActorId);
+      ReadOnlyBooleanProperties properties = new(payload.BooleanProperties);
+      if (reference == null || properties != reference.Properties)
+      {
+        fieldType.SetProperties(properties, command.ActorId);
+      }
     }
     if (payload.DateTimeProperties != null)
     {
-      fieldType.SetProperties(new ReadOnlyDateTimeProperties(payload.DateTimeProperties), command.ActorId);
+      ReadOnlyDateTimeProperties properties = new(payload.DateTimeProperties);
+      if (reference == null || properties != reference.Properties)
+      {
+        fieldType.SetProperties(properties, command.ActorId);
+      }
     }
     if (payload.NumberProperties != null)
     {
-      fieldType.SetProperties(new ReadOnlyNumberProperties(payload.NumberProperties), command.ActorId);
+      ReadOnlyNumberProperties properties = new(payload.NumberProperties);
+      if (reference == null || properties != reference.Properties)
+      {
+        fieldType.SetProperties(properties, command.ActorId);
+      }
     }
     if (payload.StringProperties != null)
     {
-      fieldType.SetProperties(new ReadOnlyStringProperties(payload.StringProperties), command.ActorId);
+      ReadOnlyStringProperties properties = new(payload.StringProperties);
+      if (reference == null || properties != reference.Properties)
+      {
+        fieldType.SetProperties(properties, command.ActorId);
+      }
     }
     if (payload.TextProperties != null)
     {
-      fieldType.SetProperties(new ReadOnlyTextProperties(payload.TextProperties), command.ActorId);
+      ReadOnlyTextProperties properties = new(payload.TextProperties);
+      if (reference == null || properties != reference.Properties)
+      {
+        fieldType.SetProperties(properties, command.ActorId);
+      }
     }
 
     await _sender.Send(new SaveFieldTypeCommand(fieldType), cancellationToken);

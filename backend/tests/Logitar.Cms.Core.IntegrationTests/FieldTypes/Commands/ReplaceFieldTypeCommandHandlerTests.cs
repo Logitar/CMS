@@ -53,6 +53,13 @@ public class ReplaceFieldTypeCommandHandlerTests : IntegrationTests
   [Fact(DisplayName = "It should replace an existing field type.")]
   public async Task It_should_replace_an_existing_field_type()
   {
+    long version = _fieldType.Version;
+
+    _fieldType.Description = new DescriptionUnit("This is the field type for blog article titles.");
+    _fieldType.Update(ActorId);
+    _fieldType.SetProperties(new ReadOnlyStringProperties(minimumLength: 1, maximumLength: 100, pattern: null), ActorId);
+    await _fieldTypeRepository.SaveAsync(_fieldType);
+
     ReplaceFieldTypePayload payload = new("ArticleTitle")
     {
       DisplayName = " Article Title ",
@@ -63,12 +70,12 @@ public class ReplaceFieldTypeCommandHandlerTests : IntegrationTests
         MaximumLength = 100
       }
     };
-    ReplaceFieldTypeCommand command = new(_fieldType.Id.ToGuid(), payload);
+    ReplaceFieldTypeCommand command = new(_fieldType.Id.ToGuid(), payload, version);
     FieldType? fieldType = await Pipeline.ExecuteAsync(command);
     Assert.NotNull(fieldType);
 
     Assert.Equal(_fieldType.Id.ToGuid(), fieldType.Id);
-    Assert.Equal(4, fieldType.Version);
+    Assert.Equal(_fieldType.Version + 1, fieldType.Version);
     Assert.Equal(Contracts.Actors.Actor.System, fieldType.CreatedBy);
     Assert.Equal(_fieldType.CreatedOn.AsUniversalTime(), fieldType.CreatedOn);
     Assert.Equal(Actor, fieldType.UpdatedBy);
@@ -76,7 +83,7 @@ public class ReplaceFieldTypeCommandHandlerTests : IntegrationTests
 
     Assert.Equal(payload.UniqueName, fieldType.UniqueName);
     Assert.Equal(payload.DisplayName.Trim(), fieldType.DisplayName);
-    Assert.Null(fieldType.Description);
+    Assert.Equal(_fieldType.Description.Value, fieldType.Description);
     Assert.Equal(DataType.String, fieldType.DataType);
     Assert.Null(fieldType.BooleanProperties);
     Assert.Null(fieldType.DateTimeProperties);

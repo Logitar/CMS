@@ -6,6 +6,7 @@ public interface IFieldTypeRepository
 {
   Task<IReadOnlyCollection<FieldTypeAggregate>> LoadAsync(CancellationToken cancellationToken = default);
   Task<FieldTypeAggregate?> LoadAsync(FieldTypeId id, CancellationToken cancellationToken = default);
+  Task<FieldTypeAggregate?> LoadAsync(FieldTypeId id, long? version, CancellationToken cancellationToken = default);
   Task<IReadOnlyCollection<FieldTypeAggregate>> LoadAsync(IEnumerable<FieldTypeId> ids, CancellationToken cancellationToken = default);
   Task<FieldTypeAggregate?> LoadAsync(UniqueNameUnit uniqueName, CancellationToken cancellationToken = default);
 

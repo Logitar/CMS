@@ -51,8 +51,8 @@ public class UpdateFieldTypeCommandHandlerTests
     Assert.Equal("TextProperties", error.PropertyName);
   }
 
-  [Fact(DisplayName = "It should update an existing field type.")]
-  public async Task It_should_update_an_existing_field_type()
+  [Fact(DisplayName = "It should update an existing field type without version.")]
+  public async Task It_should_update_an_existing_field_type_without_version()
   {
     FieldTypeAggregate fieldType = new(new UniqueNameUnit(FieldTypeAggregate.UniqueNameSettings, "ArticleTitle"), new ReadOnlyStringProperties());
     _fieldTypeRepository.Setup(x => x.LoadAsync(fieldType.Id, _cancellationToken)).ReturnsAsync(fieldType);
@@ -76,5 +76,7 @@ public class UpdateFieldTypeCommandHandlerTests
       && ((ReadOnlyStringProperties)y.FieldType.Properties).MaximumLength == payload.StringProperties.MaximumLength
       && ((ReadOnlyStringProperties)y.FieldType.Properties).Pattern == payload.StringProperties.Pattern
     ), _cancellationToken), Times.Once());
+
+    _fieldTypeRepository.Verify(x => x.LoadAsync(fieldType.Id, It.IsAny<long>(), _cancellationToken), Times.Never);
   }
 }
