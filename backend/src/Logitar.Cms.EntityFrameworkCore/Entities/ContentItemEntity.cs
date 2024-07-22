@@ -28,7 +28,8 @@ internal class ContentItemEntity : AggregateEntity
   {
   }
 
-  public override IEnumerable<ActorId> GetActorIds()
+  public override IEnumerable<ActorId> GetActorIds() => GetActorIds(includeLocales: true);
+  public IEnumerable<ActorId> GetActorIds(bool includeLocales)
   {
     List<ActorId> actorIds = base.GetActorIds().ToList();
 
@@ -37,9 +38,12 @@ internal class ContentItemEntity : AggregateEntity
       actorIds.AddRange(ContentType.GetActorIds());
     }
 
-    foreach (ContentLocaleEntity locale in Locales)
+    if (includeLocales)
     {
-      actorIds.AddRange(locale.GetActorIds());
+      foreach (ContentLocaleEntity locale in Locales)
+      {
+        actorIds.AddRange(locale.GetActorIds(includeItem: false));
+      }
     }
 
     return actorIds.AsReadOnly();

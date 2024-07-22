@@ -6,6 +6,7 @@ namespace Logitar.Cms.Core.Contents;
 
 public interface IContentRepository
 {
+  Task<IReadOnlyCollection<ContentAggregate>> LoadAsync(CancellationToken cancellationToken = default);
   Task<ContentAggregate?> LoadAsync(ContentId id, CancellationToken cancellationToken = default);
   Task<ContentAggregate?> LoadAsync(ContentTypeId contentTypeId, LanguageId? languageId, UniqueNameUnit uniqueName, CancellationToken cancellationToken = default);
 

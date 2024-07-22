@@ -6,15 +6,15 @@ namespace Logitar.Cms.Core.ContentTypes.Queries;
 
 internal class SearchContentTypesQueryHandler : IRequestHandler<SearchContentTypesQuery, SearchResults<CmsContentType>>
 {
-  private readonly IContentTypeQuerier _fieldTypeQuerier;
+  private readonly IContentTypeQuerier _contentTypeQuerier;
 
   public SearchContentTypesQueryHandler(IContentTypeQuerier fieldTypeQuerier)
   {
-    _fieldTypeQuerier = fieldTypeQuerier;
+    _contentTypeQuerier = fieldTypeQuerier;
   }
 
   public async Task<SearchResults<CmsContentType>> Handle(SearchContentTypesQuery query, CancellationToken cancellationToken)
   {
-    return await _fieldTypeQuerier.SearchAsync(query.Payload, cancellationToken);
+    return await _contentTypeQuerier.SearchAsync(query.Payload, cancellationToken);
   }
 }

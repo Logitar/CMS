@@ -7,7 +7,7 @@ namespace Logitar.Cms.Core.ContentTypes.Queries;
 [Trait(Traits.Category, Categories.Integration)]
 public class SearchContentTypesQueryHandlerTests : IntegrationTests
 {
-  private readonly IContentTypeRepository _fieldTypeRepository;
+  private readonly IContentTypeRepository _contentTypeRepository;
 
   private readonly ContentTypeAggregate _article;
   private readonly ContentTypeAggregate _blog;
@@ -17,7 +17,7 @@ public class SearchContentTypesQueryHandlerTests : IntegrationTests
 
   public SearchContentTypesQueryHandlerTests() : base()
   {
-    _fieldTypeRepository = ServiceProvider.GetRequiredService<IContentTypeRepository>();
+    _contentTypeRepository = ServiceProvider.GetRequiredService<IContentTypeRepository>();
 
     _article = new(new IdentifierUnit("BlogArticle"), isInvariant: false);
     _blog = new(new IdentifierUnit("Blog"), isInvariant: false);
@@ -30,11 +30,11 @@ public class SearchContentTypesQueryHandlerTests : IntegrationTests
   {
     await base.InitializeAsync();
 
-    await _fieldTypeRepository.SaveAsync([_article, _blog, _author, _magazine, _product]);
+    await _contentTypeRepository.SaveAsync([_article, _blog, _author, _magazine, _product]);
   }
 
-  [Fact(DisplayName = "It should return empty results when no field type matches.")]
-  public async Task It_should_return_empty_results_when_no_field_type_matches()
+  [Fact(DisplayName = "It should return empty results when no content type matches.")]
+  public async Task It_should_return_empty_results_when_no_content_type_matches()
   {
     SearchContentTypesPayload payload = new()
     {
@@ -48,13 +48,13 @@ public class SearchContentTypesQueryHandlerTests : IntegrationTests
     Assert.Equal(0, results.Total);
   }
 
-  [Fact(DisplayName = "It should return the correct matching field types.")]
-  public async Task It_should_return_the_correct_matching_field_types()
+  [Fact(DisplayName = "It should return the correct matching content types.")]
+  public async Task It_should_return_the_correct_matching_content_types()
   {
     SearchContentTypesPayload payload = new()
     {
       IsInvariant = false,
-      IdIn = (await _fieldTypeRepository.LoadAsync()).Select(fieldType => fieldType.Id.ToGuid()).ToList(),
+      IdIn = (await _contentTypeRepository.LoadAsync()).Select(contentType => contentType.Id.ToGuid()).ToList(),
       Search = new TextSearch([new SearchTerm("blog%"), new SearchTerm("%z%")], SearchOperator.Or),
       Sort = [new ContentTypeSortOption(ContentTypeSort.UniqueName, isDescending: true)],
       Skip = 1,
@@ -67,7 +67,7 @@ public class SearchContentTypesQueryHandlerTests : IntegrationTests
     SearchResults<CmsContentType> results = await Pipeline.ExecuteAsync(query);
 
     Assert.Equal(2, results.Total);
-    CmsContentType fieldType = Assert.Single(results.Items);
-    Assert.Equal(_article.Id.ToGuid(), fieldType.Id);
+    CmsContentType contentType = Assert.Single(results.Items);
+    Assert.Equal(_article.Id.ToGuid(), contentType.Id);
   }
 }

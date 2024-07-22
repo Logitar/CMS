@@ -76,7 +76,22 @@ internal class ContentLocaleEntity
   {
   }
 
-  public IEnumerable<ActorId> GetActorIds() => [new(CreatedBy), new(UpdatedBy)];
+  public IEnumerable<ActorId> GetActorIds(bool includeItem)
+  {
+    List<ActorId> actorIds = [new(CreatedBy), new(UpdatedBy)];
+
+    if (Language != null)
+    {
+      actorIds.AddRange(Language.GetActorIds());
+    }
+
+    if (includeItem && Item != null)
+    {
+      actorIds.AddRange(Item.GetActorIds(includeLocales: false));
+    }
+
+    return actorIds.AsReadOnly();
+  }
 
   public void Update(ContentLocaleUnit locale, DomainEvent @event)
   {
