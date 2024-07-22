@@ -22,6 +22,11 @@ internal class ContentRepository : EventSourcing.EntityFrameworkCore.Relational.
     _sqlHelper = sqlHelper;
   }
 
+  public async Task<IReadOnlyCollection<ContentAggregate>> LoadAsync(CancellationToken cancellationToken)
+  {
+    return (await base.LoadAsync<ContentAggregate>(cancellationToken)).ToArray();
+  }
+
   public async Task<ContentAggregate?> LoadAsync(ContentId id, CancellationToken cancellationToken)
   {
     return await base.LoadAsync<ContentAggregate>(id.AggregateId, cancellationToken);

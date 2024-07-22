@@ -99,8 +99,8 @@ internal class ContentTypeQuerier : IContentTypeQuerier
 
     query = query.ApplyPaging(payload);
 
-    ContentTypeEntity[] fieldTypes = await query.ToArrayAsync(cancellationToken);
-    IEnumerable<CmsContentType> items = await MapAsync(fieldTypes, cancellationToken);
+    ContentTypeEntity[] contentTypes = await query.ToArrayAsync(cancellationToken);
+    IEnumerable<CmsContentType> items = await MapAsync(contentTypes, cancellationToken);
 
     return new SearchResults<CmsContentType>(items, total);
   }
