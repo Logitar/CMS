@@ -44,10 +44,24 @@ public class FieldTypeController : ControllerBase
     return fieldType == null ? NotFound() : Ok(fieldType);
   }
 
+  [HttpPut("{id}")]
+  public async Task<ActionResult<FieldType>> ReplaceAsync(Guid id, [FromBody] ReplaceFieldTypePayload payload, long? version, CancellationToken cancellationToken)
+  {
+    FieldType? fieldType = await _pipeline.ExecuteAsync(new ReplaceFieldTypeCommand(id, payload, version), cancellationToken);
+    return fieldType == null ? NotFound() : Ok(fieldType);
+  }
+
   [HttpGet]
   public async Task<ActionResult<SearchResults<FieldType>>> SearchAsync([FromQuery] SearchFieldTypesParameters parameters, CancellationToken cancellationToken)
   {
     SearchResults<FieldType> fieldTypes = await _pipeline.ExecuteAsync(new SearchFieldTypesQuery(parameters.ToPayload()), cancellationToken);
     return Ok(fieldTypes);
+  }
+
+  [HttpPatch("{id}")]
+  public async Task<ActionResult<FieldType>> UpdateAsync(Guid id, [FromBody] UpdateFieldTypePayload payload, CancellationToken cancellationToken)
+  {
+    FieldType? fieldType = await _pipeline.ExecuteAsync(new UpdateFieldTypeCommand(id, payload), cancellationToken);
+    return fieldType == null ? NotFound() : Ok(fieldType);
   }
 }

@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using FluentValidation.Results;
+﻿using FluentValidation.Results;
 using Logitar.Cms.Contracts.FieldTypes;
 using Logitar.Cms.Contracts.FieldTypes.Properties;
 using Logitar.Cms.Core.FieldTypes.Properties;
@@ -133,7 +132,7 @@ public class CreateFieldTypeCommandHandlerTests
   {
     CreateFieldTypePayload payload = new("ArticleTitle");
     CreateFieldTypeCommand command = new(payload);
-    var exception = await Assert.ThrowsAsync<ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
+    var exception = await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
     ValidationFailure error = Assert.Single(exception.Errors);
     Assert.Equal("CreateFieldTypeValidator", error.ErrorCode);
   }

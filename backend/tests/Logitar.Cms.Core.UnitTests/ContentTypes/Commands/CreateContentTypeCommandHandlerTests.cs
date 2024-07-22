@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using FluentValidation.Results;
+﻿using FluentValidation.Results;
 using Logitar.Cms.Contracts.ContentTypes;
 using MediatR;
 using Moq;
@@ -61,7 +60,7 @@ public class CreateContentTypeCommandHandlerTests
   {
     CreateContentTypePayload payload = new("123_BlogArticle");
     CreateContentTypeCommand command = new(payload);
-    var exception = await Assert.ThrowsAsync<ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
+    var exception = await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
     ValidationFailure error = Assert.Single(exception.Errors);
     Assert.Equal("IdentifierValidator", error.ErrorCode);
     Assert.Equal("UniqueName", error.PropertyName);
