@@ -138,6 +138,10 @@ internal class FieldTypeEntity : AggregateEntity
   {
     base.Update(@event);
 
+    if (@event.UniqueName != null)
+    {
+      UniqueName = @event.UniqueName.Value;
+    }
     if (@event.DisplayName != null)
     {
       DisplayName = @event.DisplayName.Value?.Value;

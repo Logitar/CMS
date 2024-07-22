@@ -19,6 +19,8 @@ public class CreateFieldTypeValidator : AbstractValidator<CreateFieldTypePayload
       .Otherwise(() =>
       {
         When(x => x.BooleanProperties != null, () => RuleFor(x => x.BooleanProperties!).SetValidator(new BooleanPropertiesValidator()));
+        When(x => x.DateTimeProperties != null, () => RuleFor(x => x.DateTimeProperties!).SetValidator(new DateTimePropertiesValidator()));
+        When(x => x.NumberProperties != null, () => RuleFor(x => x.NumberProperties!).SetValidator(new NumberPropertiesValidator()));
         When(x => x.StringProperties != null, () => RuleFor(x => x.StringProperties!).SetValidator(new StringPropertiesValidator()));
         When(x => x.TextProperties != null, () => RuleFor(x => x.TextProperties!).SetValidator(new TextPropertiesValidator()));
       });

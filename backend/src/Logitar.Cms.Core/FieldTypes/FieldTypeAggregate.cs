@@ -26,7 +26,18 @@ public class FieldTypeAggregate : AggregateRoot
   public new FieldTypeId Id => new(base.Id);
 
   private UniqueNameUnit? _uniqueName = null;
-  public UniqueNameUnit UniqueName => _uniqueName ?? throw new InvalidOperationException($"The {nameof(UniqueName)} has not been initialized yet.");
+  public UniqueNameUnit UniqueName
+  {
+    get => _uniqueName ?? throw new InvalidOperationException($"The {nameof(UniqueName)} has not been initialized yet.");
+    set
+    {
+      if (_uniqueName != value)
+      {
+        _uniqueName = value;
+        _updatedEvent.UniqueName = value;
+      }
+    }
+  }
   private DisplayNameUnit? _displayName = null;
   public DisplayNameUnit? DisplayName
   {
@@ -199,6 +210,10 @@ public class FieldTypeAggregate : AggregateRoot
   }
   protected virtual void Apply(FieldTypeUpdatedEvent @event)
   {
+    if (@event.UniqueName != null)
+    {
+      _uniqueName = @event.UniqueName;
+    }
     if (@event.DisplayName != null)
     {
       _displayName = @event.DisplayName.Value;

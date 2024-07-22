@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using FluentValidation.Results;
+﻿using FluentValidation.Results;
 using Logitar.Cms.Contracts.Contents;
 using Logitar.Cms.Core.ContentTypes;
 using Logitar.Cms.Core.Languages;
@@ -116,7 +115,7 @@ public class CreateContentCommandHandlerTests
       LanguageId = null
     };
     CreateContentCommand command = new(payload);
-    var exception = await Assert.ThrowsAsync<ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
+    var exception = await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
     ValidationFailure error = Assert.Single(exception.Errors);
     Assert.Equal("NotEmptyValidator", error.ErrorCode);
     Assert.Equal("LanguageId", error.PropertyName);

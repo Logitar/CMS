@@ -7,8 +7,9 @@ namespace Logitar.Cms.Core.FieldTypes.Events;
 
 public class FieldTypeUpdatedEvent : DomainEvent, INotification
 {
+  public UniqueNameUnit? UniqueName { get; set; }
   public Change<DisplayNameUnit>? DisplayName { get; set; }
   public Change<DescriptionUnit>? Description { get; set; }
 
-  public bool HasChanges => DisplayName != null || Description != null;
+  public bool HasChanges => UniqueName != null || DisplayName != null || Description != null;
 }
