@@ -5,6 +5,7 @@ VisualStudioVersion = 17.9.34902.65
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{11D88F4E-457D-4FD4-9715-9C2368F01224}"
 	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
 		.editorconfig = .editorconfig
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
@@ -14,6 +15,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.Contracts", "src\Logitar.Cms.Contracts\Logitar.Cms.Contracts.csproj", "{02C0849F-005D-43A1-9EED-4CA0998C35FA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.Core", "src\Logitar.Cms.Core\Logitar.Cms.Core.csproj", "{CABB3261-5723-4A0A-B373-DB4758092E97}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C73FCDEC-8D2B-4E48-81BF-BD86ACBBB07C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.Core.UnitTests", "tests\Logitar.Cms.Core.UnitTests\Logitar.Cms.Core.UnitTests.csproj", "{411F8113-64F4-4C79-B445-4F716E300144}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.UnitTests", "tests\Logitar.Cms.UnitTests\Logitar.Cms.UnitTests.csproj", "{8392DAB5-9FEF-4FD9-8747-EBE684E06BE1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,9 +36,21 @@ Global
 		{CABB3261-5723-4A0A-B373-DB4758092E97}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CABB3261-5723-4A0A-B373-DB4758092E97}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CABB3261-5723-4A0A-B373-DB4758092E97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{411F8113-64F4-4C79-B445-4F716E300144}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{411F8113-64F4-4C79-B445-4F716E300144}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{411F8113-64F4-4C79-B445-4F716E300144}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{411F8113-64F4-4C79-B445-4F716E300144}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8392DAB5-9FEF-4FD9-8747-EBE684E06BE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8392DAB5-9FEF-4FD9-8747-EBE684E06BE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8392DAB5-9FEF-4FD9-8747-EBE684E06BE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8392DAB5-9FEF-4FD9-8747-EBE684E06BE1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{411F8113-64F4-4C79-B445-4F716E300144} = {C73FCDEC-8D2B-4E48-81BF-BD86ACBBB07C}
+		{8392DAB5-9FEF-4FD9-8747-EBE684E06BE1} = {C73FCDEC-8D2B-4E48-81BF-BD86ACBBB07C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DA500B33-B3CA-431A-80D8-55CD95479A70}

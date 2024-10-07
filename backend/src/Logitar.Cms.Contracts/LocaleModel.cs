@@ -27,7 +27,7 @@ public class LocaleModel
     NativeName = culture.NativeName;
 
     Language = culture.TwoLetterISOLanguageName;
-    if (!culture.IsNeutralCulture)
+    if (!culture.IsNeutralCulture && !string.IsNullOrEmpty(culture.Name))
     {
       RegionInfo region = new(culture.LCID);
       Region = region.TwoLetterISORegionName;

@@ -86,7 +86,7 @@ public class CreateOrReplaceLanguageCommandHandler : IRequestHandler<CreateOrRep
     reference ??= language;
 
     Locale locale = new(payload.Locale);
-    if (locale != reference.Locale)
+    if (!locale.Equals(reference.Locale))
     {
       language.Locale = locale;
     }
