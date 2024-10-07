@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Logitar.Cms.EntityFrameworkCore.SqlServer\Logitar.Cms.EntityFrameworkCore.SqlServer.csproj" />
+    <ProjectReference Include="..\Logitar.Cms.EntityFrameworkCore.SqlServer\Logitar.Cms.EntityFrameworkCore.SqlServer.csproj" />
   </ItemGroup>
 
 </Project>
