@@ -37,8 +37,7 @@ public class LocaleAlreadyUsedException : ConflictException
     }
   }
 
-  public LocaleAlreadyUsedException(Language language, LanguageId conflictId)
-    : base(BuildMessage(language, conflictId))
+  public LocaleAlreadyUsedException(Language language, LanguageId conflictId) : base(BuildMessage(language, conflictId))
   {
     LanguageId = language.Id.ToGuid();
     ConflictId = conflictId.ToGuid();

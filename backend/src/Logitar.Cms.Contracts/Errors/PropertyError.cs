@@ -9,8 +9,7 @@ public record PropertyError : Error
   {
   }
 
-  public PropertyError(string code, string message, object? attemptedValue, string? propertyName)
-    : base(code, message)
+  public PropertyError(string code, string message, object? attemptedValue, string? propertyName) : base(code, message)
   {
     AttemptedValue = attemptedValue;
     PropertyName = propertyName;
