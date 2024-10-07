@@ -29,6 +29,10 @@ internal class LanguageEntity : AggregateEntity
     SetLocale(@event.Locale);
   }
 
+  private LanguageEntity() : base()
+  {
+  }
+
   public void SetDefault(Language.SetDefaultEvent @event)
   {
     Update(@event);

@@ -17,6 +17,7 @@ public static class DependencyInjectionExtensions
     return services
       .AddLogitarIdentityInfrastructure()
       .AddLogitarCmsCore()
+      .AddMemoryCache()
       .AddSingleton(InitializeCachingSettings)
       .AddSingleton<ICacheService, CacheService>()
       .AddSingleton<IEventSerializer>(InitializeEventSerializer);
