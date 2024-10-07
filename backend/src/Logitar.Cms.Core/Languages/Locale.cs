@@ -17,8 +17,8 @@ public class Locale
     new Validator().ValidateAndThrow(this);
   }
 
-  public override bool Equals(object? obj) => obj is Locale locale && locale.Culture.Equals(Culture);
-  public override int GetHashCode() => Culture.GetHashCode();
+  public override bool Equals(object? obj) => obj is Locale locale && locale.Code == Code;
+  public override int GetHashCode() => Code.GetHashCode();
   public override string ToString() => $"{DisplayName} ({Code})";
 
   public class Validator : AbstractValidator<Locale>
