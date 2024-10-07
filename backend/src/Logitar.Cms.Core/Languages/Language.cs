@@ -35,6 +35,19 @@ public class Language : AggregateRoot
     _locale = @event.Locale;
   }
 
+  public void SetDefault(ActorId actorId = default) => SetDefault(isDefault: true, actorId);
+  public void SetDefault(bool isDefault, ActorId actorId = default)
+  {
+    if (IsDefault != isDefault)
+    {
+      Raise(new SetDefaultEvent(isDefault), actorId);
+    }
+  }
+  protected virtual void Apply(SetDefaultEvent @event)
+  {
+    IsDefault = @event.IsDefault;
+  }
+
   public void Update(ActorId actorId = default)
   {
     if (_updatedEvent.HasChanges)
@@ -62,6 +75,16 @@ public class Language : AggregateRoot
     {
       IsDefault = isDefault;
       Locale = locale;
+    }
+  }
+
+  public class SetDefaultEvent : DomainEvent, INotification
+  {
+    public bool IsDefault { get; }
+
+    public SetDefaultEvent(bool isDefault)
+    {
+      IsDefault = isDefault;
     }
   }
 
