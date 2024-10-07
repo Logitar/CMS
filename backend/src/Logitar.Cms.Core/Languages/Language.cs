@@ -24,6 +24,10 @@ public class Language : AggregateRoot
     }
   }
 
+  public Language() : base()
+  {
+  }
+
   public Language(Locale locale, bool isDefault = false, ActorId actorId = default, LanguageId? id = null)
     : base((id ?? LanguageId.NewId()).AggregateId)
   {
