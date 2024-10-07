@@ -15,24 +15,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="11.10.0" />
-    <PackageReference Include="Logitar" Version="6.3.0" />
-    <PackageReference Include="Logitar.EventSourcing" Version="6.0.0" />
-    <PackageReference Include="MediatR" Version="12.4.1" />
+    <PackageReference Include="Logitar.EventSourcing.Infrastructure" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Logitar.Cms.Contracts\Logitar.Cms.Contracts.csproj" />
+    <ProjectReference Include="..\Logitar.Cms.Core\Logitar.Cms.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Using Include="System.Diagnostics.CodeAnalysis" />
-    <Using Include="System.Globalization" />
-    <Using Include="System.Reflection" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <InternalsVisibleTo Include="Logitar.Cms.Core.UnitTests" />
+    <Using Include="System.Text.Json" />
+    <Using Include="System.Text.Json.Serialization" />
   </ItemGroup>
 
 </Project>
