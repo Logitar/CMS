@@ -1,5 +1,4 @@
-﻿using Logitar.Cms.Contracts.ApiKeys;
-using Logitar.Cms.Core;
+﻿using Logitar.Cms.Core;
 using Logitar.Cms.Web.Constants;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
@@ -26,16 +25,18 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthentic
       {
         try
         {
-          AuthenticateApiKeyPayload payload = new(value);
-          AuthenticateApiKeyCommand command = new(payload);
-          ApiKeyModel apiKey = await _requestPipeline.ExecuteAsync(command);
+          await Task.Delay(1);
+          throw new NotImplementedException(); // TODO(fpion): API Key Authentication
+          //AuthenticateApiKeyPayload payload = new(value);
+          //AuthenticateApiKeyCommand command = new(payload);
+          //ApiKeyModel apiKey = await _requestPipeline.ExecuteAsync(command);
 
-          Context.SetApiKey(apiKey);
+          //Context.SetApiKey(apiKey);
 
-          ClaimsPrincipal principal = new(apiKey.CreateClaimsIdentity(Scheme.Name));
-          AuthenticationTicket ticket = new(principal, Scheme.Name);
+          //ClaimsPrincipal principal = new(apiKey.CreateClaimsIdentity(Scheme.Name));
+          //AuthenticationTicket ticket = new(principal, Scheme.Name);
 
-          return AuthenticateResult.Success(ticket);
+          //return AuthenticateResult.Success(ticket);
         }
         catch (Exception exception)
         {
