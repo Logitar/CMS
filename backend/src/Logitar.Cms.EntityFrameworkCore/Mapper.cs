@@ -1,7 +1,11 @@
 ﻿using Logitar.Cms.Contracts;
 using Logitar.Cms.Contracts.Actors;
+using Logitar.Cms.Contracts.ApiKeys;
 using Logitar.Cms.Contracts.Configurations;
 using Logitar.Cms.Contracts.Languages;
+using Logitar.Cms.Contracts.Roles;
+using Logitar.Cms.Contracts.Sessions;
+using Logitar.Cms.Contracts.Users;
 using Logitar.Cms.Core.Configurations;
 using Logitar.Cms.EntityFrameworkCore.Entities;
 using Logitar.EventSourcing;
@@ -35,6 +39,26 @@ internal class Mapper
     PictureUrl = actor.PictureUrl
   };
 
+  public ApiKeyModel ToApiKey(ApiKeyEntity source)
+  {
+    ApiKeyModel destination = new()
+    {
+      DisplayName = source.DisplayName,
+      Description = source.Description,
+      ExpiresOn = source.ExpiresOn?.AsUniversalTime(),
+      AuthenticatedOn = source.AuthenticatedOn?.AsUniversalTime()
+    };
+
+    foreach (KeyValuePair<string, string> customAttribute in source.CustomAttributes)
+    {
+      destination.CustomAttributes.Add(new CustomAttribute(customAttribute));
+    }
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
   public ConfigurationModel ToConfiguration(Configuration source)
   {
     ConfigurationModel destination = new()
@@ -64,6 +88,136 @@ internal class Mapper
     return destination;
   }
 
+  public RoleModel ToRole(RoleEntity source)
+  {
+    RoleModel destination = new()
+    {
+      UniqueName = source.UniqueName,
+      DisplayName = source.DisplayName,
+      Description = source.Description
+    };
+
+    foreach (KeyValuePair<string, string> customAttribute in source.CustomAttributes)
+    {
+      destination.CustomAttributes.Add(new CustomAttribute(customAttribute));
+    }
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public SessionModel ToSession(SessionEntity source)
+  {
+    if (source.User == null)
+    {
+      throw new ArgumentException($"The {nameof(source.User)} is required.", nameof(source));
+    }
+
+    SessionModel destination = new()
+    {
+      IsPersistent = source.IsPersistent,
+      IsActive = source.IsActive,
+      SignedOutBy = TryFindActor(source.SignedOutBy),
+      SignedOutOn = source.SignedOutOn?.AsUniversalTime(),
+      User = ToUser(source.User)
+    };
+
+    foreach (KeyValuePair<string, string> customAttribute in source.CustomAttributes)
+    {
+      destination.CustomAttributes.Add(new CustomAttribute(customAttribute));
+    }
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public UserModel ToUser(UserEntity source)
+  {
+    UserModel destination = new()
+    {
+      Username = source.UniqueName,
+      HasPassword = source.HasPassword,
+      PasswordChangedBy = TryFindActor(source.PasswordChangedBy),
+      PasswordChangedOn = source.PasswordChangedOn?.AsUniversalTime(),
+      IsDisabled = source.IsDisabled,
+      DisabledBy = TryFindActor(source.DisabledBy),
+      DisabledOn = source.DisabledOn?.AsUniversalTime(),
+      IsConfirmed = source.IsConfirmed,
+      FirstName = source.FirstName,
+      MiddleName = source.MiddleName,
+      LastName = source.LastName,
+      FullName = source.FullName,
+      Nickname = source.Nickname,
+      Birthdate = source.Birthdate?.AsUniversalTime(),
+      Gender = source.Gender,
+      Locale = source.Locale == null ? null : new LocaleModel(source.Locale),
+      TimeZone = source.TimeZone,
+      Picture = source.Picture,
+      Profile = source.Profile,
+      Website = source.Website,
+      AuthenticatedOn = source.AuthenticatedOn?.AsUniversalTime()
+    };
+
+    if (source.AddressStreet != null && source.AddressLocality != null && source.AddressCountry != null && source.AddressFormatted != null)
+    {
+      destination.Address = new AddressModel
+      {
+        Street = source.AddressStreet,
+        Locality = source.AddressLocality,
+        PostalCode = source.AddressPostalCode,
+        Region = source.AddressRegion,
+        Country = source.AddressCountry,
+        Formatted = source.AddressFormatted,
+        IsVerified = source.IsAddressVerified,
+        VerifiedBy = TryFindActor(source.AddressVerifiedBy),
+        VerifiedOn = source.AddressVerifiedOn?.AsUniversalTime()
+      };
+    }
+    if (source.EmailAddress != null)
+    {
+      destination.Email = new EmailModel
+      {
+        Address = source.EmailAddress,
+        IsVerified = source.IsEmailVerified,
+        VerifiedBy = TryFindActor(source.EmailVerifiedBy),
+        VerifiedOn = source.EmailVerifiedOn?.AsUniversalTime()
+      };
+    }
+    if (source.PhoneNumber != null && source.PhoneE164Formatted != null)
+    {
+      destination.Phone = new PhoneModel
+      {
+        CountryCode = source.PhoneCountryCode,
+        Number = source.PhoneNumber,
+        Extension = source.PhoneExtension,
+        E164Formatted = source.PhoneE164Formatted,
+        IsVerified = source.IsPhoneVerified,
+        VerifiedBy = TryFindActor(source.PhoneVerifiedBy),
+        VerifiedOn = source.PhoneVerifiedOn?.AsUniversalTime()
+      };
+    }
+
+    foreach (KeyValuePair<string, string> customAttribute in source.CustomAttributes)
+    {
+      destination.CustomAttributes.Add(new CustomAttribute(customAttribute));
+    }
+    foreach (UserIdentifierEntity identifier in source.Identifiers)
+    {
+      destination.CustomIdentifiers.Add(new CustomIdentifier(identifier.Key, identifier.Value));
+    }
+
+    foreach (RoleEntity role in source.Roles)
+    {
+      destination.Roles.Add(ToRole(role));
+    }
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
   private void MapAggregate(AggregateRoot source, AggregateModel destination)
   {
     destination.Id = source.Id.ToGuid();
@@ -83,6 +237,7 @@ internal class Mapper
     destination.UpdatedOn = source.UpdatedOn.AsUniversalTime();
   }
 
+  private Actor? TryFindActor(string? id) => id == null ? null : FindActor(new ActorId(id));
   private Actor FindActor(string id) => FindActor(new ActorId(id));
   private Actor FindActor(ActorId id) => _actors.TryGetValue(id, out Actor? actor) ? actor : Actor.System;
 }

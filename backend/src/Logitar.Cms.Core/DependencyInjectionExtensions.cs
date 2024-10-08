@@ -1,4 +1,5 @@
-﻿using Logitar.Identity.Domain;
+﻿using Logitar.Cms.Core.Logging;
+using Logitar.Identity.Domain;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Logitar.Cms.Core;
@@ -9,6 +10,8 @@ public static class DependencyInjectionExtensions
   {
     return services
       .AddLogitarIdentityDomain()
-      .AddMediatR(config => config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+      .AddMediatR(config => config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()))
+      .AddScoped<ILoggingService, LoggingService>()
+      .AddScoped<IRequestPipeline, RequestPipeline>();
   }
 }
