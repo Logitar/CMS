@@ -1,4 +1,5 @@
 ﻿using Logitar.Cms.Contracts.Actors;
+using Logitar.Cms.Contracts.Configurations;
 using Logitar.Cms.Core.Caching;
 using Logitar.Cms.Infrastructure.Settings;
 using Logitar.EventSourcing;
@@ -16,6 +17,13 @@ internal class CacheService : ICacheService
     _memoryCache = memoryCache;
     _settings = settings;
   }
+
+  public ConfigurationModel? Configuration
+  {
+    get => GetItem<ConfigurationModel>(ConfigurationKey);
+    set => SetItem(ConfigurationKey, value);
+  }
+  private const string ConfigurationKey = nameof(Configuration);
 
   public Actor? GetActor(ActorId id)
   {
