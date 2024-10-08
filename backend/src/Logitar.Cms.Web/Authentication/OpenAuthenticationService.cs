@@ -78,7 +78,7 @@ internal class OpenAuthenticationService : IOpenAuthenticationService
 
     IEnumerable<Claim> claims = validatedToken.ClaimsPrincipal.FindAll(Rfc7519ClaimNames.SessionId);
     int count = claims.Count();
-    var sessionId = count switch
+    Guid sessionId = count switch
     {
       0 => throw new InvalidOperationException($"The access token did not contain any '{Rfc7519ClaimNames.SessionId}' claim."),
       1 => Guid.Parse(claims.Single().Value),
