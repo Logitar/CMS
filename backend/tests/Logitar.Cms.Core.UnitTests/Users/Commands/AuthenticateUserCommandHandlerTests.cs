@@ -43,6 +43,7 @@ public class AuthenticateUserCommandHandlerTests
 
     AuthenticateUserPayload payload = new(user.UniqueName.Value, PasswordString);
     AuthenticateUserCommand command = new(payload);
+    command.Contextualize();
 
     UserModel result = await _handler.Handle(command, _cancellationToken);
     Assert.Same(model, result);
@@ -50,6 +51,21 @@ public class AuthenticateUserCommandHandlerTests
     Assert.Contains(user.Changes, change => change is UserAuthenticatedEvent @event && @event.ActorId.Value == user.Id.Value);
 
     _userManager.Verify(x => x.SaveAsync(user, It.IsAny<IUserSettings>(), It.Is<ActorId>(y => y.Value == user.Id.Value), _cancellationToken), Times.Once);
+  }
+
+  [Fact(DisplayName = "It should throw UserNotFoundException when the user cannot be found.")]
+  public async Task It_should_throw_UserNotFoundException_when_the_user_cannot_be_found()
+  {
+    AuthenticateUserPayload payload = new(_faker.Person.UserName, PasswordString);
+
+    FoundUsers foundUsers = new();
+    _userManager.Setup(x => x.FindAsync(null, payload.Username, It.IsAny<IUserSettings>(), _cancellationToken)).ReturnsAsync(foundUsers);
+
+    AuthenticateUserCommand command = new(payload);
+    command.Contextualize();
+
+    var exception = await Assert.ThrowsAsync<UserNotFoundException>(async () => await _handler.Handle(command, _cancellationToken));
+    Assert.Equal(payload.Username, exception.Username);
   }
 
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]

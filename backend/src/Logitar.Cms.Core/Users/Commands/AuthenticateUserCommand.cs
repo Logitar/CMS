@@ -36,11 +36,7 @@ internal class AuthenticateUserCommandHandler : IRequestHandler<AuthenticateUser
 
     IUserSettings userSettings = command.GetUserSettings();
     FoundUsers users = await _userManager.FindAsync(tenantId: null, payload.Username, userSettings, cancellationToken);
-    if (users.Count > 1)
-    {
-      throw new NotImplementedException(); // TODO(fpion): typed exception
-    }
-    UserAggregate user = users.SingleOrDefault() ?? throw new NotImplementedException(); // TODO(fpion): typed exception
+    UserAggregate user = users.FirstOrDefault() ?? throw new UserNotFoundException(payload.Username);
 
     user.Authenticate(payload.Password);
 

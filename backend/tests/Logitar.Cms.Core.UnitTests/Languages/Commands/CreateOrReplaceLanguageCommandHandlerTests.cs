@@ -38,6 +38,7 @@ public class CreateOrReplaceLanguageCommandHandlerTests
 
     CreateOrReplaceLanguagePayload payload = new("fr");
     CreateOrReplaceLanguageCommand command = new(id, payload, Version: null);
+    command.Contextualize();
 
     CreateOrReplaceLanguageResult result = await _handler.Handle(command, _cancellationToken);
     Assert.Same(model, result.Language);
@@ -57,6 +58,7 @@ public class CreateOrReplaceLanguageCommandHandlerTests
 
     CreateOrReplaceLanguagePayload payload = new("en");
     CreateOrReplaceLanguageCommand command = new(_language.Id.ToGuid(), payload, Version: null);
+    command.Contextualize();
 
     CreateOrReplaceLanguageResult result = await _handler.Handle(command, _cancellationToken);
     Assert.Same(model, result.Language);
@@ -111,6 +113,7 @@ public class CreateOrReplaceLanguageCommandHandlerTests
 
     CreateOrReplaceLanguagePayload payload = new("en-CA");
     CreateOrReplaceLanguageCommand command = new(_language.Id.ToGuid(), payload, version);
+    command.Contextualize();
 
     CreateOrReplaceLanguageResult result = await _handler.Handle(command, _cancellationToken);
     Assert.Same(model, result.Language);

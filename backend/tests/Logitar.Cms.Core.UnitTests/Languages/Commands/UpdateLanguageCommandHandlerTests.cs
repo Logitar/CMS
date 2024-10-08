@@ -61,6 +61,7 @@ public class UpdateLanguageCommandHandlerTests
       Locale = "fr"
     };
     UpdateLanguageCommand command = new(language.Id.ToGuid(), payload);
+    command.Contextualize();
 
     LanguageModel? result = await _handler.Handle(command, _cancellationToken);
     Assert.NotNull(result);

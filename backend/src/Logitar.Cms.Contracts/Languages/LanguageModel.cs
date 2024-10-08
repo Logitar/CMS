@@ -14,5 +14,5 @@ public class LanguageModel : AggregateModel
     Locale = locale;
   }
 
-  public override string ToString() => $"{Locale} (Id={Id})";
+  public override string ToString() => $"{Locale} | {base.ToString()}";
 }

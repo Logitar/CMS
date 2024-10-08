@@ -33,9 +33,10 @@ public class UpdateLanguageCommandHandler : IRequestHandler<UpdateLanguageComman
       return null;
     }
 
-    if (!string.IsNullOrWhiteSpace(payload.Locale))
+    Locale? locale = Locale.TryCreate(payload.Locale);
+    if (locale != null)
     {
-      language.Locale = new Locale(payload.Locale);
+      language.Locale = locale;
     }
 
     ActorId actorId = command.GetActorId();
