@@ -35,6 +35,8 @@ internal class UserQuerier : IUserQuerier
     string aggregateId = new AggregateId(id).Value;
 
     UserEntity? user = await _users.AsNoTracking()
+      .Include(x => x.Identifiers)
+      .Include(x => x.Roles)
       .SingleOrDefaultAsync(x => x.AggregateId == aggregateId, cancellationToken);
 
     return user == null ? null : await MapAsync(user, cancellationToken);
