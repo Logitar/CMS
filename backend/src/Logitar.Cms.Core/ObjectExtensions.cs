@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-
-namespace Logitar.Cms.Core;
+﻿namespace Logitar.Cms.Core;
 
 public static class ObjectExtensions
 {

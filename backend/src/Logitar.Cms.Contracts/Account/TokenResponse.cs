@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Logitar.Cms.Contracts.Account;
+﻿namespace Logitar.Cms.Contracts.Account;
 
 public record TokenResponse
 {
