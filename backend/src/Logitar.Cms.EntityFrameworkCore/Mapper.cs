@@ -2,11 +2,13 @@
 using Logitar.Cms.Contracts.Actors;
 using Logitar.Cms.Contracts.ApiKeys;
 using Logitar.Cms.Contracts.Configurations;
+using Logitar.Cms.Contracts.FieldTypes;
 using Logitar.Cms.Contracts.Languages;
 using Logitar.Cms.Contracts.Roles;
 using Logitar.Cms.Contracts.Sessions;
 using Logitar.Cms.Contracts.Users;
 using Logitar.Cms.Core.Configurations;
+using Logitar.Cms.Core.FieldTypes;
 using Logitar.Cms.EntityFrameworkCore.Entities;
 using Logitar.EventSourcing;
 using Logitar.Identity.EntityFrameworkCore.Relational.Entities;
@@ -69,6 +71,33 @@ internal class Mapper
       RequireUniqueEmail = source.RequireUniqueEmail,
       LoggingSettings = new(source.LoggingSettings)
     };
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public FieldTypeModel ToFieldType(FieldTypeEntity source)
+  {
+    FieldTypeModel destination = new()
+    {
+      UniqueName = source.UniqueName,
+      DisplayName = source.DisplayName,
+      Description = source.Description,
+      DataType = source.DataType
+    };
+
+    switch (source.DataType)
+    {
+      case DataType.String:
+        destination.StringProperties = source.GetStringProperties();
+        break;
+      case DataType.Text:
+        destination.TextProperties = source.GetTextProperties();
+        break;
+      default:
+        throw new DataTypeNotSupportedException(source.DataType);
+    }
 
     MapAggregate(source, destination);
 
