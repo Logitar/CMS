@@ -15,7 +15,7 @@ public static class HttpContextExtensions
   private const string ApiKeyKey = "ApiKey";
   private const string SessionKey = "Session";
   private const string SessionIdKey = "SessionId";
-  private const string UserKey = "Session";
+  private const string UserKey = "User";
 
   public static Uri GetBaseUri(this HttpContext context)
   {
