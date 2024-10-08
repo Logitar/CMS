@@ -52,6 +52,16 @@ public class AuthenticateUserCommandHandlerTests
     _userManager.Verify(x => x.SaveAsync(user, It.IsAny<IUserSettings>(), It.Is<ActorId>(y => y.Value == user.Id.Value), _cancellationToken), Times.Once);
   }
 
+  [Fact(DisplayName = "It should throw UserNotFoundException when the user cannot be found.")]
+  public async Task It_should_throw_UserNotFoundException_when_the_user_cannot_be_found()
+  {
+    AuthenticateUserPayload payload = new(_faker.Person.UserName, PasswordString);
+    AuthenticateUserCommand command = new(payload);
+
+    var exception = await Assert.ThrowsAsync<UserNotFoundException>(async () => await _handler.Handle(command, _cancellationToken));
+    Assert.Equal(payload.Username, exception.Username);
+  }
+
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
   public async Task It_should_throw_ValidationException_when_the_payload_is_not_valid()
   {
