@@ -1,6 +1,8 @@
 ﻿using Logitar.Cms.Contracts;
 using Logitar.Cms.Contracts.Actors;
+using Logitar.Cms.Contracts.Configurations;
 using Logitar.Cms.Contracts.Languages;
+using Logitar.Cms.Core.Configurations;
 using Logitar.Cms.EntityFrameworkCore.Entities;
 using Logitar.EventSourcing;
 using Logitar.Identity.EntityFrameworkCore.Relational.Entities;
@@ -33,6 +35,22 @@ internal class Mapper
     PictureUrl = actor.PictureUrl
   };
 
+  public ConfigurationModel ToConfiguration(Configuration source)
+  {
+    ConfigurationModel destination = new()
+    {
+      Secret = source.Secret.Value,
+      UniqueNameSettings = new(source.UniqueNameSettings),
+      PasswordSettings = new(source.PasswordSettings),
+      RequireUniqueEmail = source.RequireUniqueEmail,
+      LoggingSettings = new(source.LoggingSettings)
+    };
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
   public LanguageModel ToLanguage(LanguageEntity source)
   {
     LanguageModel destination = new()
@@ -46,6 +64,15 @@ internal class Mapper
     return destination;
   }
 
+  private void MapAggregate(AggregateRoot source, AggregateModel destination)
+  {
+    destination.Id = source.Id.ToGuid();
+    destination.Version = source.Version;
+    destination.CreatedBy = FindActor(source.CreatedBy);
+    destination.CreatedOn = source.CreatedOn.AsUniversalTime();
+    destination.UpdatedBy = FindActor(source.UpdatedBy);
+    destination.UpdatedOn = source.UpdatedOn.AsUniversalTime();
+  }
   private void MapAggregate(AggregateEntity source, AggregateModel destination)
   {
     destination.Id = new AggregateId(source.AggregateId).ToGuid();

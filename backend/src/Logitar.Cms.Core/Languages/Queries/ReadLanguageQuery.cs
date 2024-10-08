@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Logitar.Cms.Core.Languages.Queries;
 
-public record ReadLanguageQuery(Guid? Id, string? Locale, bool IsDefault) : IRequest<LanguageModel?>;
+public record ReadLanguageQuery(Guid? Id, string? Locale, bool IsDefault) : Activity, IRequest<LanguageModel?>;
 
 internal class ReadLanguageQueryHandler : IRequestHandler<ReadLanguageQuery, LanguageModel?>
 {

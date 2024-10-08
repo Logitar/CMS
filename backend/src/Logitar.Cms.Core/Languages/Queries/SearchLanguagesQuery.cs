@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Logitar.Cms.Core.Languages.Queries;
 
-public record SearchLanguagesQuery(SearchLanguagesPayload Payload) : IRequest<SearchResults<LanguageModel>>;
+public record SearchLanguagesQuery(SearchLanguagesPayload Payload) : Activity, IRequest<SearchResults<LanguageModel>>;
 
 internal class SearchLanguagesQueryHandler : IRequestHandler<SearchLanguagesQuery, SearchResults<LanguageModel>>
 {
