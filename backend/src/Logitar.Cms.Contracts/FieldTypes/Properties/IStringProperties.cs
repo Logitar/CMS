@@ -2,7 +2,7 @@
 
 public interface IStringProperties
 {
-  int? MinimumLength { get; set; }
-  int? MaximumLength { get; set; }
-  string? Pattern { get; set; }
+  int? MinimumLength { get; }
+  int? MaximumLength { get; }
+  string? Pattern { get; }
 }

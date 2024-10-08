@@ -16,7 +16,7 @@ public class Locale
   public string EnglishName => Culture.EnglishName;
   public string NativeName => Culture.NativeName;
 
-  public Locale(string code) : this(CultureInfo.GetCultureInfo(code))
+  public Locale(string code) : this(CultureInfo.GetCultureInfo(code.Trim()))
   {
   }
   public Locale(CultureInfo culture)
@@ -26,6 +26,8 @@ public class Locale
 
     new Validator().ValidateAndThrow(this);
   }
+
+  public static Locale? TryCreate(string? value) => string.IsNullOrWhiteSpace(value) ? null : new(value);
 
   public override bool Equals(object? obj) => obj is Locale locale && locale.Code == Code;
   public override int GetHashCode() => Code.GetHashCode();

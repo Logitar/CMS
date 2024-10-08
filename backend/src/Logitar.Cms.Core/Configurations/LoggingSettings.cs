@@ -9,10 +9,6 @@ public record LoggingSettings : ILoggingSettings
   public LoggingExtent Extent { get; }
   public bool OnlyErrors { get; }
 
-  public LoggingSettings() : this(LoggingExtent.None, onlyErrors: false)
-  {
-  }
-
   public LoggingSettings(ILoggingSettings logging) : this(logging.Extent, logging.OnlyErrors)
   {
   }

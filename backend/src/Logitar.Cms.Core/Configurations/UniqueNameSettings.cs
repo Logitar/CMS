@@ -8,10 +8,6 @@ public record UniqueNameSettings : IUniqueNameSettings
 {
   public string? AllowedCharacters { get; }
 
-  public UniqueNameSettings() : this(allowedCharacters: null)
-  {
-  }
-
   public UniqueNameSettings(IUniqueNameSettings uniqueName) : this(uniqueName.AllowedCharacters)
   {
   }

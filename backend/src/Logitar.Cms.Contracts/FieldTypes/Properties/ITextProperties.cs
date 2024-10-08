@@ -2,6 +2,6 @@
 
 public interface ITextProperties
 {
-  int? MinimumLength { get; set; }
-  int? MaximumLength { get; set; }
+  int? MinimumLength { get; }
+  int? MaximumLength { get; }
 }
