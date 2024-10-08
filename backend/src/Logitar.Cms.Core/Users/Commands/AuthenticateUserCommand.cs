@@ -8,7 +8,15 @@ using MediatR;
 
 namespace Logitar.Cms.Core.Users.Commands;
 
-public record AuthenticateUserCommand(AuthenticateUserPayload Payload) : Activity, IRequest<UserModel>;
+public record AuthenticateUserCommand(AuthenticateUserPayload Payload) : Activity, IRequest<UserModel>
+{
+  public override IActivity Anonymize()
+  {
+    AuthenticateUserCommand command = this.DeepClone();
+    command.Payload.Password = command.Payload.Password.Mask();
+    return command;
+  }
+}
 
 internal class AuthenticateUserCommandHandler : IRequestHandler<AuthenticateUserCommand, UserModel>
 {
