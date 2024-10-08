@@ -10,8 +10,8 @@ internal class FieldTypeIdConverter : JsonConverter<FieldTypeId>
     return string.IsNullOrWhiteSpace(value) ? new() : new(value);
   }
 
-  public override void Write(Utf8JsonWriter writer, FieldTypeId fieldtypeId, JsonSerializerOptions options)
+  public override void Write(Utf8JsonWriter writer, FieldTypeId fieldTypeId, JsonSerializerOptions options)
   {
-    writer.WriteStringValue(fieldtypeId.Value);
+    writer.WriteStringValue(fieldTypeId.Value);
   }
 }

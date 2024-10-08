@@ -17,13 +17,13 @@ internal class CreateOrReplaceFieldTypeValidator : AbstractValidator<CreateOrRep
       {
         case DataType.String:
           When(x => x.StringProperties == null, () => RuleFor(x => x.StringProperties!).SetValidator(new StringPropertiesValidator()))
-            .Otherwise(() => RuleFor(x => x.StringProperties).Null());
+            .Otherwise(() => RuleFor(x => x.StringProperties).NotNull());
           RuleFor(x => x.TextProperties).Null();
           break;
         case DataType.Text:
           RuleFor(x => x.StringProperties).Null();
           When(x => x.TextProperties == null, () => RuleFor(x => x.TextProperties!).SetValidator(new TextPropertiesValidator()))
-            .Otherwise(() => RuleFor(x => x.TextProperties).Null());
+            .Otherwise(() => RuleFor(x => x.TextProperties).NotNull());
           break;
         default:
           throw new DataTypeNotSupportedException(dataType.Value);

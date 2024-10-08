@@ -56,6 +56,7 @@ public class SetDefaultLanguageCommandHandlerTests
     _languageQuerier.Setup(x => x.ReadAsync(_language, _cancellationToken)).ReturnsAsync(model);
 
     SetDefaultLanguageCommand command = new(_language.Id.ToGuid());
+    command.Contextualize();
 
     LanguageModel? result = await _handler.Handle(command, _cancellationToken);
     Assert.NotNull(result);
