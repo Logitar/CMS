@@ -2,6 +2,7 @@
 using Logitar.Cms.Contracts.Actors;
 using Logitar.Cms.Contracts.Configurations;
 using Logitar.Cms.Contracts.Languages;
+using Logitar.Cms.Contracts.Users;
 using Logitar.Cms.Core.Configurations;
 using Logitar.Cms.EntityFrameworkCore.Entities;
 using Logitar.EventSourcing;
@@ -64,6 +65,41 @@ internal class Mapper
     return destination;
   }
 
+  public UserModel ToUser(UserEntity source)
+  {
+    UserModel destination = new()
+    {
+      Username = source.UniqueName,
+      HasPassword = source.HasPassword,
+      PasswordChangedBy = TryFindActor(source.PasswordChangedBy),
+      PasswordChangedOn = source.PasswordChangedOn?.AsUniversalTime(),
+      IsDisabled = source.IsDisabled,
+      DisabledBy = TryFindActor(source.DisabledBy),
+      DisabledOn = source.DisabledOn?.AsUniversalTime(),
+      IsConfirmed = source.IsConfirmed,
+      FirstName = source.FirstName,
+      LastName = source.LastName,
+      FullName = source.FullName,
+      PictureUrl = source.Picture,
+      AuthenticatedOn = source.AuthenticatedOn?.AsUniversalTime()
+    };
+
+    if (source.EmailAddress != null)
+    {
+      destination.Email = new()
+      {
+        Address = source.EmailAddress,
+        IsVerified = source.IsEmailVerified,
+        VerifiedBy = TryFindActor(source.EmailVerifiedBy),
+        VerifiedOn = source.EmailVerifiedOn?.AsUniversalTime()
+      };
+    }
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
   private void MapAggregate(AggregateRoot source, AggregateModel destination)
   {
     destination.Id = source.Id.ToGuid();
@@ -83,6 +119,7 @@ internal class Mapper
     destination.UpdatedOn = source.UpdatedOn.AsUniversalTime();
   }
 
+  private Actor? TryFindActor(string? id) => id == null ? null : FindActor(new ActorId(id));
   private Actor FindActor(string id) => FindActor(new ActorId(id));
   private Actor FindActor(ActorId id) => _actors.TryGetValue(id, out Actor? actor) ? actor : Actor.System;
 }

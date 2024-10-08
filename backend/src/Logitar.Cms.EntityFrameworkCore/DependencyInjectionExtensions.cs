@@ -1,5 +1,6 @@
 ﻿using Logitar.Cms.Core.Configurations;
 using Logitar.Cms.Core.Languages;
+using Logitar.Cms.Core.Users;
 using Logitar.Cms.EntityFrameworkCore.Actors;
 using Logitar.Cms.EntityFrameworkCore.Queriers;
 using Logitar.Cms.EntityFrameworkCore.Repositories;
@@ -26,7 +27,8 @@ public static class DependencyInjectionExtensions
   {
     return services
       .AddScoped<IConfigurationQuerier, ConfigurationQuerier>()
-      .AddScoped<ILanguageQuerier, LanguageQuerier>();
+      .AddScoped<ILanguageQuerier, LanguageQuerier>()
+      .AddScoped<IUserQuerier, UserQuerier>();
   }
 
   private static IServiceCollection AddRepositories(this IServiceCollection services)
