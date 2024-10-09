@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Logitar.Cms.Contracts.Contents;
-using Logitar.Cms.Core.ContentTypes;
+using ContentType = Logitar.Cms.Core.ContentTypes.ContentType;
 
 namespace Logitar.Cms.Core.Contents.Validators;
 

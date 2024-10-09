@@ -4,6 +4,7 @@ using Logitar.Cms.Core.Languages;
 using Logitar.EventSourcing;
 using Logitar.Identity.Contracts.Settings;
 using MediatR;
+using ContentType = Logitar.Cms.Core.ContentTypes.ContentType;
 
 namespace Logitar.Cms.Core.Contents;
 

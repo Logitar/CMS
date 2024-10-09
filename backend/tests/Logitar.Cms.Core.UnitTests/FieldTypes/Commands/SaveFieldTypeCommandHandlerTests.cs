@@ -13,7 +13,7 @@ public class SaveFieldTypeCommandHandlerTests
 
   private readonly SaveFieldTypeCommandHandler _handler;
 
-  private readonly FieldType _fieldType = new("Contents", new TextProperties());
+  private readonly FieldType _fieldType = new("Contents", new TextProperties(MediaTypeNames.Text.Plain, minimumLength: null, maximumLength: null));
 
   public SaveFieldTypeCommandHandlerTests()
   {

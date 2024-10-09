@@ -2,6 +2,7 @@
 using Logitar.Cms.Core.ContentTypes;
 using Logitar.Cms.Core.FieldTypes;
 using Logitar.EventSourcing;
+using ContentType = Logitar.Cms.Core.ContentTypes.ContentType;
 
 namespace Logitar.Cms.Core;
 
