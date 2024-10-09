@@ -1,6 +1,7 @@
 ﻿using Logitar.Cms.Contracts.Contents;
 using Logitar.Cms.Core;
 using Logitar.Cms.Core.Contents.Commands;
+using Logitar.Cms.Core.Contents.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,6 +25,13 @@ public class ContentController : ControllerBase
     ContentModel content = await _pipeline.ExecuteAsync(new CreateContentCommand(payload), cancellationToken);
     Uri location = HttpContext.BuildLocation("api/contents/{id}", [new KeyValuePair<string, string>("id", content.Id.ToString())]);
     return Created(location, content);
+  }
+
+  [HttpGet("{id}")]
+  public async Task<ActionResult<ContentModel>> ReadAsync(Guid id, CancellationToken cancellationToken)
+  {
+    ContentModel? content = await _pipeline.ExecuteAsync(new ReadContentQuery(id), cancellationToken);
+    return GetActionResult(content);
   }
 
   [HttpPut("{id}/invariant")]

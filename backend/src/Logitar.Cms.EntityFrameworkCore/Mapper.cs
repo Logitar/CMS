@@ -2,6 +2,7 @@
 using Logitar.Cms.Contracts.Actors;
 using Logitar.Cms.Contracts.ApiKeys;
 using Logitar.Cms.Contracts.Configurations;
+using Logitar.Cms.Contracts.Contents;
 using Logitar.Cms.Contracts.ContentTypes;
 using Logitar.Cms.Contracts.FieldTypes;
 using Logitar.Cms.Contracts.Languages;
@@ -72,6 +73,51 @@ internal class Mapper
       RequireUniqueEmail = source.RequireUniqueEmail,
       LoggingSettings = new(source.LoggingSettings)
     };
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public ContentModel ToContent(ContentEntity source)
+  {
+    if (source.ContentType == null)
+    {
+      throw new ArgumentException($"The {nameof(source.ContentType)} is required.", nameof(source));
+    }
+
+    ContentModel destination = new()
+    {
+      ContentType = ToContentType(source.ContentType)
+    };
+
+    foreach (ContentLocaleEntity entity in source.Locales)
+    {
+      ContentLocaleModel locale = new()
+      {
+        Content = destination,
+        UniqueName = entity.UniqueName,
+        CreatedBy = FindActor(entity.CreatedBy),
+        CreatedOn = entity.CreatedOn.AsUniversalTime(),
+        UpdatedBy = FindActor(entity.UpdatedBy),
+        UpdatedOn = entity.UpdatedOn.AsUniversalTime()
+      };
+
+      if (entity.LanguageId.HasValue)
+      {
+        if (entity.Language == null)
+        {
+          throw new ArgumentException($"The {nameof(entity.Language)} is required for ContentLocaleId={entity.ContentLocaleId}.", nameof(source));
+        }
+
+        locale.Language = ToLanguage(entity.Language);
+        destination.Locales.Add(locale);
+      }
+      else
+      {
+        destination.Invariant = locale;
+      }
+    }
 
     MapAggregate(source, destination);
 
