@@ -31,6 +31,7 @@ public static class DependencyInjectionExtensions
   {
     return services
       .AddScoped<IConfigurationQuerier, ConfigurationQuerier>()
+      .AddScoped<IContentQuerier, ContentQuerier>()
       .AddScoped<IContentTypeQuerier, ContentTypeQuerier>()
       .AddScoped<IFieldTypeQuerier, FieldTypeQuerier>()
       .AddScoped<ILanguageQuerier, LanguageQuerier>()
@@ -42,7 +43,6 @@ public static class DependencyInjectionExtensions
   {
     return services
       .AddScoped<IConfigurationRepository, ConfigurationRepository>()
-      .AddScoped<IContentQuerier, ContentQuerier>()
       .AddScoped<IContentRepository, ContentRepository>()
       .AddScoped<IContentTypeRepository, ContentTypeRepository>()
       .AddScoped<IFieldTypeRepository, FieldTypeRepository>()
