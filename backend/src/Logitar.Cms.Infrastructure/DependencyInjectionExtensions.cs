@@ -34,6 +34,7 @@ public static class DependencyInjectionExtensions
   {
     return serviceProvider.GetLogitarIdentityJsonConverters().Concat(
     [
+      new ContentIdConverter(),
       new ContentTypeIdConverter(),
       new DescriptionConverter(),
       new DisplayNameConverter(),
