@@ -34,16 +34,16 @@ public class ReadFieldTypeQueryHandlerTests
     _fieldTypeQuerier.Setup(x => x.ReadAsync(_title.UniqueName, _cancellationToken)).ReturnsAsync(_title);
   }
 
-  [Fact(DisplayName = "It should return null when no fieldType could be found.")]
-  public async Task It_should_return_null_when_no_fieldType_could_be_found()
+  [Fact(DisplayName = "It should return null when no field type could be found.")]
+  public async Task It_should_return_null_when_no_field_type_could_be_found()
   {
     ReadFieldTypeQuery query = new(Guid.NewGuid(), "Author");
 
     Assert.Null(await _handler.Handle(query, _cancellationToken));
   }
 
-  [Fact(DisplayName = "It should return the fieldType found by ID.")]
-  public async Task It_should_return_the_fieldType_found_by_Id()
+  [Fact(DisplayName = "It should return the field type found by ID.")]
+  public async Task It_should_return_the_field_type_found_by_Id()
   {
     ReadFieldTypeQuery query = new(_title.Id, UniqueName: null);
 
@@ -52,8 +52,8 @@ public class ReadFieldTypeQueryHandlerTests
     Assert.Same(_title, fieldType);
   }
 
-  [Fact(DisplayName = "It should return the fieldType found by locale.")]
-  public async Task It_should_return_the_fieldType_found_by_locale()
+  [Fact(DisplayName = "It should return the field type found by locale.")]
+  public async Task It_should_return_the_field_type_found_by_locale()
   {
     ReadFieldTypeQuery query = new(Id: null, _contents.UniqueName);
 

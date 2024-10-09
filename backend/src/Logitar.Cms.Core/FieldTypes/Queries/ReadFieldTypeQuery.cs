@@ -7,11 +7,11 @@ public record ReadFieldTypeQuery(Guid? Id, string? UniqueName) : Activity, IRequ
 
 internal class ReadFieldTypeQueryHandler : IRequestHandler<ReadFieldTypeQuery, FieldTypeModel?>
 {
-  private readonly IFieldTypeQuerier _FieldTypeQuerier;
+  private readonly IFieldTypeQuerier _fieldTypeQuerier;
 
-  public ReadFieldTypeQueryHandler(IFieldTypeQuerier FieldTypeQuerier)
+  public ReadFieldTypeQueryHandler(IFieldTypeQuerier fieldTypeQuerier)
   {
-    _FieldTypeQuerier = FieldTypeQuerier;
+    _fieldTypeQuerier = fieldTypeQuerier;
   }
 
   public async Task<FieldTypeModel?> Handle(ReadFieldTypeQuery query, CancellationToken cancellationToken)
@@ -20,7 +20,7 @@ internal class ReadFieldTypeQueryHandler : IRequestHandler<ReadFieldTypeQuery, F
 
     if (query.Id.HasValue)
     {
-      FieldTypeModel? fieldType = await _FieldTypeQuerier.ReadAsync(query.Id.Value, cancellationToken);
+      FieldTypeModel? fieldType = await _fieldTypeQuerier.ReadAsync(query.Id.Value, cancellationToken);
       if (fieldType != null)
       {
         fieldTypes[fieldType.Id] = fieldType;
@@ -28,7 +28,7 @@ internal class ReadFieldTypeQueryHandler : IRequestHandler<ReadFieldTypeQuery, F
     }
     if (!string.IsNullOrWhiteSpace(query.UniqueName))
     {
-      FieldTypeModel? fieldType = await _FieldTypeQuerier.ReadAsync(query.UniqueName, cancellationToken);
+      FieldTypeModel? fieldType = await _fieldTypeQuerier.ReadAsync(query.UniqueName, cancellationToken);
       if (fieldType != null)
       {
         fieldTypes[fieldType.Id] = fieldType;

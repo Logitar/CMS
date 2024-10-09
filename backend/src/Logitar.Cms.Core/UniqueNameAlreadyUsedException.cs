@@ -1,4 +1,5 @@
 ﻿using Logitar.Cms.Contracts.Errors;
+using Logitar.Cms.Core.ContentTypes;
 using Logitar.Cms.Core.FieldTypes;
 using Logitar.EventSourcing;
 
@@ -44,27 +45,31 @@ public class UniqueNameAlreadyUsedException : ConflictException
     }
   }
 
-  public UniqueNameAlreadyUsedException(FieldType fieldType, FieldTypeId conflictId)
-    : this(typeof(FieldType), fieldType.Id.AggregateId, conflictId.AggregateId, fieldType.UniqueName, nameof(FieldType.UniqueName))
+  public UniqueNameAlreadyUsedException(ContentType contentType, ContentTypeId conflictId)
+    : this(typeof(ContentType), contentType.Id.AggregateId, conflictId.AggregateId, contentType.UniqueName.Value, nameof(ContentType.UniqueName))
   {
   }
-  private UniqueNameAlreadyUsedException(Type type, AggregateId aggregateId, AggregateId conflictId, UniqueName uniqueName, string propertyName)
+  public UniqueNameAlreadyUsedException(FieldType fieldType, FieldTypeId conflictId)
+    : this(typeof(FieldType), fieldType.Id.AggregateId, conflictId.AggregateId, fieldType.UniqueName.Value, nameof(FieldType.UniqueName))
+  {
+  }
+  private UniqueNameAlreadyUsedException(Type type, AggregateId aggregateId, AggregateId conflictId, string uniqueName, string propertyName)
     : base(BuildMessage(type, aggregateId, conflictId, uniqueName, propertyName))
   {
     TypeName = type.GetNamespaceQualifiedName();
     AggregateId = aggregateId.ToGuid();
     ConflictId = conflictId.ToGuid();
-    UniqueName = uniqueName.Value;
+    UniqueName = uniqueName;
     PropertyName = propertyName;
   }
 
-  private static string BuildMessage(Type type, AggregateId aggregateId, AggregateId conflictId, UniqueName uniqueName, string propertyName)
+  private static string BuildMessage(Type type, AggregateId aggregateId, AggregateId conflictId, string uniqueName, string propertyName)
   {
     return new ErrorMessageBuilder(ErrorMessage)
       .AddData(nameof(TypeName), type.GetNamespaceQualifiedName())
       .AddData(nameof(AggregateId), aggregateId.ToGuid())
       .AddData(nameof(ConflictId), conflictId.ToGuid())
-      .AddData(nameof(UniqueName), uniqueName.Value)
+      .AddData(nameof(UniqueName), uniqueName)
       .AddData(nameof(PropertyName), propertyName)
       .Build();
   }
