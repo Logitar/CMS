@@ -13,10 +13,6 @@ public record StringProperties : BaseProperties, IStringProperties
   public int? MaximumLength { get; }
   public string? Pattern { get; }
 
-  public StringProperties() : this(minimumLength: null, maximumLength: null, pattern: null)
-  {
-  }
-
   public StringProperties(IStringProperties @string) : this(@string.MinimumLength, @string.MaximumLength, @string.Pattern)
   {
   }

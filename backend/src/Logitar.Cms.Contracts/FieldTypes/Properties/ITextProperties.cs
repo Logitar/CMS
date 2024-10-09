@@ -2,6 +2,7 @@
 
 public interface ITextProperties
 {
+  string ContentType { get; }
   int? MinimumLength { get; }
   int? MaximumLength { get; }
 }

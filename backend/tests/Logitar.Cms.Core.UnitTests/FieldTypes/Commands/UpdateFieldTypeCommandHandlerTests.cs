@@ -19,7 +19,7 @@ public class UpdateFieldTypeCommandHandlerTests
 
   private readonly UpdateFieldTypeCommandHandler _handler;
 
-  private readonly FieldType _fieldType = new("contents", new TextProperties());
+  private readonly FieldType _fieldType = new("contents", new TextProperties(MediaTypeNames.Text.Plain, minimumLength: null, maximumLength: null));
 
   public UpdateFieldTypeCommandHandlerTests()
   {

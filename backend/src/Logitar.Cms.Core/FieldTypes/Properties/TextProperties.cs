@@ -9,19 +9,17 @@ public record TextProperties : BaseProperties, ITextProperties
 {
   public override DataType DataType { get; } = DataType.Text;
 
+  public string ContentType { get; }
   public int? MinimumLength { get; }
   public int? MaximumLength { get; }
 
-  public TextProperties() : this(minimumLength: null, maximumLength: null)
+  public TextProperties(ITextProperties text) : this(text.ContentType, text.MinimumLength, text.MaximumLength)
   {
   }
 
-  public TextProperties(ITextProperties @text) : this(@text.MinimumLength, @text.MaximumLength)
+  public TextProperties(string contentType, int? minimumLength, int? maximumLength)
   {
-  }
-
-  public TextProperties(int? minimumLength, int? maximumLength)
-  {
+    ContentType = contentType;
     MinimumLength = minimumLength;
     MaximumLength = maximumLength;
     new TextPropertiesValidator().ValidateAndThrow(this);

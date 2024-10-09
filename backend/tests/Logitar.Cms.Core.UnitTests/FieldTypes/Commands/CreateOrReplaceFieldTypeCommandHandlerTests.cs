@@ -17,7 +17,7 @@ public class CreateOrReplaceFieldTypeCommandHandlerTests
 
   private readonly CreateOrReplaceFieldTypeCommandHandler _handler;
 
-  private readonly FieldType _fieldType = new("Contents", new TextProperties());
+  private readonly FieldType _fieldType = new("Contents", new TextProperties(MediaTypeNames.Text.Plain, minimumLength: null, maximumLength: null));
 
   public CreateOrReplaceFieldTypeCommandHandlerTests()
   {
@@ -69,6 +69,9 @@ public class CreateOrReplaceFieldTypeCommandHandlerTests
       DisplayName = " Body ",
       Description = "    ",
       TextProperties = new()
+      {
+        ContentType = MediaTypeNames.Text.Plain
+      }
     };
     CreateOrReplaceFieldTypeCommand command = new(_fieldType.Id.ToGuid(), payload, Version: null);
     command.Contextualize();
@@ -132,6 +135,9 @@ public class CreateOrReplaceFieldTypeCommandHandlerTests
       DisplayName = " Body ",
       Description = "    ",
       TextProperties = new()
+      {
+        ContentType = MediaTypeNames.Text.Plain
+      }
     };
     CreateOrReplaceFieldTypeCommand command = new(_fieldType.Id.ToGuid(), payload, version);
     command.Contextualize();

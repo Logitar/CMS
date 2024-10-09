@@ -1,5 +1,5 @@
-﻿using Logitar.Cms.Core.ContentTypes;
-using Moq;
+﻿using Moq;
+using ContentType = Logitar.Cms.Core.ContentTypes.ContentType;
 
 namespace Logitar.Cms.Core.Contents.Commands;
 
