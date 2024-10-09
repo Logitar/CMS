@@ -70,7 +70,7 @@ public class CreateOrReplaceFieldTypeCommandHandlerTests
       Description = "    ",
       TextProperties = new()
       {
-        ContentType = "text/plain"
+        ContentType = MediaTypeNames.Text.Plain
       }
     };
     CreateOrReplaceFieldTypeCommand command = new(_fieldType.Id.ToGuid(), payload, Version: null);
@@ -136,7 +136,7 @@ public class CreateOrReplaceFieldTypeCommandHandlerTests
       Description = "    ",
       TextProperties = new()
       {
-        ContentType = "text/plain"
+        ContentType = MediaTypeNames.Text.Plain
       }
     };
     CreateOrReplaceFieldTypeCommand command = new(_fieldType.Id.ToGuid(), payload, version);
