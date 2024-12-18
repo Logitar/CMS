@@ -12,25 +12,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms.Contracts", "src\Logitar.Cms.Contracts\Logitar.Cms.Contracts.csproj", "{02C0849F-005D-43A1-9EED-4CA0998C35FA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.Core", "src\Logitar.Cms.Core\Logitar.Cms.Core.csproj", "{382907CD-18AF-45DE-A1AB-263353F0A9C8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms.Core", "src\Logitar.Cms.Core\Logitar.Cms.Core.csproj", "{CABB3261-5723-4A0A-B373-DB4758092E97}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.Web", "src\Logitar.Cms.Web\Logitar.Cms.Web.csproj", "{134EAA3D-D3A5-45F0-982B-D58BF1434B0F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C73FCDEC-8D2B-4E48-81BF-BD86ACBBB07C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{49A3AE69-C12F-465C-8C4E-CCE766C2414E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms.Core.UnitTests", "tests\Logitar.Cms.Core.UnitTests\Logitar.Cms.Core.UnitTests.csproj", "{411F8113-64F4-4C79-B445-4F716E300144}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms.UnitTests", "tests\Logitar.Cms.UnitTests\Logitar.Cms.UnitTests.csproj", "{8392DAB5-9FEF-4FD9-8747-EBE684E06BE1}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms.Infrastructure", "src\Logitar.Cms.Infrastructure\Logitar.Cms.Infrastructure.csproj", "{588FCFB1-B0FE-4598-8B31-B4F7494B94D4}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms.EntityFrameworkCore", "src\Logitar.Cms.EntityFrameworkCore\Logitar.Cms.EntityFrameworkCore.csproj", "{6786E254-83CF-4FEC-B3A3-185AACAD9705}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms.EntityFrameworkCore.SqlServer", "src\Logitar.Cms.EntityFrameworkCore.SqlServer\Logitar.Cms.EntityFrameworkCore.SqlServer.csproj", "{5F740A3A-5598-4B0B-BFE5-DF7E0781232D}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logitar.Cms", "src\Logitar.Cms\Logitar.Cms.csproj", "{C06B0081-9E08-4416-98A5-30538C18F1E7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.Web", "src\Logitar.Cms.Web\Logitar.Cms.Web.csproj", "{0144EB23-8A46-4823-861B-8E67F3A154B7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.UnitTests", "tests\Logitar.Cms.UnitTests\Logitar.Cms.UnitTests.csproj", "{F367B008-1CAD-49A5-9EB1-5160661FF9CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,49 +26,24 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{02C0849F-005D-43A1-9EED-4CA0998C35FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{02C0849F-005D-43A1-9EED-4CA0998C35FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{02C0849F-005D-43A1-9EED-4CA0998C35FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{02C0849F-005D-43A1-9EED-4CA0998C35FA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CABB3261-5723-4A0A-B373-DB4758092E97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CABB3261-5723-4A0A-B373-DB4758092E97}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CABB3261-5723-4A0A-B373-DB4758092E97}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CABB3261-5723-4A0A-B373-DB4758092E97}.Release|Any CPU.Build.0 = Release|Any CPU
-		{411F8113-64F4-4C79-B445-4F716E300144}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{411F8113-64F4-4C79-B445-4F716E300144}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{411F8113-64F4-4C79-B445-4F716E300144}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{411F8113-64F4-4C79-B445-4F716E300144}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8392DAB5-9FEF-4FD9-8747-EBE684E06BE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8392DAB5-9FEF-4FD9-8747-EBE684E06BE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8392DAB5-9FEF-4FD9-8747-EBE684E06BE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8392DAB5-9FEF-4FD9-8747-EBE684E06BE1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{588FCFB1-B0FE-4598-8B31-B4F7494B94D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{588FCFB1-B0FE-4598-8B31-B4F7494B94D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{588FCFB1-B0FE-4598-8B31-B4F7494B94D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{588FCFB1-B0FE-4598-8B31-B4F7494B94D4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6786E254-83CF-4FEC-B3A3-185AACAD9705}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6786E254-83CF-4FEC-B3A3-185AACAD9705}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6786E254-83CF-4FEC-B3A3-185AACAD9705}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6786E254-83CF-4FEC-B3A3-185AACAD9705}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5F740A3A-5598-4B0B-BFE5-DF7E0781232D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5F740A3A-5598-4B0B-BFE5-DF7E0781232D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5F740A3A-5598-4B0B-BFE5-DF7E0781232D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5F740A3A-5598-4B0B-BFE5-DF7E0781232D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C06B0081-9E08-4416-98A5-30538C18F1E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C06B0081-9E08-4416-98A5-30538C18F1E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C06B0081-9E08-4416-98A5-30538C18F1E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C06B0081-9E08-4416-98A5-30538C18F1E7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0144EB23-8A46-4823-861B-8E67F3A154B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0144EB23-8A46-4823-861B-8E67F3A154B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0144EB23-8A46-4823-861B-8E67F3A154B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0144EB23-8A46-4823-861B-8E67F3A154B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{382907CD-18AF-45DE-A1AB-263353F0A9C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{382907CD-18AF-45DE-A1AB-263353F0A9C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{382907CD-18AF-45DE-A1AB-263353F0A9C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{382907CD-18AF-45DE-A1AB-263353F0A9C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{134EAA3D-D3A5-45F0-982B-D58BF1434B0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{134EAA3D-D3A5-45F0-982B-D58BF1434B0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{134EAA3D-D3A5-45F0-982B-D58BF1434B0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{134EAA3D-D3A5-45F0-982B-D58BF1434B0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F367B008-1CAD-49A5-9EB1-5160661FF9CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F367B008-1CAD-49A5-9EB1-5160661FF9CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F367B008-1CAD-49A5-9EB1-5160661FF9CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F367B008-1CAD-49A5-9EB1-5160661FF9CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{411F8113-64F4-4C79-B445-4F716E300144} = {C73FCDEC-8D2B-4E48-81BF-BD86ACBBB07C}
-		{8392DAB5-9FEF-4FD9-8747-EBE684E06BE1} = {C73FCDEC-8D2B-4E48-81BF-BD86ACBBB07C}
+		{F367B008-1CAD-49A5-9EB1-5160661FF9CC} = {49A3AE69-C12F-465C-8C4E-CCE766C2414E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DA500B33-B3CA-431A-80D8-55CD95479A70}
