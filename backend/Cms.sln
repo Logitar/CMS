@@ -18,7 +18,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.Web", "src\Logi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{49A3AE69-C12F-465C-8C4E-CCE766C2414E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.Tests", "tests\Logitar.Cms.Tests\Logitar.Cms.Tests.csproj", "{9DA7EF5E-CD0F-4FB3-9DBC-62655E371A62}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.UnitTests", "tests\Logitar.Cms.UnitTests\Logitar.Cms.UnitTests.csproj", "{F367B008-1CAD-49A5-9EB1-5160661FF9CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,16 +34,16 @@ Global
 		{134EAA3D-D3A5-45F0-982B-D58BF1434B0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{134EAA3D-D3A5-45F0-982B-D58BF1434B0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{134EAA3D-D3A5-45F0-982B-D58BF1434B0F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9DA7EF5E-CD0F-4FB3-9DBC-62655E371A62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9DA7EF5E-CD0F-4FB3-9DBC-62655E371A62}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9DA7EF5E-CD0F-4FB3-9DBC-62655E371A62}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9DA7EF5E-CD0F-4FB3-9DBC-62655E371A62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F367B008-1CAD-49A5-9EB1-5160661FF9CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F367B008-1CAD-49A5-9EB1-5160661FF9CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F367B008-1CAD-49A5-9EB1-5160661FF9CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F367B008-1CAD-49A5-9EB1-5160661FF9CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{9DA7EF5E-CD0F-4FB3-9DBC-62655E371A62} = {49A3AE69-C12F-465C-8C4E-CCE766C2414E}
+		{F367B008-1CAD-49A5-9EB1-5160661FF9CC} = {49A3AE69-C12F-465C-8C4E-CCE766C2414E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DA500B33-B3CA-431A-80D8-55CD95479A70}
