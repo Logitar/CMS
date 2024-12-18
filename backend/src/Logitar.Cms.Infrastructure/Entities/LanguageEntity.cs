@@ -1,6 +1,5 @@
 ﻿using Logitar.Cms.Core.Localization;
 using Logitar.Cms.Core.Localization.Events;
-using System.Globalization;
 
 namespace Logitar.Cms.Infrastructure.Entities;
 
