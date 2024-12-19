@@ -1,5 +1,6 @@
 ﻿using Logitar.Cms.Core.Actors;
 using Logitar.Cms.Infrastructure.Entities;
+using Logitar.EventSourcing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -20,6 +21,7 @@ internal class ActorConfiguration : IEntityTypeConfiguration<ActorEntity>
     builder.HasIndex(x => x.DisplayName);
     builder.HasIndex(x => x.EmailAddress);
 
+    builder.Property(x => x.IdHash).HasMaxLength(ActorId.MaximumLength);
     builder.Property(x => x.Type).HasMaxLength(byte.MaxValue).HasConversion(new EnumToStringConverter<ActorType>());
     builder.Property(x => x.DisplayName).HasMaxLength(byte.MaxValue); // TODO(fpion): use constant
     builder.Property(x => x.EmailAddress).HasMaxLength(byte.MaxValue); // TODO(fpion): use constant
