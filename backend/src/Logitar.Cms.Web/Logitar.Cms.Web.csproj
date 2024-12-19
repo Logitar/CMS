@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Logitar.Cms.Core\Logitar.Cms.Core.csproj" />
+    <ProjectReference Include="..\Logitar.Cms.Infrastructure\Logitar.Cms.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

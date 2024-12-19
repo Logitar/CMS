@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{49A3AE69
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.UnitTests", "tests\Logitar.Cms.UnitTests\Logitar.Cms.UnitTests.csproj", "{F367B008-1CAD-49A5-9EB1-5160661FF9CC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.Infrastructure", "src\Logitar.Cms.Infrastructure\Logitar.Cms.Infrastructure.csproj", "{15549282-0316-4CA0-A3B2-ADE7E89C4A3D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{F367B008-1CAD-49A5-9EB1-5160661FF9CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F367B008-1CAD-49A5-9EB1-5160661FF9CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F367B008-1CAD-49A5-9EB1-5160661FF9CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15549282-0316-4CA0-A3B2-ADE7E89C4A3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15549282-0316-4CA0-A3B2-ADE7E89C4A3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15549282-0316-4CA0-A3B2-ADE7E89C4A3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15549282-0316-4CA0-A3B2-ADE7E89C4A3D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
