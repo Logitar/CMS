@@ -1,4 +1,4 @@
-﻿namespace Logitar.Cms.Core.Models;
+﻿namespace Logitar.Cms.Core.Actors;
 
 public enum ActorType
 {

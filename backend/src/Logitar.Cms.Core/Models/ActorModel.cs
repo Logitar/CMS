@@ -1,4 +1,6 @@
-﻿namespace Logitar.Cms.Core.Models;
+﻿using Logitar.Cms.Core.Actors;
+
+namespace Logitar.Cms.Core.Models;
 
 public class ActorModel
 {

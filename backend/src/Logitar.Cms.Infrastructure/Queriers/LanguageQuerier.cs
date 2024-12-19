@@ -1,5 +1,7 @@
 ﻿using Logitar.Cms.Core.Localization;
 using Logitar.Cms.Core.Localization.Models;
+using Logitar.Cms.Core.Models;
+using Logitar.Cms.Infrastructure.Actors;
 using Logitar.Cms.Infrastructure.Entities;
 using Logitar.EventSourcing;
 using Microsoft.EntityFrameworkCore;
@@ -8,10 +10,12 @@ namespace Logitar.Cms.Infrastructure.Queriers;
 
 internal class LanguageQuerier : ILanguageQuerier
 {
+  private readonly IActorService _actorService;
   private readonly DbSet<LanguageEntity> _languages;
 
-  public LanguageQuerier(CmsContext context)
+  public LanguageQuerier(IActorService actorService, CmsContext context)
   {
+    _actorService = actorService;
     _languages = context.Languages;
   }
 
@@ -66,7 +70,7 @@ internal class LanguageQuerier : ILanguageQuerier
   public async Task<LanguageModel> ReadDefaultAsync(CancellationToken cancellationToken)
   {
     LanguageEntity language = await _languages.AsNoTracking()
-      .SingleOrDefaultAsync(x => x.IsDefault)
+      .SingleOrDefaultAsync(x => x.IsDefault, cancellationToken)
       ?? throw new InvalidOperationException("The default language entity could not be found.");
 
     return await MapAsync(language, cancellationToken);
@@ -79,8 +83,8 @@ internal class LanguageQuerier : ILanguageQuerier
   private async Task<IReadOnlyCollection<LanguageModel>> MapAsync(IEnumerable<LanguageEntity> languages, CancellationToken cancellationToken)
   {
     IEnumerable<ActorId> actorIds = languages.SelectMany(language => language.GetActorIds());
-    await Task.Delay(1, cancellationToken); // TODO(fpion): actors
-    Mapper mapper = new(); // TODO(fpion): actors
+    IReadOnlyCollection<ActorModel> actors = await _actorService.FindAsync(actorIds, cancellationToken);
+    Mapper mapper = new(actors);
 
     return languages.Select(mapper.ToLanguage).ToArray();
   }

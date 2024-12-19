@@ -23,6 +23,15 @@ internal class Mapper
     }
   }
 
+  public static ActorModel ToActor(ActorEntity actor) => new(actor.DisplayName)
+  {
+    Id = actor.Id,
+    Type = actor.Type,
+    IsDeleted = actor.IsDeleted,
+    EmailAddress = actor.EmailAddress,
+    PictureUrl = actor.PictureUrl
+  };
+
   public LanguageModel ToLanguage(LanguageEntity source)
   {
     LanguageModel destination = new()
