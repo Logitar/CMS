@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Logitar.Cms.Infrastructure.Queriers;
 
-public class LanguageQuerier : ILanguageQuerier
+internal class LanguageQuerier : ILanguageQuerier
 {
   private readonly IActorService _actorService;
   private readonly DbSet<LanguageEntity> _languages;

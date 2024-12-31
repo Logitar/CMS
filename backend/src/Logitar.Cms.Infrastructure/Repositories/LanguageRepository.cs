@@ -3,7 +3,7 @@ using Logitar.EventSourcing;
 
 namespace Logitar.Cms.Infrastructure.Repositories;
 
-public class LanguageRepository : Repository, ILanguageRepository
+internal class LanguageRepository : Repository, ILanguageRepository
 {
   public LanguageRepository(IEventStore eventStore) : base(eventStore)
   {
