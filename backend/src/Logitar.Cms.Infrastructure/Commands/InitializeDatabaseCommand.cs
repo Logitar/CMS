@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Logitar.Cms.Infrastructure.Commands;
 
-public record InitializeDatabaseCommand : INotification;
+public record InitializeDatabaseCommand : IRequest;
 
-internal class InitializeDatabaseCommandHandler : INotificationHandler<InitializeDatabaseCommand>
+internal class InitializeDatabaseCommandHandler : IRequestHandler<InitializeDatabaseCommand>
 {
   private readonly EventContext _eventContext;
   private readonly IdentityContext _identityContext;
