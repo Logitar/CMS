@@ -51,7 +51,7 @@ internal class InitializeCmsCommandHandler : IRequestHandler<InitializeCmsComman
       actorId = new(userId.Value.Value);
       User user = new(uniqueName, actorId, userId);
 
-      Password password = _passwordManager.Create(command.Password);
+      Password password = _passwordManager.ValidateAndCreate(command.Password);
       user.SetPassword(password, actorId);
 
       await _userRepository.SaveAsync(user, cancellationToken);

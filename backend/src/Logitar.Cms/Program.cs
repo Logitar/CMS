@@ -8,7 +8,7 @@ namespace Logitar.Cms;
 internal class Program
 {
   private const string DefaultUniqueName = "admin";
-  private const string DefaultPassword = "admin";
+  private const string DefaultPassword = "P@s$W0rD";
   private const string DefaultLocale = "en";
 
   public static async Task Main(string[] args)

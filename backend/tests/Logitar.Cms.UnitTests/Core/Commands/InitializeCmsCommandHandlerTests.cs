@@ -13,7 +13,7 @@ namespace Logitar.Cms.Core.Commands;
 public class InitializeCmsCommandHandlerTests
 {
   private const string UniqueName = "admin";
-  private const string Password = "admin";
+  private const string Password = "P@s$W0rD";
   private const string DefaultLocale = "en";
 
   private readonly CancellationToken _cancellationToken = default;
@@ -49,7 +49,7 @@ public class InitializeCmsCommandHandlerTests
       .Throws(new InvalidOperationException("The default language entity could not be found."));
 
     Base64Password password = new(Password);
-    _passwordManager.Setup(x => x.Create(Password)).Returns(password);
+    _passwordManager.Setup(x => x.ValidateAndCreate(Password)).Returns(password);
 
     InitializeCmsCommand command = new(UniqueName, Password, DefaultLocale);
     await _handler.Handle(command, _cancellationToken);
