@@ -66,6 +66,7 @@ internal class Startup : StartupBase
 
     if (await featureManager.IsEnabledAsync(FeatureFlags.UseScalarUI))
     {
+      application.MapOpenApi();
       application.MapScalarApiReference();
     }
 
