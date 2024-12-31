@@ -2,7 +2,7 @@
 
 namespace Logitar.Cms.Infrastructure.Converters;
 
-internal class LanguageIdConverter : JsonConverter<LanguageId>
+public class LanguageIdConverter : JsonConverter<LanguageId>
 {
   public override LanguageId Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
   {

@@ -1,4 +1,5 @@
 ﻿using Logitar.EventSourcing;
+using Logitar.Identity.Core;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Logitar.Cms.Core;
@@ -9,6 +10,7 @@ public static class DependencyInjectionExtensions
   {
     return services
       .AddLogitarEventSourcing()
+      .AddLogitarIdentityCore()
       .AddMediatR(config => config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
   }
 }

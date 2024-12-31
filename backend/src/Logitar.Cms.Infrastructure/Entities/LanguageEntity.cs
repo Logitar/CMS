@@ -1,9 +1,11 @@
-﻿using Logitar.Cms.Core.Localization;
-using Logitar.Cms.Core.Localization.Events;
+﻿using Logitar.Cms.Core.Localization.Events;
+using Logitar.Identity.Core;
+using Logitar.Identity.EntityFrameworkCore.Relational.Entities;
+using Logitar.Identity.EntityFrameworkCore.Relational.IdentityDb;
 
 namespace Logitar.Cms.Infrastructure.Entities;
 
-internal class LanguageEntity : AggregateEntity
+public class LanguageEntity : AggregateEntity
 {
   public int LanguageId { get; private set; }
   public Guid Id { get; private set; }
@@ -14,7 +16,7 @@ internal class LanguageEntity : AggregateEntity
   public string Code { get; private set; } = string.Empty;
   public string CodeNormalized
   {
-    get => CmsDb.Helper.Normalize(Code);
+    get => Helper.Normalize(Code);
     private set { }
   }
   public string DisplayName { get; private set; } = string.Empty;
@@ -41,23 +43,20 @@ internal class LanguageEntity : AggregateEntity
     IsDefault = @event.IsDefault;
   }
 
-  public void Update(LanguageUpdated @event)
+  public void SetLocale(LanguageLocaleChanged @event)
   {
     base.Update(@event);
 
-    if (@event.Locale != null)
-    {
-      SetLocale(@event.Locale);
-    }
+    SetLocale(@event.Locale);
   }
-
   private void SetLocale(Locale locale)
   {
-    CultureInfo culture = locale.Culture;
-    LCID = culture.LCID;
-    Code = culture.Name;
-    DisplayName = culture.DisplayName;
-    EnglishName = culture.EnglishName;
-    NativeName = culture.NativeName;
+    LCID = locale.Culture.LCID;
+    Code = locale.Culture.Name;
+    DisplayName = locale.Culture.DisplayName;
+    EnglishName = locale.Culture.EnglishName;
+    NativeName = locale.Culture.NativeName;
   }
+
+  public override string ToString() => $"{DisplayName} ({Code}) | {base.ToString()}";
 }

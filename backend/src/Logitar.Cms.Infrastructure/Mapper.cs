@@ -1,14 +1,16 @@
-﻿using Logitar.Cms.Core.Localization.Models;
-using Logitar.Cms.Core.Models;
+﻿using Logitar.Cms.Core;
+using Logitar.Cms.Core.Actors;
+using Logitar.Cms.Core.Localization.Models;
 using Logitar.Cms.Infrastructure.Entities;
 using Logitar.EventSourcing;
+using Logitar.Identity.EntityFrameworkCore.Relational.Entities;
 
 namespace Logitar.Cms.Infrastructure;
 
-internal class Mapper
+public class Mapper
 {
   private readonly Dictionary<ActorId, ActorModel> _actors = [];
-  private readonly ActorModel _system = ActorModel.System;
+  private readonly ActorModel _system = new();
 
   public Mapper()
   {
@@ -18,16 +20,17 @@ internal class Mapper
   {
     foreach (ActorModel actor in actors)
     {
-      ActorId actorId = new(actor.Id);
-      _actors[actorId] = actor;
+      ActorId id = new(actor.Id);
+      _actors[id] = actor;
     }
   }
 
-  public static ActorModel ToActor(ActorEntity actor) => new(actor.DisplayName)
+  public static ActorModel ToActor(ActorEntity actor) => new()
   {
-    Id = actor.Id,
-    Type = actor.Type,
+    Id = new ActorId(actor.Id).ToGuid(),
+    Type = Enum.Parse<ActorType>(actor.Type),
     IsDeleted = actor.IsDeleted,
+    DisplayName = actor.DisplayName,
     EmailAddress = actor.EmailAddress,
     PictureUrl = actor.PictureUrl
   };
@@ -47,32 +50,22 @@ internal class Mapper
 
   private void MapAggregate(AggregateEntity source, AggregateModel destination)
   {
-    try
-    {
-      destination.Id = new StreamId(source.StreamId).ToGuid();
-    }
-    catch (Exception)
-    {
-    }
+    destination.Id = new StreamId(source.StreamId).ToGuid();
     destination.Version = source.Version;
-
-    destination.CreatedBy = FindActor(source.CreatedBy);
+    destination.CreatedBy = TryFindActor(source.CreatedBy) ?? _system;
     destination.CreatedOn = source.CreatedOn.AsUniversalTime();
-
-    destination.UpdatedBy = FindActor(source.UpdatedBy);
+    destination.UpdatedBy = TryFindActor(source.UpdatedBy) ?? _system;
     destination.UpdatedOn = source.UpdatedOn.AsUniversalTime();
   }
-  private ActorModel FindActor(string? id)
+
+  private ActorModel? TryFindActor(string? id) => TryFindActor(id == null ? null : new ActorId(id));
+  private ActorModel? TryFindActor(ActorId? actorId)
   {
-    if (id != null)
+    if (actorId.HasValue)
     {
-      ActorId actorId = new(id);
-      if (_actors.TryGetValue(actorId, out ActorModel? actor))
-      {
-        return actor;
-      }
+      return _actors.TryGetValue(actorId.Value, out ActorModel? actor) ? actor : null;
     }
 
-    return _system;
+    return null;
   }
 }
