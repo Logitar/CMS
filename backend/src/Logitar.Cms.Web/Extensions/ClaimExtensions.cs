@@ -4,7 +4,7 @@ using Logitar.Cms.Core.Sessions.Models;
 using Logitar.Cms.Core.Users.Models;
 using Logitar.Security.Claims;
 
-namespace Logitar.Cms.Extensions;
+namespace Logitar.Cms.Web.Extensions;
 
 internal static class ClaimsExtensions
 {

@@ -1,17 +1,17 @@
-﻿using Logitar.Cms.Constants;
-using Logitar.Cms.Core.Users.Commands;
+﻿using Logitar.Cms.Core.Users.Commands;
 using Logitar.Cms.Core.Users.Models;
-using Logitar.Cms.Extensions;
+using Logitar.Cms.Web.Constants;
+using Logitar.Cms.Web.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 
-namespace Logitar.Cms.Authentication;
+namespace Logitar.Cms.Web.Authentication;
 
-internal class BasicAuthenticationOptions : AuthenticationSchemeOptions;
+public class BasicAuthenticationOptions : AuthenticationSchemeOptions;
 
-internal class BasicAuthenticationHandler : AuthenticationHandler<BasicAuthenticationOptions>
+public class BasicAuthenticationHandler : AuthenticationHandler<BasicAuthenticationOptions>
 {
   private readonly IMediator _mediator;
 

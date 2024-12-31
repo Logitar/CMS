@@ -1,12 +1,12 @@
-﻿using Logitar.Cms.Constants;
-using Logitar.Cms.Core;
+﻿using Logitar.Cms.Core;
 using Logitar.Cms.Core.ApiKeys.Models;
 using Logitar.Cms.Core.Sessions.Models;
 using Logitar.Cms.Core.Users.Models;
-using Logitar.Cms.Settings;
+using Logitar.Cms.Web.Constants;
+using Logitar.Cms.Web.Settings;
 using Microsoft.Extensions.Primitives;
 
-namespace Logitar.Cms.Extensions;
+namespace Logitar.Cms.Web.Extensions;
 
 public static class HttpContextExtensions
 {

@@ -1,4 +1,4 @@
-﻿namespace Logitar.Cms.Settings;
+﻿namespace Logitar.Cms.Web.Settings;
 
 public record RefreshTokenCookieSettings
 {
