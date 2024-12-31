@@ -26,6 +26,6 @@ public class LocaleModel
   }
 
   public override bool Equals(object? obj) => obj is LocaleModel locale && locale.Id == Id;
-  public override int GetHashCode() => HashCode.Combine(GetType(), Id);
+  public override int GetHashCode() => Id.GetHashCode();
   public override string ToString() => $"{DisplayName} ({Code})";
 }
