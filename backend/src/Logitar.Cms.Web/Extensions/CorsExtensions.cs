@@ -1,12 +1,12 @@
-﻿using Logitar.Cms.Settings;
+﻿using Logitar.Cms.Web.Settings;
 
-namespace Logitar.Cms.Extensions;
+namespace Logitar.Cms.Web.Extensions;
 
-internal static class CorsExtensions
+public static class CorsExtensions
 {
-  public static IServiceCollection AddCors(this IServiceCollection services, CorsSettings settings)
+  public static void UseCors(this IApplicationBuilder builder, CorsSettings settings)
   {
-    services.AddCors(options => options.AddDefaultPolicy(cors =>
+    builder.UseCors(cors =>
     {
       if (settings.AllowAnyOrigin)
       {
@@ -43,8 +43,6 @@ internal static class CorsExtensions
       {
         cors.DisallowCredentials();
       }
-    }));
-
-    return services;
+    });
   }
 }

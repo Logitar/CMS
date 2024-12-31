@@ -4,11 +4,13 @@ using Logitar.Cms.Core.Localization.Queries;
 using Logitar.Cms.Core.Search;
 using Logitar.Cms.Web.Models.Languages;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Logitar.Cms.Web.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/languages")]
 public class LanguageController : ControllerBase
 {

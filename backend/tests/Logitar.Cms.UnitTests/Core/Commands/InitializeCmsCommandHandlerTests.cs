@@ -13,7 +13,7 @@ namespace Logitar.Cms.Core.Commands;
 public class InitializeCmsCommandHandlerTests
 {
   private const string UniqueName = "admin";
-  private const string Password = "P@s$W0rD";
+  private const string Password = "Test123!";
   private const string DefaultLocale = "en";
 
   private readonly CancellationToken _cancellationToken = default;

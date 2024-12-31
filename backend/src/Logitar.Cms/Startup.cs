@@ -1,11 +1,15 @@
 ﻿using Logitar.Cms.Core;
-using Logitar.Cms.Extensions;
 using Logitar.Cms.Infrastructure;
 using Logitar.Cms.Infrastructure.SqlServer;
-using Logitar.Cms.Settings;
 using Logitar.Cms.Web;
+using Logitar.Cms.Web.Authentication;
+using Logitar.Cms.Web.Constants;
+using Logitar.Cms.Web.Extensions;
+using Logitar.Cms.Web.Settings;
 using Logitar.EventSourcing.EntityFrameworkCore.Relational;
 using Logitar.Identity.EntityFrameworkCore.Relational;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.FeatureManagement;
 using Scalar.AspNetCore;
 
@@ -13,10 +17,12 @@ namespace Logitar.Cms;
 
 internal class Startup : StartupBase
 {
+  private readonly string[] _authenticationSchemes;
   private readonly IConfiguration _configuration;
 
   public Startup(IConfiguration configuration)
   {
+    _authenticationSchemes = Schemes.GetEnabled(configuration);
     _configuration = configuration;
   }
 
@@ -26,11 +32,18 @@ internal class Startup : StartupBase
 
     services.AddLogitarCmsCore();
     services.AddLogitarCmsInfrastructure();
-    services.AddLogitarCmsWeb();
+    services.AddLogitarCmsWeb(_configuration);
 
-    CorsSettings corsSettings = _configuration.GetSection(CorsSettings.SectionKey).Get<CorsSettings>() ?? new();
-    services.AddSingleton(corsSettings);
-    services.AddCors(corsSettings);
+    services.AddCors();
+
+    AuthenticationBuilder authenticationBuilder = services.AddAuthentication();
+    if (_authenticationSchemes.Contains(Schemes.Basic))
+    {
+      authenticationBuilder.AddScheme<BasicAuthenticationOptions, BasicAuthenticationHandler>(Schemes.Basic, options => { });
+    }
+
+    services.AddAuthorizationBuilder()
+      .SetDefaultPolicy(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build());
 
     services.AddApplicationInsightsTelemetry();
     IHealthChecksBuilder healthChecks = services.AddHealthChecks();
@@ -71,8 +84,10 @@ internal class Startup : StartupBase
     }
 
     application.UseHttpsRedirection();
-    application.UseCors();
+    application.UseCors(application.Services.GetRequiredService<CorsSettings>());
     application.UseStaticFiles();
+    application.UseAuthentication();
+    application.UseAuthorization();
 
     application.MapControllers();
     application.MapHealthChecks("/health");

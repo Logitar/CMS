@@ -1,6 +1,6 @@
-﻿namespace Logitar.Cms.Settings;
+﻿namespace Logitar.Cms.Web.Settings;
 
-internal record CorsSettings
+public record CorsSettings
 {
   public const string SectionKey = "Cors";
 
