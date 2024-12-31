@@ -1,4 +1,6 @@
 ﻿using Logitar.Cms.Core.Localization.Models;
+using Logitar.Cms.Core.Search;
+using Logitar.Identity.Core;
 
 namespace Logitar.Cms.Core.Localization;
 
@@ -13,4 +15,6 @@ public interface ILanguageQuerier
   Task<LanguageModel?> ReadAsync(string locale, CancellationToken cancellationToken = default);
 
   Task<LanguageModel> ReadDefaultAsync(CancellationToken cancellationToken = default);
+
+  Task<SearchResults<LanguageModel>> SearchAsync(SearchLanguagesPayload payload, CancellationToken cancellationToken = default);
 }

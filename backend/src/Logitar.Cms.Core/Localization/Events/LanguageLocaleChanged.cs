@@ -4,4 +4,4 @@ using MediatR;
 
 namespace Logitar.Cms.Core.Localization.Events;
 
-public record LanguageCreated(bool IsDefault, Locale Locale) : DomainEvent, INotification;
+public record LanguageLocaleChanged(Locale Locale) : DomainEvent, INotification;

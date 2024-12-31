@@ -27,7 +27,7 @@ public readonly struct LanguageId
   public static bool operator ==(LanguageId left, LanguageId right) => left.Equals(right);
   public static bool operator !=(LanguageId left, LanguageId right) => !left.Equals(right);
 
-  public override bool Equals([NotNullWhen(true)] object? obj) => obj is LanguageId languageId && languageId.Value == Value;
+  public override bool Equals([NotNullWhen(true)] object? obj) => obj is LanguageId id && id.Value == Value;
   public override int GetHashCode() => Value.GetHashCode();
   public override string ToString() => Value;
 }

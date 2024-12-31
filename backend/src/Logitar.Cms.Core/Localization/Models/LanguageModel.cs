@@ -1,6 +1,4 @@
-﻿using Logitar.Cms.Core.Models;
-
-namespace Logitar.Cms.Core.Localization.Models;
+﻿namespace Logitar.Cms.Core.Localization.Models;
 
 public class LanguageModel : AggregateModel
 {

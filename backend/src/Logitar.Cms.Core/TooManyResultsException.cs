@@ -1,6 +1,4 @@
-﻿using Logitar.Cms.Core.Errors;
-
-namespace Logitar.Cms.Core;
+﻿namespace Logitar.Cms.Core;
 
 public class TooManyResultsException : BadRequestException
 {
@@ -22,11 +20,16 @@ public class TooManyResultsException : BadRequestException
     private set => Data[nameof(ActualCount)] = value;
   }
 
-  public override Error Error => new(this.GetErrorCode(), ErrorMessage,
-  [
-    new ErrorData(nameof(ExpectedCount), ExpectedCount),
-    new ErrorData(nameof(ActualCount), ActualCount)
-  ]);
+  public override Error Error
+  {
+    get
+    {
+      Error error = new(this.GetErrorCode(), ErrorMessage);
+      error.Data[nameof(ExpectedCount)] = ExpectedCount;
+      error.Data[nameof(ActualCount)] = ActualCount;
+      return error;
+    }
+  }
 
   public TooManyResultsException(Type type, int expectedCount, int actualCount) : base(BuildMessage(type, expectedCount, actualCount))
   {

@@ -2,6 +2,7 @@
 using Logitar.Cms.Core.Localization.Models;
 using Logitar.Cms.Core.Localization.Validators;
 using Logitar.EventSourcing;
+using Logitar.Identity.Core;
 using MediatR;
 
 namespace Logitar.Cms.Core.Localization.Commands;
@@ -56,17 +57,17 @@ internal class CreateOrReplaceLanguageCommandHandler : IRequestHandler<CreateOrR
       language = new(locale, isDefault: false, actorId, languageId);
       created = true;
     }
-
-    Language reference = (command.Version.HasValue
-      ? await _languageRepository.LoadAsync(language.Id, command.Version.Value, cancellationToken)
-      : null) ?? language;
-
-    if (reference.Locale != locale)
+    else
     {
-      language.Locale = locale;
-    }
+      Language reference = (command.Version.HasValue
+        ? await _languageRepository.LoadAsync(language.Id, command.Version.Value, cancellationToken)
+        : null) ?? language;
 
-    language.Update(actorId);
+      if (reference.Locale != locale)
+      {
+        language.SetLocale(locale, actorId);
+      }
+    }
 
     await _mediator.Send(new SaveLanguageCommand(language), cancellationToken);
 

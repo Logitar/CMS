@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Logitar.Cms.Core.Localization.Models;
+using Logitar.Identity.Core;
 
 namespace Logitar.Cms.Core.Localization.Validators;
 
