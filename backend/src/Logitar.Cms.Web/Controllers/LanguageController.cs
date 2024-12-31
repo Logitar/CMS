@@ -1,6 +1,8 @@
 ﻿using Logitar.Cms.Core.Localization.Commands;
 using Logitar.Cms.Core.Localization.Models;
 using Logitar.Cms.Core.Localization.Queries;
+using Logitar.Cms.Core.Search;
+using Logitar.Cms.Web.Models.Languages;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -50,6 +52,13 @@ public class LanguageController : ControllerBase
   {
     CreateOrReplaceLanguageResult result = await _mediator.Send(new CreateOrReplaceLanguageCommand(id, payload, version), cancellationToken);
     return ToActionResult(result);
+  }
+
+  [HttpGet]
+  public async Task<ActionResult<SearchResults<LanguageModel>>> SearchAsync([FromQuery] SearchLanguagesParameters parameters, CancellationToken cancellationToken)
+  {
+    SearchResults<LanguageModel> languages = await _mediator.Send(new SearchLanguagesQuery(parameters.ToPayload()), cancellationToken);
+    return Ok(languages);
   }
 
   [HttpPatch("{id}/default")]
