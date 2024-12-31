@@ -1,3 +1,21 @@
 name: cms
+services:
+  cms_mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: Logitar.Cms_mssql
+    restart: unless-stopped
+    user: root
+    environment:
+      ACCEPT_EULA: 'Y'
+      SA_PASSWORD: tB5H47dWCqE6G9TZ
+    ports:
+      - 1440:1433
+    volumes:
+      - mssql_backup:/var/opt/mssql/backup
+      - mssql_data:/var/opt/mssql/data
+      - mssql_log:/var/opt/mssql/log
 
-#services:
+volumes:
+  mssql_backup:
+  mssql_data:
+  mssql_log:
