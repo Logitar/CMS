@@ -4,6 +4,7 @@ using Logitar.Cms.Infrastructure.Caching;
 using Logitar.Cms.Infrastructure.Queriers;
 using Logitar.Cms.Infrastructure.Repositories;
 using Logitar.Cms.Infrastructure.Settings;
+using Logitar.EventSourcing.EntityFrameworkCore.Relational;
 using Logitar.EventSourcing.Infrastructure;
 using Logitar.Identity.EntityFrameworkCore.Relational;
 using Logitar.Identity.Infrastructure;
@@ -18,6 +19,7 @@ public static class DependencyInjectionExtensions
   public static IServiceCollection AddLogitarCmsInfrastructure(this IServiceCollection services)
   {
     return services
+      .AddLogitarEventSourcingWithEntityFrameworkCoreRelational()
       .AddLogitarIdentityInfrastructure()
       .AddLogitarIdentityWithEntityFrameworkCoreRelational()
       .RemoveAll<IEventSerializer>()
