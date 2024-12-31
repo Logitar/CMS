@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Logitar.Identity.Core;
+using Moq;
 
 namespace Logitar.Cms.Core.Localization.Commands;
 

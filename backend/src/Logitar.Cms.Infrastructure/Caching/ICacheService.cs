@@ -1,4 +1,4 @@
-﻿using Logitar.Cms.Core.Models;
+﻿using Logitar.Cms.Core.Actors;
 using Logitar.EventSourcing;
 
 namespace Logitar.Cms.Infrastructure.Caching;

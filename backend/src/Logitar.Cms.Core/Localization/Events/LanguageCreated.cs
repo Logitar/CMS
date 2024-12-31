@@ -1,6 +1,7 @@
 ﻿using Logitar.EventSourcing;
+using Logitar.Identity.Core;
 using MediatR;
 
 namespace Logitar.Cms.Core.Localization.Events;
 
-public record LanguageCreated(Locale Locale, bool IsDefault) : DomainEvent, INotification;
+public record LanguageCreated(bool IsDefault, Locale Locale) : DomainEvent, INotification;

@@ -12,15 +12,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.Core", "src\Logitar.Cms.Core\Logitar.Cms.Core.csproj", "{382907CD-18AF-45DE-A1AB-263353F0A9C8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.Core", "src\Logitar.Cms.Core\Logitar.Cms.Core.csproj", "{ABFD01E5-CC58-48FB-A1A2-B9B3557DF54C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.Web", "src\Logitar.Cms.Web\Logitar.Cms.Web.csproj", "{134EAA3D-D3A5-45F0-982B-D58BF1434B0F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.Infrastructure", "src\Logitar.Cms.Infrastructure\Logitar.Cms.Infrastructure.csproj", "{BAD467E7-936A-4A01-91AE-B31E28425961}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{49A3AE69-C12F-465C-8C4E-CCE766C2414E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.Infrastructure.SqlServer", "src\Logitar.Cms.Infrastructure.SqlServer\Logitar.Cms.Infrastructure.SqlServer.csproj", "{3EE12CB0-B01F-4013-9C43-853EC64C6DFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.UnitTests", "tests\Logitar.Cms.UnitTests\Logitar.Cms.UnitTests.csproj", "{F367B008-1CAD-49A5-9EB1-5160661FF9CC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.Web", "src\Logitar.Cms.Web\Logitar.Cms.Web.csproj", "{032F0B98-DDBE-4212-BC1B-618C20FB929B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.Infrastructure", "src\Logitar.Cms.Infrastructure\Logitar.Cms.Infrastructure.csproj", "{15549282-0316-4CA0-A3B2-ADE7E89C4A3D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F1B45164-9EDE-4DC8-838E-D494B20856E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms.UnitTests", "tests\Logitar.Cms.UnitTests\Logitar.Cms.UnitTests.csproj", "{9F0F33DB-18AB-4C20-94C3-6FD92BC5601F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logitar.Cms", "src\Logitar.Cms\Logitar.Cms.csproj", "{65B274A3-35A4-40B6-99CD-6C225C8E71E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,28 +32,36 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{382907CD-18AF-45DE-A1AB-263353F0A9C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{382907CD-18AF-45DE-A1AB-263353F0A9C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{382907CD-18AF-45DE-A1AB-263353F0A9C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{382907CD-18AF-45DE-A1AB-263353F0A9C8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{134EAA3D-D3A5-45F0-982B-D58BF1434B0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{134EAA3D-D3A5-45F0-982B-D58BF1434B0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{134EAA3D-D3A5-45F0-982B-D58BF1434B0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{134EAA3D-D3A5-45F0-982B-D58BF1434B0F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F367B008-1CAD-49A5-9EB1-5160661FF9CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F367B008-1CAD-49A5-9EB1-5160661FF9CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F367B008-1CAD-49A5-9EB1-5160661FF9CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F367B008-1CAD-49A5-9EB1-5160661FF9CC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{15549282-0316-4CA0-A3B2-ADE7E89C4A3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{15549282-0316-4CA0-A3B2-ADE7E89C4A3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{15549282-0316-4CA0-A3B2-ADE7E89C4A3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{15549282-0316-4CA0-A3B2-ADE7E89C4A3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABFD01E5-CC58-48FB-A1A2-B9B3557DF54C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABFD01E5-CC58-48FB-A1A2-B9B3557DF54C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABFD01E5-CC58-48FB-A1A2-B9B3557DF54C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABFD01E5-CC58-48FB-A1A2-B9B3557DF54C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAD467E7-936A-4A01-91AE-B31E28425961}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAD467E7-936A-4A01-91AE-B31E28425961}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAD467E7-936A-4A01-91AE-B31E28425961}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAD467E7-936A-4A01-91AE-B31E28425961}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EE12CB0-B01F-4013-9C43-853EC64C6DFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EE12CB0-B01F-4013-9C43-853EC64C6DFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EE12CB0-B01F-4013-9C43-853EC64C6DFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EE12CB0-B01F-4013-9C43-853EC64C6DFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{032F0B98-DDBE-4212-BC1B-618C20FB929B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{032F0B98-DDBE-4212-BC1B-618C20FB929B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{032F0B98-DDBE-4212-BC1B-618C20FB929B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{032F0B98-DDBE-4212-BC1B-618C20FB929B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F0F33DB-18AB-4C20-94C3-6FD92BC5601F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F0F33DB-18AB-4C20-94C3-6FD92BC5601F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F0F33DB-18AB-4C20-94C3-6FD92BC5601F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F0F33DB-18AB-4C20-94C3-6FD92BC5601F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65B274A3-35A4-40B6-99CD-6C225C8E71E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65B274A3-35A4-40B6-99CD-6C225C8E71E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65B274A3-35A4-40B6-99CD-6C225C8E71E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65B274A3-35A4-40B6-99CD-6C225C8E71E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{F367B008-1CAD-49A5-9EB1-5160661FF9CC} = {49A3AE69-C12F-465C-8C4E-CCE766C2414E}
+		{9F0F33DB-18AB-4C20-94C3-6FD92BC5601F} = {F1B45164-9EDE-4DC8-838E-D494B20856E1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DA500B33-B3CA-431A-80D8-55CD95479A70}

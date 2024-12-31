@@ -22,7 +22,6 @@ internal class LanguageRepository : Repository, ILanguageRepository
   {
     await base.SaveAsync(language, cancellationToken);
   }
-
   public async Task SaveAsync(IEnumerable<Language> languages, CancellationToken cancellationToken)
   {
     await base.SaveAsync(languages, cancellationToken);

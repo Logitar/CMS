@@ -1,5 +1,6 @@
 ﻿using Logitar.Cms.Core.Localization.Models;
 using Logitar.EventSourcing;
+using Logitar.Identity.Core;
 using MediatR;
 using Moq;
 
@@ -50,7 +51,7 @@ public class CreateOrReplaceLanguageCommandHandlerTests
       It.Is<SaveLanguageCommand>(y => (!id.HasValue || y.Language.Id.ToGuid().Equals(id.Value))
         && y.Language.CreatedBy == _actorId
         && !y.Language.IsDefault
-        && y.Language.Locale.Value == payload.Locale),
+        && y.Language.Locale.Code == payload.Locale),
       _cancellationToken), Times.Once);
   }
 
@@ -70,7 +71,7 @@ public class CreateOrReplaceLanguageCommandHandlerTests
 
     Assert.Equal(_actorId, _english.UpdatedBy);
     Assert.True(_english.IsDefault);
-    Assert.Equal(payload.Locale, _english.Locale.Value);
+    Assert.Equal(payload.Locale, _english.Locale.Code);
 
     _mediator.Verify(x => x.Send(It.Is<SaveLanguageCommand>(y => y.Language.Equals(_english)), _cancellationToken), Times.Once);
   }
@@ -100,16 +101,14 @@ public class CreateOrReplaceLanguageCommandHandlerTests
   [Fact(DisplayName = "Handle: it should update an existing language.")]
   public async Task Given_ExistingLanguageWithVersion_When_Handle_Then_LanguageUpdated()
   {
-    _english.Locale = new Locale("en-US");
-    _english.Update(_actorId);
+    _english.SetLocale(new Locale("en-US"), _actorId);
     long version = _english.Version;
 
     Language reference = new(_english.Locale, _english.IsDefault, _actorId, _english.Id);
     _languageRepository.Setup(x => x.LoadAsync(reference.Id, version, _cancellationToken)).ReturnsAsync(reference);
 
     Locale locale = new("en-CA");
-    _english.Locale = locale;
-    _english.Update(_actorId);
+    _english.SetLocale(locale, _actorId);
 
     LanguageModel language = new();
     _languageQuerier.Setup(x => x.ReadAsync(_english, _cancellationToken)).ReturnsAsync(language);

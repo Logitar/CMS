@@ -20,11 +20,11 @@ internal class SaveLanguageCommandHandler : IRequestHandler<SaveLanguageCommand>
   {
     Language language = command.Language;
 
-    bool hasLocaleChanged = language.Changes.Any(change => change is LanguageCreated || change is LanguageUpdated updated && updated.Locale != null);
+    bool hasLocaleChanged = language.Changes.Any(change => change is LanguageCreated || change is LanguageLocaleChanged);
     if (hasLocaleChanged)
     {
       LanguageId? conflictId = await _languageQuerier.FindIdAsync(language.Locale, cancellationToken);
-      if (conflictId != null && !conflictId.Equals(language.Id))
+      if (conflictId.HasValue && !conflictId.Value.Equals(language.Id))
       {
         throw new LocaleAlreadyUsedException(language, conflictId.Value);
       }

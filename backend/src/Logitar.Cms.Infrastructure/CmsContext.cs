@@ -9,8 +9,7 @@ public class CmsContext : DbContext
   {
   }
 
-  internal DbSet<ActorEntity> Actors => Set<ActorEntity>();
-  internal DbSet<LanguageEntity> Languages => Set<LanguageEntity>();
+  public DbSet<LanguageEntity> Languages => Set<LanguageEntity>();
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {

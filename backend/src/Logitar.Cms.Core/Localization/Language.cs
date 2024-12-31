@@ -1,37 +1,25 @@
 ﻿using Logitar.Cms.Core.Localization.Events;
 using Logitar.EventSourcing;
+using Logitar.Identity.Core;
 
 namespace Logitar.Cms.Core.Localization;
 
 public class Language : AggregateRoot
 {
-  private LanguageUpdated _updated = new();
-
   public new LanguageId Id => new(base.Id);
 
   public bool IsDefault { get; private set; }
 
   private Locale? _locale = null;
-  public Locale Locale
-  {
-    get => _locale ?? throw new InvalidOperationException($"The {nameof(Locale)} has not been initialized yet.");
-    set
-    {
-      if (_locale != value)
-      {
-        _locale = value;
-        _updated.Locale = value;
-      }
-    }
-  }
+  public Locale Locale => _locale ?? throw new InvalidOperationException($"The {nameof(Locale)} has not been initialized yet.");
 
   public Language() : base()
   {
   }
 
-  public Language(Locale locale, bool isDefault = false, ActorId? actorId = null, LanguageId? id = null) : base((id ?? LanguageId.NewId()).StreamId)
+  public Language(Locale locale, bool isDefault = false, ActorId? actorId = null, LanguageId? languageId = null) : base(languageId?.StreamId)
   {
-    Raise(new LanguageCreated(locale, isDefault), actorId);
+    Raise(new LanguageCreated(isDefault, locale), actorId);
   }
   protected virtual void Handle(LanguageCreated @event)
   {
@@ -52,20 +40,16 @@ public class Language : AggregateRoot
     IsDefault = @event.IsDefault;
   }
 
-  public void Update(ActorId? actorId = null)
+  public void SetLocale(Locale locale, ActorId? actorId = null)
   {
-    if (_updated.HasChanges)
+    if (Locale != locale)
     {
-      Raise(_updated, actorId, DateTime.Now);
-      _updated = new();
+      Raise(new LanguageLocaleChanged(locale), actorId);
     }
   }
-  protected virtual void Handle(LanguageUpdated @event)
+  protected virtual void Handle(LanguageLocaleChanged @event)
   {
-    if (@event.Locale != null)
-    {
-      _locale = @event.Locale;
-    }
+    _locale = @event.Locale;
   }
 
   public override string ToString() => $"{Locale} | {base.ToString()}";

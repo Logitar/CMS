@@ -1,7 +1,8 @@
-﻿using Logitar.Cms.Core.Models;
+﻿using Logitar.Cms.Core.Actors;
 using Logitar.Cms.Infrastructure.Caching;
-using Logitar.Cms.Infrastructure.Entities;
 using Logitar.EventSourcing;
+using Logitar.Identity.EntityFrameworkCore.Relational;
+using Logitar.Identity.EntityFrameworkCore.Relational.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Logitar.Cms.Infrastructure.Actors;
@@ -11,7 +12,7 @@ internal class ActorService : IActorService
   private readonly DbSet<ActorEntity> _actors;
   private readonly ICacheService _cacheService;
 
-  public ActorService(ICacheService cacheService, CmsContext context)
+  public ActorService(ICacheService cacheService, IdentityContext context)
   {
     _cacheService = cacheService;
     _actors = context.Actors;
@@ -21,14 +22,14 @@ internal class ActorService : IActorService
   {
     int capacity = ids.Count();
     Dictionary<ActorId, ActorModel> actors = new(capacity);
-    HashSet<Guid> missingIds = new(capacity);
+    HashSet<string> missingIds = new(capacity);
 
     foreach (ActorId id in ids)
     {
       ActorModel? actor = _cacheService.GetActor(id);
       if (actor == null)
       {
-        missingIds.Add(id.ToGuid());
+        missingIds.Add(id.Value);
       }
       else
       {

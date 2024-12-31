@@ -1,14 +1,18 @@
 ﻿using Logitar.Cms.Infrastructure.Converters;
+using Logitar.Identity.Infrastructure.Converters;
 
 namespace Logitar.Cms.Infrastructure;
 
-internal class EventSerializer : EventSourcing.Infrastructure.EventSerializer
+public class EventSerializer : Identity.Infrastructure.EventSerializer
 {
+  public EventSerializer(PasswordConverter passwordConverter) : base(passwordConverter)
+  {
+  }
+
   protected override void RegisterConverters()
   {
     base.RegisterConverters();
 
     SerializerOptions.Converters.Add(new LanguageIdConverter());
-    SerializerOptions.Converters.Add(new LocaleConverter());
   }
 }
