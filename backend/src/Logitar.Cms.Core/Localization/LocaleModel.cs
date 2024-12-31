@@ -1,4 +1,4 @@
-﻿namespace Logitar.Cms.Core;
+﻿namespace Logitar.Cms.Core.Localization;
 
 public class LocaleModel
 {
