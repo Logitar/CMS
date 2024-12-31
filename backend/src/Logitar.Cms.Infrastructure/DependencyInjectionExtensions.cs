@@ -1,4 +1,5 @@
 ﻿using Logitar.Cms.Core.Localization;
+using Logitar.Cms.Core.Users;
 using Logitar.Cms.Infrastructure.Actors;
 using Logitar.Cms.Infrastructure.Caching;
 using Logitar.Cms.Infrastructure.Queriers;
@@ -42,7 +43,8 @@ public static class DependencyInjectionExtensions
   private static IServiceCollection AddQueriers(this IServiceCollection services)
   {
     return services
-      .AddScoped<ILanguageQuerier, LanguageQuerier>();
+      .AddScoped<ILanguageQuerier, LanguageQuerier>()
+      .AddScoped<IUserQuerier, UserQuerier>();
   }
 
   private static IServiceCollection AddRepositories(this IServiceCollection services)
