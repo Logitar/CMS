@@ -70,6 +70,13 @@ public class LanguageController : ControllerBase
     return language == null ? NotFound() : Ok(language);
   }
 
+  [HttpPatch("{id}")]
+  public async Task<ActionResult<LanguageModel>> UpdateAsync(Guid id, [FromBody] UpdateLanguagePayload payload, CancellationToken cancellationToken)
+  {
+    LanguageModel? language = await _mediator.Send(new UpdateLanguageCommand(id, payload), cancellationToken);
+    return language == null ? NotFound() : Ok(language);
+  }
+
   private ActionResult<LanguageModel> ToActionResult(CreateOrReplaceLanguageResult result)
   {
     if (result.Language == null)
