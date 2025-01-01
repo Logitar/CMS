@@ -2,7 +2,7 @@
 using Logitar.Cms.Core.Localization.Models;
 using Logitar.Cms.Core.Localization.Queries;
 using Logitar.Cms.Core.Search;
-using Logitar.Cms.Web.Models.Languages;
+using Logitar.Cms.Web.Models.Language;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

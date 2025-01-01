@@ -1,6 +1,8 @@
 ﻿using Logitar.Cms.Core.Fields.Commands;
 using Logitar.Cms.Core.Fields.Models;
 using Logitar.Cms.Core.Fields.Queries;
+using Logitar.Cms.Core.Search;
+using Logitar.Cms.Web.Models.FieldType;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -47,13 +49,12 @@ public class FieldTypeController : ControllerBase
     return ToActionResult(result);
   }
 
-  //[HttpGet]
-  //public async Task<ActionResult<SearchResults<FieldTypeModel>>> SearchAsync([FromQuery] SearchFieldTypesParameters parameters, CancellationToken cancellationToken)
-  //{
-  //  SearchResults<FieldTypeModel> fieldTypes = await _mediator.Send(new SearchFieldTypesQuery(parameters.ToPayload()), cancellationToken);
-  //  return Ok(fieldTypes);
-  //} // TODO(fpion): implement
-
+  [HttpGet]
+  public async Task<ActionResult<SearchResults<FieldTypeModel>>> SearchAsync([FromQuery] SearchFieldTypesParameters parameters, CancellationToken cancellationToken)
+  {
+    SearchResults<FieldTypeModel> fieldTypes = await _mediator.Send(new SearchFieldTypesQuery(parameters.ToPayload()), cancellationToken);
+    return Ok(fieldTypes);
+  }
   [HttpPatch("{id}")]
   public async Task<ActionResult<FieldTypeModel>> UpdateAsync(Guid id, [FromBody] UpdateFieldTypePayload payload, CancellationToken cancellationToken)
   {

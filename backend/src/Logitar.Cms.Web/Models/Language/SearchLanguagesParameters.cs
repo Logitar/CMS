@@ -2,7 +2,7 @@
 using Logitar.Cms.Core.Search;
 using Logitar.Cms.Web.Models.Search;
 
-namespace Logitar.Cms.Web.Models.Languages;
+namespace Logitar.Cms.Web.Models.Language;
 
 public record SearchLanguagesParameters : SearchParameters
 {
