@@ -1,5 +1,6 @@
 ﻿using Logitar.Cms.Core;
 using Logitar.Cms.Core.Actors;
+using Logitar.Cms.Core.Fields.Models;
 using Logitar.Cms.Core.Localization.Models;
 using Logitar.Cms.Core.Roles.Models;
 using Logitar.Cms.Core.Users.Models;
@@ -37,6 +38,23 @@ public class Mapper
     EmailAddress = actor.EmailAddress,
     PictureUrl = actor.PictureUrl
   };
+
+  public FieldTypeModel ToFieldType(FieldTypeEntity source)
+  {
+    FieldTypeModel destination = new()
+    {
+      UniqueName = source.UniqueName,
+      DisplayName = source.DisplayName,
+      Description = source.Description,
+      DataType = source.DataType
+    };
+
+    // TODO(fpion): Settings
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
 
   public LanguageModel ToLanguage(LanguageEntity source)
   {
