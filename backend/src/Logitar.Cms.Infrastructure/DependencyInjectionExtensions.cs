@@ -45,6 +45,7 @@ public static class DependencyInjectionExtensions
   private static IServiceCollection AddQueriers(this IServiceCollection services)
   {
     return services
+      .AddScoped<IContentQuerier, ContentQuerier>()
       .AddScoped<IContentTypeQuerier, ContentTypeQuerier>()
       .AddScoped<IFieldTypeQuerier, FieldTypeQuerier>()
       .AddScoped<ILanguageQuerier, LanguageQuerier>()
@@ -54,6 +55,7 @@ public static class DependencyInjectionExtensions
   private static IServiceCollection AddRepositories(this IServiceCollection services)
   {
     return services
+      .AddScoped<IContentRepository, ContentRepository>()
       .AddScoped<IContentTypeRepository, ContentTypeRepository>()
       .AddScoped<IFieldTypeRepository, FieldTypeRepository>()
       .AddScoped<ILanguageRepository, LanguageRepository>();

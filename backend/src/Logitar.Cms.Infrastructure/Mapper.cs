@@ -41,6 +41,73 @@ public class Mapper
     PictureUrl = actor.PictureUrl
   };
 
+  public ContentModel ToContent(ContentEntity source)
+  {
+    if (source.ContentType == null)
+    {
+      throw new ArgumentException($"The {nameof(source.ContentType)} is required.", nameof(source));
+    }
+
+    ContentModel destination = new()
+    {
+      ContentType = ToContentType(source.ContentType)
+    };
+
+    foreach (ContentLocaleEntity locale in source.Locales)
+    {
+      ContentLocaleModel invariantOrLocale = ToContentLocale(locale, destination);
+      if (invariantOrLocale.Language == null)
+      {
+        destination.Invariant = invariantOrLocale;
+      }
+      else
+      {
+        destination.Locales.Add(invariantOrLocale);
+      }
+    }
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public ContentLocaleModel ToContentLocale(ContentLocaleEntity source) => ToContentLocale(source, content: null);
+  public ContentLocaleModel ToContentLocale(ContentLocaleEntity source, ContentModel? content)
+  {
+    if (content == null)
+    {
+      if (source.Content == null)
+      {
+        throw new ArgumentException($"The {nameof(source.Content)} is required.");
+      }
+
+      content = ToContent(source.Content);
+    }
+    if (source.LanguageId.HasValue && source.Language == null)
+    {
+      throw new ArgumentException($"The {nameof(source.Language)} is required.", nameof(source));
+    }
+
+    ContentLocaleModel destination = new()
+    {
+      Content = content,
+      UniqueName = source.UniqueName,
+      DisplayName = source.DisplayName,
+      Description = source.Description,
+      CreatedBy = TryFindActor(source.CreatedBy) ?? _system,
+      CreatedOn = source.CreatedOn.AsUniversalTime(),
+      UpdatedBy = TryFindActor(source.UpdatedBy) ?? _system,
+      UpdatedOn = source.UpdatedOn.AsUniversalTime()
+    };
+
+    if (source.Language != null)
+    {
+      destination.Language = ToLanguage(source.Language);
+    }
+
+    return destination;
+  }
+
   public ContentTypeModel ToContentType(ContentTypeEntity source)
   {
     ContentTypeModel destination = new()

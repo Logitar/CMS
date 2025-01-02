@@ -9,6 +9,8 @@ public class CmsContext : DbContext
   {
   }
 
+  public DbSet<ContentEntity> Contents => Set<ContentEntity>();
+  public DbSet<ContentLocaleEntity> ContentLocales => Set<ContentLocaleEntity>();
   public DbSet<ContentTypeEntity> ContentTypes => Set<ContentTypeEntity>();
   public DbSet<FieldTypeEntity> FieldTypes => Set<FieldTypeEntity>();
   public DbSet<LanguageEntity> Languages => Set<LanguageEntity>();

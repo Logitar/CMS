@@ -20,6 +20,9 @@ public class ContentTypeEntity : AggregateEntity
   public string? DisplayName { get; private set; }
   public string? Description { get; private set; }
 
+  public List<ContentLocaleEntity> ContentLocales { get; private set; } = [];
+  public List<ContentEntity> Contents { get; private set; } = [];
+
   public ContentTypeEntity(ContentTypeCreated @event) : base(@event)
   {
     Id = @event.StreamId.ToGuid();
