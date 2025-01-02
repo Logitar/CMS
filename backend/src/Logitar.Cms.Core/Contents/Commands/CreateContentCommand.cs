@@ -54,13 +54,12 @@ internal class CreateContentCommandHandler : IRequestHandler<CreateContentComman
         throw new NotImplementedException(); // TODO(fpion): typed exception
       }
     }
+    else if (!payload.LanguageId.HasValue)
+    {
+      throw new NotImplementedException(); // TODO(fpion): typed exception
+    }
     else
     {
-      if (!payload.LanguageId.HasValue)
-      {
-        throw new NotImplementedException(); // TODO(fpion): typed exception
-      }
-
       LanguageId languageId = new(payload.LanguageId.Value);
       Language language = await _languageRepository.LoadAsync(languageId, cancellationToken)
         ?? throw new LanguageNotFoundException(payload.LanguageId.Value, nameof(payload.LanguageId));
