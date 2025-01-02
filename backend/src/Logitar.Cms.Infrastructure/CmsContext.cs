@@ -9,6 +9,7 @@ public class CmsContext : DbContext
   {
   }
 
+  public DbSet<FieldTypeEntity> FieldTypes => Set<FieldTypeEntity>();
   public DbSet<LanguageEntity> Languages => Set<LanguageEntity>();
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -13,6 +13,7 @@ public class EventSerializer : Identity.Infrastructure.EventSerializer
   {
     base.RegisterConverters();
 
+    SerializerOptions.Converters.Add(new FieldTypeIdConverter());
     SerializerOptions.Converters.Add(new LanguageIdConverter());
   }
 }

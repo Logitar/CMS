@@ -1,5 +1,7 @@
 ﻿using Logitar.Cms.Core;
 using Logitar.Cms.Core.Actors;
+using Logitar.Cms.Core.Fields;
+using Logitar.Cms.Core.Fields.Models;
 using Logitar.Cms.Core.Localization.Models;
 using Logitar.Cms.Core.Roles.Models;
 using Logitar.Cms.Core.Users.Models;
@@ -37,6 +39,42 @@ public class Mapper
     EmailAddress = actor.EmailAddress,
     PictureUrl = actor.PictureUrl
   };
+
+  public FieldTypeModel ToFieldType(FieldTypeEntity source)
+  {
+    FieldTypeModel destination = new()
+    {
+      UniqueName = source.UniqueName,
+      DisplayName = source.DisplayName,
+      Description = source.Description,
+      DataType = source.DataType
+    };
+
+    switch (source.DataType)
+    {
+      case DataType.Boolean:
+        destination.Boolean = (source.Settings == null ? null : JsonSerializer.Deserialize<BooleanSettingsModel>(source.Settings)) ?? new();
+        break;
+      case DataType.DateTime:
+        destination.DateTime = (source.Settings == null ? null : JsonSerializer.Deserialize<DateTimeSettingsModel>(source.Settings)) ?? new();
+        break;
+      case DataType.Number:
+        destination.Number = (source.Settings == null ? null : JsonSerializer.Deserialize<NumberSettingsModel>(source.Settings)) ?? new();
+        break;
+      case DataType.RichText:
+        destination.RichText = (source.Settings == null ? null : JsonSerializer.Deserialize<RichTextSettingsModel>(source.Settings)) ?? new();
+        break;
+      case DataType.String:
+        destination.String = (source.Settings == null ? null : JsonSerializer.Deserialize<StringSettingsModel>(source.Settings)) ?? new();
+        break;
+      default:
+        throw new DataTypeNotSupportedException(source.DataType);
+    }
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
 
   public LanguageModel ToLanguage(LanguageEntity source)
   {
