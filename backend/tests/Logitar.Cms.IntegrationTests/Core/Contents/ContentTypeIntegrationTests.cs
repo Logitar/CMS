@@ -1,13 +1,12 @@
 ﻿using Logitar.Cms.Core.Contents.Commands;
 using Logitar.Cms.Core.Contents.Models;
-using Logitar.Cms.Infrastructure;
 
 namespace Logitar.Cms.Core.Contents;
 
 [Trait(Traits.Category, Categories.Integration)]
 public class ContentTypeIntegrationTests : IntegrationTests
 {
-  public ContentTypeIntegrationTests() : base(DatabaseProvider.SqlServer)
+  public ContentTypeIntegrationTests() : base()
   {
   }
 
@@ -40,6 +39,7 @@ public class ContentTypeIntegrationTests : IntegrationTests
     Assert.Equal(DateTime.UtcNow, contentType.CreatedOn, TimeSpan.FromMinutes(1));
     Assert.Equal(Actor, contentType.UpdatedBy);
     Assert.Equal(DateTime.UtcNow, contentType.UpdatedOn, TimeSpan.FromMinutes(1));
+
     Assert.Equal(payload.IsInvariant, contentType.IsInvariant);
     Assert.Equal(payload.UniqueName, contentType.UniqueName);
     Assert.Equal(payload.DisplayName.Trim(), contentType.DisplayName);
@@ -75,6 +75,7 @@ public class ContentTypeIntegrationTests : IntegrationTests
     Assert.Equal(DateTime.UtcNow, contentType.CreatedOn, TimeSpan.FromMinutes(1));
     Assert.Equal(Actor, contentType.UpdatedBy);
     Assert.Equal(DateTime.UtcNow, contentType.UpdatedOn, TimeSpan.FromMinutes(1));
+
     Assert.Equal(payload.IsInvariant, contentType.IsInvariant);
     Assert.Equal(payload.UniqueName, contentType.UniqueName);
     Assert.Equal(payload.DisplayName.Trim(), contentType.DisplayName);

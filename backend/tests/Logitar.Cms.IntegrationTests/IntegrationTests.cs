@@ -6,6 +6,7 @@ using Logitar.Cms.Infrastructure.Commands;
 using Logitar.Cms.Infrastructure.SqlServer;
 using Logitar.Data;
 using Logitar.Data.SqlServer;
+using Logitar.EventSourcing;
 using Logitar.EventSourcing.EntityFrameworkCore.Relational;
 using Logitar.Identity.EntityFrameworkCore.Relational;
 using Logitar.Identity.EntityFrameworkCore.Relational.Entities;
@@ -35,28 +36,28 @@ public abstract class IntegrationTests : IAsyncLifetime
 
   private readonly TestContext _context = new();
   protected ActorModel Actor => _context.Actor ?? new();
+  protected ActorId ActorId => new(Actor.Id);
 
-  protected IntegrationTests(DatabaseProvider databaseProvider)
+  protected IntegrationTests()
   {
-    _databaseProvider = databaseProvider;
-
     Configuration = new ConfigurationBuilder()
       .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
       .Build();
+    _databaseProvider = Configuration.GetValue<DatabaseProvider?>("DatabaseProvider") ?? DatabaseProvider.SqlServer;
 
     ServiceCollection services = new();
     services.AddSingleton(Configuration);
 
     services.AddLogitarCmsCore();
     services.AddLogitarCmsInfrastructure();
-    switch (databaseProvider)
+    switch (_databaseProvider)
     {
       case DatabaseProvider.SqlServer:
         string connectionString = Configuration.GetValue<string>("SQLCONNSTR_Cms")?.Replace("{Database}", GetType().Name) ?? string.Empty;
         services.AddLogitarCmsWithSqlServer(connectionString);
         break;
       default:
-        throw new DatabaseProviderNotSupportedException(databaseProvider);
+        throw new DatabaseProviderNotSupportedException(_databaseProvider);
     }
 
     services.AddSingleton<IApplicationContext, TestApplicationContext>();

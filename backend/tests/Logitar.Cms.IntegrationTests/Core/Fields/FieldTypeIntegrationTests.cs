@@ -1,6 +1,5 @@
 ﻿using Logitar.Cms.Core.Fields.Commands;
 using Logitar.Cms.Core.Fields.Models;
-using Logitar.Cms.Infrastructure;
 using System.Net.Mime; // NOTE(fpion): cannot be added to CSPROJ due to ContentType aggregate.
 
 namespace Logitar.Cms.Core.Fields;
@@ -8,7 +7,7 @@ namespace Logitar.Cms.Core.Fields;
 [Trait(Traits.Category, Categories.Integration)]
 public class FieldTypeIntegrationTests : IntegrationTests
 {
-  public FieldTypeIntegrationTests() : base(DatabaseProvider.SqlServer)
+  public FieldTypeIntegrationTests() : base()
   {
   }
 
@@ -41,6 +40,7 @@ public class FieldTypeIntegrationTests : IntegrationTests
     Assert.Equal(DateTime.UtcNow, fieldType.CreatedOn, TimeSpan.FromMinutes(1));
     Assert.Equal(Actor, fieldType.UpdatedBy);
     Assert.Equal(DateTime.UtcNow, fieldType.UpdatedOn, TimeSpan.FromMinutes(1));
+
     Assert.Equal(payload.UniqueName, fieldType.UniqueName);
     Assert.Equal(payload.DisplayName.Trim(), fieldType.DisplayName);
     Assert.Equal(payload.Description.Trim(), fieldType.Description);
@@ -81,6 +81,7 @@ public class FieldTypeIntegrationTests : IntegrationTests
     Assert.Equal(DateTime.UtcNow, fieldType.CreatedOn, TimeSpan.FromMinutes(1));
     Assert.Equal(Actor, fieldType.UpdatedBy);
     Assert.Equal(DateTime.UtcNow, fieldType.UpdatedOn, TimeSpan.FromMinutes(1));
+
     Assert.Equal(payload.UniqueName, fieldType.UniqueName);
     Assert.Equal(payload.DisplayName.Trim(), fieldType.DisplayName);
     Assert.Equal(payload.Description.Trim(), fieldType.Description);
@@ -121,6 +122,7 @@ public class FieldTypeIntegrationTests : IntegrationTests
     Assert.Equal(DateTime.UtcNow, fieldType.CreatedOn, TimeSpan.FromMinutes(1));
     Assert.Equal(Actor, fieldType.UpdatedBy);
     Assert.Equal(DateTime.UtcNow, fieldType.UpdatedOn, TimeSpan.FromMinutes(1));
+
     Assert.Equal(payload.UniqueName, fieldType.UniqueName);
     Assert.Equal(payload.DisplayName.Trim(), fieldType.DisplayName);
     Assert.Equal(payload.Description.Trim(), fieldType.Description);
@@ -160,6 +162,7 @@ public class FieldTypeIntegrationTests : IntegrationTests
     Assert.Equal(DateTime.UtcNow, fieldType.CreatedOn, TimeSpan.FromMinutes(1));
     Assert.Equal(Actor, fieldType.UpdatedBy);
     Assert.Equal(DateTime.UtcNow, fieldType.UpdatedOn, TimeSpan.FromMinutes(1));
+
     Assert.Equal(payload.UniqueName, fieldType.UniqueName);
     Assert.Equal(payload.DisplayName.Trim(), fieldType.DisplayName);
     Assert.Equal(payload.Description.Trim(), fieldType.Description);
@@ -200,6 +203,7 @@ public class FieldTypeIntegrationTests : IntegrationTests
     Assert.Equal(DateTime.UtcNow, fieldType.CreatedOn, TimeSpan.FromMinutes(1));
     Assert.Equal(Actor, fieldType.UpdatedBy);
     Assert.Equal(DateTime.UtcNow, fieldType.UpdatedOn, TimeSpan.FromMinutes(1));
+
     Assert.Equal(payload.UniqueName, fieldType.UniqueName);
     Assert.Equal(payload.DisplayName.Trim(), fieldType.DisplayName);
     Assert.Equal(payload.Description.Trim(), fieldType.Description);

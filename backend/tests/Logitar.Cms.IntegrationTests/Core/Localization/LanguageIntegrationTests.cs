@@ -1,13 +1,12 @@
 ﻿using Logitar.Cms.Core.Localization.Commands;
 using Logitar.Cms.Core.Localization.Models;
-using Logitar.Cms.Infrastructure;
 
 namespace Logitar.Cms.Core.Localization;
 
 [Trait(Traits.Category, Categories.Integration)]
 public class LanguageIntegrationTests : IntegrationTests
 {
-  public LanguageIntegrationTests() : base(DatabaseProvider.SqlServer)
+  public LanguageIntegrationTests() : base()
   {
   }
 
@@ -34,6 +33,7 @@ public class LanguageIntegrationTests : IntegrationTests
     Assert.Equal(DateTime.UtcNow, language.CreatedOn, TimeSpan.FromMinutes(1));
     Assert.Equal(Actor, language.UpdatedBy);
     Assert.Equal(DateTime.UtcNow, language.UpdatedOn, TimeSpan.FromMinutes(1));
+
     Assert.False(language.IsDefault);
     Assert.Equal(payload.Locale, language.Locale.Code);
   }
