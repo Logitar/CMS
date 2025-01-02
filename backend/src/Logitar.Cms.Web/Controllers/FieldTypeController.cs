@@ -55,6 +55,7 @@ public class FieldTypeController : ControllerBase
     SearchResults<FieldTypeModel> fieldTypes = await _mediator.Send(new SearchFieldTypesQuery(parameters.ToPayload()), cancellationToken);
     return Ok(fieldTypes);
   }
+
   [HttpPatch("{id}")]
   public async Task<ActionResult<FieldTypeModel>> UpdateAsync(Guid id, [FromBody] UpdateFieldTypePayload payload, CancellationToken cancellationToken)
   {
