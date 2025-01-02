@@ -5,7 +5,7 @@ namespace Logitar.Cms.Core.Contents.Models;
 
 public record ContentLocaleModel
 {
-  public ContentModel Content { get; set; } = new();
+  public ContentModel Content { get; set; }
   public LanguageModel? Language { get; set; }
 
   public string UniqueName { get; set; } = string.Empty;
@@ -17,6 +17,11 @@ public record ContentLocaleModel
 
   public ActorModel UpdatedBy { get; set; } = new();
   public DateTime UpdatedOn { get; set; }
+
+  public ContentLocaleModel(ContentModel content)
+  {
+    Content = content;
+  }
 
   public override string ToString() => $"{DisplayName ?? UniqueName}";
 }

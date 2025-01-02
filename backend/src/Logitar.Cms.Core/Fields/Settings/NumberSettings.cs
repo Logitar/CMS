@@ -11,6 +11,7 @@ public record NumberSettings : FieldTypeSettings, INumberSettings
   public double? MaximumValue { get; }
   public double? Step { get; }
 
+  [JsonConstructor]
   public NumberSettings(double? minimumValue = null, double? maximumValue = null, double? step = null)
   {
     MinimumValue = minimumValue;

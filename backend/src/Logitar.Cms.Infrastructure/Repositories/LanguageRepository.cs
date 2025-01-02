@@ -18,6 +18,11 @@ internal class LanguageRepository : Repository, ILanguageRepository
     return await LoadAsync<Language>(id.StreamId, version, cancellationToken);
   }
 
+  public async Task<IReadOnlyCollection<Language>> LoadAsync(CancellationToken cancellationToken)
+  {
+    return await LoadAsync<Language>(cancellationToken);
+  }
+
   public async Task SaveAsync(Language language, CancellationToken cancellationToken)
   {
     await base.SaveAsync(language, cancellationToken);

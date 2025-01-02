@@ -88,9 +88,8 @@ public class Mapper
       throw new ArgumentException($"The {nameof(source.Language)} is required.", nameof(source));
     }
 
-    ContentLocaleModel destination = new()
+    ContentLocaleModel destination = new(content)
     {
-      Content = content,
       UniqueName = source.UniqueName,
       DisplayName = source.DisplayName,
       Description = source.Description,

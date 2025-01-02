@@ -10,6 +10,7 @@ public record DateTimeSettings : FieldTypeSettings, IDateTimeSettings
   public DateTime? MinimumValue { get; }
   public DateTime? MaximumValue { get; }
 
+  [JsonConstructor]
   public DateTimeSettings(DateTime? minimumValue = null, DateTime? maximumValue = null)
   {
     MinimumValue = minimumValue;

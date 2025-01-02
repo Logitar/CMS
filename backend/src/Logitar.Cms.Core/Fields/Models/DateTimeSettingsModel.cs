@@ -4,8 +4,8 @@ namespace Logitar.Cms.Core.Fields.Models;
 
 public record DateTimeSettingsModel : IDateTimeSettings
 {
-  public DateTime? MinimumValue { get; }
-  public DateTime? MaximumValue { get; }
+  public DateTime? MinimumValue { get; set; }
+  public DateTime? MaximumValue { get; set; }
 
   public DateTimeSettingsModel()
   {

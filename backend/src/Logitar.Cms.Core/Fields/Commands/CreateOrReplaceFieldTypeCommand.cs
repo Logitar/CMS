@@ -85,6 +85,8 @@ internal class CreateOrReplaceFieldTypeCommandHandler : IRequestHandler<CreateOr
       fieldType.Description = description;
     }
 
+    fieldType.Update(actorId);
+
     await _mediator.Send(new SaveFieldTypeCommand(fieldType), cancellationToken);
 
     FieldTypeModel model = await _fieldTypeQuerier.ReadAsync(fieldType, cancellationToken);
