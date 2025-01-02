@@ -1,11 +1,15 @@
 ﻿using Logitar.Cms.Core.Contents.Events;
 using Logitar.Cms.Core.Localization;
 using Logitar.EventSourcing;
+using Logitar.Identity.Contracts.Settings;
+using Logitar.Identity.Core.Settings;
 
 namespace Logitar.Cms.Core.Contents;
 
 public class Content : AggregateRoot
 {
+  public static readonly IUniqueNameSettings UniqueNameSettings = new UniqueNameSettings();
+
   public new ContentId Id => new(base.Id);
 
   public ContentTypeId ContentTypeId { get; private set; }
