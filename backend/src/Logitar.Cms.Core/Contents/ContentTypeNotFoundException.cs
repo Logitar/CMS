@@ -26,14 +26,14 @@ public class ContentTypeNotFoundException : NotFoundException
     }
   }
 
-  public ContentTypeNotFoundException(Guid contentTypeId, string propertyName) : base(BuildMessage(contentTypeId, propertyName))
+  public ContentTypeNotFoundException(ContentTypeId contentTypeId, string propertyName) : base(BuildMessage(contentTypeId, propertyName))
   {
-    ContentTypeId = contentTypeId;
+    ContentTypeId = contentTypeId.ToGuid();
     PropertyName = propertyName;
   }
 
-  private static string BuildMessage(Guid contentTypeId, string propertyName) => new ErrorMessageBuilder()
-    .AddData(nameof(ContentTypeId), contentTypeId)
+  private static string BuildMessage(ContentTypeId contentTypeId, string propertyName) => new ErrorMessageBuilder()
+    .AddData(nameof(ContentTypeId), contentTypeId.ToGuid())
     .AddData(nameof(PropertyName), propertyName)
     .Build();
 }

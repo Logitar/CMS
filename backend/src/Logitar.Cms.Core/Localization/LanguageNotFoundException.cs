@@ -26,14 +26,14 @@ public class LanguageNotFoundException : NotFoundException
     }
   }
 
-  public LanguageNotFoundException(Guid contentTypeId, string propertyName) : base(BuildMessage(contentTypeId, propertyName))
+  public LanguageNotFoundException(LanguageId languageId, string propertyName) : base(BuildMessage(languageId, propertyName))
   {
-    LanguageId = contentTypeId;
+    LanguageId = languageId.ToGuid();
     PropertyName = propertyName;
   }
 
-  private static string BuildMessage(Guid contentTypeId, string propertyName) => new ErrorMessageBuilder()
-    .AddData(nameof(LanguageId), contentTypeId)
+  private static string BuildMessage(LanguageId languageId, string propertyName) => new ErrorMessageBuilder()
+    .AddData(nameof(LanguageId), languageId.ToGuid())
     .AddData(nameof(PropertyName), propertyName)
     .Build();
 }

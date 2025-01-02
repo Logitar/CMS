@@ -42,7 +42,7 @@ internal class CreateContentCommandHandler : IRequestHandler<CreateContentComman
 
     ContentTypeId contentTypeId = new(payload.ContentTypeId);
     ContentType contentType = await _contentTypeRepository.LoadAsync(contentTypeId, cancellationToken)
-      ?? throw new ContentTypeNotFoundException(payload.ContentTypeId, nameof(payload.ContentTypeId));
+      ?? throw new ContentTypeNotFoundException(contentTypeId, nameof(payload.ContentTypeId));
 
     ActorId? actorId = _applicationContext.ActorId;
 
@@ -79,7 +79,7 @@ internal class CreateContentCommandHandler : IRequestHandler<CreateContentComman
     {
       LanguageId languageId = new(payload.LanguageId.Value);
       Language language = await _languageRepository.LoadAsync(languageId, cancellationToken)
-        ?? throw new LanguageNotFoundException(payload.LanguageId.Value, nameof(payload.LanguageId));
+        ?? throw new LanguageNotFoundException(languageId, nameof(payload.LanguageId));
 
       content.SetLocale(language, invariantAndLocale, actorId);
     }
