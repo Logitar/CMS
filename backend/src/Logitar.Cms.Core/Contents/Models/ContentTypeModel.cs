@@ -1,4 +1,6 @@
-﻿namespace Logitar.Cms.Core.Contents.Models;
+﻿using Logitar.Cms.Core.Fields.Models;
+
+namespace Logitar.Cms.Core.Contents.Models;
 
 public class ContentTypeModel : AggregateModel
 {
@@ -7,4 +9,6 @@ public class ContentTypeModel : AggregateModel
   public string UniqueName { get; set; } = string.Empty;
   public string? DisplayName { get; set; }
   public string? Description { get; set; }
+
+  public List<FieldDefinitionModel> Fields { get; set; } = [];
 }

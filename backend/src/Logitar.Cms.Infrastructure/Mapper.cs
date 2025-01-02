@@ -117,6 +117,8 @@ public class Mapper
       Description = source.Description
     };
 
+    // TODO(fpion): Fields
+
     MapAggregate(source, destination);
 
     return destination;
