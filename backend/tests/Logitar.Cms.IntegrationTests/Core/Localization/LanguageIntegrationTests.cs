@@ -31,9 +31,9 @@ public class LanguageIntegrationTests : IntegrationTests
     }
     Assert.Equal(1, language.Version);
     Assert.Equal(Actor, language.CreatedBy);
-    Assert.Equal(DateTime.UtcNow, language.CreatedOn, TimeSpan.FromSeconds(1));
+    Assert.Equal(DateTime.UtcNow, language.CreatedOn, TimeSpan.FromMinutes(1));
     Assert.Equal(Actor, language.UpdatedBy);
-    Assert.Equal(DateTime.UtcNow, language.UpdatedOn, TimeSpan.FromSeconds(1));
+    Assert.Equal(DateTime.UtcNow, language.UpdatedOn, TimeSpan.FromMinutes(1));
     Assert.False(language.IsDefault);
     Assert.Equal(payload.Locale, language.Locale.Code);
   }

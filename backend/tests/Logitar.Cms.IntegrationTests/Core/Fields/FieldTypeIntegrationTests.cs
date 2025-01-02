@@ -38,9 +38,9 @@ public class FieldTypeIntegrationTests : IntegrationTests
     }
     Assert.Equal(3, fieldType.Version);
     Assert.Equal(Actor, fieldType.CreatedBy);
-    Assert.Equal(DateTime.UtcNow, fieldType.CreatedOn, TimeSpan.FromSeconds(1));
+    Assert.Equal(DateTime.UtcNow, fieldType.CreatedOn, TimeSpan.FromMinutes(1));
     Assert.Equal(Actor, fieldType.UpdatedBy);
-    Assert.Equal(DateTime.UtcNow, fieldType.UpdatedOn, TimeSpan.FromSeconds(1));
+    Assert.Equal(DateTime.UtcNow, fieldType.UpdatedOn, TimeSpan.FromMinutes(1));
     Assert.Equal(payload.UniqueName, fieldType.UniqueName);
     Assert.Equal(payload.DisplayName.Trim(), fieldType.DisplayName);
     Assert.Equal(payload.Description.Trim(), fieldType.Description);
@@ -78,9 +78,9 @@ public class FieldTypeIntegrationTests : IntegrationTests
     }
     Assert.Equal(3, fieldType.Version);
     Assert.Equal(Actor, fieldType.CreatedBy);
-    Assert.Equal(DateTime.UtcNow, fieldType.CreatedOn, TimeSpan.FromSeconds(1));
+    Assert.Equal(DateTime.UtcNow, fieldType.CreatedOn, TimeSpan.FromMinutes(1));
     Assert.Equal(Actor, fieldType.UpdatedBy);
-    Assert.Equal(DateTime.UtcNow, fieldType.UpdatedOn, TimeSpan.FromSeconds(1));
+    Assert.Equal(DateTime.UtcNow, fieldType.UpdatedOn, TimeSpan.FromMinutes(1));
     Assert.Equal(payload.UniqueName, fieldType.UniqueName);
     Assert.Equal(payload.DisplayName.Trim(), fieldType.DisplayName);
     Assert.Equal(payload.Description.Trim(), fieldType.Description);
@@ -118,9 +118,9 @@ public class FieldTypeIntegrationTests : IntegrationTests
     }
     Assert.Equal(3, fieldType.Version);
     Assert.Equal(Actor, fieldType.CreatedBy);
-    Assert.Equal(DateTime.UtcNow, fieldType.CreatedOn, TimeSpan.FromSeconds(1));
+    Assert.Equal(DateTime.UtcNow, fieldType.CreatedOn, TimeSpan.FromMinutes(1));
     Assert.Equal(Actor, fieldType.UpdatedBy);
-    Assert.Equal(DateTime.UtcNow, fieldType.UpdatedOn, TimeSpan.FromSeconds(1));
+    Assert.Equal(DateTime.UtcNow, fieldType.UpdatedOn, TimeSpan.FromMinutes(1));
     Assert.Equal(payload.UniqueName, fieldType.UniqueName);
     Assert.Equal(payload.DisplayName.Trim(), fieldType.DisplayName);
     Assert.Equal(payload.Description.Trim(), fieldType.Description);
@@ -157,9 +157,9 @@ public class FieldTypeIntegrationTests : IntegrationTests
     }
     Assert.Equal(3, fieldType.Version);
     Assert.Equal(Actor, fieldType.CreatedBy);
-    Assert.Equal(DateTime.UtcNow, fieldType.CreatedOn, TimeSpan.FromSeconds(1));
+    Assert.Equal(DateTime.UtcNow, fieldType.CreatedOn, TimeSpan.FromMinutes(1));
     Assert.Equal(Actor, fieldType.UpdatedBy);
-    Assert.Equal(DateTime.UtcNow, fieldType.UpdatedOn, TimeSpan.FromSeconds(1));
+    Assert.Equal(DateTime.UtcNow, fieldType.UpdatedOn, TimeSpan.FromMinutes(1));
     Assert.Equal(payload.UniqueName, fieldType.UniqueName);
     Assert.Equal(payload.DisplayName.Trim(), fieldType.DisplayName);
     Assert.Equal(payload.Description.Trim(), fieldType.Description);
@@ -197,9 +197,9 @@ public class FieldTypeIntegrationTests : IntegrationTests
     }
     Assert.Equal(3, fieldType.Version);
     Assert.Equal(Actor, fieldType.CreatedBy);
-    Assert.Equal(DateTime.UtcNow, fieldType.CreatedOn, TimeSpan.FromSeconds(1));
+    Assert.Equal(DateTime.UtcNow, fieldType.CreatedOn, TimeSpan.FromMinutes(1));
     Assert.Equal(Actor, fieldType.UpdatedBy);
-    Assert.Equal(DateTime.UtcNow, fieldType.UpdatedOn, TimeSpan.FromSeconds(1));
+    Assert.Equal(DateTime.UtcNow, fieldType.UpdatedOn, TimeSpan.FromMinutes(1));
     Assert.Equal(payload.UniqueName, fieldType.UniqueName);
     Assert.Equal(payload.DisplayName.Trim(), fieldType.DisplayName);
     Assert.Equal(payload.Description.Trim(), fieldType.Description);

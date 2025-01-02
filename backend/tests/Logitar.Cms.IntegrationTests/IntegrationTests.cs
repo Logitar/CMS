@@ -72,7 +72,16 @@ public abstract class IntegrationTests : IAsyncLifetime
     await Mediator.Send(new InitializeDatabaseCommand());
 
     StringBuilder sql = new();
-    TableId[] tables = [EventDb.Streams.Table, IdentityDb.Actors.Table, IdentityDb.Users.Table, CmsDb.Languages.Table, CmsDb.FieldTypes.Table];
+    TableId[] tables =
+    [
+      CmsDb.Contents.Table,
+      CmsDb.ContentTypes.Table,
+      CmsDb.FieldTypes.Table,
+      CmsDb.Languages.Table,
+      IdentityDb.Users.Table,
+      IdentityDb.Actors.Table,
+      EventDb.Streams.Table
+    ];
     foreach (TableId table in tables)
     {
       ICommand command = CreateDeleteBuilder(table).Build();
