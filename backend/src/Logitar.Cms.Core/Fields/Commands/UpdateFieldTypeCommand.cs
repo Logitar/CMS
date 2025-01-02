@@ -4,7 +4,6 @@ using Logitar.Cms.Core.Fields.Settings;
 using Logitar.Cms.Core.Fields.Validators;
 using Logitar.EventSourcing;
 using Logitar.Identity.Core;
-using Logitar.Identity.Core.Settings;
 using MediatR;
 
 namespace Logitar.Cms.Core.Fields.Commands;
@@ -32,10 +31,8 @@ internal class UpdateFieldTypeCommandHandler : IRequestHandler<UpdateFieldTypeCo
 
   public async Task<FieldTypeModel?> Handle(UpdateFieldTypeCommand command, CancellationToken cancellationToken)
   {
-    UniqueNameSettings uniqueNameSettings = new(); // TODO(fpion): refactor
-
     UpdateFieldTypePayload payload = command.Payload;
-    new UpdateFieldTypeValidator(uniqueNameSettings).ValidateAndThrow(payload);
+    new UpdateFieldTypeValidator().ValidateAndThrow(payload);
 
     FieldTypeId fieldTypeId = new(command.Id);
     FieldType? fieldType = await _fieldTypeRepository.LoadAsync(fieldTypeId, cancellationToken);
@@ -48,7 +45,7 @@ internal class UpdateFieldTypeCommandHandler : IRequestHandler<UpdateFieldTypeCo
 
     if (!string.IsNullOrWhiteSpace(payload.UniqueName))
     {
-      UniqueName uniqueName = new(uniqueNameSettings, payload.UniqueName);
+      UniqueName uniqueName = new(FieldType.UniqueNameSettings, payload.UniqueName);
       fieldType.SetUniqueName(uniqueName, actorId);
     }
     if (payload.DisplayName != null)

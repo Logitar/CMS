@@ -22,6 +22,7 @@
   <ItemGroup>
     <Using Include="System.Diagnostics.CodeAnalysis" />
     <Using Include="System.Globalization" />
+    <Using Include="System.Net.Mime" />
     <Using Include="System.Reflection" />
     <Using Include="System.Text" />
     <Using Include="System.Text.Json.Serialization" />

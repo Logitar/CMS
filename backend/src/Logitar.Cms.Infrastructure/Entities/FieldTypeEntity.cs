@@ -1,5 +1,6 @@
 ﻿using Logitar.Cms.Core.Fields;
 using Logitar.Cms.Core.Fields.Events;
+using Logitar.Cms.Core.Fields.Settings;
 using Logitar.Identity.EntityFrameworkCore.Relational.Entities;
 using Logitar.Identity.EntityFrameworkCore.Relational.IdentityDb;
 
@@ -35,35 +36,39 @@ public class FieldTypeEntity : AggregateEntity
   {
   }
 
-  public void SetSettings(FieldTypeBooleanSettingsChanged e)
+  public void SetSettings(FieldTypeBooleanSettingsChanged @event)
   {
-    Update(e);
+    Update(@event);
 
-    // TODO(fpion): implement
+    SetSettings(@event.Settings);
   }
-  public void SetSettings(FieldTypeDateTimeSettingsChanged e)
+  public void SetSettings(FieldTypeDateTimeSettingsChanged @event)
   {
-    Update(e);
+    Update(@event);
 
-    // TODO(fpion): implement
+    SetSettings(@event.Settings);
   }
-  public void SetSettings(FieldTypeNumberSettingsChanged e)
+  public void SetSettings(FieldTypeNumberSettingsChanged @event)
   {
-    Update(e);
+    Update(@event);
 
-    // TODO(fpion): implement
+    SetSettings(@event.Settings);
   }
-  public void SetSettings(FieldTypeRichTextSettingsChanged e)
+  public void SetSettings(FieldTypeRichTextSettingsChanged @event)
   {
-    Update(e);
+    Update(@event);
 
-    // TODO(fpion): implement
+    SetSettings(@event.Settings);
   }
-  public void SetSettings(FieldTypeStringSettingsChanged e)
+  public void SetSettings(FieldTypeStringSettingsChanged @event)
   {
-    Update(e);
+    Update(@event);
 
-    // TODO(fpion): implement
+    SetSettings(@event.Settings);
+  }
+  private void SetSettings(FieldTypeSettings settings)
+  {
+    Settings = JsonSerializer.Serialize(settings, settings.GetType());
   }
 
   public void SetUniqueName(FieldTypeUniqueNameChanged @event)

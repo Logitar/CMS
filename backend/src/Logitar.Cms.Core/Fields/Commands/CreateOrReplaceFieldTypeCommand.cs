@@ -4,7 +4,6 @@ using Logitar.Cms.Core.Fields.Settings;
 using Logitar.Cms.Core.Fields.Validators;
 using Logitar.EventSourcing;
 using Logitar.Identity.Core;
-using Logitar.Identity.Core.Settings;
 using MediatR;
 
 namespace Logitar.Cms.Core.Fields.Commands;
@@ -34,12 +33,10 @@ internal class CreateOrReplaceFieldTypeCommandHandler : IRequestHandler<CreateOr
 
   public async Task<CreateOrReplaceFieldTypeResult> Handle(CreateOrReplaceFieldTypeCommand command, CancellationToken cancellationToken)
   {
-    UniqueNameSettings uniqueNameSettings = new(); // TODO(fpion): refactor
-
     CreateOrReplaceFieldTypePayload payload = command.Payload;
-    new CreateOrReplaceFieldTypeValidator(uniqueNameSettings).ValidateAndThrow(payload);
+    new CreateOrReplaceFieldTypeValidator().ValidateAndThrow(payload);
 
-    UniqueName uniqueName = new(uniqueNameSettings, payload.UniqueName);
+    UniqueName uniqueName = new(FieldType.UniqueNameSettings, payload.UniqueName);
     ActorId? actorId = _applicationContext.ActorId;
 
     FieldTypeId? fieldTypeId = null;
@@ -119,7 +116,15 @@ internal class CreateOrReplaceFieldTypeCommandHandler : IRequestHandler<CreateOr
       settings.Add(new StringSettings(payload.String));
     }
 
-    return settings.Count == 1 ? settings.Single() : throw new NotImplementedException(); // TODO(fpion): implement
+    if (settings.Count < 1)
+    {
+      throw new ArgumentException("The field type payload did not provide any settings.", nameof(payload));
+    }
+    else if (settings.Count > 1)
+    {
+      throw new ArgumentException($"The field type payload provided {settings.Count} settings.", nameof(payload));
+    }
+    return settings.Single();
   }
 
   private static void SetSettings(CreateOrReplaceFieldTypePayload payload, FieldType fieldType, FieldType reference, ActorId? actorId)

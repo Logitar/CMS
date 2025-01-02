@@ -15,6 +15,6 @@ public class StringSettingsValidator : AbstractValidator<IStringSettings>
       RuleFor(x => x.MaximumLength!.Value).GreaterThanOrEqualTo(x => x.MinimumLength!.Value);
     });
 
-    // TODO(fpion): Pattern
+    When(x => x.Pattern != null, () => RuleFor(x => x.Pattern!).NotEmpty());
   }
 }

@@ -1,12 +1,16 @@
 ﻿using Logitar.Cms.Core.Fields.Events;
 using Logitar.Cms.Core.Fields.Settings;
 using Logitar.EventSourcing;
+using Logitar.Identity.Contracts.Settings;
 using Logitar.Identity.Core;
+using Logitar.Identity.Core.Settings;
 
 namespace Logitar.Cms.Core.Fields;
 
 public class FieldType : AggregateRoot
 {
+  public static readonly IUniqueNameSettings UniqueNameSettings = new UniqueNameSettings();
+
   private FieldTypeUpdated _updated = new();
 
   public new FieldTypeId Id => new(base.Id);
@@ -69,7 +73,7 @@ public class FieldType : AggregateRoot
         SetSettings((StringSettings)settings, actorId);
         break;
       default:
-        throw new NotImplementedException(); // TODO(fpion): typed exception
+        throw new DataTypeNotSupportedException(settings.DataType);
     }
   }
   protected virtual void Handle(FieldTypeCreated @event)
@@ -83,7 +87,7 @@ public class FieldType : AggregateRoot
   {
     if (DataType != settings.DataType)
     {
-      throw new NotImplementedException(); // TODO(fpion): typed exception
+      throw new UnexpectedFieldTypeSettingsException(this, settings);
     }
 
     if (_settings == null || !_settings.Equals(settings))
@@ -100,7 +104,7 @@ public class FieldType : AggregateRoot
   {
     if (DataType != settings.DataType)
     {
-      throw new NotImplementedException(); // TODO(fpion): typed exception
+      throw new UnexpectedFieldTypeSettingsException(this, settings);
     }
 
     if (_settings == null || !_settings.Equals(settings))
@@ -117,7 +121,7 @@ public class FieldType : AggregateRoot
   {
     if (DataType != settings.DataType)
     {
-      throw new NotImplementedException(); // TODO(fpion): typed exception
+      throw new UnexpectedFieldTypeSettingsException(this, settings);
     }
 
     if (_settings == null || !_settings.Equals(settings))
@@ -134,7 +138,7 @@ public class FieldType : AggregateRoot
   {
     if (DataType != settings.DataType)
     {
-      throw new NotImplementedException(); // TODO(fpion): typed exception
+      throw new UnexpectedFieldTypeSettingsException(this, settings);
     }
 
     if (_settings == null || !_settings.Equals(settings))
@@ -151,7 +155,7 @@ public class FieldType : AggregateRoot
   {
     if (DataType != settings.DataType)
     {
-      throw new NotImplementedException(); // TODO(fpion): typed exception
+      throw new UnexpectedFieldTypeSettingsException(this, settings);
     }
 
     if (_settings == null || !_settings.Equals(settings))

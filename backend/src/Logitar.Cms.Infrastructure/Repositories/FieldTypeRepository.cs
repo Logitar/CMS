@@ -17,4 +17,13 @@ internal class FieldTypeRepository : Repository, IFieldTypeRepository
   {
     return await LoadAsync<FieldType>(id.StreamId, version, cancellationToken);
   }
+
+  public async Task SaveAsync(FieldType fieldType, CancellationToken cancellationToken)
+  {
+    await base.SaveAsync(fieldType, cancellationToken);
+  }
+  public async Task SaveAsync(IEnumerable<FieldType> fieldTypes, CancellationToken cancellationToken)
+  {
+    await base.SaveAsync(fieldTypes, cancellationToken);
+  }
 }
