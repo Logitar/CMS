@@ -4,6 +4,7 @@ namespace Logitar.Cms.Core.Contents.Models;
 
 public record ContentLocaleModel
 {
+  public ContentModel Content { get; set; } = new();
   public LanguageModel? Language { get; set; }
 
   public string UniqueName { get; set; } = string.Empty;

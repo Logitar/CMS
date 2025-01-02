@@ -1,6 +1,8 @@
 ﻿using Logitar.Cms.Core.Contents.Commands;
 using Logitar.Cms.Core.Contents.Models;
 using Logitar.Cms.Core.Contents.Queries;
+using Logitar.Cms.Core.Search;
+using Logitar.Cms.Web.Models.Content;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -41,17 +43,17 @@ public class ContentController : ControllerBase
     return content == null ? NotFound() : Ok(content);
   }
 
-  //[HttpGet]
-  //public async Task<ActionResult<SearchResults<ContentModel>>> SearchAsync([FromQuery] SearchContentsParameters parameters, CancellationToken cancellationToken)
-  //{
-  //  SearchResults<ContentModel> contentTypes = await _mediator.Send(new SearchContentsQuery(parameters.ToPayload()), cancellationToken);
-  //  return Ok(contentTypes);
-  //} // TODO(fpion): search
+  [HttpGet]
+  public async Task<ActionResult<SearchResults<ContentLocaleModel>>> SearchAsync([FromQuery] SearchContentsParameters parameters, CancellationToken cancellationToken)
+  {
+    SearchResults<ContentLocaleModel> contents = await _mediator.Send(new SearchContentsQuery(parameters.ToPayload()), cancellationToken);
+    return Ok(contents);
+  }
 
   [HttpPatch("{contentId}")]
   public async Task<ActionResult<ContentModel>> UpdateLocaleAsync(Guid contentId, Guid? languageId, [FromBody] UpdateContentLocalePayload payload, CancellationToken cancellationToken)
   {
-    ContentModel? contentType = await _mediator.Send(new UpdateContentLocaleCommand(contentId, languageId, payload), cancellationToken);
-    return contentType == null ? NotFound() : Ok(contentType);
+    ContentModel? content = await _mediator.Send(new UpdateContentLocaleCommand(contentId, languageId, payload), cancellationToken);
+    return content == null ? NotFound() : Ok(content);
   }
 }
