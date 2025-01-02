@@ -11,6 +11,7 @@ public record StringSettings : FieldTypeSettings, IStringSettings
   public int? MaximumLength { get; }
   public string? Pattern { get; }
 
+  [JsonConstructor]
   public StringSettings(int? minimumLength = null, int? maximumLength = null, string? pattern = null)
   {
     MinimumLength = minimumLength;

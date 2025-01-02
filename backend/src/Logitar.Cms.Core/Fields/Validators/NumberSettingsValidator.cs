@@ -15,8 +15,8 @@ public class NumberSettingsValidator : AbstractValidator<INumberSettings>
 
     When(x => x.MinimumValue.HasValue && x.Step.HasValue, () =>
     {
-      RuleFor(x => x.MinimumValue!.Value).LessThan(x => x.Step!.Value);
-      RuleFor(x => x.Step!.Value).GreaterThan(x => x.MinimumValue!.Value);
+      RuleFor(x => x.MinimumValue!.Value).LessThanOrEqualTo(x => x.Step!.Value);
+      RuleFor(x => x.Step!.Value).GreaterThanOrEqualTo(x => x.MinimumValue!.Value);
     });
 
     When(x => x.MaximumValue.HasValue && x.Step.HasValue, () =>

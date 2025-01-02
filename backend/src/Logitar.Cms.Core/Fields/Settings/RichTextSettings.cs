@@ -11,6 +11,7 @@ public record RichTextSettings : FieldTypeSettings, IRichTextSettings
   public int? MinimumLength { get; }
   public int? MaximumLength { get; }
 
+  [JsonConstructor]
   public RichTextSettings(string contentType, int? minimumLength = null, int? maximumLength = null)
   {
     ContentType = contentType;

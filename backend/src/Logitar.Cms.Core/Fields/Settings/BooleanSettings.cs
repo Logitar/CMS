@@ -8,6 +8,7 @@ public record BooleanSettings : FieldTypeSettings, IBooleanSettings
   [JsonIgnore]
   public override DataType DataType { get; } = DataType.Boolean;
 
+  [JsonConstructor]
   public BooleanSettings()
   {
     new BooleanSettingsValidator().ValidateAndThrow(this);
