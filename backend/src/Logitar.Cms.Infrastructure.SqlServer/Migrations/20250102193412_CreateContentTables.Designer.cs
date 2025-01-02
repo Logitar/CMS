@@ -3,6 +3,7 @@ using Logitar.Cms.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
 {
     [DbContext(typeof(CmsContext))]
-    partial class CmsContextModelSnapshot : ModelSnapshot
+    [Migration("20250102193412_CreateContentTables")]
+    partial class CreateContentTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -118,8 +121,8 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
 
                     b.Property<string>("UniqueNameNormalized")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasMaxLength(16)
+                        .HasColumnType("nvarchar(16)");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(255)
@@ -195,8 +198,8 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
 
                     b.Property<string>("UniqueNameNormalized")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasMaxLength(16)
+                        .HasColumnType("nvarchar(16)");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(255)
@@ -283,8 +286,8 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
 
                     b.Property<string>("UniqueNameNormalized")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasMaxLength(16)
+                        .HasColumnType("nvarchar(16)");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(255)

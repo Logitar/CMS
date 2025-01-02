@@ -22,7 +22,7 @@ internal class ContentTypeConfiguration : AggregateConfiguration<ContentTypeEnti
     builder.HasIndex(x => x.DisplayName);
 
     builder.Property(x => x.UniqueName).HasMaxLength(UniqueName.MaximumLength);
-    builder.Property(x => x.UniqueNameNormalized).HasMaxLength(Locale.MaximumLength);
+    builder.Property(x => x.UniqueNameNormalized).HasMaxLength(UniqueName.MaximumLength);
     builder.Property(x => x.DisplayName).HasMaxLength(DisplayName.MaximumLength);
   }
 }

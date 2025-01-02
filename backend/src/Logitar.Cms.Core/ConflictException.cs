@@ -1,5 +1,4 @@
-﻿
-namespace Logitar.Cms.Core;
+﻿namespace Logitar.Cms.Core;
 
 public abstract class ConflictException : ErrorException
 {

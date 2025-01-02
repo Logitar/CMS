@@ -24,7 +24,7 @@ internal class FieldTypeConfiguration : AggregateConfiguration<FieldTypeEntity>,
     builder.HasIndex(x => x.DataType);
 
     builder.Property(x => x.UniqueName).HasMaxLength(UniqueName.MaximumLength);
-    builder.Property(x => x.UniqueNameNormalized).HasMaxLength(Locale.MaximumLength);
+    builder.Property(x => x.UniqueNameNormalized).HasMaxLength(UniqueName.MaximumLength);
     builder.Property(x => x.DisplayName).HasMaxLength(DisplayName.MaximumLength);
     builder.Property(x => x.DataType).HasMaxLength(byte.MaxValue).HasConversion(new EnumToStringConverter<DataType>());
   }
