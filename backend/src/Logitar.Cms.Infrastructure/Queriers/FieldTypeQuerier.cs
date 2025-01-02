@@ -69,6 +69,11 @@ internal class FieldTypeQuerier : IFieldTypeQuerier
       .ApplyIdFilter(CmsDb.FieldTypes.Id, payload.Ids);
     _queryHelper.ApplyTextSearch(builder, payload.Search, CmsDb.FieldTypes.UniqueName, CmsDb.FieldTypes.DisplayName);
 
+    if (payload.DataType.HasValue)
+    {
+      builder.Where(CmsDb.FieldTypes.DataType, Operators.IsEqualTo(payload.DataType.Value.ToString()));
+    }
+
     IQueryable<FieldTypeEntity> query = _fieldTypes.FromQuery(builder).AsNoTracking();
 
     long total = await query.LongCountAsync(cancellationToken);
