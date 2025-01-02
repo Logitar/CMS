@@ -59,7 +59,7 @@ internal class CreateContentCommandHandler : IRequestHandler<CreateContentComman
       content = await _contentRepository.LoadAsync(contentId.Value, cancellationToken);
       if (content != null)
       {
-        throw new NotImplementedException(); // TODO(fpion): typed exception
+        throw new ContentAlreadyExistsException(contentId.Value, nameof(payload.Id));
       }
     }
     content = new(contentType, invariantAndLocale, actorId, contentId);
