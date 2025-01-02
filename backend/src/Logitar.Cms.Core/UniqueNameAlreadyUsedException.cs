@@ -1,5 +1,5 @@
-﻿using Logitar.Cms.Core.Fields;
-using Logitar.Identity.Core;
+﻿using Logitar.Cms.Core.Contents;
+using Logitar.Cms.Core.Fields;
 
 namespace Logitar.Cms.Core;
 
@@ -40,16 +40,26 @@ public class UniqueNameAlreadyUsedException : ConflictException
     }
   }
 
-  public UniqueNameAlreadyUsedException(FieldType fieldType, FieldTypeId conflictId)
-    : base(BuildMessage(conflictId.ToGuid(), fieldType.Id.ToGuid(), fieldType.UniqueName, nameof(fieldType.UniqueName)))
+  public UniqueNameAlreadyUsedException(ContentType contentType, ContentTypeId conflictId)
+    : this(conflictId.ToGuid(), contentType.Id.ToGuid(), contentType.UniqueName.Value, nameof(contentType.UniqueName))
   {
-    ConflictId = conflictId.ToGuid();
-    EntityId = fieldType.Id.ToGuid();
-    UniqueName = fieldType.UniqueName.ToString();
-    PropertyName = nameof(fieldType.UniqueName);
   }
 
-  private static string BuildMessage(Guid conflictId, Guid entityId, UniqueName uniqueName, string propertyName) => new ErrorMessageBuilder(ErrorMessage)
+  public UniqueNameAlreadyUsedException(FieldType fieldType, FieldTypeId conflictId)
+    : this(conflictId.ToGuid(), fieldType.Id.ToGuid(), fieldType.UniqueName.Value, nameof(fieldType.UniqueName))
+  {
+  }
+
+  private UniqueNameAlreadyUsedException(Guid conflictId, Guid entityId, string uniqueName, string propertyName)
+    : base(BuildMessage(conflictId, entityId, uniqueName, propertyName))
+  {
+    ConflictId = conflictId;
+    EntityId = entityId;
+    UniqueName = uniqueName;
+    PropertyName = propertyName;
+  }
+
+  private static string BuildMessage(Guid conflictId, Guid entityId, string uniqueName, string propertyName) => new ErrorMessageBuilder(ErrorMessage)
     .AddData(nameof(ConflictId), conflictId)
     .AddData(nameof(EntityId), entityId)
     .AddData(nameof(UniqueName), uniqueName)

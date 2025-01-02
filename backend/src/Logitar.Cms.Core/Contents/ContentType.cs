@@ -1,0 +1,109 @@
+﻿using Logitar.Cms.Core.Contents.Events;
+using Logitar.EventSourcing;
+using Logitar.Identity.Core;
+
+namespace Logitar.Cms.Core.Contents;
+
+public class ContentType : AggregateRoot
+{
+  private ContentTypeUpdated _updated = new();
+
+  public new ContentTypeId Id => new(base.Id);
+
+  private bool _isInvariant = false;
+  public bool IsInvariant
+  {
+    get => _isInvariant;
+    set
+    {
+      if (_isInvariant != value)
+      {
+        _isInvariant = value;
+        _updated.IsInvariant = value;
+      }
+    }
+  }
+
+  private Identifier? _uniqueName = null;
+  public Identifier UniqueName => _uniqueName ?? throw new InvalidOperationException($"The {nameof(UniqueName)} has not been initialized yet.");
+  private DisplayName? _displayName = null;
+  public DisplayName? DisplayName
+  {
+    get => _displayName;
+    set
+    {
+      if (_displayName != value)
+      {
+        _displayName = value;
+        _updated.DisplayName = new Change<DisplayName>(value);
+      }
+    }
+  }
+  private Description? _description = null;
+  public Description? Description
+  {
+    get => _description;
+    set
+    {
+      if (_description != value)
+      {
+        _description = value;
+        _updated.Description = new Change<Description>(value);
+      }
+    }
+  }
+
+  public ContentType() : base()
+  {
+  }
+
+  public ContentType(Identifier uniqueName, bool isInvariant = true, ActorId? actorId = null, ContentTypeId? contentTypeId = null) : base(contentTypeId?.StreamId)
+  {
+    Raise(new ContentTypeCreated(isInvariant, uniqueName), actorId);
+  }
+  protected virtual void Handle(ContentTypeCreated @event)
+  {
+    _isInvariant = @event.IsInvariant;
+
+    _uniqueName = @event.UniqueName;
+  }
+
+  public void SetUniqueName(Identifier uniqueName, ActorId? actorId = null)
+  {
+    if (_uniqueName != uniqueName)
+    {
+      Raise(new ContentTypeUniqueNameChanged(uniqueName), actorId);
+    }
+  }
+  protected virtual void Handle(ContentTypeUniqueNameChanged @event)
+  {
+    _uniqueName = @event.UniqueName;
+  }
+
+  public void Update(ActorId? actorId = null)
+  {
+    if (_updated.HasChanges)
+    {
+      Raise(_updated, actorId, DateTime.Now);
+      _updated = new();
+    }
+  }
+  protected virtual void Handle(ContentTypeUpdated updated)
+  {
+    if (updated.IsInvariant.HasValue)
+    {
+      _isInvariant = updated.IsInvariant.Value;
+    }
+
+    if (updated.DisplayName != null)
+    {
+      _displayName = updated.DisplayName.Value;
+    }
+    if (updated.Description != null)
+    {
+      _description = updated.Description.Value;
+    }
+  }
+
+  public override string ToString() => $"{DisplayName?.Value ?? UniqueName.Value} | {base.ToString()}";
+}
