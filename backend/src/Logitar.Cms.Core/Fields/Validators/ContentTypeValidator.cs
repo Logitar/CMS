@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using FluentValidation.Validators;
+using System.Net.Mime; // NOTE(fpion): cannot be added to CSPROJ due to ContentType aggregate.
 
 namespace Logitar.Cms.Core.Fields.Validators;
 
