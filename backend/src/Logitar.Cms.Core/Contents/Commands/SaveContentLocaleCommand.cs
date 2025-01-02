@@ -8,7 +8,7 @@ using MediatR;
 
 namespace Logitar.Cms.Core.Contents.Commands;
 
-public record SaveContentLocaleCommand(Guid Id, Guid? LanguageId, SaveContentLocalePayload Payload, long? Version) : IRequest<ContentModel?>;
+public record SaveContentLocaleCommand(Guid ContentId, Guid? LanguageId, SaveContentLocalePayload Payload, long? Version) : IRequest<ContentModel?>;
 
 internal class SaveContentLocaleCommandHandler : IRequestHandler<SaveContentLocaleCommand, ContentModel?>
 {
@@ -40,7 +40,7 @@ internal class SaveContentLocaleCommandHandler : IRequestHandler<SaveContentLoca
     SaveContentLocalePayload payload = command.Payload;
     new SaveContentLocaleValidator().ValidateAndThrow(payload);
 
-    ContentId contentId = new(command.Id);
+    ContentId contentId = new(command.ContentId);
     Content? content = await _contentRepository.LoadAsync(contentId, cancellationToken);
     if (content == null)
     {
