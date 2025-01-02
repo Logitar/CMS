@@ -1,5 +1,6 @@
 ﻿using Logitar.Cms.Core;
 using Logitar.Cms.Core.Actors;
+using Logitar.Cms.Core.Contents.Models;
 using Logitar.Cms.Core.Fields;
 using Logitar.Cms.Core.Fields.Models;
 using Logitar.Cms.Core.Localization.Models;
@@ -39,6 +40,21 @@ public class Mapper
     EmailAddress = actor.EmailAddress,
     PictureUrl = actor.PictureUrl
   };
+
+  public ContentTypeModel ToContentType(ContentTypeEntity source)
+  {
+    ContentTypeModel destination = new()
+    {
+      IsInvariant = source.IsInvariant,
+      UniqueName = source.UniqueName,
+      DisplayName = source.DisplayName,
+      Description = source.Description
+    };
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
 
   public FieldTypeModel ToFieldType(FieldTypeEntity source)
   {
