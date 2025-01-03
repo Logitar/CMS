@@ -55,6 +55,8 @@ public class ContentTypeEntity : AggregateEntity
 
   public void SetField(FieldTypeEntity fieldType, ContentTypeFieldDefinitionChanged @event)
   {
+    Update(@event);
+
     FieldDefinitionEntity? fieldDefinition = Fields.SingleOrDefault(x => x.Id == @event.FieldId);
     if (fieldDefinition == null)
     {

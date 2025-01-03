@@ -23,10 +23,10 @@ public class ContentIntegrationTests : IntegrationTests
     _contentTypeRepository = ServiceProvider.GetRequiredService<IContentTypeRepository>();
     _languageRepository = ServiceProvider.GetRequiredService<ILanguageRepository>();
 
-    _french = new(new Locale("fr"), isDefault: false, ActorId);
+    _french = new(new Locale("fr"), isDefault: false);
 
-    _brand = new(new Identifier("Brand"), isInvariant: true, ActorId);
-    _cymbal = new(new Identifier("Cymbal"), isInvariant: false, ActorId);
+    _brand = new(new Identifier("Brand"), isInvariant: true);
+    _cymbal = new(new Identifier("Cymbal"), isInvariant: false);
   }
 
   public override async Task InitializeAsync()
