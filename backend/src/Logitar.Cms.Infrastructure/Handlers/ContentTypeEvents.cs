@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Logitar.Cms.Infrastructure.Handlers;
 
 internal class ContentTypeEvents : INotificationHandler<ContentTypeCreated>,
+  INotificationHandler<ContentTypeFieldDefinitionChanged>,
   INotificationHandler<ContentTypeUniqueNameChanged>,
   INotificationHandler<ContentTypeUpdated>
 {
@@ -25,6 +26,23 @@ internal class ContentTypeEvents : INotificationHandler<ContentTypeCreated>,
       contentType = new(@event);
 
       _context.ContentTypes.Add(contentType);
+
+      await _context.SaveChangesAsync(cancellationToken);
+    }
+  }
+
+  public async Task Handle(ContentTypeFieldDefinitionChanged @event, CancellationToken cancellationToken)
+  {
+    ContentTypeEntity? contentType = await _context.ContentTypes
+      .Include(x => x.Fields)
+      .SingleOrDefaultAsync(x => x.StreamId == @event.StreamId.Value, cancellationToken);
+    if (contentType != null && contentType.Version == (@event.Version - 1))
+    {
+      FieldTypeEntity fieldType = await _context.FieldTypes
+        .SingleOrDefaultAsync(x => x.StreamId == @event.FieldDefinition.FieldTypeId.Value, cancellationToken)
+        ?? throw new InvalidOperationException($"The field type entity 'StreamId={@event.FieldDefinition.FieldTypeId}' could not be found.");
+
+      contentType.SetField(fieldType, @event);
 
       await _context.SaveChangesAsync(cancellationToken);
     }

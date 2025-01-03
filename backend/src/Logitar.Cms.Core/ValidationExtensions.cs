@@ -9,4 +9,9 @@ public static class ValidationExtensions
   {
     return ruleBuilder.NotEmpty().MaximumLength(byte.MaxValue).SetValidator(new ContentTypeValidator<T>());
   }
+
+  public static IRuleBuilderOptions<T, string> Placeholder<T>(this IRuleBuilder<T, string> ruleBuilder)
+  {
+    return ruleBuilder.NotEmpty().MaximumLength(Fields.Placeholder.MaximumLength);
+  }
 }

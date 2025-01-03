@@ -1,4 +1,5 @@
 ﻿using Logitar.Cms.Core.Contents.Events;
+using Logitar.Cms.Core.Fields;
 using Logitar.EventSourcing;
 using Logitar.Identity.Core;
 
@@ -53,6 +54,11 @@ public class ContentType : AggregateRoot
     }
   }
 
+  private readonly Dictionary<Guid, int> _fieldsById = [];
+  private readonly Dictionary<Identifier, int> _fieldsByUniqueName = [];
+  private readonly List<FieldDefinition> _fieldDefinitions = [];
+  public IReadOnlyCollection<FieldDefinition> FieldDefinitions => _fieldDefinitions.AsReadOnly();
+
   public ContentType() : base()
   {
   }
@@ -68,6 +74,55 @@ public class ContentType : AggregateRoot
     _uniqueName = @event.UniqueName;
   }
 
+  public void AddField(FieldDefinition fieldDefinition, ActorId? actorId = null)
+  {
+    SetField(Guid.NewGuid(), fieldDefinition, actorId);
+  }
+
+  public FieldDefinition FindField(Guid id) => TryGetField(id) ?? throw new InvalidOperationException($"The field 'Id={id}' could not be found.");
+  public FieldDefinition FindField(Identifier uniqueName) => TryGetField(uniqueName) ?? throw new InvalidOperationException($"The field 'UniqueName={uniqueName}' could not be found.");
+
+  public void SetField(Guid fieldId, FieldDefinition fieldDefinition, ActorId? actorId = null)
+  {
+    if (!_fieldsById.TryGetValue(fieldId, out int index))
+    {
+      index = -1;
+    }
+    if (_fieldsByUniqueName.TryGetValue(fieldDefinition.UniqueName, out int conflict) && conflict != index)
+    {
+      throw new NotImplementedException(); // TODO(fpion): typed exception
+    }
+
+    FieldDefinition? existingField = index < 0 ? null : _fieldDefinitions.ElementAt(index);
+    if (existingField == null || !existingField.Equals(fieldDefinition))
+    {
+      Raise(new ContentTypeFieldDefinitionChanged(fieldId, fieldDefinition), actorId);
+    }
+  }
+  protected virtual void Handle(ContentTypeFieldDefinitionChanged @event)
+  {
+    if (_fieldsById.TryGetValue(@event.FieldId, out int index))
+    {
+      FieldDefinition existingField = _fieldDefinitions.ElementAt(index);
+      _fieldDefinitions[index] = existingField;
+
+      if (!existingField.UniqueName.Equals(@event.FieldDefinition.UniqueName))
+      {
+        _fieldsByUniqueName.Remove(existingField.UniqueName);
+        _fieldsByUniqueName[@event.FieldDefinition.UniqueName] = index;
+      }
+    }
+    else
+    {
+      index = _fieldDefinitions.Count;
+
+      _fieldDefinitions.Add(@event.FieldDefinition);
+
+      _fieldsById[@event.FieldId] = index;
+      _fieldsByUniqueName[@event.FieldDefinition.UniqueName] = index;
+    }
+  }
+
   public void SetUniqueName(Identifier uniqueName, ActorId? actorId = null)
   {
     if (_uniqueName != uniqueName)
@@ -79,6 +134,9 @@ public class ContentType : AggregateRoot
   {
     _uniqueName = @event.UniqueName;
   }
+
+  public FieldDefinition? TryGetField(Guid id) => _fieldsById.TryGetValue(id, out int index) ? _fieldDefinitions.ElementAt(index) : null;
+  public FieldDefinition? TryGetField(Identifier uniqueName) => _fieldsByUniqueName.TryGetValue(uniqueName, out int index) ? _fieldDefinitions.ElementAt(index) : null;
 
   public void Update(ActorId? actorId = null)
   {
