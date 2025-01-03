@@ -17,4 +17,8 @@ public class FieldDefinitionModel
   public string? DisplayName { get; set; }
   public string? Description { get; set; }
   public string? Placeholder { get; set; }
+
+  public override bool Equals(object? obj) => obj is FieldDefinitionModel field && field.Id == Id;
+  public override int GetHashCode() => Id.GetHashCode();
+  public override string ToString() => $"{DisplayName ?? UniqueName} | {GetType()} (Id={Id})";
 }
