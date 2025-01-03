@@ -114,14 +114,41 @@ public class Mapper
       IsInvariant = source.IsInvariant,
       UniqueName = source.UniqueName,
       DisplayName = source.DisplayName,
-      Description = source.Description
+      Description = source.Description,
+      FieldCount = source.FieldCount
     };
 
-    // TODO(fpion): Fields
+    foreach (FieldDefinitionEntity field in source.Fields)
+    {
+      destination.Fields.Add(ToFieldDefinition(field));
+    }
 
     MapAggregate(source, destination);
 
     return destination;
+  }
+
+  public FieldDefinitionModel ToFieldDefinition(FieldDefinitionEntity source)
+  {
+    if (source.FieldType == null)
+    {
+      throw new ArgumentException($"The {nameof(source.FieldType)} is required.", nameof(source));
+    }
+
+    return new FieldDefinitionModel
+    {
+      Id = source.Id,
+      Order = source.Order,
+      FieldType = ToFieldType(source.FieldType),
+      IsInvariant = source.IsInvariant,
+      IsRequired = source.IsRequired,
+      IsIndexed = source.IsIndexed,
+      IsUnique = source.IsUnique,
+      UniqueName = source.UniqueName,
+      DisplayName = source.DisplayName,
+      Description = source.Description,
+      Placeholder = source.Placeholder
+    };
   }
 
   public FieldTypeModel ToFieldType(FieldTypeEntity source)

@@ -1,4 +1,5 @@
 ﻿using Logitar.Cms.Core.Contents.Events;
+using Logitar.EventSourcing;
 using Logitar.Identity.EntityFrameworkCore.Relational.Entities;
 using Logitar.Identity.EntityFrameworkCore.Relational.IdentityDb;
 
@@ -20,8 +21,11 @@ public class ContentTypeEntity : AggregateEntity
   public string? DisplayName { get; private set; }
   public string? Description { get; private set; }
 
+  public int FieldCount { get; private set; }
+
   public List<ContentLocaleEntity> ContentLocales { get; private set; } = [];
   public List<ContentEntity> Contents { get; private set; } = [];
+  public List<FieldDefinitionEntity> Fields { get; private set; } = [];
 
   public ContentTypeEntity(ContentTypeCreated @event) : base(@event)
   {
@@ -34,6 +38,34 @@ public class ContentTypeEntity : AggregateEntity
 
   private ContentTypeEntity() : base()
   {
+  }
+
+  public override IReadOnlyCollection<ActorId> GetActorIds()
+  {
+    List<ActorId> actorIds = [.. base.GetActorIds()];
+    foreach (FieldDefinitionEntity field in Fields)
+    {
+      if (field.FieldType != null)
+      {
+        actorIds.AddRange(field.FieldType.GetActorIds());
+      }
+    }
+    return actorIds.AsReadOnly();
+  }
+
+  public void SetField(FieldTypeEntity fieldType, ContentTypeFieldDefinitionChanged @event)
+  {
+    FieldDefinitionEntity? fieldDefinition = Fields.SingleOrDefault(x => x.Id == @event.FieldId);
+    if (fieldDefinition == null)
+    {
+      fieldDefinition = new(this, fieldType, @event);
+      Fields.Add(fieldDefinition);
+      FieldCount = Fields.Count;
+    }
+    else
+    {
+      fieldDefinition.Update(@event);
+    }
   }
 
   public void SetUniqueName(ContentTypeUniqueNameChanged @event)

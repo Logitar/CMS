@@ -31,14 +31,18 @@ internal class ContentTypeEvents : INotificationHandler<ContentTypeCreated>,
     }
   }
 
-  public async Task Handle(ContentTypeFieldDefinitionChanged e, CancellationToken cancellationToken)
+  public async Task Handle(ContentTypeFieldDefinitionChanged @event, CancellationToken cancellationToken)
   {
-    ContentTypeEntity? contentType = await _context.ContentTypes.AsNoTracking()
-      // TODO(fpion): include FieldDefinitions
-      .SingleOrDefaultAsync(x => x.StreamId == e.StreamId.Value, cancellationToken);
-    if (contentType != null && contentType.Version == (e.Version - 1))
+    ContentTypeEntity? contentType = await _context.ContentTypes
+      .Include(x => x.Fields)
+      .SingleOrDefaultAsync(x => x.StreamId == @event.StreamId.Value, cancellationToken);
+    if (contentType != null && contentType.Version == (@event.Version - 1))
     {
-      // TODO(fpion): set field definition
+      FieldTypeEntity fieldType = await _context.FieldTypes
+        .SingleOrDefaultAsync(x => x.StreamId == @event.FieldDefinition.FieldTypeId.Value, cancellationToken)
+        ?? throw new InvalidOperationException($"The field type entity 'StreamId={@event.FieldDefinition.FieldTypeId}' could not be found.");
+
+      contentType.SetField(fieldType, @event);
 
       await _context.SaveChangesAsync(cancellationToken);
     }

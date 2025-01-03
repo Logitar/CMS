@@ -41,6 +41,10 @@ internal class CreateOrReplaceFieldDefinitionCommandHandler : IRequestHandler<Cr
     {
       return null;
     }
+    else if (contentType.IsInvariant && !payload.IsInvariant)
+    {
+      throw new NotImplementedException(); // TODO(fpion): typed exception
+    }
 
     FieldTypeId? fieldTypeId = command.FieldId.HasValue ? contentType.TryGetField(command.FieldId.Value)?.FieldTypeId : null;
     if (fieldTypeId == null)

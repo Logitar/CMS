@@ -10,5 +10,6 @@ public class ContentTypeModel : AggregateModel
   public string? DisplayName { get; set; }
   public string? Description { get; set; }
 
+  public int FieldCount { get; set; }
   public List<FieldDefinitionModel> Fields { get; set; } = [];
 }

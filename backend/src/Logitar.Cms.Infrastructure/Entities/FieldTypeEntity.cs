@@ -23,6 +23,8 @@ public class FieldTypeEntity : AggregateEntity
   public DataType DataType { get; private set; }
   public string? Settings { get; private set; }
 
+  public List<FieldDefinitionEntity> FieldDefinitions { get; private set; } = [];
+
   public FieldTypeEntity(FieldTypeCreated @event) : base(@event)
   {
     Id = @event.StreamId.ToGuid();

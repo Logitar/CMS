@@ -49,6 +49,7 @@ internal class ContentTypeQuerier : IContentTypeQuerier
   public async Task<ContentTypeModel?> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
     ContentTypeEntity? contentType = await _contentTypes.AsNoTracking()
+      .Include(x => x.Fields).ThenInclude(x => x.FieldType)
       .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
     return contentType == null ? null : await MapAsync(contentType, cancellationToken);
@@ -58,6 +59,7 @@ internal class ContentTypeQuerier : IContentTypeQuerier
     string uniqueNameNormalized = Helper.Normalize(uniqueName);
 
     ContentTypeEntity? contentType = await _contentTypes.AsNoTracking()
+      .Include(x => x.Fields).ThenInclude(x => x.FieldType)
       .SingleOrDefaultAsync(x => x.UniqueNameNormalized == uniqueNameNormalized, cancellationToken);
 
     return contentType == null ? null : await MapAsync(contentType, cancellationToken);
