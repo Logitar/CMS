@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Logitar.Cms.Infrastructure.Handlers;
 
 internal class ContentTypeEvents : INotificationHandler<ContentTypeCreated>,
+  INotificationHandler<ContentTypeFieldDefinitionChanged>,
   INotificationHandler<ContentTypeUniqueNameChanged>,
   INotificationHandler<ContentTypeUpdated>
 {
@@ -25,6 +26,19 @@ internal class ContentTypeEvents : INotificationHandler<ContentTypeCreated>,
       contentType = new(@event);
 
       _context.ContentTypes.Add(contentType);
+
+      await _context.SaveChangesAsync(cancellationToken);
+    }
+  }
+
+  public async Task Handle(ContentTypeFieldDefinitionChanged e, CancellationToken cancellationToken)
+  {
+    ContentTypeEntity? contentType = await _context.ContentTypes.AsNoTracking()
+      // TODO(fpion): include FieldDefinitions
+      .SingleOrDefaultAsync(x => x.StreamId == e.StreamId.Value, cancellationToken);
+    if (contentType != null && contentType.Version == (e.Version - 1))
+    {
+      // TODO(fpion): set field definition
 
       await _context.SaveChangesAsync(cancellationToken);
     }
