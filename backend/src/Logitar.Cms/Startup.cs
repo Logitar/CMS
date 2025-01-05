@@ -63,7 +63,9 @@ internal class Startup : StartupBase
         throw new DatabaseProviderNotSupportedException(databaseProvider);
     }
 
+    services.AddExceptionHandler<ExceptionHandler>();
     services.AddFeatureManagement();
+    services.AddProblemDetails();
   }
 
   public override void Configure(IApplicationBuilder builder)
@@ -86,6 +88,7 @@ internal class Startup : StartupBase
     application.UseHttpsRedirection();
     application.UseCors(application.Services.GetRequiredService<CorsSettings>());
     application.UseStaticFiles();
+    application.UseExceptionHandler();
     application.UseAuthentication();
     application.UseAuthorization();
 
