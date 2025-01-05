@@ -60,7 +60,7 @@ public class ContentTypeEntity : AggregateEntity
     FieldDefinitionEntity? fieldDefinition = Fields.SingleOrDefault(x => x.Id == @event.FieldId);
     if (fieldDefinition == null)
     {
-      fieldDefinition = new(this, fieldType, @event);
+      fieldDefinition = new(this, fieldType, order: FieldCount, @event);
       Fields.Add(fieldDefinition);
       FieldCount = Fields.Count;
     }
