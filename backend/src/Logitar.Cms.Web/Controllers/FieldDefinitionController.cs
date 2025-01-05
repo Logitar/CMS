@@ -32,4 +32,11 @@ public class FieldDefinitionController : ControllerBase
     ContentTypeModel? contentType = await _mediator.Send(new CreateOrReplaceFieldDefinitionCommand(contentTypeId, fieldId, payload), cancellationToken);
     return contentType == null ? NotFound() : Ok(contentType);
   }
+
+  [HttpPatch("{fieldId}")]
+  public async Task<ActionResult<ContentTypeModel>> UpdateFieldAsync(Guid contentTypeId, Guid fieldId, [FromBody] UpdateFieldDefinitionPayload payload, CancellationToken cancellationToken)
+  {
+    ContentTypeModel? contentType = await _mediator.Send(new UpdateFieldDefinitionCommand(contentTypeId, fieldId, payload), cancellationToken);
+    return contentType == null ? NotFound() : Ok(contentType);
+  }
 }
