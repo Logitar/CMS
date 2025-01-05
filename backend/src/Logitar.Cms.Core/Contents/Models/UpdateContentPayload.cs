@@ -1,6 +1,6 @@
 ﻿namespace Logitar.Cms.Core.Contents.Models;
 
-public record UpdateContentLocalePayload
+public record UpdateContentPayload
 {
   public string? UniqueName { get; set; }
   public ChangeModel<string>? DisplayName { get; set; }
