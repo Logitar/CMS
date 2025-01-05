@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using FluentValidation.Results;
 using Logitar.Cms.Core.Contents;
 using Logitar.Cms.Core.Contents.Models;
 using Logitar.Cms.Core.Fields.Models;
@@ -51,7 +52,11 @@ internal class CreateOrReplaceFieldDefinitionCommandHandler : IRequestHandler<Cr
     {
       if (!payload.FieldTypeId.HasValue)
       {
-        throw new NotImplementedException(); // TODO(fpion): typed exception
+        ValidationFailure failure = new(nameof(payload.FieldTypeId), "'{PropertyName}' is required when creating a field definition.", payload.FieldTypeId)
+        {
+          ErrorCode = "RequiredValidator"
+        };
+        throw new ValidationException([failure]);
       }
 
       fieldTypeId = new(payload.FieldTypeId.Value);
