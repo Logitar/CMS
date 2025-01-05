@@ -2,7 +2,7 @@
 
 public record CreateOrReplaceFieldDefinitionPayload
 {
-  public Guid FieldTypeId { get; set; }
+  public Guid? FieldTypeId { get; set; }
 
   public bool IsInvariant { get; set; }
   public bool IsRequired { get; set; }

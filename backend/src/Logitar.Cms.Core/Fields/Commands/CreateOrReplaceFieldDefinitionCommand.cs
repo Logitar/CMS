@@ -49,7 +49,12 @@ internal class CreateOrReplaceFieldDefinitionCommandHandler : IRequestHandler<Cr
     FieldTypeId? fieldTypeId = command.FieldId.HasValue ? contentType.TryGetField(command.FieldId.Value)?.FieldTypeId : null;
     if (fieldTypeId == null)
     {
-      fieldTypeId = new(payload.FieldTypeId);
+      if (!payload.FieldTypeId.HasValue)
+      {
+        throw new NotImplementedException(); // TODO(fpion): typed exception
+      }
+
+      fieldTypeId = new(payload.FieldTypeId.Value);
       _ = await _fieldTypeRepository.LoadAsync(fieldTypeId.Value, cancellationToken) ?? throw new FieldTypeNotFoundException(fieldTypeId.Value, nameof(payload.FieldTypeId));
     }
 
