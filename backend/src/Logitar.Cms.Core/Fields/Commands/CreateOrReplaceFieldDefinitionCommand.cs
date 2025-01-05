@@ -44,7 +44,11 @@ internal class CreateOrReplaceFieldDefinitionCommandHandler : IRequestHandler<Cr
     }
     else if (contentType.IsInvariant && !payload.IsInvariant)
     {
-      throw new NotImplementedException(); // TODO(fpion): typed exception
+      ValidationFailure failure = new(nameof(payload.IsInvariant), "'{PropertyName}' must be true. Invariant content types cannot define variant fields.", payload.IsInvariant)
+      {
+        ErrorCode = "InvariantValidator"
+      };
+      throw new ValidationException([failure]);
     }
 
     FieldTypeId? fieldTypeId = command.FieldId.HasValue ? contentType.TryGetField(command.FieldId.Value)?.FieldTypeId : null;
