@@ -90,7 +90,8 @@ public class ContentType : AggregateRoot
     }
     if (_fieldsByUniqueName.TryGetValue(fieldDefinition.UniqueName, out int conflict) && conflict != index)
     {
-      throw new NotImplementedException(); // TODO(fpion): typed exception
+      Guid conflictId = _fieldsById.Where(x => x.Value == conflict).Single().Key;
+      throw new UniqueNameAlreadyUsedException(conflictId, fieldId, fieldDefinition.UniqueName.Value, nameof(fieldDefinition.UniqueName));
     }
 
     FieldDefinition? existingField = index < 0 ? null : _fieldDefinitions.ElementAt(index);

@@ -1,7 +1,6 @@
 ﻿using Logitar.Cms.Core.Contents.Events;
 using Logitar.Cms.Core.Localization;
 using Logitar.EventSourcing;
-using Logitar.Identity.Core;
 using MediatR;
 
 namespace Logitar.Cms.Core.Contents.Commands;
@@ -38,11 +37,11 @@ internal class SaveContentCommandHandler : IRequestHandler<SaveContentCommand>
 
     foreach (LanguageId? languageId in languageIds)
     {
-      UniqueName uniqueName = (languageId.HasValue ? content.FindLocale(languageId.Value) : content.Invariant).UniqueName;
-      ContentId? conflictId = await _contentQuerier.FindIdAsync(content.ContentTypeId, languageId, uniqueName, cancellationToken);
+      ContentLocale invariantOrLocale = languageId.HasValue ? content.FindLocale(languageId.Value) : content.Invariant;
+      ContentId? conflictId = await _contentQuerier.FindIdAsync(content.ContentTypeId, languageId, invariantOrLocale.UniqueName, cancellationToken);
       if (conflictId.HasValue && !conflictId.Value.Equals(content.Id))
       {
-        throw new NotImplementedException(); // TODO(fpion): typed exception
+        throw new ContentUniqueNameAlreadyUsedException(content, languageId, invariantOrLocale, conflictId.Value);
       }
     }
 

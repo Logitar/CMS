@@ -22,11 +22,10 @@ public class ContentController : ControllerBase
   }
 
   [HttpPost]
-  public async Task<ActionResult<ContentModel>> CreateAsync([FromBody] CreateContentPayload payload, CancellationToken cancellationToken)
+  public async Task<ActionResult<ContentModel>> CreateAsync(Guid? languageId, [FromBody] CreateOrReplaceContentPayload payload, CancellationToken cancellationToken)
   {
-    ContentModel content = await _mediator.Send(new CreateContentCommand(payload), cancellationToken);
-    Uri location = new($"{Request.Scheme}://{Request.Host}/api/contents/{content.Id}", UriKind.Absolute);
-    return Created(location, content);
+    CreateOrReplaceContentResult result = await _mediator.Send(new CreateOrReplaceContentCommand(ContentId: null, languageId, payload, Version: null), cancellationToken);
+    return ToActionResult(result);
   }
 
   [HttpGet("{id}")]
@@ -37,10 +36,10 @@ public class ContentController : ControllerBase
   }
 
   [HttpPut("{contentId}")]
-  public async Task<ActionResult<ContentModel>> SaveLocaleAsync(Guid contentId, Guid? languageId, [FromBody] SaveContentLocalePayload payload, long? version, CancellationToken cancellationToken)
+  public async Task<ActionResult<ContentModel>> SaveLocaleAsync(Guid contentId, Guid? languageId, [FromBody] CreateOrReplaceContentPayload payload, long? version, CancellationToken cancellationToken)
   {
-    ContentModel? content = await _mediator.Send(new SaveContentLocaleCommand(contentId, languageId, payload, version), cancellationToken);
-    return content == null ? NotFound() : Ok(content);
+    CreateOrReplaceContentResult result = await _mediator.Send(new CreateOrReplaceContentCommand(contentId, languageId, payload, version), cancellationToken);
+    return ToActionResult(result);
   }
 
   [HttpGet]
@@ -55,5 +54,20 @@ public class ContentController : ControllerBase
   {
     ContentModel? content = await _mediator.Send(new UpdateContentLocaleCommand(contentId, languageId, payload), cancellationToken);
     return content == null ? NotFound() : Ok(content);
+  }
+
+  private ActionResult<ContentModel> ToActionResult(CreateOrReplaceContentResult result)
+  {
+    if (result.Content == null)
+    {
+      return NotFound();
+    }
+    else if (result.Created)
+    {
+      Uri location = new($"{Request.Scheme}://{Request.Host}/api/contents/{result.Content.Id}", UriKind.Absolute);
+      return Created(location, result.Content);
+    }
+
+    return Ok(result.Content);
   }
 }

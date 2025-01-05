@@ -31,12 +31,12 @@ public class FieldDefinitionEntity
   public string? Description { get; private set; }
   public string? Placeholder { get; private set; }
 
-  public FieldDefinitionEntity(ContentTypeEntity contentType, FieldTypeEntity fieldType, ContentTypeFieldDefinitionChanged @event)
+  public FieldDefinitionEntity(ContentTypeEntity contentType, FieldTypeEntity fieldType, int order, ContentTypeFieldDefinitionChanged @event)
   {
     ContentType = contentType;
     ContentTypeId = contentType.ContentTypeId;
     Id = @event.FieldId;
-    // TODO(fpion): Order
+    Order = order;
 
     FieldType = fieldType;
     FieldTypeId = fieldType.FieldTypeId;

@@ -50,7 +50,7 @@ public class UniqueNameAlreadyUsedException : ConflictException
   {
   }
 
-  private UniqueNameAlreadyUsedException(Guid conflictId, Guid entityId, string uniqueName, string propertyName)
+  public UniqueNameAlreadyUsedException(Guid conflictId, Guid entityId, string uniqueName, string propertyName)
     : base(BuildMessage(conflictId, entityId, uniqueName, propertyName))
   {
     ConflictId = conflictId;

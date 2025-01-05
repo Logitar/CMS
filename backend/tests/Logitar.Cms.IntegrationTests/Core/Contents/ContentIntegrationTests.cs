@@ -52,14 +52,17 @@ public class ContentIntegrationTests : IntegrationTests
     cymbal.SetLocale(english, locale, ActorId);
     await _contentRepository.SaveAsync(cymbal);
 
-    SaveContentLocalePayload payload = new()
+    CreateOrReplaceContentPayload payload = new()
     {
       UniqueName = "Sabian-AA-17-Inch-Holy-China-Traditional-Finish",
       DisplayName = " Sabian Cymbale AA Holy China finition traditionnelle de 17 pouces ",
       Description = "  Le 17\" Holy China offre tout le son unique et trash du 21\" Holy China, avec moins de volume.\n\nSTYLE : VINTAGE\nMÉTAL : B20\nSON : BRIGHT\nPOIDS : MINCE  "
     };
-    SaveContentLocaleCommand command = new(cymbal.Id.ToGuid(), _french.Id.ToGuid(), payload, Version: 999);
-    ContentModel? content = await Mediator.Send(command);
+    CreateOrReplaceContentCommand command = new(cymbal.Id.ToGuid(), _french.Id.ToGuid(), payload, Version: 999);
+    CreateOrReplaceContentResult result = await Mediator.Send(command);
+    Assert.False(result.Created);
+
+    ContentModel? content = result.Content;
     Assert.NotNull(content);
 
     Assert.Equal(command.ContentId, content.Id);
@@ -108,21 +111,23 @@ public class ContentIntegrationTests : IntegrationTests
   [InlineData("d11ec43b-9db3-4487-90b4-f423bf8e4455")]
   public async Task Given_Invariant_When_Create_Then_ContentCreated(string? idValue)
   {
-    CreateContentPayload payload = new()
+    CreateOrReplaceContentPayload payload = new()
     {
-      Id = idValue == null ? null : Guid.Parse(idValue),
       ContentTypeId = _brand.Id.ToGuid(),
-      LanguageId = null,
       UniqueName = "Sabian",
       DisplayName = " Sabian ",
       Description = "  Sabian is a Canadian cymbal manufacturing company based in New Brunswick. It was established in 1981 in the village of Meductic, which is now part of Lakeland Ridges, where the company is still headquartered. Sabian is considered one of the big four manufacturers of cymbals, along with Zildjian, Meinl and Paiste.  "
     };
-    CreateContentCommand command = new(payload);
-    ContentModel content = await Mediator.Send(command);
+    CreateOrReplaceContentCommand command = new(idValue == null ? null : Guid.Parse(idValue), LanguageId: null, payload, Version: null);
+    CreateOrReplaceContentResult result = await Mediator.Send(command);
+    Assert.True(result.Created);
 
-    if (payload.Id.HasValue)
+    ContentModel? content = result.Content;
+    Assert.NotNull(content);
+
+    if (command.ContentId.HasValue)
     {
-      Assert.Equal(payload.Id.Value, content.Id);
+      Assert.Equal(command.ContentId.Value, content.Id);
     }
     Assert.Equal(1, content.Version);
     Assert.Equal(Actor, content.CreatedBy);
@@ -154,21 +159,23 @@ public class ContentIntegrationTests : IntegrationTests
     Language? english = (await _languageRepository.LoadAsync()).SingleOrDefault(x => x.IsDefault);
     Assert.NotNull(english);
 
-    CreateContentPayload payload = new()
+    CreateOrReplaceContentPayload payload = new()
     {
-      Id = idValue == null ? null : Guid.Parse(idValue),
       ContentTypeId = _cymbal.Id.ToGuid(),
-      LanguageId = english.Id.ToGuid(),
       UniqueName = "Sabian-AA-17-Inch-Holy-China-Traditional-Finish",
       DisplayName = " Sabian AA 17 \" Holy China Traditional Finish ",
       Description = "  The 17\" Holy China delivers all of the unique, trashy tone of the 21\" Holy China, with less volume.\n\nSTYLE: VINTAGE\nMETAL: B20\nSOUND: BRIGHT\nWEIGHT: THIN  "
     };
-    CreateContentCommand command = new(payload);
-    ContentModel content = await Mediator.Send(command);
+    CreateOrReplaceContentCommand command = new(idValue == null ? null : Guid.Parse(idValue), english.Id.ToGuid(), payload, Version: null);
+    CreateOrReplaceContentResult result = await Mediator.Send(command);
+    Assert.True(result.Created);
 
-    if (payload.Id.HasValue)
+    ContentModel? content = result.Content;
+    Assert.NotNull(content);
+
+    if (command.ContentId.HasValue)
     {
-      Assert.Equal(payload.Id.Value, content.Id);
+      Assert.Equal(command.ContentId.Value, content.Id);
     }
     Assert.Equal(2, content.Version);
     Assert.Equal(Actor, content.CreatedBy);
@@ -191,7 +198,7 @@ public class ContentIntegrationTests : IntegrationTests
 
     ContentLocaleModel locale = Assert.Single(content.Locales);
     Assert.Same(content, locale.Content);
-    Assert.Equal(payload.LanguageId.Value, locale.Language?.Id);
+    Assert.Equal(command.LanguageId, locale.Language?.Id);
     Assert.Equal(payload.UniqueName, locale.UniqueName);
     Assert.Equal(payload.DisplayName.Trim(), locale.DisplayName);
     Assert.Equal(payload.Description.Trim(), locale.Description);

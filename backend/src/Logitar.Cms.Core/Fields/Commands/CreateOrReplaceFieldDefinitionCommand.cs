@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using FluentValidation.Results;
 using Logitar.Cms.Core.Contents;
 using Logitar.Cms.Core.Contents.Models;
 using Logitar.Cms.Core.Fields.Models;
@@ -43,13 +44,26 @@ internal class CreateOrReplaceFieldDefinitionCommandHandler : IRequestHandler<Cr
     }
     else if (contentType.IsInvariant && !payload.IsInvariant)
     {
-      throw new NotImplementedException(); // TODO(fpion): typed exception
+      ValidationFailure failure = new(nameof(payload.IsInvariant), "'{PropertyName}' must be true. Invariant content types cannot define variant fields.", payload.IsInvariant)
+      {
+        ErrorCode = "InvariantValidator"
+      };
+      throw new ValidationException([failure]);
     }
 
     FieldTypeId? fieldTypeId = command.FieldId.HasValue ? contentType.TryGetField(command.FieldId.Value)?.FieldTypeId : null;
     if (fieldTypeId == null)
     {
-      fieldTypeId = new(payload.FieldTypeId);
+      if (!payload.FieldTypeId.HasValue)
+      {
+        ValidationFailure failure = new(nameof(payload.FieldTypeId), "'{PropertyName}' is required when creating a field definition.", payload.FieldTypeId)
+        {
+          ErrorCode = "RequiredValidator"
+        };
+        throw new ValidationException([failure]);
+      }
+
+      fieldTypeId = new(payload.FieldTypeId.Value);
       _ = await _fieldTypeRepository.LoadAsync(fieldTypeId.Value, cancellationToken) ?? throw new FieldTypeNotFoundException(fieldTypeId.Value, nameof(payload.FieldTypeId));
     }
 
