@@ -14,7 +14,6 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Text;
 using CmsDb = Logitar.Cms.Infrastructure.CmsDb;
 using IdentityDb = Logitar.Identity.EntityFrameworkCore.Relational.IdentityDb;
 
