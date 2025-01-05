@@ -8,7 +8,11 @@ public static class DependencyInjectionExtensions
   public static IServiceCollection AddLogitarCmsWeb(this IServiceCollection services, IConfiguration configuration)
   {
     services.AddControllersWithViews()
-      .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+      .AddJsonOptions(options =>
+      {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+      });
 
     CookiesSettings cookiesSettings = configuration.GetSection(CookiesSettings.SectionKey).Get<CookiesSettings>() ?? new();
     services.AddSingleton(cookiesSettings);
