@@ -4,9 +4,9 @@ using Logitar.Identity.Core;
 
 namespace Logitar.Cms.Core.Contents.Validators;
 
-internal class UpdateContentLocaleValidator : AbstractValidator<UpdateContentLocalePayload>
+internal class UpdateContentValidator : AbstractValidator<UpdateContentPayload>
 {
-  public UpdateContentLocaleValidator()
+  public UpdateContentValidator()
   {
     When(x => !string.IsNullOrWhiteSpace(x.UniqueName), () => RuleFor(x => x.UniqueName!).UniqueName(Content.UniqueNameSettings));
     When(x => !string.IsNullOrWhiteSpace(x.DisplayName?.Value), () => RuleFor(x => x.DisplayName!.Value!).DisplayName());

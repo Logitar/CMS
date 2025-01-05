@@ -36,7 +36,7 @@ public class ContentController : ControllerBase
   }
 
   [HttpPut("{contentId}")]
-  public async Task<ActionResult<ContentModel>> SaveLocaleAsync(Guid contentId, Guid? languageId, [FromBody] CreateOrReplaceContentPayload payload, long? version, CancellationToken cancellationToken)
+  public async Task<ActionResult<ContentModel>> ReplaceAsync(Guid contentId, Guid? languageId, [FromBody] CreateOrReplaceContentPayload payload, long? version, CancellationToken cancellationToken)
   {
     CreateOrReplaceContentResult result = await _mediator.Send(new CreateOrReplaceContentCommand(contentId, languageId, payload, version), cancellationToken);
     return ToActionResult(result);
@@ -50,9 +50,9 @@ public class ContentController : ControllerBase
   }
 
   [HttpPatch("{contentId}")]
-  public async Task<ActionResult<ContentModel>> UpdateLocaleAsync(Guid contentId, Guid? languageId, [FromBody] UpdateContentLocalePayload payload, CancellationToken cancellationToken)
+  public async Task<ActionResult<ContentModel>> UpdateAsync(Guid contentId, Guid? languageId, [FromBody] UpdateContentPayload payload, CancellationToken cancellationToken)
   {
-    ContentModel? content = await _mediator.Send(new UpdateContentLocaleCommand(contentId, languageId, payload), cancellationToken);
+    ContentModel? content = await _mediator.Send(new UpdateContentCommand(contentId, languageId, payload), cancellationToken);
     return content == null ? NotFound() : Ok(content);
   }
 

@@ -8,9 +8,9 @@ using MediatR;
 
 namespace Logitar.Cms.Core.Contents.Commands;
 
-public record UpdateContentLocaleCommand(Guid ContentId, Guid? LanguageId, UpdateContentLocalePayload Payload) : IRequest<ContentModel?>;
+public record UpdateContentCommand(Guid ContentId, Guid? LanguageId, UpdateContentPayload Payload) : IRequest<ContentModel?>;
 
-internal class UpdateContentLocaleCommandHandler : IRequestHandler<UpdateContentLocaleCommand, ContentModel?>
+internal class UpdateContentLocaleCommandHandler : IRequestHandler<UpdateContentCommand, ContentModel?>
 {
   private readonly IApplicationContext _applicationContext;
   private readonly IContentQuerier _contentQuerier;
@@ -32,10 +32,10 @@ internal class UpdateContentLocaleCommandHandler : IRequestHandler<UpdateContent
     _mediator = mediator;
   }
 
-  public async Task<ContentModel?> Handle(UpdateContentLocaleCommand command, CancellationToken cancellationToken)
+  public async Task<ContentModel?> Handle(UpdateContentCommand command, CancellationToken cancellationToken)
   {
-    UpdateContentLocalePayload payload = command.Payload;
-    new UpdateContentLocaleValidator().ValidateAndThrow(payload);
+    UpdateContentPayload payload = command.Payload;
+    new UpdateContentValidator().ValidateAndThrow(payload);
 
     ContentId contentId = new(command.ContentId);
     Content? content = await _contentRepository.LoadAsync(contentId, cancellationToken);
