@@ -83,13 +83,22 @@ internal class CreateOrReplaceContentCommandHandler : IRequestHandler<CreateOrRe
     ContentType contentType = await _contentTypeRepository.LoadAsync(contentTypeId, cancellationToken)
       ?? throw new ContentTypeNotFoundException(contentTypeId, nameof(payload.ContentTypeId));
 
+    string? errorMessage = null;
     if (contentType.IsInvariant && languageGuid.HasValue)
     {
-      throw new NotImplementedException(); // TODO(fpion): typed exception
+      errorMessage = "'{PropertyName}' must be null. The content type is invariant.";
     }
     else if (!contentType.IsInvariant && !languageGuid.HasValue)
     {
-      throw new NotImplementedException(); // TODO(fpion): typed exception
+      errorMessage = "'{PropertyName}' cannot be null. The content type is not invariant.";
+    }
+    if (errorMessage != null)
+    {
+      ValidationFailure failure = new("LanguageId", errorMessage, languageGuid)
+      {
+        ErrorCode = "InvariantValidator"
+      };
+      throw new ValidationException([failure]);
     }
 
     ContentLocale invariantAndLocale = CreateLocale(payload);
@@ -117,7 +126,11 @@ internal class CreateOrReplaceContentCommandHandler : IRequestHandler<CreateOrRe
       ContentType contentType = await _contentTypeRepository.LoadAsync(content, cancellationToken);
       if (contentType.IsInvariant)
       {
-        throw new NotImplementedException(); // TODO(fpion): typed exception
+        ValidationFailure failure = new("LanguageId", "'{PropertyName}' must be null. The content type is invariant.", languageGuid)
+        {
+          ErrorCode = "InvariantValidator"
+        };
+        throw new ValidationException([failure]);
       }
 
       LanguageId languageId = new(languageGuid.Value);
