@@ -1,5 +1,6 @@
 ﻿using Logitar.Cms.Core.Sessions.Commands;
 using Logitar.Cms.Core.Sessions.Models;
+using Logitar.Cms.Core.Sessions.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,13 @@ public class SessionController : ControllerBase
   public SessionController(IMediator mediator)
   {
     _mediator = mediator;
+  }
+
+  [HttpGet("{id}")]
+  public async Task<ActionResult<SessionModel>> ReadAsync(Guid id, CancellationToken cancellationToken)
+  {
+    SessionModel? session = await _mediator.Send(new ReadSessionQuery(id), cancellationToken);
+    return session == null ? NotFound() : Ok(session);
   }
 
   [HttpPost("sign/in")]
