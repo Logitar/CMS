@@ -43,7 +43,7 @@ public class ContentIntegrationTests : IntegrationTests
     Language? english = (await _languageRepository.LoadAsync()).SingleOrDefault(x => x.IsDefault);
     Assert.NotNull(english);
 
-    ContentLocale invariant = new(new UniqueName(Content.UniqueNameSettings, "Sabian-AA-17-Inch-Holy-China-Traditional-Finish"), DisplayName: null, Description: null);
+    ContentLocale invariant = new(new UniqueName(Content.UniqueNameSettings, "Sabian-AA-17-Inch-Holy-China-Traditional-Finish"));
     Content cymbal = new(_cymbal, invariant, ActorId);
     ContentLocale locale = new(
       new UniqueName(Content.UniqueNameSettings, "Sabian-AA-17-Inch-Holy-China-Traditional-Finish"),
