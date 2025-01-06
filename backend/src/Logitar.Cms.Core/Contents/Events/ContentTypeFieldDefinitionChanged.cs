@@ -4,4 +4,4 @@ using MediatR;
 
 namespace Logitar.Cms.Core.Contents.Events;
 
-public record ContentTypeFieldDefinitionChanged(Guid FieldId, FieldDefinition FieldDefinition) : DomainEvent, INotification;
+public record ContentTypeFieldDefinitionChanged(FieldDefinition FieldDefinition) : DomainEvent, INotification;

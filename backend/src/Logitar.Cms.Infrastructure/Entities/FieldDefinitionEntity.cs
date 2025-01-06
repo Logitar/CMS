@@ -35,7 +35,7 @@ public class FieldDefinitionEntity
   {
     ContentType = contentType;
     ContentTypeId = contentType.ContentTypeId;
-    Id = @event.FieldId;
+    Id = @event.FieldDefinition.Id;
     Order = order;
 
     FieldType = fieldType;

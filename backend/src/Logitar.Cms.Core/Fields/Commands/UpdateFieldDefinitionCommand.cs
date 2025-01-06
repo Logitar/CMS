@@ -40,6 +40,7 @@ internal class UpdateFieldDefinitionCommandHandler : IRequestHandler<UpdateField
     }
 
     fieldDefinition = new(
+      fieldDefinition.Id,
       fieldDefinition.FieldTypeId,
       payload.IsInvariant ?? fieldDefinition.IsInvariant,
       payload.IsRequired ?? fieldDefinition.IsRequired,
@@ -49,7 +50,7 @@ internal class UpdateFieldDefinitionCommandHandler : IRequestHandler<UpdateField
       payload.DisplayName == null ? fieldDefinition.DisplayName : DisplayName.TryCreate(payload.DisplayName.Value),
       payload.Description == null ? fieldDefinition.Description : Description.TryCreate(payload.Description.Value),
       payload.Placeholder == null ? fieldDefinition.Placeholder : Placeholder.TryCreate(payload.Placeholder.Value));
-    contentType.SetField(command.FieldId, fieldDefinition, _applicationContext.ActorId);
+    contentType.SetField(fieldDefinition, _applicationContext.ActorId);
 
     await _contentTypeRepository.SaveAsync(contentType, cancellationToken);
 
