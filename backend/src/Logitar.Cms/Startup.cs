@@ -36,7 +36,8 @@ internal class Startup : StartupBase
 
     services.AddCors();
 
-    AuthenticationBuilder authenticationBuilder = services.AddAuthentication();
+    AuthenticationBuilder authenticationBuilder = services.AddAuthentication()
+      .AddScheme<SessionAuthenticationOptions, SessionAuthenticationHandler>(Schemes.Session, options => { });
     if (_authenticationSchemes.Contains(Schemes.Basic))
     {
       authenticationBuilder.AddScheme<BasicAuthenticationOptions, BasicAuthenticationHandler>(Schemes.Basic, options => { });
@@ -44,6 +45,13 @@ internal class Startup : StartupBase
 
     services.AddAuthorizationBuilder()
       .SetDefaultPolicy(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build());
+
+    CookiesSettings cookiesSettings = _configuration.GetSection(CookiesSettings.SectionKey).Get<CookiesSettings>() ?? new();
+    services.AddSession(options =>
+    {
+      options.Cookie.SameSite = cookiesSettings.Session.SameSite;
+      options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    });
 
     services.AddApplicationInsightsTelemetry();
     IHealthChecksBuilder healthChecks = services.AddHealthChecks();
@@ -63,6 +71,7 @@ internal class Startup : StartupBase
         throw new DatabaseProviderNotSupportedException(databaseProvider);
     }
 
+    services.AddDistributedMemoryCache();
     services.AddExceptionHandler<ExceptionHandler>();
     services.AddFeatureManagement();
     services.AddProblemDetails();
@@ -89,6 +98,7 @@ internal class Startup : StartupBase
     application.UseCors(application.Services.GetRequiredService<CorsSettings>());
     application.UseStaticFiles();
     application.UseExceptionHandler();
+    application.UseSession();
     application.UseAuthentication();
     application.UseAuthorization();
 
