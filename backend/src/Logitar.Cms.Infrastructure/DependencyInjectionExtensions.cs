@@ -1,6 +1,7 @@
 ﻿using Logitar.Cms.Core.Contents;
 using Logitar.Cms.Core.Fields;
 using Logitar.Cms.Core.Localization;
+using Logitar.Cms.Core.Sessions;
 using Logitar.Cms.Core.Users;
 using Logitar.Cms.Infrastructure.Actors;
 using Logitar.Cms.Infrastructure.Caching;
@@ -49,6 +50,7 @@ public static class DependencyInjectionExtensions
       .AddScoped<IContentTypeQuerier, ContentTypeQuerier>()
       .AddScoped<IFieldTypeQuerier, FieldTypeQuerier>()
       .AddScoped<ILanguageQuerier, LanguageQuerier>()
+      .AddScoped<ISessionQuerier, SessionQuerier>()
       .AddScoped<IUserQuerier, UserQuerier>();
   }
 

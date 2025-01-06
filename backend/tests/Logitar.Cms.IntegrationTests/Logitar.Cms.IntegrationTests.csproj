@@ -40,7 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Logitar.Cms\Logitar.Cms.csproj" />
+    <ProjectReference Include="..\Logitar.Cms.Tests\Logitar.Cms.Tests.csproj" />
   </ItemGroup>
 
   <ItemGroup>
