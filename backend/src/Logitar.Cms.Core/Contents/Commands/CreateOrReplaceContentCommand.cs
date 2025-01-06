@@ -12,7 +12,7 @@ namespace Logitar.Cms.Core.Contents.Commands;
 
 public record CreateOrReplaceContentResult(ContentModel? Content = null, bool Created = false);
 
-public record CreateOrReplaceContentCommand(Guid? ContentId, Guid? LanguageId, CreateOrReplaceContentPayload Payload, long? Version) : IRequest<CreateOrReplaceContentResult>;
+public record CreateOrReplaceContentCommand(Guid? ContentId, Guid? LanguageId, CreateOrReplaceContentPayload Payload) : IRequest<CreateOrReplaceContentResult>;
 
 internal class CreateOrReplaceContentCommandHandler : IRequestHandler<CreateOrReplaceContentCommand, CreateOrReplaceContentResult>
 {
@@ -161,14 +161,7 @@ internal class CreateOrReplaceContentCommandHandler : IRequestHandler<CreateOrRe
     Dictionary<Guid, string> fieldValues = new(capacity: payload.FieldValues.Count);
     foreach (FieldValue fieldValue in payload.FieldValues)
     {
-      if (string.IsNullOrWhiteSpace(fieldValue.Value))
-      {
-        fieldValues.Remove(fieldValue.Id);
-      }
-      else
-      {
-        fieldValues[fieldValue.Id] = fieldValue.Value.Trim();
-      }
+      fieldValues[fieldValue.Id] = fieldValue.Value.Trim();
     }
 
     return new ContentLocale(uniqueName, displayName, description, fieldValues);
@@ -185,11 +178,7 @@ internal class CreateOrReplaceContentCommandHandler : IRequestHandler<CreateOrRe
     {
       foreach (FieldValue fieldValue in payload.FieldValues)
       {
-        if (string.IsNullOrWhiteSpace(fieldValue.Value))
-        {
-          fieldValues.Remove(fieldValue.Id);
-        }
-        else if (!variantFieldIds.Contains(fieldValue.Id))
+        if (!variantFieldIds.Contains(fieldValue.Id))
         {
           fieldValues[fieldValue.Id] = fieldValue.Value.Trim();
         }
@@ -199,11 +188,7 @@ internal class CreateOrReplaceContentCommandHandler : IRequestHandler<CreateOrRe
     {
       foreach (FieldValue fieldValue in payload.FieldValues)
       {
-        if (string.IsNullOrWhiteSpace(fieldValue.Value))
-        {
-          fieldValues.Remove(fieldValue.Id);
-        }
-        else if (variantFieldIds.Contains(fieldValue.Id))
+        if (variantFieldIds.Contains(fieldValue.Id))
         {
           fieldValues[fieldValue.Id] = fieldValue.Value.Trim();
         }

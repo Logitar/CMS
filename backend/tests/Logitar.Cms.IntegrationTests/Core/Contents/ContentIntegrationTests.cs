@@ -58,7 +58,7 @@ public class ContentIntegrationTests : IntegrationTests
       DisplayName = " Sabian Cymbale AA Holy China finition traditionnelle de 17 pouces ",
       Description = "  Le 17\" Holy China offre tout le son unique et trash du 21\" Holy China, avec moins de volume.\n\nSTYLE : VINTAGE\nMÉTAL : B20\nSON : BRIGHT\nPOIDS : MINCE  "
     };
-    CreateOrReplaceContentCommand command = new(cymbal.Id.ToGuid(), _french.Id.ToGuid(), payload, Version: 999);
+    CreateOrReplaceContentCommand command = new(cymbal.Id.ToGuid(), _french.Id.ToGuid(), payload);
     CreateOrReplaceContentResult result = await Mediator.Send(command);
     Assert.False(result.Created);
 
@@ -118,7 +118,7 @@ public class ContentIntegrationTests : IntegrationTests
       DisplayName = " Sabian ",
       Description = "  Sabian is a Canadian cymbal manufacturing company based in New Brunswick. It was established in 1981 in the village of Meductic, which is now part of Lakeland Ridges, where the company is still headquartered. Sabian is considered one of the big four manufacturers of cymbals, along with Zildjian, Meinl and Paiste.  "
     };
-    CreateOrReplaceContentCommand command = new(idValue == null ? null : Guid.Parse(idValue), LanguageId: null, payload, Version: null);
+    CreateOrReplaceContentCommand command = new(idValue == null ? null : Guid.Parse(idValue), LanguageId: null, payload);
     CreateOrReplaceContentResult result = await Mediator.Send(command);
     Assert.True(result.Created);
 
@@ -166,7 +166,7 @@ public class ContentIntegrationTests : IntegrationTests
       DisplayName = " Sabian AA 17 \" Holy China Traditional Finish ",
       Description = "  The 17\" Holy China delivers all of the unique, trashy tone of the 21\" Holy China, with less volume.\n\nSTYLE: VINTAGE\nMETAL: B20\nSOUND: BRIGHT\nWEIGHT: THIN  "
     };
-    CreateOrReplaceContentCommand command = new(idValue == null ? null : Guid.Parse(idValue), english.Id.ToGuid(), payload, Version: null);
+    CreateOrReplaceContentCommand command = new(idValue == null ? null : Guid.Parse(idValue), english.Id.ToGuid(), payload);
     CreateOrReplaceContentResult result = await Mediator.Send(command);
     Assert.True(result.Created);
 

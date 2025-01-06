@@ -19,7 +19,17 @@ public record ContentLocale
     UniqueName = uniqueName;
     DisplayName = displayName;
     Description = description;
-    FieldValues = fieldValues ?? new Dictionary<Guid, string>();
+
+    Dictionary<Guid, string> cleanValues = [];
+    if (fieldValues != null)
+    {
+      foreach (KeyValuePair<Guid, string> fieldValue in fieldValues)
+      {
+        cleanValues[fieldValue.Key] = fieldValue.Value.Trim();
+      }
+    }
+    FieldValues = cleanValues.AsReadOnly();
+
     new Validator().ValidateAndThrow(this);
   }
 
