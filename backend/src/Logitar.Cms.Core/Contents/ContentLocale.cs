@@ -1,4 +1,5 @@
-﻿using Logitar.Identity.Core;
+﻿using FluentValidation;
+using Logitar.Identity.Core;
 
 namespace Logitar.Cms.Core.Contents;
 
@@ -13,27 +14,20 @@ public record ContentLocale
     UniqueName uniqueName,
     DisplayName? displayName = null,
     Description? description = null,
-    IEnumerable<KeyValuePair<Guid, string>>? fieldValues = null)
+    IReadOnlyDictionary<Guid, string>? fieldValues = null)
   {
     UniqueName = uniqueName;
     DisplayName = displayName;
     Description = description;
+    FieldValues = fieldValues ?? new Dictionary<Guid, string>();
+    new Validator().ValidateAndThrow(this);
+  }
 
-    Dictionary<Guid, string> cleanValues = [];
-    if (fieldValues != null)
+  private class Validator : AbstractValidator<ContentLocale>
+  {
+    public Validator()
     {
-      foreach (KeyValuePair<Guid, string> fieldValue in fieldValues)
-      {
-        if (string.IsNullOrWhiteSpace(fieldValue.Value))
-        {
-          cleanValues.Remove(fieldValue.Key);
-        }
-        else
-        {
-          cleanValues[fieldValue.Key] = fieldValue.Value.Trim();
-        }
-      }
+      RuleForEach(x => x.FieldValues.Values).NotEmpty();
     }
-    FieldValues = cleanValues.AsReadOnly();
   }
 }
