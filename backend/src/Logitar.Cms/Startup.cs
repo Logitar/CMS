@@ -5,6 +5,7 @@ using Logitar.Cms.Web;
 using Logitar.Cms.Web.Authentication;
 using Logitar.Cms.Web.Constants;
 using Logitar.Cms.Web.Extensions;
+using Logitar.Cms.Web.Middlewares;
 using Logitar.Cms.Web.Settings;
 using Logitar.EventSourcing.EntityFrameworkCore.Relational;
 using Logitar.Identity.EntityFrameworkCore.Relational;
@@ -99,6 +100,7 @@ internal class Startup : StartupBase
     application.UseStaticFiles();
     application.UseExceptionHandler();
     application.UseSession();
+    application.UseMiddleware<RedirectNotFound>();
     application.UseAuthentication();
     application.UseAuthorization();
 
