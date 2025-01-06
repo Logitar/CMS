@@ -1,4 +1,5 @@
-﻿using Logitar.Cms.Core;
+﻿using Bogus;
+using Logitar.Cms.Core;
 using Logitar.Cms.Core.Actors;
 using Logitar.Cms.Core.Commands;
 using Logitar.Cms.Infrastructure;
@@ -21,10 +22,6 @@ namespace Logitar.Cms;
 
 public abstract class IntegrationTests : IAsyncLifetime
 {
-  private const string DefaultUniqueName = "admin";
-  private const string DefaultPassword = "P@s$W0rD";
-  private const string DefaultLocale = "en";
-
   private readonly DatabaseProvider _databaseProvider;
 
   protected IConfiguration Configuration { get; }
@@ -32,10 +29,16 @@ public abstract class IntegrationTests : IAsyncLifetime
 
   protected IMediator Mediator { get; }
   protected CmsContext CmsContext { get; }
+  protected IdentityContext IdentityContext { get; }
 
   private readonly TestContext _context = new();
   protected ActorModel Actor => _context.Actor ?? new();
   protected ActorId ActorId => new(Actor.Id);
+  protected Faker Faker { get; } = new();
+
+  protected string UniqueName => Configuration.GetValue<string>("CMS_USERNAME") ?? "admin";
+  protected string Password => Configuration.GetValue<string>("CMS_PASSWORD") ?? "P@s$W0rD";
+  protected string LocaleCode => Configuration.GetValue<string>("CMS_LOCALE") ?? Faker.Locale;
 
   protected IntegrationTests()
   {
@@ -65,6 +68,7 @@ public abstract class IntegrationTests : IAsyncLifetime
 
     Mediator = ServiceProvider.GetRequiredService<IMediator>();
     CmsContext = ServiceProvider.GetRequiredService<CmsContext>();
+    IdentityContext = ServiceProvider.GetRequiredService<IdentityContext>();
   }
 
   public virtual async Task InitializeAsync()
@@ -78,6 +82,7 @@ public abstract class IntegrationTests : IAsyncLifetime
       CmsDb.ContentTypes.Table,
       CmsDb.FieldTypes.Table,
       CmsDb.Languages.Table,
+      IdentityDb.Sessions.Table,
       IdentityDb.Users.Table,
       IdentityDb.Actors.Table,
       EventDb.Streams.Table
@@ -89,13 +94,9 @@ public abstract class IntegrationTests : IAsyncLifetime
     }
     await CmsContext.Database.ExecuteSqlRawAsync(sql.ToString());
 
-    string uniqueName = Configuration.GetValue<string>("CMS_USERNAME") ?? DefaultUniqueName;
-    string password = Configuration.GetValue<string>("CMS_PASSWORD") ?? DefaultPassword;
-    string defaultLocale = Configuration.GetValue<string>("CMS_LOCALE") ?? DefaultLocale;
-    await Mediator.Send(new InitializeCmsCommand(uniqueName, password, defaultLocale));
+    await Mediator.Send(new InitializeCmsCommand(UniqueName, Password, LocaleCode));
 
-    IdentityContext identityContext = ServiceProvider.GetRequiredService<IdentityContext>();
-    ActorEntity actor = await identityContext.Actors.AsNoTracking().SingleAsync();
+    ActorEntity actor = await IdentityContext.Actors.AsNoTracking().SingleAsync();
     _context.Actor = Mapper.ToActor(actor);
   }
   protected IDeleteBuilder CreateDeleteBuilder(TableId table) => _databaseProvider switch

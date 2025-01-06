@@ -5,6 +5,7 @@ using Logitar.Cms.Core.Fields;
 using Logitar.Cms.Core.Fields.Models;
 using Logitar.Cms.Core.Localization.Models;
 using Logitar.Cms.Core.Roles.Models;
+using Logitar.Cms.Core.Sessions.Models;
 using Logitar.Cms.Core.Users.Models;
 using Logitar.Cms.Infrastructure.Entities;
 using Logitar.EventSourcing;
@@ -207,6 +208,32 @@ public class Mapper
       Id = new EntityId(source.EntityId).ToGuid(),
       DisplayName = source.DisplayName,
       Description = source.Description
+    };
+
+    foreach (KeyValuePair<string, string> customAttribute in source.GetCustomAttributes())
+    {
+      destination.CustomAttributes.Add(new CustomAttribute(customAttribute));
+    }
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public SessionModel ToSession(SessionEntity source)
+  {
+    if (source.User == null)
+    {
+      throw new ArgumentException($"The {nameof(source.User)} is required.", nameof(source));
+    }
+    UserModel user = ToUser(source.User);
+
+    SessionModel destination = new(user)
+    {
+      IsPersistent = source.IsPersistent,
+      IsActive = source.IsActive,
+      SignedOutBy = TryFindActor(source.SignedOutBy),
+      SignedOutOn = source.SignedOutOn?.AsUniversalTime()
     };
 
     foreach (KeyValuePair<string, string> customAttribute in source.GetCustomAttributes())
