@@ -26,6 +26,13 @@ public class SessionController : ControllerBase
     return session == null ? NotFound() : Ok(session);
   }
 
+  [HttpPut("renew")]
+  public async Task<ActionResult<SessionModel>> RenewAsync([FromBody] RenewSessionPayload payload, CancellationToken cancellationToken)
+  {
+    SessionModel session = await _mediator.Send(new RenewSessionCommand(payload), cancellationToken);
+    return Ok(session);
+  }
+
   [HttpPost("sign/in")]
   public async Task<ActionResult<SessionModel>> SignInAsync([FromBody] SignInSessionPayload payload, CancellationToken cancellationToken)
   {
