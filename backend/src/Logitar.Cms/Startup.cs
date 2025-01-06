@@ -38,6 +38,7 @@ internal class Startup : StartupBase
     services.AddCors();
 
     AuthenticationBuilder authenticationBuilder = services.AddAuthentication()
+      .AddScheme<BearerAuthenticationOptions, BearerAuthenticationHandler>(Schemes.Bearer, options => { })
       .AddScheme<SessionAuthenticationOptions, SessionAuthenticationHandler>(Schemes.Session, options => { });
     if (_authenticationSchemes.Contains(Schemes.Basic))
     {
@@ -45,7 +46,7 @@ internal class Startup : StartupBase
     }
 
     services.AddAuthorizationBuilder()
-      .SetDefaultPolicy(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build());
+      .SetDefaultPolicy(new AuthorizationPolicyBuilder(_authenticationSchemes).RequireAuthenticatedUser().Build());
 
     CookiesSettings cookiesSettings = _configuration.GetSection(CookiesSettings.SectionKey).Get<CookiesSettings>() ?? new();
     services.AddSession(options =>
