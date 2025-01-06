@@ -72,7 +72,7 @@ internal class CreateOrReplaceContentCommandHandler : IRequestHandler<CreateOrRe
   {
     if (!payload.ContentTypeId.HasValue)
     {
-      ValidationFailure failure = new(nameof(payload.ContentTypeId), "'{PropertyName}' is required when creating content.", payload.ContentTypeId)
+      ValidationFailure failure = new(nameof(payload.ContentTypeId), "'ContentTypeId' is required when creating content.", payload.ContentTypeId)
       {
         ErrorCode = "RequiredValidator"
       };
@@ -86,11 +86,11 @@ internal class CreateOrReplaceContentCommandHandler : IRequestHandler<CreateOrRe
     string? errorMessage = null;
     if (contentType.IsInvariant && languageGuid.HasValue)
     {
-      errorMessage = "'{PropertyName}' must be null. The content type is invariant.";
+      errorMessage = "'LanguageId' must be null. The content type is invariant.";
     }
     else if (!contentType.IsInvariant && !languageGuid.HasValue)
     {
-      errorMessage = "'{PropertyName}' cannot be null. The content type is not invariant.";
+      errorMessage = "'LanguageId' cannot be null. The content type is not invariant.";
     }
     if (errorMessage != null)
     {
@@ -126,7 +126,7 @@ internal class CreateOrReplaceContentCommandHandler : IRequestHandler<CreateOrRe
       ContentType contentType = await _contentTypeRepository.LoadAsync(content, cancellationToken);
       if (contentType.IsInvariant)
       {
-        ValidationFailure failure = new("LanguageId", "'{PropertyName}' must be null. The content type is invariant.", languageGuid)
+        ValidationFailure failure = new("LanguageId", "'LanguageId' must be null. The content type is invariant.", languageGuid)
         {
           ErrorCode = "InvariantValidator"
         };
