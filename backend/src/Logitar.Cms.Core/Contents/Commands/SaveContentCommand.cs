@@ -38,11 +38,14 @@ internal class SaveContentCommandHandler : IRequestHandler<SaveContentCommand>
     foreach (LanguageId? languageId in languageIds)
     {
       ContentLocale invariantOrLocale = languageId.HasValue ? content.FindLocale(languageId.Value) : content.Invariant;
+
       ContentId? conflictId = await _contentQuerier.FindIdAsync(content.ContentTypeId, languageId, invariantOrLocale.UniqueName, cancellationToken);
       if (conflictId.HasValue && !conflictId.Value.Equals(content.Id))
       {
         throw new ContentUniqueNameAlreadyUsedException(content, languageId, invariantOrLocale, conflictId.Value);
       }
+
+      // TODO(fpion): validate field values
     }
 
     await _contentRepository.SaveAsync(content, cancellationToken);

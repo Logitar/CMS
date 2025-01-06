@@ -2,6 +2,7 @@
 using FluentValidation.Results;
 using Logitar.Cms.Core.Contents.Models;
 using Logitar.Cms.Core.Contents.Validators;
+using Logitar.Cms.Core.Fields.Models;
 using Logitar.Cms.Core.Localization;
 using Logitar.EventSourcing;
 using Logitar.Identity.Core;
@@ -101,10 +102,10 @@ internal class CreateOrReplaceContentCommandHandler : IRequestHandler<CreateOrRe
       throw new ValidationException([failure]);
     }
 
-    ContentLocale invariantAndLocale = CreateLocale(payload);
     ActorId? actorId = _applicationContext.ActorId;
 
-    Content content = new(contentType, invariantAndLocale, actorId, contentId);
+    ContentLocale invariant = CreateLocale(payload, contentType, language: null);
+    Content content = new(contentType, invariant, actorId, contentId);
 
     if (languageGuid.HasValue)
     {
@@ -112,7 +113,8 @@ internal class CreateOrReplaceContentCommandHandler : IRequestHandler<CreateOrRe
       Language language = await _languageRepository.LoadAsync(languageId, cancellationToken)
         ?? throw new LanguageNotFoundException(languageId, "LanguageId");
 
-      content.SetLocale(language, invariantAndLocale, actorId);
+      ContentLocale locale = CreateLocale(payload, contentType, language);
+      content.SetLocale(language, locale, actorId);
     }
 
     return content;
@@ -140,7 +142,6 @@ internal class CreateOrReplaceContentCommandHandler : IRequestHandler<CreateOrRe
 
     ContentLocale invariantOrLocale = CreateLocale(payload);
     ActorId? actorId = _applicationContext.ActorId;
-
     if (language == null)
     {
       content.SetInvariant(invariantOrLocale, actorId);
@@ -157,6 +158,58 @@ internal class CreateOrReplaceContentCommandHandler : IRequestHandler<CreateOrRe
     DisplayName? displayName = DisplayName.TryCreate(payload.DisplayName);
     Description? description = Description.TryCreate(payload.Description);
 
-    return new ContentLocale(uniqueName, displayName, description);
+    Dictionary<Guid, string> fieldValues = new(capacity: payload.FieldValues.Count);
+    foreach (FieldValue fieldValue in payload.FieldValues)
+    {
+      if (string.IsNullOrWhiteSpace(fieldValue.Value))
+      {
+        fieldValues.Remove(fieldValue.Id);
+      }
+      else
+      {
+        fieldValues[fieldValue.Id] = fieldValue.Value.Trim();
+      }
+    }
+
+    return new ContentLocale(uniqueName, displayName, description, fieldValues);
+  }
+  private static ContentLocale CreateLocale(CreateOrReplaceContentPayload payload, ContentType contentType, Language? language)
+  {
+    UniqueName uniqueName = new(Content.UniqueNameSettings, payload.UniqueName);
+    DisplayName? displayName = DisplayName.TryCreate(payload.DisplayName);
+    Description? description = Description.TryCreate(payload.Description);
+
+    HashSet<Guid> variantFieldIds = contentType.FieldDefinitions.Where(x => !x.IsInvariant).Select(x => x.Id).ToHashSet();
+    Dictionary<Guid, string> fieldValues = new(capacity: payload.FieldValues.Count);
+    if (language == null)
+    {
+      foreach (FieldValue fieldValue in payload.FieldValues)
+      {
+        if (string.IsNullOrWhiteSpace(fieldValue.Value))
+        {
+          fieldValues.Remove(fieldValue.Id);
+        }
+        else if (!variantFieldIds.Contains(fieldValue.Id))
+        {
+          fieldValues[fieldValue.Id] = fieldValue.Value.Trim();
+        }
+      }
+    }
+    else
+    {
+      foreach (FieldValue fieldValue in payload.FieldValues)
+      {
+        if (string.IsNullOrWhiteSpace(fieldValue.Value))
+        {
+          fieldValues.Remove(fieldValue.Id);
+        }
+        else if (variantFieldIds.Contains(fieldValue.Id))
+        {
+          fieldValues[fieldValue.Id] = fieldValue.Value.Trim();
+        }
+      }
+    }
+
+    return new ContentLocale(uniqueName, displayName, description, fieldValues);
   }
 }
