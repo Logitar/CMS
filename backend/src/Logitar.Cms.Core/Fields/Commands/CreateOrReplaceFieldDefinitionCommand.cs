@@ -44,7 +44,7 @@ internal class CreateOrReplaceFieldDefinitionCommandHandler : IRequestHandler<Cr
     }
     else if (contentType.IsInvariant && !payload.IsInvariant)
     {
-      ValidationFailure failure = new(nameof(payload.IsInvariant), "'{PropertyName}' must be true. Invariant content types cannot define variant fields.", payload.IsInvariant)
+      ValidationFailure failure = new(nameof(payload.IsInvariant), "'IsInvariant' must be true. Invariant content types cannot define variant fields.", payload.IsInvariant)
       {
         ErrorCode = "InvariantValidator"
       };
@@ -56,7 +56,7 @@ internal class CreateOrReplaceFieldDefinitionCommandHandler : IRequestHandler<Cr
     {
       if (!payload.FieldTypeId.HasValue)
       {
-        ValidationFailure failure = new(nameof(payload.FieldTypeId), "'{PropertyName}' is required when creating a field definition.", payload.FieldTypeId)
+        ValidationFailure failure = new(nameof(payload.FieldTypeId), "'FieldTypeId' is required when creating a field definition.", payload.FieldTypeId)
         {
           ErrorCode = "RequiredValidator"
         };
