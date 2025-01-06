@@ -100,6 +100,7 @@ internal class Startup : StartupBase
     application.UseStaticFiles();
     application.UseExceptionHandler();
     application.UseSession();
+    application.UseMiddleware<RenewSession>();
     application.UseMiddleware<RedirectNotFound>();
     application.UseAuthentication();
     application.UseAuthorization();

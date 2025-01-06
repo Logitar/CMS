@@ -48,6 +48,47 @@ public class SessionIntegrationTests : IntegrationTests
     Assert.True(model.IsActive);
   }
 
+  [Fact(DisplayName = "It should renew a session given valid credentials.")]
+  public async Task Given_ValidCredentials_When_Renew_Then_SessionRenewed()
+  {
+    User user = Assert.Single(await _userRepository.LoadAsync());
+
+    Password secret = _passwordManager.GenerateBase64(RefreshToken.SecretLength, out string secretString);
+    EntityId entityId = EntityId.NewId();
+    Session session = user.SignIn(secret, actorId: null, entityId);
+    session.SetCustomAttribute(new Identifier("IpAddress"), "0.0.0.0/0");
+    session.Update(ActorId);
+    await _sessionRepository.SaveAsync(session);
+
+    RefreshToken refreshToken = new(entityId.ToGuid(), secretString);
+    RenewSessionPayload payload = new(refreshToken.Encode(),
+    [
+      new CustomAttribute("IpAddress", Faker.Internet.Ip()),
+      new CustomAttribute("AdditionalInformation", $@"{{""User-Agent"":""{Faker.Internet.UserAgent()}""}}")
+    ]);
+    RenewSessionCommand command = new(payload);
+    SessionModel model = await Mediator.Send(command);
+
+    Assert.Equal(refreshToken.SessionId, model.Id);
+    Assert.Equal(session.Version + 2, model.Version);
+    Assert.Equal(Actor, model.CreatedBy);
+    Assert.Equal(DateTime.UtcNow, model.CreatedOn, TimeSpan.FromMinutes(1));
+    Assert.Equal(Actor, model.UpdatedBy);
+    Assert.Equal(DateTime.UtcNow, model.UpdatedOn, TimeSpan.FromMinutes(1));
+
+    Assert.Equal(user.EntityId.ToGuid(), model.User.Id);
+    Assert.True(model.IsPersistent);
+    Assert.NotNull(model.RefreshToken);
+    Assert.NotEqual(payload.RefreshToken, model.RefreshToken);
+    refreshToken = RefreshToken.Decode(model.RefreshToken);
+    Assert.Equal(model.Id, refreshToken.SessionId);
+    Assert.Equal(RefreshToken.SecretLength, Convert.FromBase64String(refreshToken.Secret).Length);
+    Assert.True(model.IsActive);
+    Assert.Null(model.SignedOutBy);
+    Assert.Null(model.SignedOutOn);
+    Assert.Equal(payload.CustomAttributes, model.CustomAttributes);
+  }
+
   [Fact(DisplayName = "It should sign-in an user given valid credentials.")]
   public async Task Given_ValidCredentials_When_SignIn_Then_UserIsSignedIn()
   {
