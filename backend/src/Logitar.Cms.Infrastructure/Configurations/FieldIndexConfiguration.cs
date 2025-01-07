@@ -55,10 +55,10 @@ internal class FieldIndexConfiguration : IEntityTypeConfiguration<FieldIndexEnti
       .OnDelete(DeleteBehavior.Cascade);
     builder.HasOne(x => x.FieldDefinition).WithMany(x => x.FieldIndex)
       .HasPrincipalKey(x => x.FieldDefinitionId).HasForeignKey(x => x.FieldDefinitionId)
-      .OnDelete(DeleteBehavior.Cascade);
+      .OnDelete(DeleteBehavior.NoAction);
     builder.HasOne(x => x.Content).WithMany(x => x.FieldIndex)
       .HasPrincipalKey(x => x.ContentId).HasForeignKey(x => x.ContentId)
-      .OnDelete(DeleteBehavior.Cascade);
+      .OnDelete(DeleteBehavior.NoAction);
     builder.HasOne(x => x.ContentLocale).WithMany(x => x.FieldIndex)
       .HasPrincipalKey(x => x.ContentLocaleId).HasForeignKey(x => x.ContentLocaleId)
       .OnDelete(DeleteBehavior.Cascade);

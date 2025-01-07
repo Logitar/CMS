@@ -56,10 +56,10 @@ internal class UniqueIndexConfiguration : IEntityTypeConfiguration<UniqueIndexEn
       .OnDelete(DeleteBehavior.Cascade);
     builder.HasOne(x => x.FieldDefinition).WithMany(x => x.UniqueIndex)
       .HasPrincipalKey(x => x.FieldDefinitionId).HasForeignKey(x => x.FieldDefinitionId)
-      .OnDelete(DeleteBehavior.Cascade);
+      .OnDelete(DeleteBehavior.NoAction);
     builder.HasOne(x => x.Content).WithMany(x => x.UniqueIndex)
       .HasPrincipalKey(x => x.ContentId).HasForeignKey(x => x.ContentId)
-      .OnDelete(DeleteBehavior.Cascade);
+      .OnDelete(DeleteBehavior.NoAction);
     builder.HasOne(x => x.ContentLocale).WithMany(x => x.UniqueIndex)
       .HasPrincipalKey(x => x.ContentLocaleId).HasForeignKey(x => x.ContentLocaleId)
       .OnDelete(DeleteBehavior.Cascade);

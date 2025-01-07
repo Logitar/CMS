@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
 {
     [DbContext(typeof(CmsContext))]
-    [Migration("20250107065649_AddContentLocaleFieldValues")]
-    partial class AddContentLocaleFieldValues
+    [Migration("20250107071952_CreateFieldIndicesTables")]
+    partial class CreateFieldIndicesTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -837,7 +837,7 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                     b.HasOne("Logitar.Cms.Infrastructure.Entities.ContentEntity", "Content")
                         .WithMany("FieldIndex")
                         .HasForeignKey("ContentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Logitar.Cms.Infrastructure.Entities.ContentLocaleEntity", "ContentLocale")
@@ -855,7 +855,7 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                     b.HasOne("Logitar.Cms.Infrastructure.Entities.FieldDefinitionEntity", "FieldDefinition")
                         .WithMany("FieldIndex")
                         .HasForeignKey("FieldDefinitionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Logitar.Cms.Infrastructure.Entities.FieldTypeEntity", "FieldType")
@@ -887,7 +887,7 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                     b.HasOne("Logitar.Cms.Infrastructure.Entities.ContentEntity", "Content")
                         .WithMany("UniqueIndex")
                         .HasForeignKey("ContentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Logitar.Cms.Infrastructure.Entities.ContentLocaleEntity", "ContentLocale")
@@ -905,7 +905,7 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                     b.HasOne("Logitar.Cms.Infrastructure.Entities.FieldDefinitionEntity", "FieldDefinition")
                         .WithMany("UniqueIndex")
                         .HasForeignKey("FieldDefinitionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Logitar.Cms.Infrastructure.Entities.FieldTypeEntity", "FieldType")
