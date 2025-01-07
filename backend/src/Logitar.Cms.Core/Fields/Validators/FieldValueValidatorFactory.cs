@@ -10,6 +10,7 @@ internal static class FieldValueValidatorFactory
     DataType.DateTime => new DateTimeValueValidator((DateTimeSettings)fieldType.Settings),
     DataType.Number => new NumberValueValidator((NumberSettings)fieldType.Settings),
     DataType.RichText => new RichTextValueValidator((RichTextSettings)fieldType.Settings),
+    DataType.Select => new SelectValueValidator((SelectSettings)fieldType.Settings),
     DataType.String => new StringValueValidator((StringSettings)fieldType.Settings),
     _ => throw new DataTypeNotSupportedException(fieldType.DataType),
   };

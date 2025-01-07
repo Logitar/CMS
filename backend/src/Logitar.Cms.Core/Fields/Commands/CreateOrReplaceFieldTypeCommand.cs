@@ -98,7 +98,7 @@ internal class CreateOrReplaceFieldTypeCommandHandler : IRequestHandler<CreateOr
 
   private static FieldTypeSettings GetSettings(CreateOrReplaceFieldTypePayload payload)
   {
-    List<FieldTypeSettings> settings = new(capacity: 5);
+    List<FieldTypeSettings> settings = new(capacity: 6);
 
     if (payload.Boolean != null)
     {
@@ -115,6 +115,10 @@ internal class CreateOrReplaceFieldTypeCommandHandler : IRequestHandler<CreateOr
     if (payload.RichText != null)
     {
       settings.Add(new RichTextSettings(payload.RichText));
+    }
+    if (payload.Select != null)
+    {
+      settings.Add(payload.Select.ToSelectSettings());
     }
     if (payload.String != null)
     {
@@ -161,6 +165,14 @@ internal class CreateOrReplaceFieldTypeCommandHandler : IRequestHandler<CreateOr
     if (payload.RichText != null)
     {
       RichTextSettings settings = new(payload.RichText);
+      if (!reference.Settings.Equals(settings))
+      {
+        fieldType.SetSettings(settings, actorId);
+      }
+    }
+    if (payload.Select != null)
+    {
+      SelectSettings settings = payload.Select.ToSelectSettings();
       if (!reference.Settings.Equals(settings))
       {
         fieldType.SetSettings(settings, actorId);

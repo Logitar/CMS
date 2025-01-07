@@ -14,7 +14,7 @@ internal class StringValueValidator : IFieldValueValidator
 
   public ValidationResult Validate(string value, string propertyName)
   {
-    List<ValidationFailure> failures = new(capacity: 2);
+    List<ValidationFailure> failures = new(capacity: 3);
 
     if (value.Length < _settings.MinimumLength)
     {
