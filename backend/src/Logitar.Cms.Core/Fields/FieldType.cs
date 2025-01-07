@@ -1,4 +1,5 @@
-﻿using Logitar.Cms.Core.Fields.Events;
+﻿using FluentValidation.Results;
+using Logitar.Cms.Core.Fields.Events;
 using Logitar.Cms.Core.Fields.Settings;
 using Logitar.EventSourcing;
 using Logitar.Identity.Contracts.Settings;
@@ -198,6 +199,11 @@ public class FieldType : AggregateRoot
     {
       _description = updated.Description.Value;
     }
+  }
+
+  public ValidationResult Validate(string value)
+  {
+    return new ValidationResult(); // TODO(fpion): implement
   }
 
   public override string ToString() => $"{DisplayName?.Value ?? UniqueName.Value} | {base.ToString()}";

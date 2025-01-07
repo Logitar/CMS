@@ -1,4 +1,7 @@
-﻿using Logitar.Cms.Core.Contents.Events;
+﻿using FluentValidation;
+using FluentValidation.Results;
+using Logitar.Cms.Core.Contents.Events;
+using Logitar.Cms.Core.Fields;
 using Logitar.Cms.Core.Localization;
 using Logitar.EventSourcing;
 
@@ -9,12 +12,18 @@ internal class ContentManager : IContentManager
   private readonly IContentQuerier _contentQuerier;
   private readonly IContentRepository _contentRepository;
   private readonly IContentTypeRepository _contentTypeRepository;
+  private readonly IFieldTypeRepository _fieldTypeRepository;
 
-  public ContentManager(IContentQuerier contentQuerier, IContentRepository contentRepository, IContentTypeRepository contentTypeRepository)
+  public ContentManager(
+    IContentQuerier contentQuerier,
+    IContentRepository contentRepository,
+    IContentTypeRepository contentTypeRepository,
+    IFieldTypeRepository fieldTypeRepository)
   {
     _contentQuerier = contentQuerier;
     _contentRepository = contentRepository;
     _contentTypeRepository = contentTypeRepository;
+    _fieldTypeRepository = fieldTypeRepository;
   }
 
   public async Task SaveAsync(Content content, CancellationToken cancellationToken)
@@ -52,9 +61,97 @@ internal class ContentManager : IContentManager
         throw new ContentUniqueNameAlreadyUsedException(content, languageId, invariantOrLocale, conflictId.Value);
       }
 
-      // TODO(fpion): validate field values
+      await ValidateAsync(contentType, languageId, content.Id, invariantOrLocale.FieldValues, cancellationToken);
     }
 
     await _contentRepository.SaveAsync(content, cancellationToken);
+  }
+
+  private async Task ValidateAsync(ContentType contentType, LanguageId? languageId, ContentId contentId, IReadOnlyDictionary<Guid, string> fieldValues, CancellationToken cancellationToken)
+  {
+    bool isInvariant = languageId == null;
+    int capacity = contentType.FieldDefinitions.Count;
+    Dictionary<Guid, FieldDefinition> fieldDefinitions = new(capacity);
+    HashSet<FieldTypeId> fieldTypeIds = new(capacity);
+    HashSet<Guid> requiredIds = new(capacity);
+    HashSet<Guid> uniqueIds = new(capacity);
+    foreach (FieldDefinition fieldDefinition in contentType.FieldDefinitions)
+    {
+      if (fieldDefinition.IsInvariant == isInvariant)
+      {
+        fieldDefinitions[fieldDefinition.Id] = fieldDefinition;
+        fieldTypeIds.Add(fieldDefinition.FieldTypeId);
+
+        if (fieldDefinition.IsRequired)
+        {
+          requiredIds.Add(fieldDefinition.Id);
+        }
+        if (fieldDefinition.IsUnique)
+        {
+          uniqueIds.Add(fieldDefinition.Id);
+        }
+      }
+    }
+
+    Dictionary<FieldTypeId, FieldType> fieldTypes = (await _fieldTypeRepository.LoadAsync(fieldTypeIds, cancellationToken))
+      .ToDictionary(x => x.Id, x => x); // TODO(fpion): optimize when saving multiple locales
+
+    capacity = fieldValues.Count;
+    List<Guid> unexpectedIds = new(capacity);
+    List<ValidationFailure> validationFailures = [];
+    Dictionary<Guid, string> uniqueValues = new(capacity);
+    foreach (KeyValuePair<Guid, string> fieldValue in fieldValues)
+    {
+      if (!fieldDefinitions.TryGetValue(fieldValue.Key, out FieldDefinition? fieldDefinition))
+      {
+        unexpectedIds.Add(fieldValue.Key);
+        continue;
+      }
+
+      requiredIds.Remove(fieldValue.Key);
+
+      FieldType fieldType = fieldTypes[fieldDefinition.FieldTypeId];
+      ValidationResult result = fieldType.Validate(fieldValue.Value);
+      if (!result.IsValid)
+      {
+        validationFailures.AddRange(result.Errors);
+        continue;
+      }
+
+      if (uniqueIds.Contains(fieldValue.Key))
+      {
+        uniqueValues[fieldValue.Key] = fieldValue.Value;
+      }
+    }
+
+    if (unexpectedIds.Count > 0)
+    {
+      IEnumerable<ValidationFailure> unexpectedFailures = unexpectedIds.Select(id => new ValidationFailure("FieldValues", "TODO(fpion): document", id)
+      {
+        ErrorCode = "TODO(fpion): document"
+      });
+      throw new ValidationException(unexpectedFailures);
+    }
+    if (requiredIds.Count > 0) // TODO(fpion): we don't care when saving content draft.
+    {
+      IEnumerable<ValidationFailure> requiredFailures = requiredIds.Select(id => new ValidationFailure("FieldValues", "TODO(fpion): document", id)
+      {
+        ErrorCode = "TODO(fpion): document"
+      });
+      throw new ValidationException(requiredFailures);
+    }
+    if (validationFailures.Count > 0)
+    {
+      throw new ValidationException(validationFailures);
+    }
+
+    if (uniqueValues.Count > 0)
+    {
+      IReadOnlyDictionary<Guid, ContentId> conflicts = await _contentQuerier.FindConflictsAsync(contentType.Id, languageId, uniqueValues, contentId, cancellationToken);
+      if (conflicts.Count > 0)
+      {
+        throw new NotImplementedException(); // TODO(fpion): typed exception
+      }
+    }
   }
 }
