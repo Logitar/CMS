@@ -12,20 +12,20 @@ public record UpdateContentTypeCommand(Guid Id, UpdateContentTypePayload Payload
 internal class UpdateContentTypeCommandHandler : IRequestHandler<UpdateContentTypeCommand, ContentTypeModel?>
 {
   private readonly IApplicationContext _applicationContext;
+  private readonly IContentTypeManager _contentTypeManager;
   private readonly IContentTypeQuerier _contentTypeQuerier;
   private readonly IContentTypeRepository _contentTypeRepository;
-  private readonly IMediator _mediator;
 
   public UpdateContentTypeCommandHandler(
     IApplicationContext applicationContext,
+    IContentTypeManager contentTypeManager,
     IContentTypeQuerier contentTypeQuerier,
-    IContentTypeRepository contentTypeRepository,
-    IMediator mediator)
+    IContentTypeRepository contentTypeRepository)
   {
     _applicationContext = applicationContext;
+    _contentTypeManager = contentTypeManager;
     _contentTypeQuerier = contentTypeQuerier;
     _contentTypeRepository = contentTypeRepository;
-    _mediator = mediator;
   }
 
   public async Task<ContentTypeModel?> Handle(UpdateContentTypeCommand command, CancellationToken cancellationToken)
@@ -63,7 +63,7 @@ internal class UpdateContentTypeCommandHandler : IRequestHandler<UpdateContentTy
 
     contentType.Update(actorId);
 
-    await _mediator.Send(new SaveContentTypeCommand(contentType), cancellationToken);
+    await _contentTypeManager.SaveAsync(contentType, cancellationToken);
 
     return await _contentTypeQuerier.ReadAsync(contentType, cancellationToken);
   }

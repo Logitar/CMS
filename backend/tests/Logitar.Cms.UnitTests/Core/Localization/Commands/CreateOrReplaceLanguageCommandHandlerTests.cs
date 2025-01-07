@@ -1,7 +1,6 @@
 ﻿using Logitar.Cms.Core.Localization.Models;
 using Logitar.EventSourcing;
 using Logitar.Identity.Core;
-using MediatR;
 using Moq;
 
 namespace Logitar.Cms.Core.Localization.Commands;
@@ -13,9 +12,9 @@ public class CreateOrReplaceLanguageCommandHandlerTests
   private readonly CancellationToken _cancellationToken = default;
 
   private readonly Mock<IApplicationContext> _applicationContext = new();
+  private readonly Mock<ILanguageManager> _languageManager = new();
   private readonly Mock<ILanguageQuerier> _languageQuerier = new();
   private readonly Mock<ILanguageRepository> _languageRepository = new();
-  private readonly Mock<IMediator> _mediator = new();
 
   private readonly CreateOrReplaceLanguageCommandHandler _handler;
 
@@ -23,7 +22,7 @@ public class CreateOrReplaceLanguageCommandHandlerTests
 
   public CreateOrReplaceLanguageCommandHandlerTests()
   {
-    _handler = new(_applicationContext.Object, _languageQuerier.Object, _languageRepository.Object, _mediator.Object);
+    _handler = new(_applicationContext.Object, _languageManager.Object, _languageQuerier.Object, _languageRepository.Object);
 
     _applicationContext.Setup(x => x.ActorId).Returns(_actorId);
     _languageRepository.Setup(x => x.LoadAsync(_english.Id, _cancellationToken)).ReturnsAsync(_english);
@@ -47,11 +46,11 @@ public class CreateOrReplaceLanguageCommandHandlerTests
     Assert.Same(language, result.Language);
     Assert.True(result.Created);
 
-    _mediator.Verify(x => x.Send(
-      It.Is<SaveLanguageCommand>(y => (!id.HasValue || y.Language.Id.ToGuid().Equals(id.Value))
-        && y.Language.CreatedBy == _actorId
-        && !y.Language.IsDefault
-        && y.Language.Locale.Code == payload.Locale),
+    _languageManager.Verify(x => x.SaveAsync(
+      It.Is<Language>(y => (!id.HasValue || y.Id.ToGuid().Equals(id.Value))
+        && y.CreatedBy == _actorId
+        && !y.IsDefault
+        && y.Locale.Code == payload.Locale),
       _cancellationToken), Times.Once);
   }
 
@@ -73,7 +72,7 @@ public class CreateOrReplaceLanguageCommandHandlerTests
     Assert.True(_english.IsDefault);
     Assert.Equal(payload.Locale, _english.Locale.Code);
 
-    _mediator.Verify(x => x.Send(It.Is<SaveLanguageCommand>(y => y.Language.Equals(_english)), _cancellationToken), Times.Once);
+    _languageManager.Verify(x => x.SaveAsync(_english, _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "Handle: it should return null when updating a language that does not exist.")]
@@ -125,6 +124,6 @@ public class CreateOrReplaceLanguageCommandHandlerTests
     Assert.True(_english.IsDefault);
     Assert.Equal(locale, _english.Locale);
 
-    _mediator.Verify(x => x.Send(It.Is<SaveLanguageCommand>(y => y.Language.Equals(_english)), _cancellationToken), Times.Once);
+    _languageManager.Verify(x => x.SaveAsync(_english, _cancellationToken), Times.Once);
   }
 }

@@ -14,20 +14,20 @@ public record CreateOrReplaceLanguageCommand(Guid? Id, CreateOrReplaceLanguagePa
 internal class CreateOrReplaceLanguageCommandHandler : IRequestHandler<CreateOrReplaceLanguageCommand, CreateOrReplaceLanguageResult>
 {
   private readonly IApplicationContext _applicationContext;
+  private readonly ILanguageManager _languageManager;
   private readonly ILanguageQuerier _languageQuerier;
   private readonly ILanguageRepository _languageRepository;
-  private readonly IMediator _mediator;
 
   public CreateOrReplaceLanguageCommandHandler(
     IApplicationContext applicationContext,
+    ILanguageManager languageManager,
     ILanguageQuerier languageQuerier,
-    ILanguageRepository languageRepository,
-    IMediator mediator)
+    ILanguageRepository languageRepository)
   {
     _applicationContext = applicationContext;
+    _languageManager = languageManager;
     _languageQuerier = languageQuerier;
     _languageRepository = languageRepository;
-    _mediator = mediator;
   }
 
   public async Task<CreateOrReplaceLanguageResult> Handle(CreateOrReplaceLanguageCommand command, CancellationToken cancellationToken)
@@ -69,7 +69,7 @@ internal class CreateOrReplaceLanguageCommandHandler : IRequestHandler<CreateOrR
       }
     }
 
-    await _mediator.Send(new SaveLanguageCommand(language), cancellationToken);
+    await _languageManager.SaveAsync(language, cancellationToken);
 
     LanguageModel model = await _languageQuerier.ReadAsync(language, cancellationToken);
     return new CreateOrReplaceLanguageResult(model, created);
