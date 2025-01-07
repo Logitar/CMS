@@ -83,6 +83,8 @@ internal class ContentManager : IContentManager
     bool isPublished,
     CancellationToken cancellationToken)
   {
+    const string PropertyName = "FieldValues";
+
     bool isInvariant = languageId == null;
     int capacity = contentType.FieldDefinitions.Count;
     Dictionary<Guid, FieldDefinition> fieldDefinitions = new(capacity);
@@ -135,7 +137,7 @@ internal class ContentManager : IContentManager
 
     if (unexpectedIds.Count > 0)
     {
-      IEnumerable<ValidationFailure> unexpectedFailures = unexpectedIds.Select(id => new ValidationFailure("FieldValues", "The specified field identifiers were not expected.", id)
+      IEnumerable<ValidationFailure> unexpectedFailures = unexpectedIds.Select(id => new ValidationFailure(PropertyName, "The specified field identifiers were not expected.", id)
       {
         ErrorCode = "UnexpectedFieldValidator"
       });
@@ -143,7 +145,7 @@ internal class ContentManager : IContentManager
     }
     if (isPublished && requiredIds.Count > 0)
     {
-      IEnumerable<ValidationFailure> requiredFailures = requiredIds.Select(id => new ValidationFailure("FieldValues", "The specified field identifiers are missing.", id)
+      IEnumerable<ValidationFailure> requiredFailures = requiredIds.Select(id => new ValidationFailure(PropertyName, "The specified field identifiers are missing.", id)
       {
         ErrorCode = "RequiredFieldValidator"
       });
@@ -159,7 +161,7 @@ internal class ContentManager : IContentManager
       IReadOnlyDictionary<Guid, ContentId> conflicts = await _contentQuerier.FindConflictsAsync(contentType.Id, languageId, uniqueValues, contentId, cancellationToken);
       if (conflicts.Count > 0)
       {
-        throw new NotImplementedException(); // TODO(fpion): typed exception
+        throw new ContentFieldValueConflictException(contentId, conflicts, PropertyName);
       }
     }
   }
