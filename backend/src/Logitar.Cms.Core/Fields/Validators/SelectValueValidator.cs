@@ -1,5 +1,6 @@
 ﻿using FluentValidation.Results;
 using Logitar.Cms.Core.Fields.Settings;
+using System.Text.Json;
 
 namespace Logitar.Cms.Core.Fields.Validators;
 
@@ -12,38 +13,57 @@ internal class SelectValueValidator : IFieldValueValidator
     _settings = settings;
   }
 
-  public ValidationResult Validate(string value, string propertyName)
+  public ValidationResult Validate(string inputValue, string propertyName)
   {
-    List<ValidationFailure> failures = new(capacity: -1); // TODO(fpion): capacity
+    IReadOnlyCollection<string> values = Parse(inputValue);
+    List<ValidationFailure> failures = new(capacity: 1 + values.Count);
 
-    //if (value.Length < _settings.MinimumLength)
-    //{
-    //  ValidationFailure failure = new(propertyName, $"The length of the value must be at least {_settings.MinimumLength} characters.", value)
-    //  {
-    //    CustomState = new { _settings.MinimumLength },
-    //    ErrorCode = "MinimumLengthValidator"
-    //  };
-    //  failures.Add(failure);
-    //}
-    //if (value.Length > _settings.MaximumLength)
-    //{
-    //  ValidationFailure failure = new(propertyName, $"The length of the value may not exceed {_settings.MaximumLength} characters.", value)
-    //  {
-    //    CustomState = new { _settings.MaximumLength },
-    //    ErrorCode = "MaximumLengthValidator"
-    //  };
-    //  failures.Add(failure);
-    //}
-    //if (_settings.Pattern != null && !Regex.IsMatch(value, _settings.Pattern))
-    //{
-    //  ValidationFailure failure = new(propertyName, $"The value must match the pattern '{_settings.Pattern}'.", value)
-    //  {
-    //    CustomState = new { _settings.Pattern },
-    //    ErrorCode = "RegularExpressionValidator"
-    //  };
-    //  failures.Add(failure);
-    //} // TODO(fpion): implement
+    if (values.Count < 0)
+    {
+      ValidationFailure failure = new(propertyName, "The value cannot be empty.", inputValue)
+      {
+        ErrorCode = "NotEmptyValidator"
+      };
+      failures.Add(failure);
+    }
+    else if (values.Count > 1 && !_settings.IsMultiple)
+    {
+      ValidationFailure failure = new(propertyName, "Exactly one value is allowed.", inputValue)
+      {
+        ErrorCode = "MultipleValidator"
+      };
+      failures.Add(failure);
+    }
+
+    HashSet<string> allowedValues = _settings.Options.Select(option => option.Value ?? option.Text).ToHashSet();
+    foreach (string value in values)
+    {
+      if (!allowedValues.Contains(value))
+      {
+        ValidationFailure failure = new(propertyName, "The value is not included within select options.", value)
+        {
+          ErrorCode = "OptionValidator"
+        };
+      }
+    }
 
     return new ValidationResult(failures);
+  }
+
+  private static IReadOnlyCollection<string> Parse(string value)
+  {
+    IReadOnlyCollection<string>? values = null;
+    if (value.StartsWith('[') && value.EndsWith(']'))
+    {
+      try
+      {
+        values = JsonSerializer.Deserialize<IReadOnlyCollection<string>>(value);
+      }
+      catch (Exception)
+      {
+      }
+    }
+
+    return values ?? [value];
   }
 }
