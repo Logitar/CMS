@@ -13,6 +13,7 @@ public class CmsContext : DbContext
   public DbSet<ContentLocaleEntity> ContentLocales => Set<ContentLocaleEntity>();
   public DbSet<ContentTypeEntity> ContentTypes => Set<ContentTypeEntity>();
   public DbSet<FieldDefinitionEntity> FieldDefinitions => Set<FieldDefinitionEntity>();
+  public DbSet<FieldIndexEntity> FieldIndex => Set<FieldIndexEntity>();
   public DbSet<FieldTypeEntity> FieldTypes => Set<FieldTypeEntity>();
   public DbSet<LanguageEntity> Languages => Set<LanguageEntity>();
   public DbSet<UniqueIndexEntity> UniqueIndex => Set<UniqueIndexEntity>();

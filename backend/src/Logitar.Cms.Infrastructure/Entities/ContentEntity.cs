@@ -12,6 +12,7 @@ public class ContentEntity : AggregateEntity
   public ContentTypeEntity? ContentType { get; private set; }
   public int ContentTypeId { get; private set; }
 
+  public List<FieldIndexEntity> FieldIndex { get; private set; } = [];
   public List<ContentLocaleEntity> Locales { get; private set; } = [];
   public List<UniqueIndexEntity> UniqueIndex { get; private set; } = [];
 

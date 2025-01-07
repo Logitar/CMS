@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Logitar.Cms.Infrastructure.Configurations;
 
-internal class UniqueIndexConfiguration : IEntityTypeConfiguration<UniqueIndexEntity>
+internal class FieldIndexConfiguration : IEntityTypeConfiguration<FieldIndexEntity>
 {
-  public void Configure(EntityTypeBuilder<UniqueIndexEntity> builder)
+  public void Configure(EntityTypeBuilder<FieldIndexEntity> builder)
   {
-    builder.ToTable(CmsDb.UniqueIndex.Table.Table ?? string.Empty, CmsDb.UniqueIndex.Table.Schema);
-    builder.HasKey(x => x.UniqueIndexId);
+    builder.ToTable(CmsDb.FieldIndex.Table.Table ?? string.Empty, CmsDb.FieldIndex.Table.Schema);
+    builder.HasKey(x => x.FieldIndexId);
 
     builder.HasIndex(x => x.ContentTypeId);
     builder.HasIndex(x => x.ContentTypeUid);
@@ -25,42 +25,41 @@ internal class UniqueIndexConfiguration : IEntityTypeConfiguration<UniqueIndexEn
     builder.HasIndex(x => x.FieldDefinitionId);
     builder.HasIndex(x => x.FieldDefinitionUid);
     builder.HasIndex(x => x.FieldDefinitionName);
-    builder.HasIndex(x => x.Status);
-    builder.HasIndex(x => x.Value);
-    builder.HasIndex(x => x.ValueNormalized);
-    builder.HasIndex(x => x.Key);
     builder.HasIndex(x => x.ContentId);
     builder.HasIndex(x => x.ContentUid);
     builder.HasIndex(x => x.ContentLocaleId);
     builder.HasIndex(x => x.ContentLocaleName);
-    builder.HasIndex(x => new { x.FieldDefinitionId, x.LanguageId, x.Status, x.ValueNormalized }).IsUnique();
+    builder.HasIndex(x => x.Status);
+    builder.HasIndex(x => x.Boolean);
+    builder.HasIndex(x => x.DateTime);
+    builder.HasIndex(x => x.Number);
+    builder.HasIndex(x => x.String);
+    builder.HasIndex(x => new { x.ContentLocaleId, x.FieldDefinitionId, x.Status }).IsUnique();
 
     builder.Property(x => x.ContentTypeName).HasMaxLength(Identifier.MaximumLength);
     builder.Property(x => x.LanguageCode).HasMaxLength(Locale.MaximumLength);
     builder.Property(x => x.FieldTypeName).HasMaxLength(UniqueName.MaximumLength);
     builder.Property(x => x.FieldDefinitionName).HasMaxLength(Identifier.MaximumLength);
     builder.Property(x => x.Status).HasMaxLength(10).HasConversion(new EnumToStringConverter<ContentStatus>()); // NOTE(fpion): the longest status name, Published, is only 9 characters.
-    builder.Property(x => x.Value).HasMaxLength(UniqueIndexEntity.MaximumLength);
-    builder.Property(x => x.ValueNormalized).HasMaxLength(UniqueIndexEntity.MaximumLength);
-    builder.Property(x => x.Key).HasMaxLength(UniqueIndexEntity.MaximumLength + 22 + 1); // NOTE(fpion): 22 base64 characters in a Guid and 1 separator character.
     builder.Property(x => x.ContentLocaleName).HasMaxLength(UniqueName.MaximumLength);
+    builder.Property(x => x.String).HasMaxLength(FieldIndexEntity.MaximumLength);
 
-    builder.HasOne(x => x.ContentType).WithMany(x => x.UniqueIndex)
+    builder.HasOne(x => x.ContentType).WithMany(x => x.FieldIndex)
       .HasPrincipalKey(x => x.ContentTypeId).HasForeignKey(x => x.ContentTypeId)
       .OnDelete(DeleteBehavior.Cascade);
-    builder.HasOne(x => x.Language).WithMany(x => x.UniqueIndex)
+    builder.HasOne(x => x.Language).WithMany(x => x.FieldIndex)
       .HasPrincipalKey(x => x.LanguageId).HasForeignKey(x => x.LanguageId)
       .OnDelete(DeleteBehavior.Cascade);
-    builder.HasOne(x => x.FieldType).WithMany(x => x.UniqueIndex)
+    builder.HasOne(x => x.FieldType).WithMany(x => x.FieldIndex)
       .HasPrincipalKey(x => x.FieldTypeId).HasForeignKey(x => x.FieldTypeId)
       .OnDelete(DeleteBehavior.Cascade);
-    builder.HasOne(x => x.FieldDefinition).WithMany(x => x.UniqueIndex)
+    builder.HasOne(x => x.FieldDefinition).WithMany(x => x.FieldIndex)
       .HasPrincipalKey(x => x.FieldDefinitionId).HasForeignKey(x => x.FieldDefinitionId)
       .OnDelete(DeleteBehavior.Cascade);
-    builder.HasOne(x => x.Content).WithMany(x => x.UniqueIndex)
+    builder.HasOne(x => x.Content).WithMany(x => x.FieldIndex)
       .HasPrincipalKey(x => x.ContentId).HasForeignKey(x => x.ContentId)
       .OnDelete(DeleteBehavior.Cascade);
-    builder.HasOne(x => x.ContentLocale).WithMany(x => x.UniqueIndex)
+    builder.HasOne(x => x.ContentLocale).WithMany(x => x.FieldIndex)
       .HasPrincipalKey(x => x.ContentLocaleId).HasForeignKey(x => x.ContentLocaleId)
       .OnDelete(DeleteBehavior.Cascade);
   }

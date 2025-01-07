@@ -23,9 +23,10 @@ public class ContentTypeEntity : AggregateEntity
 
   public int FieldCount { get; private set; }
 
-  public List<ContentLocaleEntity> ContentLocales { get; private set; } = [];
   public List<ContentEntity> Contents { get; private set; } = [];
+  public List<ContentLocaleEntity> ContentLocales { get; private set; } = [];
   public List<FieldDefinitionEntity> Fields { get; private set; } = [];
+  public List<FieldIndexEntity> FieldIndex { get; private set; } = [];
   public List<UniqueIndexEntity> UniqueIndex { get; private set; } = [];
 
   public ContentTypeEntity(ContentTypeCreated @event) : base(@event)
