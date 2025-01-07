@@ -1,5 +1,6 @@
 ﻿using Logitar.Cms.Core.Fields.Events;
 using Logitar.Cms.Infrastructure.Entities;
+using Logitar.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,10 +15,12 @@ internal class FieldTypeEvents : INotificationHandler<FieldTypeBooleanSettingsCh
   INotificationHandler<FieldTypeUniqueNameChanged>,
   INotificationHandler<FieldTypeUpdated>
 {
+  private readonly ICommandHelper _commandHelper;
   private readonly CmsContext _context;
 
-  public FieldTypeEvents(CmsContext context)
+  public FieldTypeEvents(ICommandHelper commandHelper, CmsContext context)
   {
+    _commandHelper = commandHelper;
     _context = context;
   }
 
@@ -104,6 +107,18 @@ internal class FieldTypeEvents : INotificationHandler<FieldTypeBooleanSettingsCh
       fieldType.SetUniqueName(@event);
 
       await _context.SaveChangesAsync(cancellationToken);
+
+      ICommand command = _commandHelper.Update()
+        .Set(new Update(CmsDb.FieldIndex.FieldTypeName, fieldType.UniqueNameNormalized))
+        .Where(new OperatorCondition(CmsDb.FieldIndex.FieldTypeId, Operators.IsEqualTo(fieldType.FieldTypeId)))
+        .Build();
+      await _context.Database.ExecuteSqlRawAsync(command.Text, command.Parameters.ToArray(), cancellationToken);
+
+      command = _commandHelper.Update()
+        .Set(new Update(CmsDb.UniqueIndex.FieldTypeName, fieldType.UniqueNameNormalized))
+        .Where(new OperatorCondition(CmsDb.UniqueIndex.FieldTypeId, Operators.IsEqualTo(fieldType.FieldTypeId)))
+        .Build();
+      await _context.Database.ExecuteSqlRawAsync(command.Text, command.Parameters.ToArray(), cancellationToken);
     }
   }
 

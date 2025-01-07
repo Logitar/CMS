@@ -5,11 +5,6 @@ namespace Logitar.Cms.Infrastructure.Entities;
 // TODO(fpion): insert values
 // TODO(fpion): remove values
 // TODO(fpion): update values
-// TODO(fpion): update index on ContentType Name change
-// TODO(fpion): update index on Language Code change
-// TODO(fpion): update index on FieldType Name change
-// TODO(fpion): update index on FieldDefinition Name change
-// TODO(fpion): update index on ContentLocale Name change
 
 public class UniqueIndexEntity
 {

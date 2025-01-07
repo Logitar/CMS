@@ -1,5 +1,6 @@
 ﻿using Logitar.Cms.Core.Contents.Events;
 using Logitar.Cms.Infrastructure.Entities;
+using Logitar.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,10 +9,12 @@ namespace Logitar.Cms.Infrastructure.Handlers;
 internal class ContentEvents : INotificationHandler<ContentCreated>,
   INotificationHandler<ContentLocaleChanged>
 {
+  private readonly ICommandHelper _commandHelper;
   private readonly CmsContext _context;
 
-  public ContentEvents(CmsContext context)
+  public ContentEvents(ICommandHelper commandHelper, CmsContext context)
   {
+    _commandHelper = commandHelper;
     _context = context;
   }
 
@@ -30,6 +33,8 @@ internal class ContentEvents : INotificationHandler<ContentCreated>,
       _context.Contents.Add(content);
 
       await _context.SaveChangesAsync(cancellationToken);
+
+      // TODO(fpion): update indices
     }
   }
 
@@ -50,6 +55,22 @@ internal class ContentEvents : INotificationHandler<ContentCreated>,
       content.SetLocale(language, @event);
 
       await _context.SaveChangesAsync(cancellationToken);
+
+      // TODO(fpion): update indices
+
+      ContentLocaleEntity locale = content.Locales.Single(l => l.LanguageId == language?.LanguageId);
+
+      ICommand command = _commandHelper.Update()
+        .Set(new Update(CmsDb.FieldIndex.ContentLocaleName, locale.UniqueNameNormalized))
+        .Where(new OperatorCondition(CmsDb.FieldIndex.ContentLocaleId, Operators.IsEqualTo(locale.ContentLocaleId)))
+        .Build();
+      await _context.Database.ExecuteSqlRawAsync(command.Text, command.Parameters.ToArray(), cancellationToken);
+
+      command = _commandHelper.Update()
+        .Set(new Update(CmsDb.UniqueIndex.ContentLocaleName, locale.UniqueNameNormalized))
+        .Where(new OperatorCondition(CmsDb.UniqueIndex.ContentLocaleId, Operators.IsEqualTo(locale.ContentLocaleId)))
+        .Build();
+      await _context.Database.ExecuteSqlRawAsync(command.Text, command.Parameters.ToArray(), cancellationToken);
     }
   }
 }

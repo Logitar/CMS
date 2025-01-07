@@ -1,5 +1,6 @@
 ﻿using Logitar.Cms.Core.Contents.Events;
 using Logitar.Cms.Infrastructure.Entities;
+using Logitar.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,10 +11,12 @@ internal class ContentTypeEvents : INotificationHandler<ContentTypeCreated>,
   INotificationHandler<ContentTypeUniqueNameChanged>,
   INotificationHandler<ContentTypeUpdated>
 {
+  private readonly ICommandHelper _commandHelper;
   private readonly CmsContext _context;
 
-  public ContentTypeEvents(CmsContext context)
+  public ContentTypeEvents(ICommandHelper commandHelper, CmsContext context)
   {
+    _commandHelper = commandHelper;
     _context = context;
   }
 
@@ -45,6 +48,20 @@ internal class ContentTypeEvents : INotificationHandler<ContentTypeCreated>,
       contentType.SetField(fieldType, @event);
 
       await _context.SaveChangesAsync(cancellationToken);
+
+      FieldDefinitionEntity fieldDefinition = contentType.Fields.Single(f => f.Id == @event.FieldDefinition.Id);
+
+      ICommand command = _commandHelper.Update()
+        .Set(new Update(CmsDb.FieldIndex.FieldDefinitionName, fieldDefinition.UniqueNameNormalized))
+        .Where(new OperatorCondition(CmsDb.FieldIndex.FieldDefinitionId, Operators.IsEqualTo(fieldDefinition.FieldDefinitionId)))
+        .Build();
+      await _context.Database.ExecuteSqlRawAsync(command.Text, command.Parameters.ToArray(), cancellationToken);
+
+      command = _commandHelper.Update()
+        .Set(new Update(CmsDb.UniqueIndex.FieldDefinitionName, fieldDefinition.UniqueNameNormalized))
+        .Where(new OperatorCondition(CmsDb.UniqueIndex.FieldDefinitionId, Operators.IsEqualTo(fieldDefinition.FieldDefinitionId)))
+        .Build();
+      await _context.Database.ExecuteSqlRawAsync(command.Text, command.Parameters.ToArray(), cancellationToken);
     }
   }
 
@@ -57,6 +74,18 @@ internal class ContentTypeEvents : INotificationHandler<ContentTypeCreated>,
       contentType.SetUniqueName(@event);
 
       await _context.SaveChangesAsync(cancellationToken);
+
+      ICommand command = _commandHelper.Update()
+        .Set(new Update(CmsDb.FieldIndex.ContentTypeName, contentType.UniqueNameNormalized))
+        .Where(new OperatorCondition(CmsDb.FieldIndex.ContentTypeId, Operators.IsEqualTo(contentType.ContentTypeId)))
+        .Build();
+      await _context.Database.ExecuteSqlRawAsync(command.Text, command.Parameters.ToArray(), cancellationToken);
+
+      command = _commandHelper.Update()
+        .Set(new Update(CmsDb.UniqueIndex.ContentTypeName, contentType.UniqueNameNormalized))
+        .Where(new OperatorCondition(CmsDb.UniqueIndex.ContentTypeId, Operators.IsEqualTo(contentType.ContentTypeId)))
+        .Build();
+      await _context.Database.ExecuteSqlRawAsync(command.Text, command.Parameters.ToArray(), cancellationToken);
     }
   }
 

@@ -1,5 +1,6 @@
 ﻿using Logitar.Cms.Core.Localization.Events;
 using Logitar.Cms.Infrastructure.Entities;
+using Logitar.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,10 +10,12 @@ internal class LanguageEvents : INotificationHandler<LanguageCreated>,
   INotificationHandler<LanguageLocaleChanged>,
   INotificationHandler<LanguageSetDefault>
 {
+  private readonly ICommandHelper _commandHelper;
   private readonly CmsContext _context;
 
-  public LanguageEvents(CmsContext context)
+  public LanguageEvents(ICommandHelper commandHelper, CmsContext context)
   {
+    _commandHelper = commandHelper;
     _context = context;
   }
 
@@ -39,6 +42,18 @@ internal class LanguageEvents : INotificationHandler<LanguageCreated>,
       language.SetLocale(@event);
 
       await _context.SaveChangesAsync(cancellationToken);
+
+      ICommand command = _commandHelper.Update()
+        .Set(new Update(CmsDb.FieldIndex.LanguageCode, language.CodeNormalized))
+        .Where(new OperatorCondition(CmsDb.FieldIndex.LanguageId, Operators.IsEqualTo(language.LanguageId)))
+        .Build();
+      await _context.Database.ExecuteSqlRawAsync(command.Text, command.Parameters.ToArray(), cancellationToken);
+
+      command = _commandHelper.Update()
+        .Set(new Update(CmsDb.UniqueIndex.LanguageCode, language.CodeNormalized))
+        .Where(new OperatorCondition(CmsDb.UniqueIndex.LanguageId, Operators.IsEqualTo(language.LanguageId)))
+        .Build();
+      await _context.Database.ExecuteSqlRawAsync(command.Text, command.Parameters.ToArray(), cancellationToken);
     }
   }
 

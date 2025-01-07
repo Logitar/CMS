@@ -27,6 +27,7 @@ public static class DependencyInjectionExtensions
     return services
       .AddDbContext<CmsContext>(options => options.UseSqlServer(connectionString, builder => builder.MigrationsAssembly("Logitar.Cms.Infrastructure.SqlServer")))
       .AddLogitarIdentityWithEntityFrameworkCoreSqlServer(connectionString)
+      .AddSingleton<ICommandHelper, SqlServerCommandHelper>()
       .AddSingleton<IQueryHelper, SqlServerQueryHelper>();
   }
 }
