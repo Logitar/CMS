@@ -17,26 +17,26 @@ public record CreateOrReplaceContentCommand(Guid? ContentId, Guid? LanguageId, C
 internal class CreateOrReplaceContentCommandHandler : IRequestHandler<CreateOrReplaceContentCommand, CreateOrReplaceContentResult>
 {
   private readonly IApplicationContext _applicationContext;
+  private readonly IContentManager _contentManager;
   private readonly IContentQuerier _contentQuerier;
   private readonly IContentRepository _contentRepository;
   private readonly IContentTypeRepository _contentTypeRepository;
   private readonly ILanguageRepository _languageRepository;
-  private readonly IMediator _mediator;
 
   public CreateOrReplaceContentCommandHandler(
     IApplicationContext applicationContext,
+    IContentManager contentManager,
     IContentQuerier contentQuerier,
     IContentRepository contentRepository,
     IContentTypeRepository contentTypeRepository,
-    ILanguageRepository languageRepository,
-    IMediator mediator)
+    ILanguageRepository languageRepository)
   {
     _applicationContext = applicationContext;
+    _contentManager = contentManager;
     _contentQuerier = contentQuerier;
     _contentRepository = contentRepository;
     _contentTypeRepository = contentTypeRepository;
     _languageRepository = languageRepository;
-    _mediator = mediator;
   }
 
   public async Task<CreateOrReplaceContentResult> Handle(CreateOrReplaceContentCommand command, CancellationToken cancellationToken)
@@ -52,38 +52,41 @@ internal class CreateOrReplaceContentCommandHandler : IRequestHandler<CreateOrRe
       content = await _contentRepository.LoadAsync(contentId.Value, cancellationToken);
     }
 
+    ContentType contentType;
     bool created = false;
     if (content == null)
     {
-      content = await CreateAsync(payload, command.LanguageId, contentId, cancellationToken);
+      if (!payload.ContentTypeId.HasValue)
+      {
+        ValidationFailure failure = new(nameof(payload.ContentTypeId), "'ContentTypeId' is required when creating content.", payload.ContentTypeId)
+        {
+          ErrorCode = "RequiredValidator"
+        };
+        throw new ValidationException([failure]);
+      }
+
+      ContentTypeId contentTypeId = new(payload.ContentTypeId.Value);
+      contentType = await _contentTypeRepository.LoadAsync(contentTypeId, cancellationToken)
+        ?? throw new ContentTypeNotFoundException(contentTypeId, nameof(payload.ContentTypeId));
+
+      content = await CreateAsync(payload, contentType, command.LanguageId, contentId, cancellationToken);
       created = true;
     }
     else
     {
-      await ReplaceAsync(content, payload, command.LanguageId, cancellationToken);
+      contentType = await _contentTypeRepository.LoadAsync(content, cancellationToken);
+
+      await ReplaceAsync(content, payload, contentType, command.LanguageId, cancellationToken);
     }
 
-    await _mediator.Send(new SaveContentCommand(content), cancellationToken);
+    await _contentManager.SaveAsync(content, contentType, cancellationToken);
 
     ContentModel model = await _contentQuerier.ReadAsync(content, cancellationToken);
     return new CreateOrReplaceContentResult(model, created);
   }
 
-  private async Task<Content> CreateAsync(CreateOrReplaceContentPayload payload, Guid? languageGuid, ContentId? contentId, CancellationToken cancellationToken)
+  private async Task<Content> CreateAsync(CreateOrReplaceContentPayload payload, ContentType contentType, Guid? languageGuid, ContentId? contentId, CancellationToken cancellationToken)
   {
-    if (!payload.ContentTypeId.HasValue)
-    {
-      ValidationFailure failure = new(nameof(payload.ContentTypeId), "'ContentTypeId' is required when creating content.", payload.ContentTypeId)
-      {
-        ErrorCode = "RequiredValidator"
-      };
-      throw new ValidationException([failure]);
-    }
-
-    ContentTypeId contentTypeId = new(payload.ContentTypeId.Value);
-    ContentType contentType = await _contentTypeRepository.LoadAsync(contentTypeId, cancellationToken)
-      ?? throw new ContentTypeNotFoundException(contentTypeId, nameof(payload.ContentTypeId));
-
     string? errorMessage = null;
     if (contentType.IsInvariant && languageGuid.HasValue)
     {
@@ -120,12 +123,13 @@ internal class CreateOrReplaceContentCommandHandler : IRequestHandler<CreateOrRe
     return content;
   }
 
-  private async Task ReplaceAsync(Content content, CreateOrReplaceContentPayload payload, Guid? languageGuid, CancellationToken cancellationToken)
+  private async Task ReplaceAsync(Content content, CreateOrReplaceContentPayload payload, ContentType contentType, Guid? languageGuid, CancellationToken cancellationToken)
   {
-    Language? language = null;
+    ContentLocale invariantOrLocale = CreateLocale(payload);
+    ActorId? actorId = _applicationContext.ActorId;
+
     if (languageGuid.HasValue)
     {
-      ContentType contentType = await _contentTypeRepository.LoadAsync(content, cancellationToken);
       if (contentType.IsInvariant)
       {
         ValidationFailure failure = new("LanguageId", "'LanguageId' must be null. The content type is invariant.", languageGuid)
@@ -136,19 +140,14 @@ internal class CreateOrReplaceContentCommandHandler : IRequestHandler<CreateOrRe
       }
 
       LanguageId languageId = new(languageGuid.Value);
-      language = await _languageRepository.LoadAsync(languageId, cancellationToken)
+      Language language = await _languageRepository.LoadAsync(languageId, cancellationToken)
         ?? throw new LanguageNotFoundException(languageId, "LanguageId");
-    }
 
-    ContentLocale invariantOrLocale = CreateLocale(payload);
-    ActorId? actorId = _applicationContext.ActorId;
-    if (language == null)
-    {
-      content.SetInvariant(invariantOrLocale, actorId);
+      content.SetLocale(language, invariantOrLocale, actorId);
     }
     else
     {
-      content.SetLocale(language, invariantOrLocale, actorId);
+      content.SetInvariant(invariantOrLocale, actorId);
     }
   }
 

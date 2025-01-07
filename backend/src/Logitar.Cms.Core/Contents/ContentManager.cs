@@ -1,26 +1,33 @@
 ﻿using Logitar.Cms.Core.Contents.Events;
 using Logitar.Cms.Core.Localization;
 using Logitar.EventSourcing;
-using MediatR;
 
-namespace Logitar.Cms.Core.Contents.Commands;
+namespace Logitar.Cms.Core.Contents;
 
-public record SaveContentCommand(Content Content) : IRequest;
-
-internal class SaveContentCommandHandler : IRequestHandler<SaveContentCommand>
+internal class ContentManager : IContentManager
 {
   private readonly IContentQuerier _contentQuerier;
   private readonly IContentRepository _contentRepository;
+  private readonly IContentTypeRepository _contentTypeRepository;
 
-  public SaveContentCommandHandler(IContentQuerier contentQuerier, IContentRepository contentRepository)
+  public ContentManager(IContentQuerier contentQuerier, IContentRepository contentRepository, IContentTypeRepository contentTypeRepository)
   {
     _contentQuerier = contentQuerier;
     _contentRepository = contentRepository;
+    _contentTypeRepository = contentTypeRepository;
   }
 
-  public async Task Handle(SaveContentCommand command, CancellationToken cancellationToken)
+  public async Task SaveAsync(Content content, CancellationToken cancellationToken)
   {
-    Content content = command.Content;
+    ContentType contentType = await _contentTypeRepository.LoadAsync(content, cancellationToken);
+    await SaveAsync(content, contentType, cancellationToken);
+  }
+  public async Task SaveAsync(Content content, ContentType contentType, CancellationToken cancellationToken)
+  {
+    if (contentType.Id != content.ContentTypeId)
+    {
+      throw new ArgumentException($"The content type 'Id={contentType.Id}' was not expected. The expected content type for content 'Id={content.Id}' is '{content.ContentTypeId}'.", nameof(contentType));
+    }
 
     HashSet<LanguageId?> languageIds = new(capacity: content.Locales.Count + 1);
     foreach (IEvent change in content.Changes)

@@ -14,23 +14,23 @@ public record UpdateContentCommand(Guid ContentId, Guid? LanguageId, UpdateConte
 internal class UpdateContentLocaleCommandHandler : IRequestHandler<UpdateContentCommand, ContentModel?>
 {
   private readonly IApplicationContext _applicationContext;
+  private readonly IContentManager _contentManager;
   private readonly IContentQuerier _contentQuerier;
   private readonly IContentRepository _contentRepository;
   private readonly ILanguageRepository _languageRepository;
-  private readonly IMediator _mediator;
 
   public UpdateContentLocaleCommandHandler(
     IApplicationContext applicationContext,
+    IContentManager contentManager,
     IContentQuerier contentQuerier,
     IContentRepository contentRepository,
-    ILanguageRepository languageRepository,
-    IMediator mediator)
+    ILanguageRepository languageRepository)
   {
     _applicationContext = applicationContext;
+    _contentManager = contentManager;
     _contentQuerier = contentQuerier;
     _contentRepository = contentRepository;
     _languageRepository = languageRepository;
-    _mediator = mediator;
   }
 
   public async Task<ContentModel?> Handle(UpdateContentCommand command, CancellationToken cancellationToken)
@@ -93,7 +93,7 @@ internal class UpdateContentLocaleCommandHandler : IRequestHandler<UpdateContent
       content.SetLocale(language, invariantOrLocale, actorId);
     }
 
-    await _mediator.Send(new SaveContentCommand(content), cancellationToken);
+    await _contentManager.SaveAsync(content, cancellationToken);
 
     return await _contentQuerier.ReadAsync(content, cancellationToken);
   }
