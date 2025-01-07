@@ -31,11 +31,14 @@ public class FieldDefinitionEntity
   public string? Description { get; private set; }
   public string? Placeholder { get; private set; }
 
+  public List<FieldIndexEntity> FieldIndex { get; private set; } = [];
+  public List<UniqueIndexEntity> UniqueIndex { get; private set; } = [];
+
   public FieldDefinitionEntity(ContentTypeEntity contentType, FieldTypeEntity fieldType, int order, ContentTypeFieldDefinitionChanged @event)
   {
     ContentType = contentType;
     ContentTypeId = contentType.ContentTypeId;
-    Id = @event.FieldId;
+    Id = @event.FieldDefinition.Id;
     Order = order;
 
     FieldType = fieldType;

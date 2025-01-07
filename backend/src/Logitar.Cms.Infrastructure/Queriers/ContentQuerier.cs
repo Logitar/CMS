@@ -19,6 +19,7 @@ internal class ContentQuerier : IContentQuerier
   private readonly DbSet<ContentEntity> _contents;
   private readonly DbSet<ContentLocaleEntity> _contentLocales;
   private readonly IQueryHelper _queryHelper;
+  private readonly DbSet<UniqueIndexEntity> _uniqueIndex;
 
   public ContentQuerier(IActorService actorService, CmsContext context, IQueryHelper queryHelper)
   {
@@ -26,6 +27,34 @@ internal class ContentQuerier : IContentQuerier
     _contents = context.Contents;
     _contentLocales = context.ContentLocales;
     _queryHelper = queryHelper;
+    _uniqueIndex = context.UniqueIndex;
+  }
+
+  public async Task<IReadOnlyDictionary<Guid, ContentId>> FindConflictsAsync(
+    ContentTypeId contentTypeId,
+    LanguageId? languageId,
+    IReadOnlyDictionary<Guid, string> fieldValues,
+    ContentId contentId,
+    CancellationToken cancellationToken)
+  {
+    Guid contentTypeUid = contentTypeId.ToGuid();
+    Guid? languageUid = languageId?.ToGuid();
+    HashSet<string> keys = fieldValues.Select(UniqueIndexEntity.CreateKey).ToHashSet();
+    Guid contentUid = contentId.ToGuid();
+
+    var conflicts = await _uniqueIndex.AsNoTracking()
+      .Where(x => x.ContentTypeUid == contentTypeUid
+        && (languageUid.HasValue ? x.LanguageUid == languageUid.Value : x.LanguageUid == null)
+        && keys.Contains(x.Key)
+        && x.ContentUid != contentUid)
+      .Select(x => new
+      {
+        FieldDefinitionId = x.FieldDefinitionUid,
+        ContentId = x.ContentUid
+      })
+      .ToArrayAsync(cancellationToken);
+
+    return conflicts.ToDictionary(x => x.FieldDefinitionId, x => new ContentId(x.ContentId));
   }
 
   public async Task<ContentId?> FindIdAsync(ContentTypeId contentTypeId, LanguageId? languageId, UniqueName uniqueName, CancellationToken cancellationToken)

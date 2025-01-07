@@ -3,6 +3,7 @@
 namespace Logitar.Cms.Core.Fields;
 
 public record FieldDefinition(
+  Guid Id,
   FieldTypeId FieldTypeId,
   bool IsInvariant,
   bool IsRequired,

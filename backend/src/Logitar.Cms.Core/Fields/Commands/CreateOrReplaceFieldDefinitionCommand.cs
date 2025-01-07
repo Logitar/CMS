@@ -4,7 +4,6 @@ using Logitar.Cms.Core.Contents;
 using Logitar.Cms.Core.Contents.Models;
 using Logitar.Cms.Core.Fields.Models;
 using Logitar.Cms.Core.Fields.Validators;
-using Logitar.EventSourcing;
 using Logitar.Identity.Core;
 using MediatR;
 
@@ -67,21 +66,13 @@ internal class CreateOrReplaceFieldDefinitionCommandHandler : IRequestHandler<Cr
       _ = await _fieldTypeRepository.LoadAsync(fieldTypeId.Value, cancellationToken) ?? throw new FieldTypeNotFoundException(fieldTypeId.Value, nameof(payload.FieldTypeId));
     }
 
+    Guid fieldId = command.FieldId ?? Guid.NewGuid();
     Identifier uniqueName = new(payload.UniqueName);
     DisplayName? displayName = DisplayName.TryCreate(payload.DisplayName);
     Description? description = Description.TryCreate(payload.Description);
     Placeholder? placeholder = Placeholder.TryCreate(payload.Placeholder);
-    FieldDefinition fieldDefinition = new(fieldTypeId.Value, payload.IsInvariant, payload.IsRequired, payload.IsIndexed, payload.IsUnique, uniqueName, displayName, description, placeholder);
-
-    ActorId? actorId = _applicationContext.ActorId;
-    if (command.FieldId.HasValue)
-    {
-      contentType.SetField(command.FieldId.Value, fieldDefinition, actorId);
-    }
-    else
-    {
-      contentType.AddField(fieldDefinition, actorId);
-    }
+    FieldDefinition fieldDefinition = new(fieldId, fieldTypeId.Value, payload.IsInvariant, payload.IsRequired, payload.IsIndexed, payload.IsUnique, uniqueName, displayName, description, placeholder);
+    contentType.SetField(fieldDefinition, _applicationContext.ActorId);
 
     await _contentTypeRepository.SaveAsync(contentType, cancellationToken);
 

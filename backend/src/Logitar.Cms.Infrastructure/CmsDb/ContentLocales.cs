@@ -17,6 +17,7 @@ public static class ContentLocales
   public static readonly ColumnId ContentTypeId = new(nameof(ContentLocaleEntity.ContentTypeId), Table);
   public static readonly ColumnId Description = new(nameof(ContentLocaleEntity.Description), Table);
   public static readonly ColumnId DisplayName = new(nameof(ContentLocaleEntity.DisplayName), Table);
+  public static readonly ColumnId FieldValues = new(nameof(ContentLocaleEntity.FieldValues), Table);
   public static readonly ColumnId LanguageId = new(nameof(ContentLocaleEntity.LanguageId), Table);
   public static readonly ColumnId UniqueName = new(nameof(ContentLocaleEntity.UniqueName), Table);
   public static readonly ColumnId UniqueNameNormalized = new(nameof(ContentLocaleEntity.UniqueNameNormalized), Table);

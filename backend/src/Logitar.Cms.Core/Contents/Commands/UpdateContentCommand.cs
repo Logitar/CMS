@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Logitar.Cms.Core.Contents.Models;
 using Logitar.Cms.Core.Contents.Validators;
+using Logitar.Cms.Core.Fields.Models;
 using Logitar.Cms.Core.Localization;
 using Logitar.EventSourcing;
 using Logitar.Identity.Core;
@@ -13,23 +14,23 @@ public record UpdateContentCommand(Guid ContentId, Guid? LanguageId, UpdateConte
 internal class UpdateContentLocaleCommandHandler : IRequestHandler<UpdateContentCommand, ContentModel?>
 {
   private readonly IApplicationContext _applicationContext;
+  private readonly IContentManager _contentManager;
   private readonly IContentQuerier _contentQuerier;
   private readonly IContentRepository _contentRepository;
   private readonly ILanguageRepository _languageRepository;
-  private readonly IMediator _mediator;
 
   public UpdateContentLocaleCommandHandler(
     IApplicationContext applicationContext,
+    IContentManager contentManager,
     IContentQuerier contentQuerier,
     IContentRepository contentRepository,
-    ILanguageRepository languageRepository,
-    IMediator mediator)
+    ILanguageRepository languageRepository)
   {
     _applicationContext = applicationContext;
+    _contentManager = contentManager;
     _contentQuerier = contentQuerier;
     _contentRepository = contentRepository;
     _languageRepository = languageRepository;
-    _mediator = mediator;
   }
 
   public async Task<ContentModel?> Handle(UpdateContentCommand command, CancellationToken cancellationToken)
@@ -63,12 +64,25 @@ internal class UpdateContentLocaleCommandHandler : IRequestHandler<UpdateContent
       invariantOrLocale = content.Invariant;
     }
 
-    ActorId? actorId = _applicationContext.ActorId;
-
     UniqueName uniqueName = string.IsNullOrWhiteSpace(payload.UniqueName) ? invariantOrLocale.UniqueName : new(Content.UniqueNameSettings, payload.UniqueName);
     DisplayName? displayName = payload.DisplayName == null ? invariantOrLocale.DisplayName : DisplayName.TryCreate(payload.DisplayName.Value);
     Description? description = payload.Description == null ? invariantOrLocale.Description : Description.TryCreate(payload.Description.Value);
-    invariantOrLocale = new(uniqueName, displayName, description);
+
+    Dictionary<Guid, string> fieldValues = new(invariantOrLocale.FieldValues);
+    foreach (FieldValueUpdate fieldValue in payload.FieldValues)
+    {
+      if (string.IsNullOrWhiteSpace(fieldValue.Value))
+      {
+        fieldValues.Remove(fieldValue.Id);
+      }
+      else
+      {
+        fieldValues[fieldValue.Id] = fieldValue.Value;
+      }
+    }
+
+    invariantOrLocale = new(uniqueName, displayName, description, fieldValues);
+    ActorId? actorId = _applicationContext.ActorId;
 
     if (language == null)
     {
@@ -79,7 +93,7 @@ internal class UpdateContentLocaleCommandHandler : IRequestHandler<UpdateContent
       content.SetLocale(language, invariantOrLocale, actorId);
     }
 
-    await _mediator.Send(new SaveContentCommand(content), cancellationToken);
+    await _contentManager.SaveAsync(content, cancellationToken);
 
     return await _contentQuerier.ReadAsync(content, cancellationToken);
   }

@@ -74,35 +74,30 @@ public class ContentType : AggregateRoot
     _uniqueName = @event.UniqueName;
   }
 
-  public void AddField(FieldDefinition fieldDefinition, ActorId? actorId = null)
-  {
-    SetField(Guid.NewGuid(), fieldDefinition, actorId);
-  }
-
   public FieldDefinition FindField(Guid id) => TryGetField(id) ?? throw new InvalidOperationException($"The field 'Id={id}' could not be found.");
   public FieldDefinition FindField(Identifier uniqueName) => TryGetField(uniqueName) ?? throw new InvalidOperationException($"The field 'UniqueName={uniqueName}' could not be found.");
 
-  public void SetField(Guid fieldId, FieldDefinition fieldDefinition, ActorId? actorId = null)
+  public void SetField(FieldDefinition fieldDefinition, ActorId? actorId = null)
   {
-    if (!_fieldsById.TryGetValue(fieldId, out int index))
+    if (!_fieldsById.TryGetValue(fieldDefinition.Id, out int index))
     {
       index = -1;
     }
     if (_fieldsByUniqueName.TryGetValue(fieldDefinition.UniqueName, out int conflict) && conflict != index)
     {
       Guid conflictId = _fieldsById.Where(x => x.Value == conflict).Single().Key;
-      throw new UniqueNameAlreadyUsedException(conflictId, fieldId, fieldDefinition.UniqueName.Value, nameof(fieldDefinition.UniqueName));
+      throw new UniqueNameAlreadyUsedException(conflictId, fieldDefinition.Id, fieldDefinition.UniqueName.Value, nameof(fieldDefinition.UniqueName));
     }
 
     FieldDefinition? existingField = index < 0 ? null : _fieldDefinitions.ElementAt(index);
     if (existingField == null || !existingField.Equals(fieldDefinition))
     {
-      Raise(new ContentTypeFieldDefinitionChanged(fieldId, fieldDefinition), actorId);
+      Raise(new ContentTypeFieldDefinitionChanged(fieldDefinition), actorId);
     }
   }
   protected virtual void Handle(ContentTypeFieldDefinitionChanged @event)
   {
-    if (_fieldsById.TryGetValue(@event.FieldId, out int index))
+    if (_fieldsById.TryGetValue(@event.FieldDefinition.Id, out int index))
     {
       FieldDefinition existingField = _fieldDefinitions.ElementAt(index);
       _fieldDefinitions[index] = existingField;
@@ -119,7 +114,7 @@ public class ContentType : AggregateRoot
 
       _fieldDefinitions.Add(@event.FieldDefinition);
 
-      _fieldsById[@event.FieldId] = index;
+      _fieldsById[@event.FieldDefinition.Id] = index;
       _fieldsByUniqueName[@event.FieldDefinition.UniqueName] = index;
     }
   }

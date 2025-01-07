@@ -24,6 +24,8 @@ public class LanguageEntity : AggregateEntity
   public string NativeName { get; private set; } = string.Empty;
 
   public List<ContentLocaleEntity> ContentLocales { get; private set; } = [];
+  public List<FieldIndexEntity> FieldIndex { get; private set; } = [];
+  public List<UniqueIndexEntity> UniqueIndex { get; private set; } = [];
 
   public LanguageEntity(LanguageCreated @event) : base(@event)
   {

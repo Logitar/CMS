@@ -23,9 +23,11 @@ public class ContentTypeEntity : AggregateEntity
 
   public int FieldCount { get; private set; }
 
-  public List<ContentLocaleEntity> ContentLocales { get; private set; } = [];
   public List<ContentEntity> Contents { get; private set; } = [];
+  public List<ContentLocaleEntity> ContentLocales { get; private set; } = [];
   public List<FieldDefinitionEntity> Fields { get; private set; } = [];
+  public List<FieldIndexEntity> FieldIndex { get; private set; } = [];
+  public List<UniqueIndexEntity> UniqueIndex { get; private set; } = [];
 
   public ContentTypeEntity(ContentTypeCreated @event) : base(@event)
   {
@@ -57,7 +59,7 @@ public class ContentTypeEntity : AggregateEntity
   {
     Update(@event);
 
-    FieldDefinitionEntity? fieldDefinition = Fields.SingleOrDefault(x => x.Id == @event.FieldId);
+    FieldDefinitionEntity? fieldDefinition = Fields.SingleOrDefault(x => x.Id == @event.FieldDefinition.Id);
     if (fieldDefinition == null)
     {
       fieldDefinition = new(this, fieldType, order: FieldCount, @event);

@@ -1,4 +1,4 @@
-﻿namespace Logitar.Cms.Core.Contents.Models;
+﻿namespace Logitar.Cms.Core.Fields.Models;
 
 public record FieldValue
 {

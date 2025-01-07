@@ -1,4 +1,5 @@
 ﻿using Logitar.Cms.Core.Actors;
+using Logitar.Cms.Core.Fields.Models;
 using Logitar.Cms.Core.Localization.Models;
 
 namespace Logitar.Cms.Core.Contents.Models;
@@ -17,6 +18,8 @@ public record ContentLocaleModel
 
   public ActorModel UpdatedBy { get; set; } = new();
   public DateTime UpdatedOn { get; set; }
+
+  public List<FieldValue> FieldValues { get; set; } = [];
 
   public ContentLocaleModel(ContentModel content)
   {
