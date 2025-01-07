@@ -68,6 +68,7 @@ internal class UpdateContentLocaleCommandHandler : IRequestHandler<UpdateContent
     UniqueName uniqueName = string.IsNullOrWhiteSpace(payload.UniqueName) ? invariantOrLocale.UniqueName : new(Content.UniqueNameSettings, payload.UniqueName);
     DisplayName? displayName = payload.DisplayName == null ? invariantOrLocale.DisplayName : DisplayName.TryCreate(payload.DisplayName.Value);
     Description? description = payload.Description == null ? invariantOrLocale.Description : Description.TryCreate(payload.Description.Value);
+    // TODO(fpion): set field values
     invariantOrLocale = new(uniqueName, displayName, description);
 
     if (language == null)
