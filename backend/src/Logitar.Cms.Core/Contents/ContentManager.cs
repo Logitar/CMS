@@ -2,6 +2,7 @@
 using FluentValidation.Results;
 using Logitar.Cms.Core.Contents.Events;
 using Logitar.Cms.Core.Fields;
+using Logitar.Cms.Core.Fields.Validators;
 using Logitar.Cms.Core.Localization;
 using Logitar.EventSourcing;
 
@@ -122,7 +123,8 @@ internal class ContentManager : IContentManager
       requiredIds.Remove(fieldValue.Key);
 
       FieldType fieldType = fieldTypes[fieldDefinition.FieldTypeId];
-      ValidationResult result = fieldType.Validate(fieldValue.Key, fieldValue.Value, PropertyName);
+      IFieldValueValidator validator = FieldValueValidatorFactory.Create(fieldType);
+      ValidationResult result = validator.Validate(fieldValue.Value, $"{PropertyName}.{fieldValue.Key}");
       if (!result.IsValid)
       {
         validationFailures.AddRange(result.Errors);
