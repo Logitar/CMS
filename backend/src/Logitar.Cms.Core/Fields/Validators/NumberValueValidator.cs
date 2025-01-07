@@ -20,19 +20,19 @@ internal class NumberValueValidator : IFieldValueValidator
     {
       if (number < _settings.MinimumValue)
       {
-        ValidationFailure failure = new(propertyName, "TODO", value)
+        ValidationFailure failure = new(propertyName, $"The value must be greater than or equal to {_settings.MinimumValue}.", value)
         {
-          ErrorCode = "TODO"
-          // TODO(fpion): CustomState?
+          CustomState = new { _settings.MinimumValue },
+          ErrorCode = "GreaterThanOrEqualValidator"
         };
         failures.Add(failure);
       }
       if (number > _settings.MaximumValue)
       {
-        ValidationFailure failure = new(propertyName, "TODO", value)
+        ValidationFailure failure = new(propertyName, $"The value must be less than or equal to {_settings.MaximumValue}.", value)
         {
-          ErrorCode = "TODO"
-          // TODO(fpion): CustomState?
+          CustomState = new { _settings.MaximumValue },
+          ErrorCode = "LessThanOrEqualValidator"
         };
         failures.Add(failure);
       }
