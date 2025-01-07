@@ -1,26 +1,21 @@
 ﻿using Logitar.Cms.Core.Localization.Events;
-using MediatR;
 
-namespace Logitar.Cms.Core.Localization.Commands;
+namespace Logitar.Cms.Core.Localization;
 
-public record SaveLanguageCommand(Language Language) : IRequest;
-
-internal class SaveLanguageCommandHandler : IRequestHandler<SaveLanguageCommand>
+internal class LanguageManager : ILanguageManager
 {
   private readonly ILanguageQuerier _languageQuerier;
   private readonly ILanguageRepository _languageRepository;
 
-  public SaveLanguageCommandHandler(ILanguageQuerier languageQuerier, ILanguageRepository languageRepository)
+  public LanguageManager(ILanguageQuerier languageQuerier, ILanguageRepository languageRepository)
   {
     _languageQuerier = languageQuerier;
     _languageRepository = languageRepository;
   }
 
-  public async Task Handle(SaveLanguageCommand command, CancellationToken cancellationToken)
+  public async Task SaveAsync(Language language, CancellationToken cancellationToken)
   {
-    Language language = command.Language;
-
-    bool hasLocaleChanged = language.Changes.Any(change => change is LanguageCreated || change is LanguageLocaleChanged);
+    bool hasLocaleChanged = language.Changes.Any(change => change is LanguageLocaleChanged);
     if (hasLocaleChanged)
     {
       LanguageId? conflictId = await _languageQuerier.FindIdAsync(language.Locale, cancellationToken);

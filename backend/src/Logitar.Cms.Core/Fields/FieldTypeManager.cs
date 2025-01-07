@@ -1,26 +1,21 @@
 ﻿using Logitar.Cms.Core.Fields.Events;
-using MediatR;
 
-namespace Logitar.Cms.Core.Fields.Commands;
+namespace Logitar.Cms.Core.Fields;
 
-public record SaveFieldTypeCommand(FieldType FieldType) : IRequest;
-
-internal class SaveFieldTypeCommandHandler : IRequestHandler<SaveFieldTypeCommand>
+internal class FieldTypeManager : IFieldTypeManager
 {
   private readonly IFieldTypeQuerier _fieldTypeQuerier;
   private readonly IFieldTypeRepository _fieldTypeRepository;
 
-  public SaveFieldTypeCommandHandler(IFieldTypeQuerier fieldTypeQuerier, IFieldTypeRepository fieldTypeRepository)
+  public FieldTypeManager(IFieldTypeQuerier fieldTypeQuerier, IFieldTypeRepository fieldTypeRepository)
   {
     _fieldTypeQuerier = fieldTypeQuerier;
     _fieldTypeRepository = fieldTypeRepository;
   }
 
-  public async Task Handle(SaveFieldTypeCommand command, CancellationToken cancellationToken)
+  public async Task SaveAsync(FieldType fieldType, CancellationToken cancellationToken)
   {
-    FieldType fieldType = command.FieldType;
-
-    bool hasUniqueNameChanged = fieldType.Changes.Any(change => change is FieldTypeCreated || change is FieldTypeUniqueNameChanged);
+    bool hasUniqueNameChanged = fieldType.Changes.Any(change => change is FieldTypeUniqueNameChanged);
     if (hasUniqueNameChanged)
     {
       FieldTypeId? conflictId = await _fieldTypeQuerier.FindIdAsync(fieldType.UniqueName, cancellationToken);

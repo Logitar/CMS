@@ -15,17 +15,20 @@ public record CreateOrReplaceFieldTypeCommand(Guid? Id, CreateOrReplaceFieldType
 internal class CreateOrReplaceFieldTypeCommandHandler : IRequestHandler<CreateOrReplaceFieldTypeCommand, CreateOrReplaceFieldTypeResult>
 {
   private readonly IApplicationContext _applicationContext;
+  private readonly IFieldTypeManager _fieldTypeManager;
   private readonly IFieldTypeQuerier _fieldTypeQuerier;
   private readonly IFieldTypeRepository _fieldTypeRepository;
   private readonly IMediator _mediator;
 
   public CreateOrReplaceFieldTypeCommandHandler(
     IApplicationContext applicationContext,
+    IFieldTypeManager fieldTypeManager,
     IFieldTypeQuerier fieldTypeQuerier,
     IFieldTypeRepository fieldTypeRepository,
     IMediator mediator)
   {
     _applicationContext = applicationContext;
+    _fieldTypeManager = fieldTypeManager;
     _fieldTypeQuerier = fieldTypeQuerier;
     _fieldTypeRepository = fieldTypeRepository;
     _mediator = mediator;
@@ -87,7 +90,7 @@ internal class CreateOrReplaceFieldTypeCommandHandler : IRequestHandler<CreateOr
 
     fieldType.Update(actorId);
 
-    await _mediator.Send(new SaveFieldTypeCommand(fieldType), cancellationToken);
+    await _fieldTypeManager.SaveAsync(fieldType, cancellationToken);
 
     FieldTypeModel model = await _fieldTypeQuerier.ReadAsync(fieldType, cancellationToken);
     return new CreateOrReplaceFieldTypeResult(model, created);

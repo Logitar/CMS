@@ -11,20 +11,20 @@ public record UpdateLanguageCommand(Guid Id, UpdateLanguagePayload Payload) : IR
 internal class UpdateLanguageCommandHandler : IRequestHandler<UpdateLanguageCommand, LanguageModel?>
 {
   private readonly IApplicationContext _applicationContext;
+  private readonly ILanguageManager _languageManager;
   private readonly ILanguageQuerier _languageQuerier;
   private readonly ILanguageRepository _languageRepository;
-  private readonly IMediator _mediator;
 
   public UpdateLanguageCommandHandler(
     IApplicationContext applicationContext,
+    ILanguageManager languageManager,
     ILanguageQuerier languageQuerier,
-    ILanguageRepository languageRepository,
-    IMediator mediator)
+    ILanguageRepository languageRepository)
   {
     _applicationContext = applicationContext;
+    _languageManager = languageManager;
     _languageQuerier = languageQuerier;
     _languageRepository = languageRepository;
-    _mediator = mediator;
   }
 
   public async Task<LanguageModel?> Handle(UpdateLanguageCommand command, CancellationToken cancellationToken)
@@ -45,7 +45,7 @@ internal class UpdateLanguageCommandHandler : IRequestHandler<UpdateLanguageComm
       language.SetLocale(locale, _applicationContext.ActorId);
     }
 
-    await _mediator.Send(new SaveLanguageCommand(language), cancellationToken);
+    await _languageManager.SaveAsync(language, cancellationToken);
 
     return await _languageQuerier.ReadAsync(language, cancellationToken);
   }

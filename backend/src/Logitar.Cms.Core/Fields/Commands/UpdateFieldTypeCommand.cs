@@ -13,20 +13,20 @@ public record UpdateFieldTypeCommand(Guid Id, UpdateFieldTypePayload Payload) : 
 internal class UpdateFieldTypeCommandHandler : IRequestHandler<UpdateFieldTypeCommand, FieldTypeModel?>
 {
   private readonly IApplicationContext _applicationContext;
+  private readonly IFieldTypeManager _fieldTypeManager;
   private readonly IFieldTypeQuerier _fieldTypeQuerier;
   private readonly IFieldTypeRepository _fieldTypeRepository;
-  private readonly IMediator _mediator;
 
   public UpdateFieldTypeCommandHandler(
     IApplicationContext applicationContext,
+    IFieldTypeManager fieldTypeManager,
     IFieldTypeQuerier fieldTypeQuerier,
-    IFieldTypeRepository fieldTypeRepository,
-    IMediator mediator)
+    IFieldTypeRepository fieldTypeRepository)
   {
     _applicationContext = applicationContext;
+    _fieldTypeManager = fieldTypeManager;
     _fieldTypeQuerier = fieldTypeQuerier;
     _fieldTypeRepository = fieldTypeRepository;
-    _mediator = mediator;
   }
 
   public async Task<FieldTypeModel?> Handle(UpdateFieldTypeCommand command, CancellationToken cancellationToken)
@@ -61,7 +61,7 @@ internal class UpdateFieldTypeCommandHandler : IRequestHandler<UpdateFieldTypeCo
 
     SetSettings(payload, fieldType, actorId);
 
-    await _mediator.Send(new SaveFieldTypeCommand(fieldType), cancellationToken);
+    await _fieldTypeManager.SaveAsync(fieldType, cancellationToken);
 
     return await _fieldTypeQuerier.ReadAsync(fieldType, cancellationToken);
   }

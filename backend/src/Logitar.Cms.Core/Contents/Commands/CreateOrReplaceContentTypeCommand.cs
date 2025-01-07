@@ -14,20 +14,20 @@ public record CreateOrReplaceContentTypeCommand(Guid? Id, CreateOrReplaceContent
 internal class CreateOrReplaceContentTypeCommandHandler : IRequestHandler<CreateOrReplaceContentTypeCommand, CreateOrReplaceContentTypeResult>
 {
   private readonly IApplicationContext _applicationContext;
+  private readonly IContentTypeManager _contentTypeManager;
   private readonly IContentTypeQuerier _contentTypeQuerier;
   private readonly IContentTypeRepository _contentTypeRepository;
-  private readonly IMediator _mediator;
 
   public CreateOrReplaceContentTypeCommandHandler(
     IApplicationContext applicationContext,
+    IContentTypeManager contentTypeManager,
     IContentTypeQuerier contentTypeQuerier,
-    IContentTypeRepository contentTypeRepository,
-    IMediator mediator)
+    IContentTypeRepository contentTypeRepository)
   {
     _applicationContext = applicationContext;
+    _contentTypeManager = contentTypeManager;
     _contentTypeQuerier = contentTypeQuerier;
     _contentTypeRepository = contentTypeRepository;
-    _mediator = mediator;
   }
 
   public async Task<CreateOrReplaceContentTypeResult> Handle(CreateOrReplaceContentTypeCommand command, CancellationToken cancellationToken)
@@ -88,7 +88,7 @@ internal class CreateOrReplaceContentTypeCommandHandler : IRequestHandler<Create
 
     contentType.Update(actorId);
 
-    await _mediator.Send(new SaveContentTypeCommand(contentType), cancellationToken);
+    await _contentTypeManager.SaveAsync(contentType, cancellationToken);
 
     ContentTypeModel model = await _contentTypeQuerier.ReadAsync(contentType, cancellationToken);
     return new CreateOrReplaceContentTypeResult(model, created);

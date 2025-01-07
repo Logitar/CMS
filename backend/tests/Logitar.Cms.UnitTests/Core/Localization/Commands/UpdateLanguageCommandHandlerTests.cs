@@ -2,7 +2,6 @@
 using Logitar.EventSourcing;
 using Logitar.Identity.Core;
 using Logitar.Security.Cryptography;
-using MediatR;
 using Moq;
 
 namespace Logitar.Cms.Core.Localization.Commands;
@@ -14,9 +13,9 @@ public class UpdateLanguageCommandHandlerTests
   private readonly CancellationToken _cancellationToken = default;
 
   private readonly Mock<IApplicationContext> _applicationContext = new();
+  private readonly Mock<ILanguageManager> _languageManager = new();
   private readonly Mock<ILanguageQuerier> _languageQuerier = new();
   private readonly Mock<ILanguageRepository> _languageRepository = new();
-  private readonly Mock<IMediator> _mediator = new();
 
   private readonly UpdateLanguageCommandHandler _handler;
 
@@ -24,7 +23,7 @@ public class UpdateLanguageCommandHandlerTests
 
   public UpdateLanguageCommandHandlerTests()
   {
-    _handler = new(_applicationContext.Object, _languageQuerier.Object, _languageRepository.Object, _mediator.Object);
+    _handler = new(_applicationContext.Object, _languageManager.Object, _languageQuerier.Object, _languageRepository.Object);
 
     _applicationContext.Setup(x => x.ActorId).Returns(_actorId);
     _languageRepository.Setup(x => x.LoadAsync(_english.Id, _cancellationToken)).ReturnsAsync(_english);
@@ -50,7 +49,7 @@ public class UpdateLanguageCommandHandlerTests
     Assert.True(_english.IsDefault);
     Assert.Equal(payload.Locale, _english.Locale.Code);
 
-    _mediator.Verify(x => x.Send(It.Is<SaveLanguageCommand>(y => y.Language.Equals(_english)), _cancellationToken), Times.Once);
+    _languageManager.Verify(x => x.SaveAsync(_english, _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "Handle: it should return null when updating a language that does not exist.")]
