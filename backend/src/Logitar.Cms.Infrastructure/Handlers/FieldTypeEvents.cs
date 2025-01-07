@@ -11,6 +11,7 @@ internal class FieldTypeEvents : INotificationHandler<FieldTypeBooleanSettingsCh
   INotificationHandler<FieldTypeDateTimeSettingsChanged>,
   INotificationHandler<FieldTypeNumberSettingsChanged>,
   INotificationHandler<FieldTypeRichTextSettingsChanged>,
+  INotificationHandler<FieldTypeSelectSettingsChanged>,
   INotificationHandler<FieldTypeStringSettingsChanged>,
   INotificationHandler<FieldTypeUniqueNameChanged>,
   INotificationHandler<FieldTypeUpdated>
