@@ -33,6 +33,8 @@ public class ContentLocaleEntity
   public string? UpdatedBy { get; private set; }
   public DateTime UpdatedOn { get; private set; }
 
+  public string? FieldValues { get; private set; }
+
   public List<FieldIndexEntity> FieldIndex { get; private set; } = [];
   public List<UniqueIndexEntity> UniqueIndex { get; private set; } = [];
 
@@ -99,6 +101,17 @@ public class ContentLocaleEntity
 
     UpdatedBy = @event.ActorId?.Value;
     UpdatedOn = @event.OccurredOn.AsUniversalTime();
+
+    SetFieldValues(locale.FieldValues);
+  }
+
+  public Dictionary<Guid, string> GetFieldValues()
+  {
+    return (FieldValues == null ? null : JsonSerializer.Deserialize<Dictionary<Guid, string>>(FieldValues)) ?? [];
+  }
+  private void SetFieldValues(IReadOnlyDictionary<Guid, string> fieldValues)
+  {
+    FieldValues = fieldValues.Count < 1 ? null : JsonSerializer.Serialize(fieldValues);
   }
 
   public override bool Equals(object? obj) => obj is ContentLocaleEntity entity && entity.ContentLocaleId == ContentLocaleId;

@@ -105,6 +105,11 @@ public class Mapper
       destination.Language = ToLanguage(source.Language);
     }
 
+    foreach (KeyValuePair<Guid, string> fieldValue in source.GetFieldValues())
+    {
+      destination.FieldValues.Add(new FieldValue(fieldValue));
+    }
+
     return destination;
   }
 
