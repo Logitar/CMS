@@ -67,7 +67,7 @@ internal class ContentManager : IContentManager
           throw new ContentUniqueNameAlreadyUsedException(content, languageId, invariantOrLocale, conflictId.Value);
         }
 
-        await ValidateAsync(contentType, fieldTypes, content.Id, languageId, invariantOrLocale.FieldValues, cancellationToken);
+        await ValidateAsync(contentType, fieldTypes, content.Id, languageId, invariantOrLocale.FieldValues, isPublished: false, cancellationToken);
       }
     }
 
@@ -80,6 +80,7 @@ internal class ContentManager : IContentManager
     ContentId contentId,
     LanguageId? languageId,
     IReadOnlyDictionary<Guid, string> fieldValues,
+    bool isPublished,
     CancellationToken cancellationToken)
   {
     bool isInvariant = languageId == null;
@@ -140,7 +141,7 @@ internal class ContentManager : IContentManager
       });
       throw new ValidationException(unexpectedFailures);
     }
-    if (requiredIds.Count > 0) // TODO(fpion): we don't care when saving content draft.
+    if (isPublished && requiredIds.Count > 0)
     {
       IEnumerable<ValidationFailure> requiredFailures = requiredIds.Select(id => new ValidationFailure("FieldValues", "The specified field identifiers are missing.", id)
       {
