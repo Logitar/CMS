@@ -2,10 +2,6 @@
 
 namespace Logitar.Cms.Infrastructure.Entities;
 
-// TODO(fpion): insert values
-// TODO(fpion): remove values
-// TODO(fpion): update values
-
 public class UniqueIndexEntity
 {
   public const char KeySeparator = '|';
@@ -91,7 +87,7 @@ public class UniqueIndexEntity
 
     Status = status;
 
-    Value = value.Truncate(MaximumLength);
+    Update(value);
 
     Content = content;
     ContentId = content.ContentId;
@@ -110,4 +106,9 @@ public class UniqueIndexEntity
   public static string CreateKey(Guid fieldDefinitionId, string value) => string.Join(KeySeparator,
     Convert.ToBase64String(fieldDefinitionId.ToByteArray()).TrimEnd('='),
     Helper.Normalize(value));
+
+  public void Update(string value)
+  {
+    Value = value.Truncate(MaximumLength);
+  }
 }

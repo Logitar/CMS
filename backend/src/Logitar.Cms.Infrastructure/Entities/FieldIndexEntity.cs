@@ -1,8 +1,6 @@
-﻿namespace Logitar.Cms.Infrastructure.Entities;
+﻿using Logitar.Cms.Core.Fields;
 
-// TODO(fpion): insert values
-// TODO(fpion): remove values
-// TODO(fpion): update values
+namespace Logitar.Cms.Infrastructure.Entities;
 
 public class FieldIndexEntity
 {
@@ -53,7 +51,8 @@ public class FieldIndexEntity
     FieldDefinitionEntity fieldDefinition,
     ContentEntity content,
     ContentLocaleEntity contentLocale,
-    ContentStatus status)
+    ContentStatus status,
+    string value)
   {
     ContentType = contentType;
     ContentTypeId = contentType.ContentTypeId;
@@ -88,10 +87,39 @@ public class FieldIndexEntity
 
     Status = status;
 
-    // TODO(fpion): values
+    Update(value);
   }
 
   private FieldIndexEntity()
   {
+  }
+
+  public void Update(string value)
+  {
+    if (FieldType == null)
+    {
+      throw new InvalidOperationException($"The {nameof(FieldType)} is required.");
+    }
+
+    switch (FieldType.DataType)
+    {
+      case DataType.Boolean:
+        Boolean = bool.Parse(value);
+        break;
+      case DataType.DateTime:
+        DateTime = System.DateTime.Parse(value);
+        break;
+      case DataType.Number:
+        Number = double.Parse(value);
+        break;
+      case DataType.RichText:
+        RichText = value;
+        break;
+      case DataType.String:
+        String = value.Truncate(MaximumLength);
+        break;
+      default:
+        throw new DataTypeNotSupportedException(FieldType.DataType);
+    }
   }
 }
