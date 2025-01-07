@@ -28,6 +28,17 @@ internal class ContentQuerier : IContentQuerier
     _queryHelper = queryHelper;
   }
 
+  public async Task<IReadOnlyDictionary<Guid, ContentId>> FindConflictsAsync(
+    ContentTypeId contentTypeId,
+    LanguageId? languageId,
+    IReadOnlyDictionary<Guid, string> fieldValues,
+    ContentId contentId,
+    CancellationToken cancellationToken)
+  {
+    await Task.Delay(1, cancellationToken);
+    throw new NotImplementedException(); // TODO(fpion): implement
+  }
+
   public async Task<ContentId?> FindIdAsync(ContentTypeId contentTypeId, LanguageId? languageId, UniqueName uniqueName, CancellationToken cancellationToken)
   {
     string contentTypeStreamId = contentTypeId.Value;
