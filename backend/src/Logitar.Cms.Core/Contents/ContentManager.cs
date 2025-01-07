@@ -122,7 +122,7 @@ internal class ContentManager : IContentManager
       requiredIds.Remove(fieldValue.Key);
 
       FieldType fieldType = fieldTypes[fieldDefinition.FieldTypeId];
-      ValidationResult result = fieldType.Validate(fieldValue.Value);
+      ValidationResult result = fieldType.Validate(fieldValue.Key, fieldValue.Value, PropertyName);
       if (!result.IsValid)
       {
         validationFailures.AddRange(result.Errors);
@@ -137,7 +137,7 @@ internal class ContentManager : IContentManager
 
     if (unexpectedIds.Count > 0)
     {
-      IEnumerable<ValidationFailure> unexpectedFailures = unexpectedIds.Select(id => new ValidationFailure(PropertyName, "The specified field identifiers were not expected.", id)
+      IEnumerable<ValidationFailure> unexpectedFailures = unexpectedIds.Select(id => new ValidationFailure(PropertyName, "The specified field was not expected.", id)
       {
         ErrorCode = "UnexpectedFieldValidator"
       });
@@ -145,7 +145,7 @@ internal class ContentManager : IContentManager
     }
     if (isPublished && requiredIds.Count > 0)
     {
-      IEnumerable<ValidationFailure> requiredFailures = requiredIds.Select(id => new ValidationFailure(PropertyName, "The specified field identifiers are missing.", id)
+      IEnumerable<ValidationFailure> requiredFailures = requiredIds.Select(id => new ValidationFailure(PropertyName, "The specified field is missing.", id)
       {
         ErrorCode = "RequiredFieldValidator"
       });

@@ -201,9 +201,32 @@ public class FieldType : AggregateRoot
     }
   }
 
-  public ValidationResult Validate(string value)
+  public ValidationResult Validate(Guid fieldId, string value, string propertyName)
   {
-    return new ValidationResult(); // TODO(fpion): implement
+    propertyName = $"{propertyName}.{fieldId}";
+
+    return DataType switch
+    {
+      DataType.Boolean => ValidateBoolean(value, propertyName),
+      // TODO(fpion): DateTime
+      // TODO(fpion): Number
+      // TODO(fpion): RichText
+      // TODO(fpion): String
+      _ => throw new DataTypeNotSupportedException(DataType),
+    };
+  }
+  private static ValidationResult ValidateBoolean(string value, string propertyName)
+  {
+    List<ValidationFailure> failures = new(capacity: 1);
+    if (!bool.TryParse(value, out _))
+    {
+      ValidationFailure failure = new(propertyName, "The value is not a valid boolean.", value)
+      {
+        ErrorCode = "BooleanValidator"
+      };
+      failures.Add(failure);
+    }
+    return new ValidationResult(failures);
   }
 
   public override string ToString() => $"{DisplayName?.Value ?? UniqueName.Value} | {base.ToString()}";
