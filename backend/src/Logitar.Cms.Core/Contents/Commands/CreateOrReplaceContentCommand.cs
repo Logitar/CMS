@@ -161,7 +161,7 @@ internal class CreateOrReplaceContentCommandHandler : IRequestHandler<CreateOrRe
     Dictionary<Guid, string> fieldValues = new(capacity: payload.FieldValues.Count);
     foreach (FieldValue fieldValue in payload.FieldValues)
     {
-      fieldValues[fieldValue.Id] = fieldValue.Value.Trim();
+      fieldValues[fieldValue.Id] = fieldValue.Value;
     }
 
     return new ContentLocale(uniqueName, displayName, description, fieldValues);
@@ -180,7 +180,7 @@ internal class CreateOrReplaceContentCommandHandler : IRequestHandler<CreateOrRe
       {
         if (!variantFieldIds.Contains(fieldValue.Id))
         {
-          fieldValues[fieldValue.Id] = fieldValue.Value.Trim();
+          fieldValues[fieldValue.Id] = fieldValue.Value;
         }
       }
     }
@@ -190,7 +190,7 @@ internal class CreateOrReplaceContentCommandHandler : IRequestHandler<CreateOrRe
       {
         if (variantFieldIds.Contains(fieldValue.Id))
         {
-          fieldValues[fieldValue.Id] = fieldValue.Value.Trim();
+          fieldValues[fieldValue.Id] = fieldValue.Value;
         }
       }
     }

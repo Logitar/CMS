@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Logitar.Cms.Core.Contents.Models;
 using Logitar.Cms.Core.Contents.Validators;
+using Logitar.Cms.Core.Fields.Models;
 using Logitar.Cms.Core.Localization;
 using Logitar.EventSourcing;
 using Logitar.Identity.Core;
@@ -63,13 +64,25 @@ internal class UpdateContentLocaleCommandHandler : IRequestHandler<UpdateContent
       invariantOrLocale = content.Invariant;
     }
 
-    ActorId? actorId = _applicationContext.ActorId;
-
     UniqueName uniqueName = string.IsNullOrWhiteSpace(payload.UniqueName) ? invariantOrLocale.UniqueName : new(Content.UniqueNameSettings, payload.UniqueName);
     DisplayName? displayName = payload.DisplayName == null ? invariantOrLocale.DisplayName : DisplayName.TryCreate(payload.DisplayName.Value);
     Description? description = payload.Description == null ? invariantOrLocale.Description : Description.TryCreate(payload.Description.Value);
-    // TODO(fpion): set field values
-    invariantOrLocale = new(uniqueName, displayName, description);
+
+    Dictionary<Guid, string> fieldValues = new(invariantOrLocale.FieldValues);
+    foreach (FieldValueUpdate fieldValue in payload.FieldValues)
+    {
+      if (string.IsNullOrWhiteSpace(fieldValue.Value))
+      {
+        fieldValues.Remove(fieldValue.Id);
+      }
+      else
+      {
+        fieldValues[fieldValue.Id] = fieldValue.Value;
+      }
+    }
+
+    invariantOrLocale = new(uniqueName, displayName, description, fieldValues);
+    ActorId? actorId = _applicationContext.ActorId;
 
     if (language == null)
     {
