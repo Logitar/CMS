@@ -15,6 +15,7 @@ public class CmsContext : DbContext
   public DbSet<FieldDefinitionEntity> FieldDefinitions => Set<FieldDefinitionEntity>();
   public DbSet<FieldTypeEntity> FieldTypes => Set<FieldTypeEntity>();
   public DbSet<LanguageEntity> Languages => Set<LanguageEntity>();
+  public DbSet<UniqueIndexEntity> UniqueIndex => Set<UniqueIndexEntity>();
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {

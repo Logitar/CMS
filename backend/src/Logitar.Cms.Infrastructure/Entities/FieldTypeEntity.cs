@@ -24,6 +24,7 @@ public class FieldTypeEntity : AggregateEntity
   public string? Settings { get; private set; }
 
   public List<FieldDefinitionEntity> FieldDefinitions { get; private set; } = [];
+  public List<UniqueIndexEntity> UniqueIndex { get; private set; } = [];
 
   public FieldTypeEntity(FieldTypeCreated @event) : base(@event)
   {

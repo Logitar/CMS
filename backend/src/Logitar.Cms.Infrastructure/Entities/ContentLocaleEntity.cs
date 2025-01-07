@@ -33,6 +33,8 @@ public class ContentLocaleEntity
   public string? UpdatedBy { get; private set; }
   public DateTime UpdatedOn { get; private set; }
 
+  public List<UniqueIndexEntity> UniqueIndex { get; private set; } = [];
+
   public ContentLocaleEntity(ContentEntity content, ContentCreated @event)
     : this(content, language: null, @event.Invariant, @event)
   {

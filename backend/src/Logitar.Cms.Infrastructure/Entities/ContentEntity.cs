@@ -13,6 +13,7 @@ public class ContentEntity : AggregateEntity
   public int ContentTypeId { get; private set; }
 
   public List<ContentLocaleEntity> Locales { get; private set; } = [];
+  public List<UniqueIndexEntity> UniqueIndex { get; private set; } = [];
 
   public ContentEntity(ContentTypeEntity contentType, ContentCreated @event) : base(@event)
   {
