@@ -19,12 +19,13 @@ internal class CreateOrReplaceFieldTypeValidator : AbstractValidator<CreateOrRep
     When(x => x.DateTime != null, () => RuleFor(x => x.DateTime!).SetValidator(new DateTimeSettingsValidator()));
     When(x => x.Number != null, () => RuleFor(x => x.Number!).SetValidator(new NumberSettingsValidator()));
     When(x => x.RichText != null, () => RuleFor(x => x.RichText!).SetValidator(new RichTextSettingsValidator()));
+    When(x => x.Select != null, () => RuleFor(x => x.Select!).SetValidator(new SelectSettingsValidator()));
     When(x => x.String != null, () => RuleFor(x => x.String!).SetValidator(new StringSettingsValidator()));
   }
 
   private static IReadOnlyCollection<DataType> GetDataTypes(CreateOrReplaceFieldTypePayload payload)
   {
-    List<DataType> dataTypes = new(capacity: 5);
+    List<DataType> dataTypes = new(capacity: 6);
 
     if (payload.Boolean != null)
     {
@@ -41,6 +42,10 @@ internal class CreateOrReplaceFieldTypeValidator : AbstractValidator<CreateOrRep
     if (payload.RichText != null)
     {
       dataTypes.Add(DataType.RichText);
+    }
+    if (payload.Select != null)
+    {
+      dataTypes.Add(DataType.Select);
     }
     if (payload.String != null)
     {

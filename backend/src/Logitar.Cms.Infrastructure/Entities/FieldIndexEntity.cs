@@ -42,6 +42,7 @@ public class FieldIndexEntity
   public DateTime? DateTime { get; private set; }
   public double? Number { get; private set; }
   public string? RichText { get; private set; }
+  public string? Select { get; private set; }
   public string? String { get; private set; }
 
   public FieldIndexEntity(
@@ -114,6 +115,9 @@ public class FieldIndexEntity
         break;
       case DataType.RichText:
         RichText = value;
+        break;
+      case DataType.Select:
+        Select = value;
         break;
       case DataType.String:
         String = value.Truncate(MaximumLength);

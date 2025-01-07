@@ -64,6 +64,12 @@ public class FieldTypeEntity : AggregateEntity
 
     SetSettings(@event.Settings);
   }
+  public void SetSettings(FieldTypeSelectSettingsChanged @event)
+  {
+    Update(@event);
+
+    SetSettings(@event.Settings);
+  }
   public void SetSettings(FieldTypeStringSettingsChanged @event)
   {
     Update(@event);

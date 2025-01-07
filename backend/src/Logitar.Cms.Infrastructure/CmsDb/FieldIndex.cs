@@ -30,5 +30,6 @@ public static class FieldIndex
   public static readonly ColumnId DateTime = new(nameof(FieldIndexEntity.DateTime), Table);
   public static readonly ColumnId Number = new(nameof(FieldIndexEntity.Number), Table);
   public static readonly ColumnId RichText = new(nameof(FieldIndexEntity.RichText), Table);
+  public static readonly ColumnId Select = new(nameof(FieldIndexEntity.Select), Table);
   public static readonly ColumnId String = new(nameof(FieldIndexEntity.String), Table);
 }

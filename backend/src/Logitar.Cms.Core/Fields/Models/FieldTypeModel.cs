@@ -11,5 +11,6 @@ public class FieldTypeModel : AggregateModel
   public DateTimeSettingsModel? DateTime { get; set; }
   public NumberSettingsModel? Number { get; set; }
   public RichTextSettingsModel? RichText { get; set; }
+  public SelectSettingsModel? Select { get; set; }
   public StringSettingsModel? String { get; set; }
 }

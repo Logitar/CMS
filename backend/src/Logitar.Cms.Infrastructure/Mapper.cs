@@ -181,6 +181,9 @@ public class Mapper
       case DataType.RichText:
         destination.RichText = (source.Settings == null ? null : JsonSerializer.Deserialize<RichTextSettingsModel>(source.Settings)) ?? new();
         break;
+      case DataType.Select:
+        destination.Select = (source.Settings == null ? null : JsonSerializer.Deserialize<SelectSettingsModel>(source.Settings)) ?? new();
+        break;
       case DataType.String:
         destination.String = (source.Settings == null ? null : JsonSerializer.Deserialize<StringSettingsModel>(source.Settings)) ?? new();
         break;

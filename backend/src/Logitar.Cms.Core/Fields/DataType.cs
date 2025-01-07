@@ -6,5 +6,6 @@ public enum DataType
   RichText = 1,
   Boolean = 2,
   Number = 3,
-  DateTime = 4
+  DateTime = 4,
+  Select = 5
 }

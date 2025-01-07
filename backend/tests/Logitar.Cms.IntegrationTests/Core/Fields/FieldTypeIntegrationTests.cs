@@ -170,6 +170,56 @@ public class FieldTypeIntegrationTests : IntegrationTests
     Assert.Equal(payload.RichText, fieldType.RichText);
   }
 
+  [Theory(DisplayName = "It should create a new Select field type.")]
+  [InlineData(null)]
+  [InlineData("71bbbde7-c34c-4428-afd0-8ebd820b6955")]
+  public async Task Given_SelectType_When_Create_Then_FieldTypeCreated(string? idValue)
+  {
+    Guid? id = idValue == null ? null : Guid.Parse(idValue);
+
+    CreateOrReplaceFieldTypePayload payload = new()
+    {
+      UniqueName = "OnSale",
+      DisplayName = " On-sale? ",
+      Description = "  A field type to mark items on-sale.  ",
+      Select = new SelectSettingsModel
+      {
+        IsMultiple = true,
+        Options =
+        [
+          new SelectOptionModel { IsDisabled = true, Text = "None" },
+          new SelectOptionModel { IsSelected = true, Text = "May be?", Value = "may_be" },
+          new SelectOptionModel { Text = "True", Value = "true" },
+          new SelectOptionModel { Text = "False", Value = "false" }
+        ]
+      }
+    };
+    CreateOrReplaceFieldTypeCommand command = new(id, payload, Version: null);
+    CreateOrReplaceFieldTypeResult result = await Mediator.Send(command);
+    Assert.True(result.Created);
+
+    FieldTypeModel? fieldType = result.FieldType;
+    Assert.NotNull(fieldType);
+    if (id.HasValue)
+    {
+      Assert.Equal(id.Value, fieldType.Id);
+    }
+    Assert.Equal(3, fieldType.Version);
+    Assert.Equal(Actor, fieldType.CreatedBy);
+    Assert.Equal(DateTime.UtcNow, fieldType.CreatedOn, TimeSpan.FromMinutes(1));
+    Assert.Equal(Actor, fieldType.UpdatedBy);
+    Assert.Equal(DateTime.UtcNow, fieldType.UpdatedOn, TimeSpan.FromMinutes(1));
+
+    Assert.Equal(payload.UniqueName, fieldType.UniqueName);
+    Assert.Equal(payload.DisplayName.Trim(), fieldType.DisplayName);
+    Assert.Equal(payload.Description.Trim(), fieldType.Description);
+    Assert.Equal(DataType.Select, fieldType.DataType);
+
+    Assert.NotNull(fieldType.Select);
+    Assert.Equal(payload.Select.IsMultiple, fieldType.Select.IsMultiple);
+    Assert.True(payload.Select.Options.SequenceEqual(fieldType.Select.Options));
+  }
+
   [Theory(DisplayName = "It should create a new String field type.")]
   [InlineData(null)]
   [InlineData("06854434-c633-403b-b09f-cebca4513d03")]

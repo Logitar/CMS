@@ -88,6 +88,11 @@ internal class UpdateFieldTypeCommandHandler : IRequestHandler<UpdateFieldTypeCo
       RichTextSettings settings = new(payload.RichText);
       fieldType.SetSettings(settings, actorId);
     }
+    if (payload.Select != null)
+    {
+      SelectSettings settings = payload.Select.ToSelectSettings();
+      fieldType.SetSettings(settings, actorId);
+    }
     if (payload.String != null)
     {
       StringSettings settings = new(payload.String);
