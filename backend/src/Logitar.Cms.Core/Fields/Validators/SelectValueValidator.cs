@@ -1,6 +1,5 @@
 ﻿using FluentValidation.Results;
 using Logitar.Cms.Core.Fields.Settings;
-using System.Text.Json;
 
 namespace Logitar.Cms.Core.Fields.Validators;
 
