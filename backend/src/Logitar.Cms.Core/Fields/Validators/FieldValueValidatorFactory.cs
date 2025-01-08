@@ -9,6 +9,7 @@ internal static class FieldValueValidatorFactory
     DataType.Boolean => new BooleanValueValidator(),
     DataType.DateTime => new DateTimeValueValidator((DateTimeSettings)fieldType.Settings),
     DataType.Number => new NumberValueValidator((NumberSettings)fieldType.Settings),
+    DataType.RelatedContent => new RelatedContentValueValidator((RelatedContentSettings)fieldType.Settings),
     DataType.RichText => new RichTextValueValidator((RichTextSettings)fieldType.Settings),
     DataType.Select => new SelectValueValidator((SelectSettings)fieldType.Settings),
     DataType.String => new StringValueValidator((StringSettings)fieldType.Settings),

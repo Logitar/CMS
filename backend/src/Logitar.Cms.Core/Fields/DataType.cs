@@ -8,5 +8,6 @@ public enum DataType
   Number = 3,
   DateTime = 4,
   Select = 5,
-  Tags = 6
+  Tags = 6,
+  RelatedContent = 7
 }

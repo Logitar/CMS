@@ -15,6 +15,7 @@ internal class UpdateFieldTypeValidator : AbstractValidator<UpdateFieldTypePaylo
     When(x => x.Boolean != null, () => RuleFor(x => x.Boolean!).SetValidator(new BooleanSettingsValidator()));
     When(x => x.DateTime != null, () => RuleFor(x => x.DateTime!).SetValidator(new DateTimeSettingsValidator()));
     When(x => x.Number != null, () => RuleFor(x => x.Number!).SetValidator(new NumberSettingsValidator()));
+    When(x => x.RelatedContent != null, () => RuleFor(x => x.RelatedContent!).SetValidator(new RelatedContentSettingsValidator()));
     When(x => x.RichText != null, () => RuleFor(x => x.RichText!).SetValidator(new RichTextSettingsValidator()));
     When(x => x.Select != null, () => RuleFor(x => x.Select!).SetValidator(new SelectSettingsValidator()));
     When(x => x.String != null, () => RuleFor(x => x.String!).SetValidator(new StringSettingsValidator()));

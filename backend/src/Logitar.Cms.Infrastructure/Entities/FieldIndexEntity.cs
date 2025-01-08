@@ -41,6 +41,7 @@ public class FieldIndexEntity
   public bool? Boolean { get; private set; }
   public DateTime? DateTime { get; private set; }
   public double? Number { get; private set; }
+  public string? RelatedContent { get; private set; }
   public string? RichText { get; private set; }
   public string? Select { get; private set; }
   public string? String { get; private set; }
@@ -113,6 +114,9 @@ public class FieldIndexEntity
         break;
       case DataType.Number:
         Number = double.Parse(value);
+        break;
+      case DataType.RelatedContent:
+        RelatedContent = value;
         break;
       case DataType.RichText:
         RichText = value;

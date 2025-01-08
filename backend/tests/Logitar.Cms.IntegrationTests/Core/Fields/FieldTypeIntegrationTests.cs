@@ -130,6 +130,47 @@ public class FieldTypeIntegrationTests : IntegrationTests
     Assert.Equal(payload.Number, fieldType.Number);
   }
 
+  [Theory(DisplayName = "It should create a new RelatedContent field type.")]
+  [InlineData(null)]
+  [InlineData("5310a19e-7227-43be-a03c-a2c7f6be2d0e")]
+  public async Task Given_RelatedContentType_When_Create_Then_FieldTypeCreated(string? idValue)
+  {
+    Guid? id = idValue == null ? null : Guid.Parse(idValue);
+
+    CreateOrReplaceFieldTypePayload payload = new()
+    {
+      UniqueName = "ArticleAuthor",
+      DisplayName = " Article Author ",
+      Description = "  This is the field type for blog article related author content.  ",
+      RelatedContent = new RelatedContentSettingsModel
+      {
+        ContentTypeId = Guid.NewGuid(),
+        IsMultiple = true
+      }
+    };
+    CreateOrReplaceFieldTypeCommand command = new(id, payload, Version: null);
+    CreateOrReplaceFieldTypeResult result = await Mediator.Send(command);
+    Assert.True(result.Created);
+
+    FieldTypeModel? fieldType = result.FieldType;
+    Assert.NotNull(fieldType);
+    if (id.HasValue)
+    {
+      Assert.Equal(id.Value, fieldType.Id);
+    }
+    Assert.Equal(3, fieldType.Version);
+    Assert.Equal(Actor, fieldType.CreatedBy);
+    Assert.Equal(DateTime.UtcNow, fieldType.CreatedOn, TimeSpan.FromMinutes(1));
+    Assert.Equal(Actor, fieldType.UpdatedBy);
+    Assert.Equal(DateTime.UtcNow, fieldType.UpdatedOn, TimeSpan.FromMinutes(1));
+
+    Assert.Equal(payload.UniqueName, fieldType.UniqueName);
+    Assert.Equal(payload.DisplayName.Trim(), fieldType.DisplayName);
+    Assert.Equal(payload.Description.Trim(), fieldType.Description);
+    Assert.Equal(DataType.RelatedContent, fieldType.DataType);
+    Assert.Equal(payload.RelatedContent, fieldType.RelatedContent);
+  }
+
   [Theory(DisplayName = "It should create a new RichText field type.")]
   [InlineData(null)]
   [InlineData("2a7357dd-4996-4f85-9159-20da1acdca76")]
