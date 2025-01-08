@@ -90,9 +90,9 @@ public class FieldTypeEntity : AggregateEntity
 
     SetSettings(@event.Settings);
   }
-  private void SetSettings(object settings)
+  private void SetSettings<T>(T settings)
   {
-    Settings = JsonSerializer.Serialize(settings, settings.GetType());
+    Settings = JsonSerializer.Serialize(settings, typeof(T));
   }
 
   public void SetUniqueName(FieldTypeUniqueNameChanged @event)
