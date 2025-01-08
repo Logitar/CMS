@@ -111,11 +111,11 @@ internal class CreateOrReplaceFieldTypeCommandHandler : IRequestHandler<CreateOr
     }
     if (payload.RelatedContent != null)
     {
-      settings.Add(payload.RelatedContent.ToRelatedContentSettings());
+      settings.Add(payload.RelatedContent.ToRelatedContentSettings()); // TODO(fpion): ensure ContentType exists
     }
     if (payload.RichText != null)
     {
-      settings.Add(new RichTextSettings(payload.RichText)); // TODO(fpion): ensure ContentType exists
+      settings.Add(new RichTextSettings(payload.RichText));
     }
     if (payload.Select != null)
     {
