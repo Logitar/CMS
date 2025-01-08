@@ -1,21 +1,39 @@
-﻿using Logitar.Cms.Core.Fields.Events;
+﻿using Logitar.Cms.Core.Contents;
+using Logitar.Cms.Core.Fields.Events;
+using Logitar.Cms.Core.Fields.Settings;
+using Logitar.EventSourcing;
 
 namespace Logitar.Cms.Core.Fields;
 
 internal class FieldTypeManager : IFieldTypeManager
 {
+  private readonly IContentTypeQuerier _contentTypeQuerier;
   private readonly IFieldTypeQuerier _fieldTypeQuerier;
   private readonly IFieldTypeRepository _fieldTypeRepository;
 
-  public FieldTypeManager(IFieldTypeQuerier fieldTypeQuerier, IFieldTypeRepository fieldTypeRepository)
+  public FieldTypeManager(IContentTypeQuerier contentTypeQuerier, IFieldTypeQuerier fieldTypeQuerier, IFieldTypeRepository fieldTypeRepository)
   {
+    _contentTypeQuerier = contentTypeQuerier;
     _fieldTypeQuerier = fieldTypeQuerier;
     _fieldTypeRepository = fieldTypeRepository;
   }
 
   public async Task SaveAsync(FieldType fieldType, CancellationToken cancellationToken)
   {
-    bool hasUniqueNameChanged = fieldType.Changes.Any(change => change is FieldTypeUniqueNameChanged);
+    bool hasUniqueNameChanged = false;
+    RelatedContentSettings? relatedContentSettings = null;
+    foreach (IEvent change in fieldType.Changes)
+    {
+      if (change is FieldTypeUniqueNameChanged)
+      {
+        hasUniqueNameChanged = true;
+      }
+      else if (change is FieldTypeRelatedContentSettingsChanged relatedContentSettingsChanged)
+      {
+        relatedContentSettings = relatedContentSettingsChanged.Settings;
+      }
+    }
+
     if (hasUniqueNameChanged)
     {
       FieldTypeId? conflictId = await _fieldTypeQuerier.FindIdAsync(fieldType.UniqueName, cancellationToken);
@@ -23,6 +41,12 @@ internal class FieldTypeManager : IFieldTypeManager
       {
         throw new UniqueNameAlreadyUsedException(fieldType, conflictId.Value);
       }
+    }
+
+    if (relatedContentSettings != null)
+    {
+      _ = await _contentTypeQuerier.ReadAsync(relatedContentSettings.ContentTypeId, cancellationToken)
+        ?? throw new ContentTypeNotFoundException(relatedContentSettings.ContentTypeId, nameof(relatedContentSettings.ContentTypeId));
     }
 
     await _fieldTypeRepository.SaveAsync(fieldType, cancellationToken);

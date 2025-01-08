@@ -85,7 +85,7 @@ internal class UpdateFieldTypeCommandHandler : IRequestHandler<UpdateFieldTypeCo
     }
     if (payload.RelatedContent != null)
     {
-      RelatedContentSettings settings = payload.RelatedContent.ToRelatedContentSettings(); // TODO(fpion): ensure ContentType exists
+      RelatedContentSettings settings = payload.RelatedContent.ToRelatedContentSettings();
       fieldType.SetSettings(settings, actorId);
     }
     if (payload.RichText != null)

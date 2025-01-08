@@ -111,7 +111,7 @@ internal class CreateOrReplaceFieldTypeCommandHandler : IRequestHandler<CreateOr
     }
     if (payload.RelatedContent != null)
     {
-      settings.Add(payload.RelatedContent.ToRelatedContentSettings()); // TODO(fpion): ensure ContentType exists
+      settings.Add(payload.RelatedContent.ToRelatedContentSettings());
     }
     if (payload.RichText != null)
     {
@@ -169,7 +169,7 @@ internal class CreateOrReplaceFieldTypeCommandHandler : IRequestHandler<CreateOr
     }
     if (payload.RelatedContent != null)
     {
-      RelatedContentSettings settings = payload.RelatedContent.ToRelatedContentSettings(); // TODO(fpion): ensure ContentType exists
+      RelatedContentSettings settings = payload.RelatedContent.ToRelatedContentSettings();
       if (!reference.Settings.Equals(settings))
       {
         fieldType.SetSettings(settings, actorId);
