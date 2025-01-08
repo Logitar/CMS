@@ -260,4 +260,41 @@ public class FieldTypeIntegrationTests : IntegrationTests
     Assert.Equal(DataType.String, fieldType.DataType);
     Assert.Equal(payload.String, fieldType.String);
   }
+
+  [Theory(DisplayName = "It should create a new Tags field type.")]
+  [InlineData(null)]
+  [InlineData("a7329767-ee3e-4546-9606-85466c1d1b82")]
+  public async Task Given_TagsType_When_Create_Then_FieldTypeCreated(string? idValue)
+  {
+    Guid? id = idValue == null ? null : Guid.Parse(idValue);
+
+    CreateOrReplaceFieldTypePayload payload = new()
+    {
+      UniqueName = "MetaKeywords",
+      DisplayName = " Keywords (meta) ",
+      Description = "  This is the field type keyword metadata.  ",
+      Tags = new TagsSettingsModel()
+    };
+    CreateOrReplaceFieldTypeCommand command = new(id, payload, Version: null);
+    CreateOrReplaceFieldTypeResult result = await Mediator.Send(command);
+    Assert.True(result.Created);
+
+    FieldTypeModel? fieldType = result.FieldType;
+    Assert.NotNull(fieldType);
+    if (id.HasValue)
+    {
+      Assert.Equal(id.Value, fieldType.Id);
+    }
+    Assert.Equal(3, fieldType.Version);
+    Assert.Equal(Actor, fieldType.CreatedBy);
+    Assert.Equal(DateTime.UtcNow, fieldType.CreatedOn, TimeSpan.FromMinutes(1));
+    Assert.Equal(Actor, fieldType.UpdatedBy);
+    Assert.Equal(DateTime.UtcNow, fieldType.UpdatedOn, TimeSpan.FromMinutes(1));
+
+    Assert.Equal(payload.UniqueName, fieldType.UniqueName);
+    Assert.Equal(payload.DisplayName.Trim(), fieldType.DisplayName);
+    Assert.Equal(payload.Description.Trim(), fieldType.Description);
+    Assert.Equal(DataType.Tags, fieldType.DataType);
+    Assert.Equal(payload.Tags, fieldType.Tags);
+  }
 }

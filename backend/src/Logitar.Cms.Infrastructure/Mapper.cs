@@ -187,6 +187,9 @@ public class Mapper
       case DataType.String:
         destination.String = (source.Settings == null ? null : JsonSerializer.Deserialize<StringSettingsModel>(source.Settings)) ?? new();
         break;
+      case DataType.Tags:
+        destination.Tags = (source.Settings == null ? null : JsonSerializer.Deserialize<TagsSettingsModel>(source.Settings)) ?? new();
+        break;
       default:
         throw new DataTypeNotSupportedException(source.DataType);
     }

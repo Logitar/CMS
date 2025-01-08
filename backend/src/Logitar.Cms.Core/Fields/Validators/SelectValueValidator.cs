@@ -18,7 +18,7 @@ internal class SelectValueValidator : IFieldValueValidator
     IReadOnlyCollection<string> values = Parse(inputValue);
     List<ValidationFailure> failures = new(capacity: 1 + values.Count);
 
-    if (values.Count < 0)
+    if (values.Count < 1)
     {
       ValidationFailure failure = new(propertyName, "The value cannot be empty.", inputValue)
       {

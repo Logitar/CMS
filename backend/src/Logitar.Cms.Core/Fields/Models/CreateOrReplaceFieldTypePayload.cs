@@ -12,4 +12,5 @@ public record CreateOrReplaceFieldTypePayload
   public RichTextSettingsModel? RichText { get; set; }
   public SelectSettingsModel? Select { get; set; }
   public StringSettingsModel? String { get; set; }
+  public TagsSettingsModel? Tags { get; set; }
 }

@@ -7,5 +7,6 @@ public enum DataType
   Boolean = 2,
   Number = 3,
   DateTime = 4,
-  Select = 5
+  Select = 5,
+  Tags = 6
 }

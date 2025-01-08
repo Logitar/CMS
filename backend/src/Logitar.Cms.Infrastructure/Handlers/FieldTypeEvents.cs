@@ -13,6 +13,7 @@ internal class FieldTypeEvents : INotificationHandler<FieldTypeBooleanSettingsCh
   INotificationHandler<FieldTypeRichTextSettingsChanged>,
   INotificationHandler<FieldTypeSelectSettingsChanged>,
   INotificationHandler<FieldTypeStringSettingsChanged>,
+  INotificationHandler<FieldTypeTagsSettingsChanged>,
   INotificationHandler<FieldTypeUniqueNameChanged>,
   INotificationHandler<FieldTypeUpdated>
 {
@@ -100,6 +101,18 @@ internal class FieldTypeEvents : INotificationHandler<FieldTypeBooleanSettingsCh
   }
 
   public async Task Handle(FieldTypeStringSettingsChanged @event, CancellationToken cancellationToken)
+  {
+    FieldTypeEntity? fieldType = await _context.FieldTypes
+      .SingleOrDefaultAsync(x => x.StreamId == @event.StreamId.Value, cancellationToken);
+    if (fieldType != null && fieldType.Version == (@event.Version - 1))
+    {
+      fieldType.SetSettings(@event);
+
+      await _context.SaveChangesAsync(cancellationToken);
+    }
+  }
+
+  public async Task Handle(FieldTypeTagsSettingsChanged @event, CancellationToken cancellationToken)
   {
     FieldTypeEntity? fieldType = await _context.FieldTypes
       .SingleOrDefaultAsync(x => x.StreamId == @event.StreamId.Value, cancellationToken);

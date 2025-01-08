@@ -44,6 +44,7 @@ public class FieldIndexEntity
   public string? RichText { get; private set; }
   public string? Select { get; private set; }
   public string? String { get; private set; }
+  public string? Tags { get; private set; }
 
   public FieldIndexEntity(
     ContentTypeEntity contentType,
@@ -121,6 +122,9 @@ public class FieldIndexEntity
         break;
       case DataType.String:
         String = value.Truncate(MaximumLength);
+        break;
+      case DataType.Tags:
+        Tags = value;
         break;
       default:
         throw new DataTypeNotSupportedException(FieldType.DataType);

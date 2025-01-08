@@ -98,5 +98,10 @@ internal class UpdateFieldTypeCommandHandler : IRequestHandler<UpdateFieldTypeCo
       StringSettings settings = new(payload.String);
       fieldType.SetSettings(settings, actorId);
     }
+    if (payload.Tags != null)
+    {
+      TagsSettings settings = new(payload.Tags);
+      fieldType.SetSettings(settings, actorId);
+    }
   }
 }

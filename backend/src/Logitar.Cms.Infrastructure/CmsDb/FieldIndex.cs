@@ -32,4 +32,5 @@ public static class FieldIndex
   public static readonly ColumnId RichText = new(nameof(FieldIndexEntity.RichText), Table);
   public static readonly ColumnId Select = new(nameof(FieldIndexEntity.Select), Table);
   public static readonly ColumnId String = new(nameof(FieldIndexEntity.String), Table);
+  public static readonly ColumnId Tags = new(nameof(FieldIndexEntity.Tags), Table);
 }

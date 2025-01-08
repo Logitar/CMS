@@ -76,6 +76,12 @@ public class FieldTypeEntity : AggregateEntity
 
     SetSettings(@event.Settings);
   }
+  public void SetSettings(FieldTypeTagsSettingsChanged @event)
+  {
+    Update(@event);
+
+    SetSettings(@event.Settings);
+  }
   private void SetSettings(FieldTypeSettings settings)
   {
     Settings = JsonSerializer.Serialize(settings, settings.GetType());

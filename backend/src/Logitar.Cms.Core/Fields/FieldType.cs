@@ -75,6 +75,9 @@ public class FieldType : AggregateRoot
       case DataType.String:
         SetSettings((StringSettings)settings, actorId);
         break;
+      case DataType.Tags:
+        SetSettings((TagsSettings)settings, actorId);
+        break;
       default:
         throw new DataTypeNotSupportedException(settings.DataType);
     }
@@ -184,6 +187,23 @@ public class FieldType : AggregateRoot
     }
   }
   protected virtual void Handle(FieldTypeStringSettingsChanged @event)
+  {
+    _settings = @event.Settings;
+  }
+
+  public void SetSettings(TagsSettings settings, ActorId? actorId = null)
+  {
+    if (DataType != settings.DataType)
+    {
+      throw new UnexpectedFieldTypeSettingsException(this, settings);
+    }
+
+    if (_settings == null || !_settings.Equals(settings))
+    {
+      Raise(new FieldTypeTagsSettingsChanged(settings), actorId);
+    }
+  }
+  protected virtual void Handle(FieldTypeTagsSettingsChanged @event)
   {
     _settings = @event.Settings;
   }
