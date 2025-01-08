@@ -66,6 +66,9 @@ public class FieldType : AggregateRoot
       case DataType.Number:
         SetSettings((NumberSettings)settings, actorId);
         break;
+      case DataType.RelatedContent:
+        SetSettings((RelatedContentSettings)settings, actorId);
+        break;
       case DataType.RichText:
         SetSettings((RichTextSettings)settings, actorId);
         break;
@@ -136,6 +139,23 @@ public class FieldType : AggregateRoot
     }
   }
   protected virtual void Handle(FieldTypeNumberSettingsChanged @event)
+  {
+    _settings = @event.Settings;
+  }
+
+  public void SetSettings(RelatedContentSettings settings, ActorId? actorId = null)
+  {
+    if (DataType != settings.DataType)
+    {
+      throw new UnexpectedFieldTypeSettingsException(this, settings);
+    }
+
+    if (_settings == null || !_settings.Equals(settings))
+    {
+      Raise(new FieldTypeRelatedContentSettingsChanged(settings), actorId);
+    }
+  }
+  protected virtual void Handle(FieldTypeRelatedContentSettingsChanged @event)
   {
     _settings = @event.Settings;
   }

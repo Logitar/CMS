@@ -1,6 +1,6 @@
 ﻿using Logitar.Cms.Core.Fields;
 using Logitar.Cms.Core.Fields.Events;
-using Logitar.Cms.Core.Fields.Settings;
+using Logitar.Cms.Core.Fields.Models;
 using Logitar.Identity.EntityFrameworkCore.Relational.Entities;
 using Logitar.Identity.EntityFrameworkCore.Relational.IdentityDb;
 
@@ -58,6 +58,13 @@ public class FieldTypeEntity : AggregateEntity
 
     SetSettings(@event.Settings);
   }
+  public void SetSettings(FieldTypeRelatedContentSettingsChanged @event)
+  {
+    Update(@event);
+
+    RelatedContentSettingsModel settings = new(@event.Settings);
+    SetSettings(settings);
+  }
   public void SetSettings(FieldTypeRichTextSettingsChanged @event)
   {
     Update(@event);
@@ -68,7 +75,8 @@ public class FieldTypeEntity : AggregateEntity
   {
     Update(@event);
 
-    SetSettings(@event.Settings);
+    SelectSettingsModel settings = new(@event.Settings);
+    SetSettings(settings);
   }
   public void SetSettings(FieldTypeStringSettingsChanged @event)
   {
@@ -82,7 +90,7 @@ public class FieldTypeEntity : AggregateEntity
 
     SetSettings(@event.Settings);
   }
-  private void SetSettings(FieldTypeSettings settings)
+  private void SetSettings(object settings)
   {
     Settings = JsonSerializer.Serialize(settings, settings.GetType());
   }

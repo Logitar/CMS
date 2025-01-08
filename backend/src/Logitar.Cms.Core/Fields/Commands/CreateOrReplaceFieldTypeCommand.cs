@@ -18,20 +18,17 @@ internal class CreateOrReplaceFieldTypeCommandHandler : IRequestHandler<CreateOr
   private readonly IFieldTypeManager _fieldTypeManager;
   private readonly IFieldTypeQuerier _fieldTypeQuerier;
   private readonly IFieldTypeRepository _fieldTypeRepository;
-  private readonly IMediator _mediator;
 
   public CreateOrReplaceFieldTypeCommandHandler(
     IApplicationContext applicationContext,
     IFieldTypeManager fieldTypeManager,
     IFieldTypeQuerier fieldTypeQuerier,
-    IFieldTypeRepository fieldTypeRepository,
-    IMediator mediator)
+    IFieldTypeRepository fieldTypeRepository)
   {
     _applicationContext = applicationContext;
     _fieldTypeManager = fieldTypeManager;
     _fieldTypeQuerier = fieldTypeQuerier;
     _fieldTypeRepository = fieldTypeRepository;
-    _mediator = mediator;
   }
 
   public async Task<CreateOrReplaceFieldTypeResult> Handle(CreateOrReplaceFieldTypeCommand command, CancellationToken cancellationToken)
@@ -98,7 +95,7 @@ internal class CreateOrReplaceFieldTypeCommandHandler : IRequestHandler<CreateOr
 
   private static FieldTypeSettings GetSettings(CreateOrReplaceFieldTypePayload payload)
   {
-    List<FieldTypeSettings> settings = new(capacity: 7);
+    List<FieldTypeSettings> settings = new(capacity: 8);
 
     if (payload.Boolean != null)
     {
@@ -112,9 +109,13 @@ internal class CreateOrReplaceFieldTypeCommandHandler : IRequestHandler<CreateOr
     {
       settings.Add(new NumberSettings(payload.Number));
     }
+    if (payload.RelatedContent != null)
+    {
+      settings.Add(payload.RelatedContent.ToRelatedContentSettings());
+    }
     if (payload.RichText != null)
     {
-      settings.Add(new RichTextSettings(payload.RichText));
+      settings.Add(new RichTextSettings(payload.RichText)); // TODO(fpion): ensure ContentType exists
     }
     if (payload.Select != null)
     {
@@ -161,6 +162,14 @@ internal class CreateOrReplaceFieldTypeCommandHandler : IRequestHandler<CreateOr
     if (payload.Number != null)
     {
       NumberSettings settings = new(payload.Number);
+      if (!reference.Settings.Equals(settings))
+      {
+        fieldType.SetSettings(settings, actorId);
+      }
+    }
+    if (payload.RelatedContent != null)
+    {
+      RelatedContentSettings settings = payload.RelatedContent.ToRelatedContentSettings(); // TODO(fpion): ensure ContentType exists
       if (!reference.Settings.Equals(settings))
       {
         fieldType.SetSettings(settings, actorId);
