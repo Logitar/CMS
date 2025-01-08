@@ -1,18 +1,21 @@
 ﻿using FluentValidation.Results;
+using Logitar.Cms.Core.Contents;
 using Logitar.Cms.Core.Fields.Settings;
 
 namespace Logitar.Cms.Core.Fields.Validators;
 
 internal class RelatedContentValueValidator : IFieldValueValidator
 {
+  private readonly IContentQuerier _contentQuerier;
   private readonly RelatedContentSettings _settings;
 
-  public RelatedContentValueValidator(RelatedContentSettings settings)
+  public RelatedContentValueValidator(IContentQuerier contentQuerier, RelatedContentSettings settings)
   {
+    _contentQuerier = contentQuerier;
     _settings = settings;
   }
 
-  public ValidationResult Validate(string value, string propertyName)
+  public async Task<ValidationResult> ValidateAsync(string value, string propertyName, CancellationToken cancellationToken)
   {
     IReadOnlyCollection<Guid> contentIds = Parse(value);
     List<ValidationFailure> failures = new(capacity: 1 + contentIds.Count);
@@ -29,14 +32,39 @@ internal class RelatedContentValueValidator : IFieldValueValidator
     {
       ValidationFailure failure = new(propertyName, "Exactly one value is allowed.", value)
       {
+        CustomState = new { contentIds.Count },
         ErrorCode = "MultipleValidator"
       };
       failures.Add(failure);
     }
 
-    // TODO(fpion): find ContentTypeId for each ContentId
-    // TODO(fpion): failure if ContentId not in results (dictionary?)
-    // TODO(fpion): failure if ContentTypeId != _settings.ContentTypeId
+    IReadOnlyDictionary<Guid, Guid> contentTypeIds = await _contentQuerier.FindContentTypeIdsAsync(contentIds, cancellationToken);
+    Guid expectedContentTypeId = _settings.ContentTypeId.ToGuid();
+    foreach (Guid contentId in contentIds)
+    {
+      if (!contentTypeIds.TryGetValue(contentId, out Guid contentTypeId))
+      {
+        ValidationFailure failure = new(propertyName, "The content could not be found.", contentId)
+        {
+          ErrorCode = "ContentValidator"
+        };
+        failures.Add(failure);
+      }
+      else if (contentTypeId != expectedContentTypeId)
+      {
+        string errorMessage = $"The content type 'Id={contentTypeId}' does not match the expected content type 'Id={expectedContentTypeId}'.";
+        ValidationFailure failure = new(propertyName, errorMessage, contentId)
+        {
+          CustomState = new
+          {
+            ExpectedContentTypeId = expectedContentTypeId,
+            ActualContentTypeId = contentTypeId
+          },
+          ErrorCode = "ContentTypeValidator"
+        };
+        failures.Add(failure);
+      }
+    }
 
     return new ValidationResult(failures);
   }

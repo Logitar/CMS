@@ -4,7 +4,7 @@ namespace Logitar.Cms.Core.Fields.Validators;
 
 internal class TagsValueValidator : IFieldValueValidator
 {
-  public ValidationResult Validate(string inputValue, string propertyName)
+  public Task<ValidationResult> ValidateAsync(string inputValue, string propertyName, CancellationToken cancellationToken)
   {
     List<ValidationFailure> failures = new(capacity: 1);
 
@@ -18,7 +18,7 @@ internal class TagsValueValidator : IFieldValueValidator
       failures.Add(failure);
     }
 
-    return new ValidationResult(failures);
+    return Task.FromResult(new ValidationResult(failures));
   }
 
   private static IReadOnlyCollection<string> Parse(string value)

@@ -4,5 +4,5 @@ namespace Logitar.Cms.Core.Fields.Validators;
 
 internal interface IFieldValueValidator
 {
-  ValidationResult Validate(string value, string propertyName);
+  Task<ValidationResult> ValidateAsync(string value, string propertyName, CancellationToken cancellationToken = default);
 }

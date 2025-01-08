@@ -14,17 +14,20 @@ internal class ContentManager : IContentManager
   private readonly IContentRepository _contentRepository;
   private readonly IContentTypeRepository _contentTypeRepository;
   private readonly IFieldTypeRepository _fieldTypeRepository;
+  private readonly IFieldValueValidatorFactory _fieldValueValidatorFactory;
 
   public ContentManager(
     IContentQuerier contentQuerier,
     IContentRepository contentRepository,
     IContentTypeRepository contentTypeRepository,
-    IFieldTypeRepository fieldTypeRepository)
+    IFieldTypeRepository fieldTypeRepository,
+    IFieldValueValidatorFactory fieldValueValidatorFactory)
   {
     _contentQuerier = contentQuerier;
     _contentRepository = contentRepository;
     _contentTypeRepository = contentTypeRepository;
     _fieldTypeRepository = fieldTypeRepository;
+    _fieldValueValidatorFactory = fieldValueValidatorFactory;
   }
 
   public async Task SaveAsync(Content content, CancellationToken cancellationToken)
@@ -123,8 +126,8 @@ internal class ContentManager : IContentManager
       requiredIds.Remove(fieldValue.Key);
 
       FieldType fieldType = fieldTypes[fieldDefinition.FieldTypeId];
-      IFieldValueValidator validator = FieldValueValidatorFactory.Create(fieldType);
-      ValidationResult result = validator.Validate(fieldValue.Value, $"{PropertyName}.{fieldValue.Key}");
+      IFieldValueValidator validator = _fieldValueValidatorFactory.Create(fieldType);
+      ValidationResult result = await validator.ValidateAsync(fieldValue.Value, $"{PropertyName}.{fieldValue.Key}", cancellationToken);
       if (!result.IsValid)
       {
         validationFailures.AddRange(result.Errors);

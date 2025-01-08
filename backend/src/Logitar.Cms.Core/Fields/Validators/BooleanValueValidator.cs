@@ -4,7 +4,7 @@ namespace Logitar.Cms.Core.Fields.Validators;
 
 internal class BooleanValueValidator : IFieldValueValidator
 {
-  public ValidationResult Validate(string value, string propertyName)
+  public Task<ValidationResult> ValidateAsync(string value, string propertyName, CancellationToken cancellationToken)
   {
     List<ValidationFailure> failures = new(capacity: 1);
 
@@ -17,6 +17,6 @@ internal class BooleanValueValidator : IFieldValueValidator
       failures.Add(failure);
     }
 
-    return new ValidationResult(failures);
+    return Task.FromResult(new ValidationResult(failures));
   }
 }

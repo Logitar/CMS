@@ -14,6 +14,8 @@ public interface IContentQuerier
     ContentId contentId,
     CancellationToken cancellationToken = default);
 
+  Task<IReadOnlyDictionary<Guid, Guid>> FindContentTypeIdsAsync(IEnumerable<Guid> contentIds, CancellationToken cancellationToken = default);
+
   Task<ContentId?> FindIdAsync(ContentTypeId contentTypeId, LanguageId? languageId, UniqueName uniqueName, CancellationToken cancellationToken = default);
 
   Task<ContentModel> ReadAsync(Content content, CancellationToken cancellationToken = default);
