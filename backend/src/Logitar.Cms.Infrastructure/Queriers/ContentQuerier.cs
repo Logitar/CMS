@@ -57,6 +57,23 @@ internal class ContentQuerier : IContentQuerier
     return conflicts.ToDictionary(x => x.FieldDefinitionId, x => new ContentId(x.ContentId));
   }
 
+  public async Task<IReadOnlyDictionary<Guid, Guid>> FindContentTypeIdsAsync(IEnumerable<Guid> contentIds, CancellationToken cancellationToken)
+  {
+    HashSet<Guid> distinctIds = contentIds.ToHashSet();
+
+    var associations = await _contents.AsNoTracking()
+      .Include(x => x.ContentType)
+      .Where(x => distinctIds.Contains(x.Id))
+      .Select(x => new
+      {
+        ContentId = x.Id,
+        ContentTypeId = x.ContentType!.Id
+      })
+      .ToArrayAsync(cancellationToken);
+
+    return associations.ToDictionary(x => x.ContentId, x => x.ContentTypeId);
+  }
+
   public async Task<ContentId?> FindIdAsync(ContentTypeId contentTypeId, LanguageId? languageId, UniqueName uniqueName, CancellationToken cancellationToken)
   {
     string contentTypeStreamId = contentTypeId.Value;

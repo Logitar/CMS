@@ -1,5 +1,6 @@
 ﻿using Logitar.Cms.Core.Contents;
 using Logitar.Cms.Core.Fields;
+using Logitar.Cms.Core.Fields.Validators;
 using Logitar.Cms.Core.Localization;
 using Logitar.EventSourcing;
 using Logitar.Identity.Core;
@@ -18,6 +19,7 @@ public static class DependencyInjectionExtensions
       .AddTransient<IContentManager, ContentManager>()
       .AddTransient<IContentTypeManager, ContentTypeManager>()
       .AddTransient<IFieldTypeManager, FieldTypeManager>()
+      .AddTransient<IFieldValueValidatorFactory, FieldValueValidatorFactory>()
       .AddTransient<ILanguageManager, LanguageManager>();
   }
 }

@@ -1,5 +1,8 @@
-﻿using Logitar.Cms.Core.Fields.Commands;
+﻿using Logitar.Cms.Core.Contents;
+using Logitar.Cms.Core.Fields.Commands;
 using Logitar.Cms.Core.Fields.Models;
+using Logitar.Identity.Core;
+using Microsoft.Extensions.DependencyInjection;
 using System.Net.Mime; // NOTE(fpion): cannot be added to CSPROJ due to ContentType aggregate.
 
 namespace Logitar.Cms.Core.Fields;
@@ -7,8 +10,11 @@ namespace Logitar.Cms.Core.Fields;
 [Trait(Traits.Category, Categories.Integration)]
 public class FieldTypeIntegrationTests : IntegrationTests
 {
+  private readonly IContentTypeRepository _contentTypeRepository;
+
   public FieldTypeIntegrationTests() : base()
   {
+    _contentTypeRepository = ServiceProvider.GetRequiredService<IContentTypeRepository>();
   }
 
   [Theory(DisplayName = "It should create a new Boolean field type.")]
@@ -135,6 +141,9 @@ public class FieldTypeIntegrationTests : IntegrationTests
   [InlineData("5310a19e-7227-43be-a03c-a2c7f6be2d0e")]
   public async Task Given_RelatedContentType_When_Create_Then_FieldTypeCreated(string? idValue)
   {
+    Contents.ContentType contentType = new(new Identifier("BlogAuthor"), isInvariant: false);
+    await _contentTypeRepository.SaveAsync(contentType);
+
     Guid? id = idValue == null ? null : Guid.Parse(idValue);
 
     CreateOrReplaceFieldTypePayload payload = new()
@@ -144,7 +153,7 @@ public class FieldTypeIntegrationTests : IntegrationTests
       Description = "  This is the field type for blog article related author content.  ",
       RelatedContent = new RelatedContentSettingsModel
       {
-        ContentTypeId = Guid.NewGuid(),
+        ContentTypeId = contentType.Id.ToGuid(),
         IsMultiple = true
       }
     };

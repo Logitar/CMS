@@ -12,7 +12,7 @@ internal class SelectValueValidator : IFieldValueValidator
     _settings = settings;
   }
 
-  public ValidationResult Validate(string inputValue, string propertyName)
+  public Task<ValidationResult> ValidateAsync(string inputValue, string propertyName, CancellationToken cancellationToken)
   {
     IReadOnlyCollection<string> values = Parse(inputValue);
     List<ValidationFailure> failures = new(capacity: 1 + values.Count);
@@ -29,6 +29,7 @@ internal class SelectValueValidator : IFieldValueValidator
     {
       ValidationFailure failure = new(propertyName, "Exactly one value is allowed.", inputValue)
       {
+        CustomState = new { values.Count },
         ErrorCode = "MultipleValidator"
       };
       failures.Add(failure);
@@ -39,14 +40,15 @@ internal class SelectValueValidator : IFieldValueValidator
     {
       if (!allowedValues.Contains(value))
       {
-        ValidationFailure failure = new(propertyName, "The value is not included within select options.", value)
+        ValidationFailure failure = new(propertyName, $"The value should be one of the following: {string.Join(", ", allowedValues)}.", value)
         {
+          CustomState = new { AllowedValues = allowedValues },
           ErrorCode = "OptionValidator"
         };
       }
     }
 
-    return new ValidationResult(failures);
+    return Task.FromResult(new ValidationResult(failures));
   }
 
   private static IReadOnlyCollection<string> Parse(string value)
