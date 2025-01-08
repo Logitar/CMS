@@ -2,6 +2,7 @@
 using Logitar.Cms.Core.Fields.Events;
 using Logitar.Cms.Core.Fields.Settings;
 using Logitar.EventSourcing;
+using Logitar.Identity.Core;
 
 namespace Logitar.Cms.Core.Fields;
 
@@ -20,13 +21,13 @@ internal class FieldTypeManager : IFieldTypeManager
 
   public async Task SaveAsync(FieldType fieldType, CancellationToken cancellationToken)
   {
-    bool hasUniqueNameChanged = false;
+    UniqueName? uniqueName = null;
     RelatedContentSettings? relatedContentSettings = null;
     foreach (IEvent change in fieldType.Changes)
     {
-      if (change is FieldTypeUniqueNameChanged)
+      if (change is FieldTypeUniqueNameChanged uniqueNameChanged)
       {
-        hasUniqueNameChanged = true;
+        uniqueName = uniqueNameChanged.UniqueName;
       }
       else if (change is FieldTypeRelatedContentSettingsChanged relatedContentSettingsChanged)
       {
@@ -34,9 +35,9 @@ internal class FieldTypeManager : IFieldTypeManager
       }
     }
 
-    if (hasUniqueNameChanged)
+    if (uniqueName != null)
     {
-      FieldTypeId? conflictId = await _fieldTypeQuerier.FindIdAsync(fieldType.UniqueName, cancellationToken);
+      FieldTypeId? conflictId = await _fieldTypeQuerier.FindIdAsync(uniqueName, cancellationToken);
       if (conflictId.HasValue && !conflictId.Value.Equals(fieldType.Id))
       {
         throw new UniqueNameAlreadyUsedException(fieldType, conflictId.Value);
