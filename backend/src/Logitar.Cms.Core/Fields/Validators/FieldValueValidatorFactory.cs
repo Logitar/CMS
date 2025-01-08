@@ -12,6 +12,7 @@ internal static class FieldValueValidatorFactory
     DataType.RichText => new RichTextValueValidator((RichTextSettings)fieldType.Settings),
     DataType.Select => new SelectValueValidator((SelectSettings)fieldType.Settings),
     DataType.String => new StringValueValidator((StringSettings)fieldType.Settings),
+    DataType.Tags => new TagsValueValidator(),
     _ => throw new DataTypeNotSupportedException(fieldType.DataType),
   };
 }
