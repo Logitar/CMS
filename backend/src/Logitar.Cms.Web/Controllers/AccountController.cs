@@ -1,5 +1,6 @@
 ﻿using Logitar.Cms.Core.Sessions.Commands;
 using Logitar.Cms.Core.Sessions.Models;
+using Logitar.Cms.Core.Users.Commands;
 using Logitar.Cms.Core.Users.Models;
 using Logitar.Cms.Web.Authentication;
 using Logitar.Cms.Web.Extensions;
@@ -23,7 +24,7 @@ public class AccountController : ControllerBase
     _openAuthenticationService = openAuthenticationService;
   }
 
-  [HttpGet("auth/profile")]
+  [HttpGet("profile")]
   [Authorize]
   public ActionResult<UserProfile> GetProfile()
   {
@@ -51,12 +52,35 @@ public class AccountController : ControllerBase
     return Ok(response);
   }
 
-  [HttpPost("auth/sign/in")]
+  [HttpPost("sign/in")]
   public async Task<ActionResult<CurrentUser>> SignInAsync([FromBody] SignInPayload credentials, CancellationToken cancellationToken)
   {
     SignInSessionPayload payload = new(credentials.Username, credentials.Password, id: null, isPersistent: true, HttpContext.GetSessionCustomAttributes());
     SessionModel session = await _mediator.Send(new SignInSessionCommand(payload), cancellationToken);
     HttpContext.SignIn(session);
     return Ok(new CurrentUser(session));
+  }
+
+  [HttpPost("sign/out")]
+  public async Task<ActionResult> SignOutAsync(bool everywhere, CancellationToken cancellationToken)
+  {
+    if (everywhere)
+    {
+      UserModel? user = HttpContext.GetUser();
+      if (user != null)
+      {
+        await _mediator.Send(new SignOutUserCommand(user.Id), cancellationToken);
+      }
+    }
+    else
+    {
+      Guid? sessionId = HttpContext.GetSessionId();
+      if (sessionId.HasValue)
+      {
+        await _mediator.Send(new SignOutSessionCommand(sessionId.Value), cancellationToken);
+      }
+    }
+
+    return NoContent();
   }
 }

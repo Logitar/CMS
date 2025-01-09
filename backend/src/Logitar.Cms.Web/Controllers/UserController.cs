@@ -24,4 +24,11 @@ public class UserController : ControllerBase
     UserModel user = await _mediator.Send(new AuthenticateUserCommand(payload), cancellationToken);
     return Ok(user);
   }
+
+  [HttpPatch("{id}/sign/out")]
+  public async Task<ActionResult<UserModel>> SignOutAsync(Guid id, CancellationToken cancellationToken)
+  {
+    UserModel? user = await _mediator.Send(new SignOutUserCommand(id), cancellationToken);
+    return user == null ? NotFound() : Ok(user);
+  }
 }
