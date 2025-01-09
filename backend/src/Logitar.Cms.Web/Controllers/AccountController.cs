@@ -1,9 +1,11 @@
 ﻿using Logitar.Cms.Core.Sessions.Commands;
 using Logitar.Cms.Core.Sessions.Models;
+using Logitar.Cms.Core.Users.Models;
 using Logitar.Cms.Web.Authentication;
 using Logitar.Cms.Web.Extensions;
 using Logitar.Cms.Web.Models.Account;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Logitar.Cms.Web.Controllers;
@@ -19,6 +21,15 @@ public class AccountController : ControllerBase
   {
     _mediator = mediator;
     _openAuthenticationService = openAuthenticationService;
+  }
+
+  [HttpGet("auth/profile")]
+  [Authorize]
+  public ActionResult<UserProfile> GetProfile()
+  {
+    UserModel user = HttpContext.GetUser() ?? throw new InvalidOperationException("An authorized user is required.");
+    UserProfile profile = new(user);
+    return Ok(profile);
   }
 
   [HttpPost("auth/token")]
