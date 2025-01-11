@@ -40,4 +40,11 @@ public class SessionController : ControllerBase
     Uri location = new($"{Request.Scheme}://{Request.Host}/api/sessions/{session.Id}", UriKind.Absolute);
     return Created(location, session);
   }
+
+  [HttpPatch("{id}/sign/out")]
+  public async Task<ActionResult<SessionModel>> SignOutAsync(Guid id, CancellationToken cancellationToken)
+  {
+    SessionModel? session = await _mediator.Send(new SignOutSessionCommand(id), cancellationToken);
+    return session == null ? NotFound() : Ok(session);
+  }
 }

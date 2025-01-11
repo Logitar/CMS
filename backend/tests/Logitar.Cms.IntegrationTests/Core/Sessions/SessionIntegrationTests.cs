@@ -125,4 +125,23 @@ public class SessionIntegrationTests : IntegrationTests
     Assert.NotNull(user.AuthenticatedOn);
     Assert.Equal(DateTime.UtcNow, user.AuthenticatedOn.Value, TimeSpan.FromMinutes(1));
   }
+
+  [Fact(DisplayName = "It should sign-out an active user session.")]
+  public async Task Given_ActiveSession_When_SignOut_Then_SessionIsSignedOut()
+  {
+    User user = Assert.Single(await _userRepository.LoadAsync());
+
+    Session session = new(user);
+    await _sessionRepository.SaveAsync(session);
+
+    SignOutSessionCommand command = new(session.EntityId.ToGuid());
+    SessionModel? model = await Mediator.Send(command);
+
+    Assert.NotNull(model);
+    Assert.Equal(command.Id, model.Id);
+    Assert.False(model.IsActive);
+    Assert.Equal(Actor, model.SignedOutBy);
+    Assert.True(model.SignedOutOn.HasValue);
+    Assert.Equal(DateTime.UtcNow, model.SignedOutOn.Value, TimeSpan.FromMinutes(1));
+  }
 }
