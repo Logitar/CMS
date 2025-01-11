@@ -62,6 +62,7 @@ public class AccountController : ControllerBase
   }
 
   [HttpPost("sign/out")]
+  [Authorize]
   public async Task<ActionResult> SignOutAsync(bool everywhere, CancellationToken cancellationToken)
   {
     if (everywhere)
@@ -74,10 +75,10 @@ public class AccountController : ControllerBase
     }
     else
     {
-      Guid? sessionId = HttpContext.GetSessionId();
-      if (sessionId.HasValue)
+      SessionModel? session = HttpContext.GetSession();
+      if (session != null)
       {
-        await _mediator.Send(new SignOutSessionCommand(sessionId.Value), cancellationToken);
+        await _mediator.Send(new SignOutSessionCommand(session.Id), cancellationToken);
       }
     }
 
