@@ -1,4 +1,6 @@
 ﻿using Logitar.Cms.Core.Localization.Events;
+using Logitar.EventSourcing;
+using Logitar.Identity.Core;
 
 namespace Logitar.Cms.Core.Localization;
 
@@ -15,10 +17,22 @@ internal class LanguageManager : ILanguageManager
 
   public async Task SaveAsync(Language language, CancellationToken cancellationToken)
   {
-    bool hasLocaleChanged = language.Changes.Any(change => change is LanguageLocaleChanged);
-    if (hasLocaleChanged)
+    Locale? locale = null;
+    foreach (IEvent change in language.Changes)
     {
-      LanguageId? conflictId = await _languageQuerier.FindIdAsync(language.Locale, cancellationToken);
+      if (change is LanguageCreated created)
+      {
+        locale = created.Locale;
+      }
+      else if (change is LanguageLocaleChanged localeChanged)
+      {
+        locale = localeChanged.Locale;
+      }
+    }
+
+    if (locale != null)
+    {
+      LanguageId? conflictId = await _languageQuerier.FindIdAsync(locale, cancellationToken);
       if (conflictId.HasValue && !conflictId.Value.Equals(language.Id))
       {
         throw new LocaleAlreadyUsedException(language, conflictId.Value);
