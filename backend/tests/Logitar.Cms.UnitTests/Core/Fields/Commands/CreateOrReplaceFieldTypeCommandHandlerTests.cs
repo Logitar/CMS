@@ -369,6 +369,9 @@ public class CreateOrReplaceFieldTypeCommandHandlerTests
     Assert.NotNull(result.FieldType);
     Assert.Same(model, result.FieldType);
 
+    _fieldTypeManager.Verify(x => x.SaveAsync(fieldType, _cancellationToken), Times.Once);
+
+    Assert.Equal(_actorId, fieldType.UpdatedBy);
     Assert.Equal(uniqueName?.Value ?? payload.UniqueName, fieldType.UniqueName.Value);
     Assert.Equal(payload.DisplayName.Trim(), fieldType.DisplayName?.Value);
     Assert.Equal(payload.Description.Trim(), fieldType.Description?.Value);
@@ -416,6 +419,9 @@ public class CreateOrReplaceFieldTypeCommandHandlerTests
     Assert.NotNull(result.FieldType);
     Assert.Same(model, result.FieldType);
 
+    _fieldTypeManager.Verify(x => x.SaveAsync(fieldType, _cancellationToken), Times.Once);
+
+    Assert.Equal(_actorId, fieldType.UpdatedBy);
     Assert.Equal(uniqueName?.Value ?? payload.UniqueName, fieldType.UniqueName.Value);
     Assert.Equal(payload.DisplayName.Trim(), fieldType.DisplayName?.Value);
     Assert.Equal(payload.Description.Trim(), fieldType.Description?.Value);
@@ -463,6 +469,9 @@ public class CreateOrReplaceFieldTypeCommandHandlerTests
     Assert.NotNull(result.FieldType);
     Assert.Same(model, result.FieldType);
 
+    _fieldTypeManager.Verify(x => x.SaveAsync(fieldType, _cancellationToken), Times.Once);
+
+    Assert.Equal(_actorId, fieldType.UpdatedBy);
     Assert.Equal(uniqueName?.Value ?? payload.UniqueName, fieldType.UniqueName.Value);
     Assert.Equal(payload.DisplayName.Trim(), fieldType.DisplayName?.Value);
     Assert.Equal(payload.Description.Trim(), fieldType.Description?.Value);
@@ -510,6 +519,9 @@ public class CreateOrReplaceFieldTypeCommandHandlerTests
     Assert.NotNull(result.FieldType);
     Assert.Same(model, result.FieldType);
 
+    _fieldTypeManager.Verify(x => x.SaveAsync(fieldType, _cancellationToken), Times.Once);
+
+    Assert.Equal(_actorId, fieldType.UpdatedBy);
     Assert.Equal(uniqueName?.Value ?? payload.UniqueName, fieldType.UniqueName.Value);
     Assert.Equal(payload.DisplayName.Trim(), fieldType.DisplayName?.Value);
     Assert.Equal(payload.Description.Trim(), fieldType.Description?.Value);
@@ -557,6 +569,9 @@ public class CreateOrReplaceFieldTypeCommandHandlerTests
     Assert.NotNull(result.FieldType);
     Assert.Same(model, result.FieldType);
 
+    _fieldTypeManager.Verify(x => x.SaveAsync(fieldType, _cancellationToken), Times.Once);
+
+    Assert.Equal(_actorId, fieldType.UpdatedBy);
     Assert.Equal(uniqueName?.Value ?? payload.UniqueName, fieldType.UniqueName.Value);
     Assert.Equal(payload.DisplayName.Trim(), fieldType.DisplayName?.Value);
     Assert.Equal(payload.Description.Trim(), fieldType.Description?.Value);
@@ -616,6 +631,9 @@ public class CreateOrReplaceFieldTypeCommandHandlerTests
     Assert.NotNull(result.FieldType);
     Assert.Same(model, result.FieldType);
 
+    _fieldTypeManager.Verify(x => x.SaveAsync(fieldType, _cancellationToken), Times.Once);
+
+    Assert.Equal(_actorId, fieldType.UpdatedBy);
     Assert.Equal(uniqueName?.Value ?? payload.UniqueName, fieldType.UniqueName.Value);
     Assert.Equal(payload.DisplayName.Trim(), fieldType.DisplayName?.Value);
     Assert.Equal(payload.Description.Trim(), fieldType.Description?.Value);
@@ -670,6 +688,9 @@ public class CreateOrReplaceFieldTypeCommandHandlerTests
     Assert.NotNull(result.FieldType);
     Assert.Same(model, result.FieldType);
 
+    _fieldTypeManager.Verify(x => x.SaveAsync(fieldType, _cancellationToken), Times.Once);
+
+    Assert.Equal(_actorId, fieldType.UpdatedBy);
     Assert.Equal(uniqueName?.Value ?? payload.UniqueName, fieldType.UniqueName.Value);
     Assert.Equal(payload.DisplayName.Trim(), fieldType.DisplayName?.Value);
     Assert.Equal(payload.Description.Trim(), fieldType.Description?.Value);
@@ -713,6 +734,9 @@ public class CreateOrReplaceFieldTypeCommandHandlerTests
     Assert.NotNull(result.FieldType);
     Assert.Same(model, result.FieldType);
 
+    _fieldTypeManager.Verify(x => x.SaveAsync(fieldType, _cancellationToken), Times.Once);
+
+    Assert.Equal(_actorId, fieldType.UpdatedBy);
     Assert.Equal(uniqueName?.Value ?? payload.UniqueName, fieldType.UniqueName.Value);
     Assert.Equal(payload.DisplayName.Trim(), fieldType.DisplayName?.Value);
     Assert.Equal(payload.Description.Trim(), fieldType.Description?.Value);

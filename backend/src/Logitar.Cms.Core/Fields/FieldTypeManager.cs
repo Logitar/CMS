@@ -25,7 +25,11 @@ internal class FieldTypeManager : IFieldTypeManager
     RelatedContentSettings? relatedContentSettings = null;
     foreach (IEvent change in fieldType.Changes)
     {
-      if (change is FieldTypeUniqueNameChanged uniqueNameChanged)
+      if (change is FieldTypeCreated created)
+      {
+        uniqueName = created.UniqueName;
+      }
+      else if (change is FieldTypeUniqueNameChanged uniqueNameChanged)
       {
         uniqueName = uniqueNameChanged.UniqueName;
       }
