@@ -98,6 +98,7 @@ public class UpdateFieldTypeCommandHandlerTests
     _fieldTypeManager.Verify(x => x.SaveAsync(fieldType, _cancellationToken), Times.Once);
 
     Assert.Equal(_actorId, fieldType.UpdatedBy);
+    Assert.Equal(uniqueName, fieldType.UniqueName);
     Assert.Equal(payload.DisplayName.Value?.Trim(), fieldType.DisplayName?.Value);
     Assert.Equal(payload.Description.Value?.Trim(), fieldType.Description?.Value);
 
