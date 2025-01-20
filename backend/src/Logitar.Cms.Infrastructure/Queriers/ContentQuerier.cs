@@ -112,6 +112,20 @@ internal class ContentQuerier : IContentQuerier
     return content == null ? null : await MapAsync(content, cancellationToken);
   }
 
+  public async Task<ContentModel?> ReadAsync(ContentKey key, CancellationToken cancellationToken)
+  {
+    string uniqueNameNormalized = Helper.Normalize(key.UniqueName);
+
+    ContentEntity? content = await _contents.AsNoTracking()
+      .Include(x => x.ContentType)
+      .Include(x => x.Locales).ThenInclude(x => x.Language)
+      .SingleOrDefaultAsync(x => x.ContentType!.Id == key.ContentTypeId
+        && x.Locales.Any(l => (key.LanguageId.HasValue ? l.Language!.Id == key.LanguageId.Value : l.LanguageId == null)
+          && l.UniqueNameNormalized == uniqueNameNormalized), cancellationToken);
+
+    return content == null ? null : await MapAsync(content, cancellationToken);
+  }
+
   public async Task<SearchResults<ContentLocaleModel>> SearchAsync(SearchContentsPayload payload, CancellationToken cancellationToken)
   {
     IQueryBuilder builder = _queryHelper.From(CmsDb.ContentLocales.Table).SelectAll(CmsDb.ContentLocales.Table)

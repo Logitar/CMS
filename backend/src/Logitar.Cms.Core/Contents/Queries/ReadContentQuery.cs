@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Logitar.Cms.Core.Contents.Queries;
 
-public record ReadContentQuery(Guid Id) : IRequest<ContentModel?>;
+public record ReadContentQuery(Guid? Id, ContentKey? Key) : IRequest<ContentModel?>;
 
 internal class ReadContentQueryHandler : IRequestHandler<ReadContentQuery, ContentModel?>
 {
@@ -16,6 +16,31 @@ internal class ReadContentQueryHandler : IRequestHandler<ReadContentQuery, Conte
 
   public async Task<ContentModel?> Handle(ReadContentQuery query, CancellationToken cancellationToken)
   {
-    return await _contentQuerier.ReadAsync(query.Id, cancellationToken);
+    Dictionary<Guid, ContentModel> contents = new(capacity: 2);
+
+    if (query.Id.HasValue)
+    {
+      ContentModel? content = await _contentQuerier.ReadAsync(query.Id.Value, cancellationToken);
+      if (content != null)
+      {
+        contents[content.Id] = content;
+      }
+    }
+
+    if (query.Key != null)
+    {
+      ContentModel? content = await _contentQuerier.ReadAsync(query.Key, cancellationToken);
+      if (content != null)
+      {
+        contents[content.Id] = content;
+      }
+    }
+
+    if (contents.Count > 1)
+    {
+      throw TooManyResultsException<ContentModel>.ExpectedSingle(contents.Count);
+    }
+
+    return contents.SingleOrDefault().Value;
   }
 }
