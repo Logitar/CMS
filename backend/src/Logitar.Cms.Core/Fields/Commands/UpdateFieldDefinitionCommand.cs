@@ -44,7 +44,7 @@ internal class UpdateFieldDefinitionCommandHandler : IRequestHandler<UpdateField
       fieldDefinition.FieldTypeId,
       payload.IsInvariant ?? fieldDefinition.IsInvariant,
       payload.IsRequired ?? fieldDefinition.IsRequired,
-      payload.IsInvariant ?? fieldDefinition.IsInvariant,
+      payload.IsIndexed ?? fieldDefinition.IsIndexed,
       payload.IsUnique ?? fieldDefinition.IsUnique,
       string.IsNullOrWhiteSpace(payload.UniqueName) ? fieldDefinition.UniqueName : new Identifier(payload.UniqueName),
       payload.DisplayName == null ? fieldDefinition.DisplayName : DisplayName.TryCreate(payload.DisplayName.Value),

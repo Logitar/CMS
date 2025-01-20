@@ -100,7 +100,7 @@ public class ContentType : AggregateRoot
     if (_fieldsById.TryGetValue(@event.FieldDefinition.Id, out int index))
     {
       FieldDefinition existingField = _fieldDefinitions.ElementAt(index);
-      _fieldDefinitions[index] = existingField;
+      _fieldDefinitions[index] = @event.FieldDefinition;
 
       if (!existingField.UniqueName.Equals(@event.FieldDefinition.UniqueName))
       {
