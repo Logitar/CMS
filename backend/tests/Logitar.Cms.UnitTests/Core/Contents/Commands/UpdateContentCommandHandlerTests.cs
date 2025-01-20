@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Logitar.Cms.Core.Contents.Models;
+using Logitar.Cms.Core.Fields.Models;
 using Logitar.Cms.Core.Localization;
 using Logitar.EventSourcing;
 using Logitar.Identity.Core;
@@ -85,5 +86,110 @@ public class UpdateContentCommandHandlerTests
     Assert.Equal(2, exception.Errors.Count());
     Assert.Contains(exception.Errors, e => e.ErrorCode == "AllowedCharactersValidator" && e.PropertyName == "UniqueName");
     Assert.Contains(exception.Errors, e => e.ErrorCode == "MaximumLengthValidator" && e.PropertyName == "DisplayName.Value");
+  }
+
+  [Fact(DisplayName = "It should update an existing content invariant.")]
+  public async Task Given_InvariantExists_When_Handle_Then_Updated()
+  {
+    Guid authorId = Guid.NewGuid();
+    Guid wordCount = Guid.NewGuid();
+    string authorIdValue = Guid.NewGuid().ToString();
+    ContentLocale invariant = new(new UniqueName(Content.UniqueNameSettings, "my-blog-article"), fieldValues: new Dictionary<Guid, string>
+    {
+      [Guid.Empty] = "empty",
+      [authorId] = authorIdValue,
+      [wordCount] = "749"
+    });
+    Content content = new(_contentType, invariant);
+    _contentRepository.Setup(x => x.LoadAsync(content.Id, _cancellationToken)).ReturnsAsync(content);
+
+    ContentModel model = new();
+    _contentQuerier.Setup(x => x.ReadAsync(content, _cancellationToken)).ReturnsAsync(model);
+
+    Guid publishedOn = Guid.NewGuid();
+    string publishedOnValue = DateTime.Now.ToISOString();
+    UpdateContentPayload payload = new()
+    {
+      DisplayName = new ChangeModel<string>(" My Blog Article! "),
+      Description = new ChangeModel<string>("  This is my first blog article.  "),
+      FieldValues =
+      [
+        new FieldValueUpdate(Guid.Empty, "    "),
+        new FieldValueUpdate(wordCount, "1023"),
+        new FieldValueUpdate(publishedOn, publishedOnValue)
+      ]
+    };
+    UpdateContentCommand command = new(content.Id.ToGuid(), LanguageId: null, payload);
+    ContentModel? result = await _handler.Handle(command, _cancellationToken);
+    Assert.NotNull(result);
+    Assert.Same(model, result);
+
+    _contentManager.Verify(x => x.SaveAsync(content, _cancellationToken), Times.Once);
+
+    Assert.Equal(invariant.UniqueName, content.Invariant.UniqueName);
+    Assert.Equal(payload.DisplayName.Value?.Trim(), content.Invariant.DisplayName?.Value);
+    Assert.Equal(payload.Description.Value?.Trim(), content.Invariant.Description?.Value);
+
+    Assert.Equal(3, content.Invariant.FieldValues.Count);
+    Assert.Contains(content.Invariant.FieldValues, f => f.Key == authorId && f.Value == authorIdValue);
+    Assert.Contains(content.Invariant.FieldValues, f => f.Key == wordCount && f.Value == "1023");
+    Assert.Contains(content.Invariant.FieldValues, f => f.Key == publishedOn && f.Value == publishedOnValue);
+  }
+
+  [Fact(DisplayName = "It should update an existing content locale.")]
+  public async Task Given_VariantExists_When_Handle_Then_Updated()
+  {
+    Guid authorId = Guid.NewGuid();
+    Guid wordCount = Guid.NewGuid();
+    string authorIdValue = Guid.NewGuid().ToString();
+    ContentLocale invariant = new(new UniqueName(Content.UniqueNameSettings, "my-blog-article"), fieldValues: new Dictionary<Guid, string>
+    {
+      [Guid.Empty] = "empty",
+      [authorId] = authorIdValue,
+      [wordCount] = "749"
+    });
+    Content content = new(_contentType, invariant);
+    _contentRepository.Setup(x => x.LoadAsync(content.Id, _cancellationToken)).ReturnsAsync(content);
+
+    Language language = new(new Locale("en"), isDefault: true);
+    _languageRepository.Setup(x => x.LoadAsync(language.Id, _cancellationToken)).ReturnsAsync(language);
+
+    content.SetLocale(language, invariant);
+
+    ContentModel model = new();
+    _contentQuerier.Setup(x => x.ReadAsync(content, _cancellationToken)).ReturnsAsync(model);
+
+    Guid publishedOn = Guid.NewGuid();
+    string publishedOnValue = DateTime.Now.ToISOString();
+    UpdateContentPayload payload = new()
+    {
+      DisplayName = new ChangeModel<string>(" My Blog Article! "),
+      Description = new ChangeModel<string>("  This is my first blog article.  "),
+      FieldValues =
+      [
+        new FieldValueUpdate(Guid.Empty, "    "),
+        new FieldValueUpdate(wordCount, "1023"),
+        new FieldValueUpdate(publishedOn, publishedOnValue)
+      ]
+    };
+    UpdateContentCommand command = new(content.Id.ToGuid(), language.Id.ToGuid(), payload);
+    ContentModel? result = await _handler.Handle(command, _cancellationToken);
+    Assert.NotNull(result);
+    Assert.Same(model, result);
+
+    _contentManager.Verify(x => x.SaveAsync(content, _cancellationToken), Times.Once);
+
+    KeyValuePair<LanguageId, ContentLocale> pair = Assert.Single(content.Locales);
+    Assert.Equal(language.Id, pair.Key);
+    ContentLocale locale = pair.Value;
+
+    Assert.Equal(invariant.UniqueName, locale.UniqueName);
+    Assert.Equal(payload.DisplayName.Value?.Trim(), locale.DisplayName?.Value);
+    Assert.Equal(payload.Description.Value?.Trim(), locale.Description?.Value);
+
+    Assert.Equal(3, locale.FieldValues.Count);
+    Assert.Contains(locale.FieldValues, f => f.Key == authorId && f.Value == authorIdValue);
+    Assert.Contains(locale.FieldValues, f => f.Key == wordCount && f.Value == "1023");
+    Assert.Contains(locale.FieldValues, f => f.Key == publishedOn && f.Value == publishedOnValue);
   }
 }
