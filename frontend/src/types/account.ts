@@ -50,18 +50,22 @@ export type SignInPayload = {
 };
 
 export type UserProfile = {
-  createdOn: string;
-  updatedOn: string;
   username: string;
   passwordChangedOn?: string;
-  authenticatedOn?: string;
-  address?: Address;
-  email?: Email;
-  phone?: Phone;
   firstName?: string;
   middleName?: string;
   lastName?: string;
   fullName?: string;
+  emailAddress?: string;
+  pictureUrl?: string;
+  createdOn: string;
+  updatedOn: string;
+  authenticatedOn?: string;
+
+  // TODO(fpion): remove following
+  address?: Address;
+  email?: Email;
+  phone?: Phone;
   nickname?: string;
   birthdate?: string;
   gender?: string;

@@ -10,7 +10,11 @@ const version = import.meta.env.VITE_APP_VERSION;
   <footer class="bg-dark">
     <div class="fluid">
       <RouterLink :to="{ name: 'Home' }" class="text-light">
-        <img src="@/assets/img/logo.png" :alt="`${t('brand')} Logo`" height="32" /> {{ t("copyright", { version, year }) }}
+        <img src="@/assets/img/logo.png" :alt="`${t('brand')} Logo`" height="32" />
+      </RouterLink>
+      {{ " " }}
+      <RouterLink :to="{ name: 'Home' }" class="text-light text-decoration-none">
+        {{ t("copyright", { version, year }) }}
       </RouterLink>
     </div>
   </footer>
