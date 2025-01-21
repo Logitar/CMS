@@ -54,15 +54,14 @@ function setPattern(pattern: string | undefined): void {
         type="number"
         @update:model-value="setMaximumLength(parseNumber($event))"
       />
-      <AppInput
-        class="col"
-        floating
-        id="step"
-        label="fields.types.string.pattern"
-        :model-value="modelValue?.pattern?.toString()"
-        placeholder="fields.types.string.pattern"
-        @update:model-value="setPattern"
-      />
     </div>
+    <AppInput
+      floating
+      id="step"
+      label="fields.types.string.pattern"
+      :model-value="modelValue?.pattern?.toString()"
+      placeholder="fields.types.string.pattern"
+      @update:model-value="setPattern"
+    />
   </div>
 </template>
