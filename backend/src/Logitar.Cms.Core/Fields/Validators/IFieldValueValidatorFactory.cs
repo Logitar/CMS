@@ -1,6 +1,6 @@
 ﻿namespace Logitar.Cms.Core.Fields.Validators;
 
-internal interface IFieldValueValidatorFactory
+public interface IFieldValueValidatorFactory
 {
   IFieldValueValidator Create(FieldType fieldType);
 }

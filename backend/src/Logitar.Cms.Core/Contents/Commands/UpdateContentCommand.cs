@@ -11,7 +11,7 @@ namespace Logitar.Cms.Core.Contents.Commands;
 
 public record UpdateContentCommand(Guid ContentId, Guid? LanguageId, UpdateContentPayload Payload) : IRequest<ContentModel?>;
 
-internal class UpdateContentLocaleCommandHandler : IRequestHandler<UpdateContentCommand, ContentModel?>
+internal class UpdateContentCommandHandler : IRequestHandler<UpdateContentCommand, ContentModel?>
 {
   private readonly IApplicationContext _applicationContext;
   private readonly IContentManager _contentManager;
@@ -19,7 +19,7 @@ internal class UpdateContentLocaleCommandHandler : IRequestHandler<UpdateContent
   private readonly IContentRepository _contentRepository;
   private readonly ILanguageRepository _languageRepository;
 
-  public UpdateContentLocaleCommandHandler(
+  public UpdateContentCommandHandler(
     IApplicationContext applicationContext,
     IContentManager contentManager,
     IContentQuerier contentQuerier,

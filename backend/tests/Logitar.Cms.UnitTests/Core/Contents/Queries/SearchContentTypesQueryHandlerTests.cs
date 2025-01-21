@@ -9,13 +9,13 @@ public class SearchContentTypesQueryHandlerTests
 {
   private readonly CancellationToken _cancellationToken = default;
 
-  private readonly Mock<IContentTypeQuerier> _languageQuerier = new();
+  private readonly Mock<IContentTypeQuerier> _contentTypeQuerier = new();
 
   private readonly SearchContentTypesQueryHandler _handler;
 
   public SearchContentTypesQueryHandlerTests()
   {
-    _handler = new(_languageQuerier.Object);
+    _handler = new(_contentTypeQuerier.Object);
   }
 
   [Fact(DisplayName = "It should return the correct search results.")]
@@ -23,7 +23,7 @@ public class SearchContentTypesQueryHandlerTests
   {
     SearchContentTypesPayload payload = new();
     SearchResults<ContentTypeModel> contentTypes = new();
-    _languageQuerier.Setup(x => x.SearchAsync(payload, _cancellationToken)).ReturnsAsync(contentTypes);
+    _contentTypeQuerier.Setup(x => x.SearchAsync(payload, _cancellationToken)).ReturnsAsync(contentTypes);
 
     SearchContentTypesQuery query = new(payload);
     SearchResults<ContentTypeModel> results = await _handler.Handle(query, _cancellationToken);
