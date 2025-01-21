@@ -55,7 +55,7 @@ const onSubmit = handleSubmit(async () => {
         payload.relatedContent = { contentTypeId: "TODO", isMultiple: false };
         break;
       case "RichText":
-        payload.richText = { contentType: "TODO?" };
+        payload.richText = { contentType: "text/plain" };
         break;
       case "Select":
         payload.select = { isMultiple: false, options: [] };

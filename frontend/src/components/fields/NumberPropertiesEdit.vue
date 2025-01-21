@@ -9,7 +9,7 @@ const { parseNumber } = parsingUtils;
 const { t } = useI18n();
 
 const props = defineProps<{
-  modelValue?: NumberProperties;
+  modelValue: NumberProperties;
 }>();
 
 const emit = defineEmits<{
@@ -39,7 +39,8 @@ function setStep(step: number | undefined): void {
         floating
         id="minimum-value"
         label="fields.types.number.minimumValue"
-        :model-value="modelValue?.minimumValue?.toString()"
+        :max="modelValue.maximumValue"
+        :model-value="modelValue.minimumValue?.toString()"
         placeholder="fields.types.number.minimumValue"
         type="number"
         @update:model-value="setMinimumValue(parseNumber($event))"
@@ -49,7 +50,8 @@ function setStep(step: number | undefined): void {
         floating
         id="maximum-value"
         label="fields.types.number.maximumValue"
-        :model-value="modelValue?.maximumValue?.toString()"
+        :min="modelValue.minimumValue"
+        :model-value="modelValue.maximumValue?.toString()"
         placeholder="fields.types.number.maximumValue"
         type="number"
         @update:model-value="setMaximumValue(parseNumber($event))"
@@ -59,7 +61,9 @@ function setStep(step: number | undefined): void {
         floating
         id="step"
         label="fields.types.number.step"
-        :model-value="modelValue?.step?.toString()"
+        :min="modelValue.minimumValue"
+        :max="modelValue.maximumValue"
+        :model-value="modelValue.step?.toString()"
         placeholder="fields.types.number.step"
         type="number"
         @update:model-value="setStep(parseNumber($event))"

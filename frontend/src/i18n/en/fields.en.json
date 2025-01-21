@@ -16,6 +16,10 @@
       },
       "placeholder": "Select a data type"
     },
+    "dateTime": {
+      "maximumValue": "Maximum Value",
+      "minimumValue": "Minimum Value"
+    },
     "empty": "This list is empty.",
     "list": "Field Types",
     "number": {
@@ -24,6 +28,10 @@
       "step": "Step"
     },
     "properties": "{type} Properties",
+    "richText": {
+      "maximumLength": "Maximum Length",
+      "minimumLength": "Minimum Length"
+    },
     "sort": {
       "options": {
         "CreatedOn": "Created on",
