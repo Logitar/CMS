@@ -1,0 +1,20 @@
+{
+  "types": {
+    "create": "New Content Type",
+    "created": "The content type has been created.",
+    "empty": "This list is empty.",
+    "fieldCount": "Field Count",
+    "invariant": "Invariant",
+    "isInvariant": "Is Invariant?",
+    "list": "Content Types",
+    "sort": {
+      "options": {
+        "CreatedOn": "Created on",
+        "DisplayName": "Display Name",
+        "UniqueName": "Unique Name",
+        "UpdatedOn": "Updated on"
+      }
+    },
+    "updated": "The content type has been updated."
+  }
+}

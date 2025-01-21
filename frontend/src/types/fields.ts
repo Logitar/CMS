@@ -24,6 +24,20 @@ export type DateTimeProperties = {
   maximumValue?: string;
 };
 
+export type FieldDefinition = {
+  id: string;
+  order: number;
+  fieldType: FieldType;
+  isInvariant: boolean;
+  isRequired: boolean;
+  isIndexed: boolean;
+  isUnique: boolean;
+  uniqueName: string;
+  displayName?: string;
+  description?: string;
+  placeholder?: string;
+};
+
 export type FieldType = Aggregate & {
   uniqueName: string;
   displayName?: string;
