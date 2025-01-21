@@ -16,6 +16,10 @@
   "description": "Description",
   "displayName": "Display Name",
   "loading": "Loading…",
+  "locale": {
+    "label": "Locale",
+    "placeholder": "Select a locale"
+  },
   "no": "No",
   "notFound": {
     "help": "The requested page could not be found.",

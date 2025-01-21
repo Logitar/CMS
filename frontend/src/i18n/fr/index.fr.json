@@ -16,6 +16,10 @@
   "description": "Description",
   "displayName": "Nom d’affichage",
   "loading": "Chargement…",
+  "locale": {
+    "label": "Langue",
+    "placeholder": "Sélectionnez une langue"
+  },
   "no": "Non",
   "notFound": {
     "help": "La page demandée n’a pu être trouvée.",

@@ -33,21 +33,16 @@ const router = createRouter({
       path: "/sign-out",
       component: () => import("./views/account/SignOutView.vue"),
     },
-    // Todos
+    // Languages
     {
-      name: "TodoList",
-      path: "/todos",
-      component: () => import("./views/todos/TodoList.vue"),
+      name: "LanguageList",
+      path: "/languages",
+      component: () => import("./views/languages/LanguageList.vue"),
     },
     {
-      name: "TodoEdit",
-      path: "/todos/:id",
-      component: () => import("./views/todos/TodoEdit.vue"),
-    },
-    {
-      name: "CreateTodo",
-      path: "/create-todo",
-      component: () => import("./views/todos/TodoEdit.vue"),
+      name: "LanguageEdit",
+      path: "/languages/:id",
+      component: () => import("./views/languages/LanguageEdit.vue"),
     },
     // NotFound
     {

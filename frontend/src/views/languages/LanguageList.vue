@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TarButton, parsingUtils, type SelectOption } from "logitar-vue3-ui";
+import { TarBadge, TarButton, parsingUtils, type SelectOption } from "logitar-vue3-ui";
 import { arrayUtils, objectUtils } from "logitar-js";
 import { computed, inject, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
@@ -7,17 +7,20 @@ import { useRoute, useRouter } from "vue-router";
 
 import AppPagination from "@/components/shared/AppPagination.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
+import CreateLanguage from "@/components/languages/CreateLanguage.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
-import StatusSelect from "@/components/todos/StatusSelect.vue";
-import type { Todo, TodoSort, SearchTodosPayload } from "@/types/todos";
+import type { Language, LanguageSort, SearchLanguagesPayload } from "@/types/languages";
+import { formatLanguage } from "@/helpers/format";
 import { handleErrorKey } from "@/inject/App";
-import { searchTodos } from "@/api/todos";
+import { searchLanguages } from "@/api/languages";
+import { useToastStore } from "@/stores/toast";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const route = useRoute();
 const router = useRouter();
+const toasts = useToastStore();
 const { isEmpty } = objectUtils;
 const { orderBy } = arrayUtils;
 const { parseBoolean, parseNumber } = parsingUtils;
@@ -25,27 +28,25 @@ const { rt, t, tm } = useI18n();
 
 const isLoading = ref<boolean>(false);
 const timestamp = ref<number>(0);
-const todos = ref<Todo[]>([]);
+const languages = ref<Language[]>([]);
 const total = ref<number>(0);
 
 const count = computed<number>(() => parseNumber(route.query.count?.toString()) || 10);
 const isDescending = computed<boolean>(() => parseBoolean(route.query.isDescending?.toString()) ?? false);
-const isDone = computed<boolean | undefined>(() => parseBoolean(route.query.isDone?.toString()));
 const page = computed<number>(() => parseNumber(route.query.page?.toString()) || 1);
 const search = computed<string>(() => route.query.search?.toString() ?? "");
 const sort = computed<string>(() => route.query.sort?.toString() ?? "");
 
 const sortOptions = computed<SelectOption[]>(() =>
   orderBy(
-    Object.entries(tm(rt("todos.sort.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
+    Object.entries(tm(rt("languages.sort.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
     "text",
   ),
 );
 
 async function refresh(): Promise<void> {
-  const payload: SearchTodosPayload = {
+  const payload: SearchLanguagesPayload = {
     ids: [],
-    isDone: isDone.value,
     search: {
       terms: search.value
         .split(" ")
@@ -53,7 +54,7 @@ async function refresh(): Promise<void> {
         .map((term) => ({ value: `%${term}%` })),
       operator: "And",
     },
-    sort: sort.value ? [{ field: sort.value as TodoSort, isDescending: isDescending.value }] : [],
+    sort: sort.value ? [{ field: sort.value as LanguageSort, isDescending: isDescending.value }] : [],
     skip: (page.value - 1) * count.value,
     limit: count.value,
   };
@@ -61,9 +62,9 @@ async function refresh(): Promise<void> {
   const now = Date.now();
   timestamp.value = now;
   try {
-    const results = await searchTodos(payload);
+    const results = await searchLanguages(payload);
     if (now === timestamp.value) {
-      todos.value = results.items;
+      languages.value = results.items;
       total.value = results.total;
     }
   } catch (e: unknown) {
@@ -78,7 +79,6 @@ async function refresh(): Promise<void> {
 function setQuery(key: string, value: string): void {
   const query = { ...route.query, [key]: value };
   switch (key) {
-    case "priority":
     case "search":
     case "count":
       query.page = "1";
@@ -87,10 +87,15 @@ function setQuery(key: string, value: string): void {
   router.replace({ ...route, query });
 }
 
+function onCreated(language: Language) {
+  toasts.success("languages.created");
+  router.push({ name: "LanguageEdit", params: { id: language.id } });
+}
+
 watch(
   () => route,
   (route) => {
-    if (route.name === "TodoList") {
+    if (route.name === "LanguageList") {
       const { query } = route;
       if (!query.page || !query.count) {
         router.replace({
@@ -120,7 +125,7 @@ watch(
 
 <template>
   <main class="container">
-    <h1>{{ t("todos.title.list") }}</h1>
+    <h1>{{ t("languages.list") }}</h1>
     <div class="my-3">
       <TarButton
         class="me-1"
@@ -131,45 +136,52 @@ watch(
         :text="t('actions.refresh')"
         @click="refresh()"
       />
-      <RouterLink :to="{ name: 'CreateTodo' }" class="btn btn-success ms-1"><font-awesome-icon icon="fas fa-plus" /> {{ t("actions.create") }}</RouterLink>
+      <CreateLanguage class="ms-1" @created="onCreated" @error="handleError" />
     </div>
     <div class="row">
-      <StatusSelect class="col-lg-3" :model-value="isDone?.toString()" @update:model-value="setQuery('isDone', $event ?? '')" />
-      <SearchInput class="col-lg-3" :model-value="search" @update:model-value="setQuery('search', $event ?? '')" />
+      <SearchInput class="col-lg-4" :model-value="search" @update:model-value="setQuery('search', $event ?? '')" />
       <SortSelect
-        class="col-lg-3"
+        class="col-lg-4"
         :descending="isDescending"
         :model-value="sort"
+        #
         :options="sortOptions"
         @descending="setQuery('isDescending', $event.toString())"
         @update:model-value="setQuery('sort', $event ?? '')"
       />
-      <CountSelect class="col-lg-3" :model-value="count" @update:model-value="setQuery('count', ($event ?? 10).toString())" />
+      <CountSelect class="col-lg-4" :model-value="count" @update:model-value="setQuery('count', ($event ?? 10).toString())" />
     </div>
-    <template v-if="todos.length">
+    <template v-if="languages.length">
       <table class="table table-striped">
         <thead>
           <tr>
-            <th scope="col">{{ t("todos.sort.options.DisplayName") }}</th>
-            <th scope="col">{{ t("todos.isDone") }}</th>
-            <th scope="col">{{ t("todos.sort.options.UpdatedOn") }}</th>
+            <th scope="col">{{ t("languages.identification") }}</th>
+            <th scope="col">{{ t("languages.otherNames") }}</th>
+            <th scope="col">{{ t("languages.sort.options.UpdatedOn") }}</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="todo in todos" :key="todo.id">
+          <tr v-for="language in languages" :key="language.id">
             <td>
-              <RouterLink :to="{ name: 'TodoEdit', params: { id: todo.id } }"> <font-awesome-icon icon="fas fa-edit" />{{ todo.displayName }} </RouterLink>
+              <RouterLink :to="{ name: 'LanguageEdit', params: { id: language.id } }">
+                <font-awesome-icon icon="fas fa-edit" /> {{ formatLanguage(language) }}
+              </RouterLink>
+              <template v-if="language.isDefault">
+                <br />
+                <TarBadge pill variant="info">{{ t("languages.default.label") }}</TarBadge>
+              </template>
             </td>
             <td>
-              <template v-if="todo.isDone"><font-awesome-icon icon="fas fa-check" /> {{ t("yes") }}</template>
-              <template v-else><font-awesome-icon icon="fas fa-times" /> {{ t("no") }}</template>
+              {{ language.locale.englishName }}
+              <br />
+              {{ language.locale.englishName }}
             </td>
-            <td><StatusBlock :actor="todo.updatedBy" :date="todo.updatedOn" /></td>
+            <td><StatusBlock :actor="language.updatedBy" :date="language.updatedOn" /></td>
           </tr>
         </tbody>
       </table>
       <AppPagination :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event.toString())" />
     </template>
-    <p v-else>{{ t("todos.empty") }}</p>
+    <p v-else>{{ t("languages.empty") }}</p>
   </main>
 </template>
