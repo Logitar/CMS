@@ -80,6 +80,6 @@ internal class RelatedContentValueValidator : IFieldValueValidator
     {
     }
 
-    return contentIds ?? [];
+    return contentIds ?? (Guid.TryParse(value, out Guid contentId) ? [contentId] : []);
   }
 }

@@ -45,6 +45,7 @@ internal class SelectValueValidator : IFieldValueValidator
           CustomState = new { AllowedValues = allowedValues },
           ErrorCode = "OptionValidator"
         };
+        failures.Add(failure);
       }
     }
 
