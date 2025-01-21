@@ -35,13 +35,11 @@ const otherLocales = computed<Locale[]>(() => {
     "nativeName",
   );
 });
-const swaggerUrl = computed<string | undefined>(() => (isOpenApiEnabled ? combineURL(apiBaseUrl, "/swagger") : undefined));
+const scalarUrl = computed<string | undefined>(() => (isOpenApiEnabled ? combineURL(apiBaseUrl, "/scalar/v1") : undefined));
 const graphQLLinks = computed<Hyperlink[]>(() =>
   isGraphQLEnabled
     ? [
-        { text: "Altair", url: combineURL(apiBaseUrl, "/ui/altair") },
         { text: "GraphiQL", url: combineURL(apiBaseUrl, "/ui/graphiql") },
-        { text: "Playground", url: combineURL(apiBaseUrl, "/ui/playground") },
         { text: "Voyager", url: combineURL(apiBaseUrl, "/ui/voyager") },
       ]
     : [],
@@ -83,8 +81,8 @@ watchEffect(() => {
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li v-if="swaggerUrl" class="nav-item">
-            <a class="nav-link" :href="swaggerUrl" target="_blank"> <font-awesome-icon icon="fas fa-vial" /> Swagger</a>
+          <li v-if="scalarUrl" class="nav-item">
+            <a class="nav-link" :href="scalarUrl" target="_blank"> <font-awesome-icon icon="fas fa-vial" /> Scalar</a>
           </li>
           <li v-if="graphQLLinks.length" class="nav-item dropdown d-none d-lg-block">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

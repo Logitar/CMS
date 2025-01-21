@@ -1,6 +1,6 @@
-# Logitar Vue3 Template
+# Logitar CMS
 
-This template should help get you started developing with Vue 3 in Vite. It integrates TypeScript, Pinia stores, routing, i18n, Bootstrap, Font Awesome, forms and validation, and unit tests using Vitest.
+This is the frontend of the Logitar content management system.
 
 ## Recommended IDE Setup
 
