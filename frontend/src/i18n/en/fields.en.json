@@ -1,0 +1,42 @@
+{
+  "types": {
+    "create": "New Field Type",
+    "created": "The field type has been created.",
+    "dataType": {
+      "label": "Data Type",
+      "options": {
+        "Boolean": "Boolean",
+        "DateTime": "Date & Time",
+        "Number": "Number",
+        "RelatedContent": "Related Content",
+        "RichText": "Rich Text",
+        "Select": "Select",
+        "String": "String",
+        "Tags": "Tags"
+      },
+      "placeholder": "Select a data type"
+    },
+    "empty": "This list is empty.",
+    "list": "Field Types",
+    "number": {
+      "maximumValue": "Maximum Value",
+      "minimumValue": "Minimum Value",
+      "step": "Step"
+    },
+    "properties": "{type} Properties",
+    "sort": {
+      "options": {
+        "CreatedOn": "Created on",
+        "DisplayName": "Display Name",
+        "UniqueName": "Unique Name",
+        "UpdatedOn": "Updated on"
+      }
+    },
+    "string": {
+      "maximumLength": "Maximum Length",
+      "minimumLength": "Minimum Length",
+      "pattern": "Pattern"
+    },
+    "updated": "The field type has been updated."
+  }
+}
