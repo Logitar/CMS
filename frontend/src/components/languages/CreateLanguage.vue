@@ -7,6 +7,7 @@ import { useI18n } from "vue-i18n";
 import LocaleSelect from "@/components/shared/LocaleSelect.vue";
 import type { CreateOrReplaceLanguagePayload, Language } from "@/types/languages";
 import { createLanguage } from "@/api/languages";
+
 const { t } = useI18n();
 
 const locale = ref<string>("");

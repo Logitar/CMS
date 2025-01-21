@@ -1,0 +1,50 @@
+{
+  "types": {
+    "create": "Nouveau type de champs",
+    "created": "Le type de champs a été créé.",
+    "dataType": {
+      "label": "Type de données",
+      "options": {
+        "Boolean": "Booléen",
+        "DateTime": "Date & Heure",
+        "Number": "Nombre",
+        "RelatedContent": "Contenu connexe",
+        "RichText": "Texte riche",
+        "Select": "Sélection",
+        "String": "Chaîne de caractères",
+        "Tags": "Étiquettes"
+      },
+      "placeholder": "Sélectionnez un type de données"
+    },
+    "dateTime": {
+      "maximumValue": "Valeur maximale",
+      "minimumValue": "Valeur minimale"
+    },
+    "empty": "Cette liste est vide.",
+    "list": "Types de champs",
+    "number": {
+      "maximumValue": "Valeur maximale",
+      "minimumValue": "Valeur minimale",
+      "step": "Pas"
+    },
+    "properties": "Propriétés : {type}",
+    "richText": {
+      "maximumLength": "Longueur maximale",
+      "minimumLength": "Longueur minimale"
+    },
+    "sort": {
+      "options": {
+        "CreatedOn": "Date de création",
+        "DisplayName": "Nom d’affichage",
+        "UniqueName": "Nom unique",
+        "UpdatedOn": "Dernière modification"
+      }
+    },
+    "string": {
+      "maximumLength": "Longueur maximale",
+      "minimumLength": "Longueur minimale",
+      "pattern": "Patron"
+    },
+    "updated": "Le type de champs a été enregistré."
+  }
+}

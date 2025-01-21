@@ -33,6 +33,17 @@ const router = createRouter({
       path: "/sign-out",
       component: () => import("./views/account/SignOutView.vue"),
     },
+    // Fields
+    {
+      name: "FieldTypeList",
+      path: "/field-types",
+      component: () => import("./views/fields/FieldTypeList.vue"),
+    },
+    {
+      name: "FieldTypeEdit",
+      path: "/field-types/:id",
+      component: () => import("./views/fields/FieldTypeEdit.vue"),
+    },
     // Languages
     {
       name: "LanguageList",
