@@ -14,6 +14,8 @@ const rules = computed<ValidationRules>(() => {
   const rules: ValidationRules = {};
   if (props.allowedCharacters) {
     rules.allowed_characters = props.allowedCharacters;
+  } else {
+    rules.identifier = true;
   }
   return rules;
 });

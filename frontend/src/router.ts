@@ -33,6 +33,17 @@ const router = createRouter({
       path: "/sign-out",
       component: () => import("./views/account/SignOutView.vue"),
     },
+    // Contents
+    {
+      name: "ContentTypeList",
+      path: "/content-types",
+      component: () => import("./views/contents/ContentTypeList.vue"),
+    },
+    {
+      name: "ContentTypeEdit",
+      path: "/content-types/:id",
+      component: () => import("./views/contents/ContentTypeEdit.vue"),
+    },
     // Fields
     {
       name: "FieldTypeList",
