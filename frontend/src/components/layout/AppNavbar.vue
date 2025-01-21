@@ -96,7 +96,7 @@ watchEffect(() => {
           </li>
           <template v-if="user">
             <li class="nav-item">
-              <RouterLink :to="{ name: 'TodoList' }" class="nav-link"><font-awesome-icon icon="fas fa-list-check" /> {{ t("todos.title.list") }}</RouterLink>
+              <RouterLink :to="{ name: 'LanguageList' }" class="nav-link"><font-awesome-icon icon="fas fa-language" /> {{ t("languages.list") }}</RouterLink>
             </li>
           </template>
         </ul>

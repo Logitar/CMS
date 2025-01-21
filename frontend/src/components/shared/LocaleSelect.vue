@@ -8,9 +8,18 @@ import locales from "@/resources/locales.json";
 
 const { orderBy } = arrayUtils;
 
-defineProps<{
-  modelValue?: string;
-}>();
+withDefaults(
+  defineProps<{
+    label?: string;
+    modelValue?: string;
+    placeholder?: string;
+    required?: boolean | string;
+  }>(),
+  {
+    label: "locale.label",
+    placeholder: "locale.placeholder",
+  },
+);
 
 const options = computed<SelectOption[]>(() =>
   orderBy(
@@ -22,18 +31,17 @@ const options = computed<SelectOption[]>(() =>
 defineEmits<{
   (e: "update:model-value", value?: string): void;
 }>();
-
-// TODO(fpion): remove this file
 </script>
 
 <template>
   <AppSelect
     floating
     id="locale"
-    label="users.locale.label"
+    :label="label"
     :model-value="modelValue"
     :options="options"
-    placeholder="users.locale.placeholder"
+    :placeholder="placeholder"
+    :required="required"
     @update:model-value="$emit('update:model-value', $event)"
   />
 </template>
