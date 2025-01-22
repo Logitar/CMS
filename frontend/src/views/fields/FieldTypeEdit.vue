@@ -138,8 +138,8 @@ onMounted(async () => {
   try {
     const id = route.params.id?.toString();
     if (id) {
-      const language = await readFieldType(id);
-      setModel(language);
+      const fieldType: FieldType = await readFieldType(id);
+      setModel(fieldType);
     }
   } catch (e: unknown) {
     const { status } = e as ApiError;

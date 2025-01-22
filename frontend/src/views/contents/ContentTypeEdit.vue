@@ -85,8 +85,8 @@ onMounted(async () => {
   try {
     const id = route.params.id?.toString();
     if (id) {
-      const language = await readContentType(id);
-      setModel(language);
+      const contentType: ContentType = await readContentType(id);
+      setModel(contentType);
     }
   } catch (e: unknown) {
     const { status } = e as ApiError;
