@@ -21,8 +21,8 @@ function hide(): void {
 }
 
 function reset(): void {
-  locale.value = "";
   localeAlreadyUsed.value = false;
+  locale.value = "";
 }
 
 const emit = defineEmits<{

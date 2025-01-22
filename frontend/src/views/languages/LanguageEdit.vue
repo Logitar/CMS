@@ -33,6 +33,7 @@ function setModel(model: Language): void {
 
 const { handleSubmit, isSubmitting } = useForm();
 const onSubmit = handleSubmit(async () => {
+  localeAlreadyUsed.value = false;
   if (language.value) {
     try {
       const payload: CreateOrReplaceLanguagePayload = {

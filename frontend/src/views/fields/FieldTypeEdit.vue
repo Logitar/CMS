@@ -13,6 +13,7 @@ import RichTextPropertiesEdit from "@/components/fields/RichTextPropertiesEdit.v
 import SelectPropertiesEdit from "@/components/fields/SelectPropertiesEdit.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
 import StringPropertiesEdit from "@/components/fields/StringPropertiesEdit.vue";
+import UniqueNameAlreadyUsed from "@/components/shared/UniqueNameAlreadyUsed.vue";
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
 import type { ApiError } from "@/types/api";
 import type {
@@ -35,6 +36,7 @@ import {
   compareStringProperties,
 } from "@/helpers/fields";
 import { handleErrorKey } from "@/inject/App";
+import { isError } from "@/helpers/errors";
 import { readFieldType, replaceFieldType } from "@/api/fieldTypes";
 import { useToastStore } from "@/stores/toast";
 
@@ -53,6 +55,7 @@ const richText = ref<RichTextProperties>({ contentType: "text/plain" });
 const select = ref<SelectProperties>({ isMultiple: false, options: [] });
 const string = ref<StringProperties>({});
 const uniqueName = ref<string>("");
+const uniqueNameAlreadyUsed = ref<boolean>(false);
 
 const hasChanges = computed<boolean>(() =>
   Boolean(
@@ -84,6 +87,7 @@ function setModel(model: FieldType): void {
 
 const { handleSubmit, isSubmitting } = useForm();
 const onSubmit = handleSubmit(async () => {
+  uniqueNameAlreadyUsed.value = false;
   if (fieldType.value) {
     try {
       const payload: CreateOrReplaceFieldTypePayload = {
@@ -129,7 +133,11 @@ const onSubmit = handleSubmit(async () => {
       setModel(updatedFieldType);
       toasts.success("fields.types.updated");
     } catch (e: unknown) {
-      handleError(e);
+      if (isError(e, 409, "UniqueNameAlreadyUsed")) {
+        uniqueNameAlreadyUsed.value = true;
+      } else {
+        handleError(e);
+      }
     }
   }
 });
@@ -158,6 +166,7 @@ onMounted(async () => {
       <h1>{{ fieldType.displayName ?? fieldType.uniqueName }}</h1>
       <StatusDetail :aggregate="fieldType" />
       <form @submit.prevent="onSubmit">
+        <UniqueNameAlreadyUsed v-model="uniqueNameAlreadyUsed" />
         <div class="row">
           <UniqueNameInput :allowed-characters="FIELD_TYPE_UNIQUE_NAME_CHARACTERS" class="col" required v-model="uniqueName" />
           <DisplayNameInput class="col" v-model="displayName" />

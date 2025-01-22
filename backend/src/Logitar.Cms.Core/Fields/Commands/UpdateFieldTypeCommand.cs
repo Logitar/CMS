@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Logitar.Cms.Core.Contents;
 using Logitar.Cms.Core.Fields.Models;
 using Logitar.Cms.Core.Fields.Settings;
 using Logitar.Cms.Core.Fields.Validators;
@@ -8,6 +9,10 @@ using MediatR;
 
 namespace Logitar.Cms.Core.Fields.Commands;
 
+/// <exception cref="ContentTypeNotFoundException"></exception>
+/// <exception cref="UnexpectedFieldTypeSettingsException"></exception>
+/// <exception cref="UniqueNameAlreadyUsedException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record UpdateFieldTypeCommand(Guid Id, UpdateFieldTypePayload Payload) : IRequest<FieldTypeModel?>;
 
 internal class UpdateFieldTypeCommandHandler : IRequestHandler<UpdateFieldTypeCommand, FieldTypeModel?>

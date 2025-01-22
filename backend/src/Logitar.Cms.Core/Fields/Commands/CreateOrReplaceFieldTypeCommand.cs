@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Logitar.Cms.Core.Contents;
 using Logitar.Cms.Core.Fields.Models;
 using Logitar.Cms.Core.Fields.Settings;
 using Logitar.Cms.Core.Fields.Validators;
@@ -10,6 +11,12 @@ namespace Logitar.Cms.Core.Fields.Commands;
 
 public record CreateOrReplaceFieldTypeResult(FieldTypeModel? FieldType = null, bool Created = false);
 
+/// <exception cref="ArgumentException"></exception>
+/// <exception cref="ContentTypeNotFoundException"></exception>
+/// <exception cref="DataTypeNotSupportedException"></exception>
+/// <exception cref="UnexpectedFieldTypeSettingsException"></exception>
+/// <exception cref="UniqueNameAlreadyUsedException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record CreateOrReplaceFieldTypeCommand(Guid? Id, CreateOrReplaceFieldTypePayload Payload, long? Version) : IRequest<CreateOrReplaceFieldTypeResult>;
 
 internal class CreateOrReplaceFieldTypeCommandHandler : IRequestHandler<CreateOrReplaceFieldTypeCommand, CreateOrReplaceFieldTypeResult>

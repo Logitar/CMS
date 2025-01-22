@@ -6,11 +6,13 @@ import { useI18n } from "vue-i18n";
 
 import ContentTypeSelect from "@/components/contents/ContentTypeSelect.vue";
 import DataTypeSelect from "./DataTypeSelect.vue";
+import UniqueNameAlreadyUsed from "@/components/shared/UniqueNameAlreadyUsed.vue";
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
 import type { ContentType } from "@/types/contents";
 import type { CreateOrReplaceFieldTypePayload, DataType, FieldType } from "@/types/fields";
 import { FIELD_TYPE_UNIQUE_NAME_CHARACTERS } from "@/helpers/constants";
 import { createFieldType } from "@/api/fieldTypes";
+import { isError } from "@/helpers/errors";
 
 const { t } = useI18n();
 
@@ -18,12 +20,14 @@ const contentType = ref<ContentType>();
 const dataType = ref<DataType>();
 const modalRef = ref<InstanceType<typeof TarModal> | null>(null);
 const uniqueName = ref<string>("");
+const uniqueNameAlreadyUsed = ref<boolean>(false);
 
 function hide(): void {
   modalRef.value?.hide();
 }
 
 function reset(): void {
+  uniqueNameAlreadyUsed.value = false;
   uniqueName.value = "";
   dataType.value = undefined;
   contentType.value = undefined;
@@ -76,7 +80,11 @@ const onSubmit = handleSubmit(async () => {
     reset();
     hide();
   } catch (e: unknown) {
-    emit("error", e);
+    if (isError(e, 409, "UniqueNameAlreadyUsed")) {
+      uniqueNameAlreadyUsed.value = true;
+    } else {
+      emit("error", e);
+    }
   }
 });
 </script>
@@ -85,6 +93,7 @@ const onSubmit = handleSubmit(async () => {
   <span>
     <TarButton icon="fas fa-plus" :text="t('actions.create')" variant="success" data-bs-toggle="modal" data-bs-target="#create-field-type" />
     <TarModal :close="t('actions.close')" id="create-field-type" ref="modalRef" size="large" :title="t('fields.types.create')">
+      <UniqueNameAlreadyUsed v-model="uniqueNameAlreadyUsed" />
       <form>
         <UniqueNameInput :allowed-characters="FIELD_TYPE_UNIQUE_NAME_CHARACTERS" required v-model="uniqueName" />
         <DataTypeSelect required v-model="dataType" />
