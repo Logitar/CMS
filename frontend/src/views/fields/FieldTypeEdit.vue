@@ -9,6 +9,7 @@ import DescriptionTextarea from "@/components/shared/DescriptionTextarea.vue";
 import DisplayNameInput from "@/components/shared/DisplayNameInput.vue";
 import NumberPropertiesEdit from "@/components/fields/NumberPropertiesEdit.vue";
 import RichTextPropertiesEdit from "@/components/fields/RichTextPropertiesEdit.vue";
+import SelectPropertiesEdit from "@/components/fields/SelectPropertiesEdit.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
 import StringPropertiesEdit from "@/components/fields/StringPropertiesEdit.vue";
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
@@ -75,7 +76,7 @@ function setModel(model: FieldType): void {
   number.value = model.number ? { ...model.number } : {};
   relatedContent.value = model.relatedContent ? { ...model.relatedContent } : { contentTypeId: "", isMultiple: false };
   richText.value = model.richText ? { ...model.richText } : { contentType: "text/plain" };
-  select.value = model.select ? { ...model.select } : { isMultiple: false, options: [] };
+  select.value = model.select ? { ...model.select, options: [...model.select.options] } : { isMultiple: false, options: [] };
   string.value = model.string ? { ...model.string } : {};
   uniqueName.value = model.uniqueName;
 }
@@ -165,7 +166,7 @@ onMounted(async () => {
         <NumberPropertiesEdit v-else-if="fieldType.dataType === 'Number'" v-model="number" />
         <!-- TODO(fpion): RelatedContentPropertiesEdit -->
         <RichTextPropertiesEdit v-else-if="fieldType.dataType === 'RichText'" v-model="richText" />
-        <!-- TODO(fpion): SelectPropertiesEdit -->
+        <SelectPropertiesEdit v-else-if="fieldType.dataType === 'Select'" v-model="select" />
         <StringPropertiesEdit v-else-if="fieldType.dataType === 'String'" v-model="string" />
         <div class="mb-3">
           <AppSaveButton :disabled="isSubmitting || !hasChanges" :loading="isSubmitting" />

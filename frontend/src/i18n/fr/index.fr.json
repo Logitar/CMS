@@ -1,5 +1,6 @@
 {
   "actions": {
+    "add": "Ajouter",
     "back": "Retour",
     "cancel": "Annuler",
     "clear": "Vider",
