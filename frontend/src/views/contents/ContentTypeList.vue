@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { TarBadge, TarButton, parsingUtils, type SelectOption } from "logitar-vue3-ui";
+import { TarBadge, TarButton, type SelectOption } from "logitar-vue3-ui";
 import { arrayUtils, objectUtils } from "logitar-js";
 import { computed, inject, ref, watch } from "vue";
+import { parsingUtils } from "logitar-js";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
@@ -14,7 +15,7 @@ import StatusBlock from "@/components/shared/StatusBlock.vue";
 import YesNoSelect from "@/components/shared/YesNoSelect.vue";
 import type { ContentType, ContentTypeSort, SearchContentTypesPayload } from "@/types/contents";
 import { handleErrorKey } from "@/inject/App";
-import { searchContentTypes } from "@/api/contents";
+import { searchContentTypes } from "@/api/contentTypes";
 import { useToastStore } from "@/stores/toast";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;

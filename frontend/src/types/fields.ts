@@ -71,6 +71,11 @@ export type FieldTypeSortOption = SortOption & {
   field: FieldTypeSort;
 };
 
+export type FieldValue = {
+  id: string;
+  value: string;
+};
+
 export type NumberProperties = {
   minimumValue?: number;
   maximumValue?: number;

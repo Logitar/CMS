@@ -1,21 +1,23 @@
 <script setup lang="ts">
 import type { SelectOption } from "logitar-vue3-ui";
-import { arrayUtils } from "logitar-js";
+import { arrayUtils, parsingUtils } from "logitar-js";
 import { computed, onMounted, ref } from "vue";
 
 import AppSelect from "@/components/shared/AppSelect.vue";
 import type { ContentType, SearchContentTypesPayload } from "@/types/contents";
 import type { SearchResults } from "@/types/search";
 import { formatContentType } from "@/helpers/format";
-import { searchContentTypes } from "@/api/contents";
+import { searchContentTypes } from "@/api/contentTypes";
 
 const { orderBy } = arrayUtils;
+const { parseBoolean } = parsingUtils;
 
 withDefaults(
   defineProps<{
     id?: string;
     label?: string;
     modelValue?: string;
+    noStatus?: boolean | string;
     placeholder?: string;
     required?: boolean | string;
   }>(),
@@ -79,6 +81,7 @@ onMounted(async () => {
     :options="options"
     :placeholder="placeholder ?? 'any'"
     :required="required"
+    :validation="parseBoolean(noStatus) ? 'server' : undefined"
     @update:model-value="onSelected"
   />
 </template>

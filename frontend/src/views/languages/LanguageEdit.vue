@@ -53,7 +53,7 @@ onMounted(async () => {
   try {
     const id = route.params.id?.toString();
     if (id) {
-      const language = await readLanguage(id);
+      const language: Language = await readLanguage(id);
       setModel(language);
     }
   } catch (e: unknown) {

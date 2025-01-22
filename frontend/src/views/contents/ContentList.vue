@@ -7,15 +7,17 @@ import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
 import AppPagination from "@/components/shared/AppPagination.vue";
+import ContentTypeSelect from "@/components/contents/ContentTypeSelect.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
-import CreateFieldType from "@/components/fields/CreateFieldType.vue";
-import DataTypeSelect from "@/components/fields/DataTypeSelect.vue";
+import CreateContent from "@/components/contents/CreateContent.vue";
+import LanguageSelect from "@/components/languages/LanguageSelect.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
-import type { DataType, FieldType, FieldTypeSort, SearchFieldTypesPayload } from "@/types/fields";
+import type { Content, ContentLocale, ContentSort, SearchContentsPayload } from "@/types/contents";
+import { formatContentType } from "@/helpers/format";
 import { handleErrorKey } from "@/inject/App";
-import { searchFieldTypes } from "@/api/fieldTypes";
+import { searchContents } from "@/api/contents";
 import { useToastStore } from "@/stores/toast";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
@@ -28,27 +30,29 @@ const { parseBoolean, parseNumber } = parsingUtils;
 const { rt, t, tm } = useI18n();
 
 const isLoading = ref<boolean>(false);
+const locales = ref<ContentLocale[]>([]);
 const timestamp = ref<number>(0);
-const fieldTypes = ref<FieldType[]>([]);
 const total = ref<number>(0);
 
 const count = computed<number>(() => parseNumber(route.query.count?.toString()) || 10);
 const isDescending = computed<boolean>(() => parseBoolean(route.query.isDescending?.toString()) ?? false);
+const language = computed<string>(() => route.query.language?.toString() ?? "");
 const page = computed<number>(() => parseNumber(route.query.page?.toString()) || 1);
 const search = computed<string>(() => route.query.search?.toString() ?? "");
 const sort = computed<string>(() => route.query.sort?.toString() ?? "");
-const type = computed<DataType>(() => (route.query.type?.toString() ?? "") as DataType);
+const type = computed<string>(() => route.query.type?.toString() ?? "");
 
 const sortOptions = computed<SelectOption[]>(() =>
   orderBy(
-    Object.entries(tm(rt("fields.types.sort.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
+    Object.entries(tm(rt("contents.items.sort.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
     "text",
   ),
 );
 
 async function refresh(): Promise<void> {
-  const payload: SearchFieldTypesPayload = {
+  const payload: SearchContentsPayload = {
     ids: [],
+    languageId: language.value,
     search: {
       terms: search.value
         .split(" ")
@@ -56,8 +60,8 @@ async function refresh(): Promise<void> {
         .map((term) => ({ value: `%${term}%` })),
       operator: "And",
     },
-    dataType: type.value,
-    sort: sort.value ? [{ field: sort.value as FieldTypeSort, isDescending: isDescending.value }] : [],
+    contentTypeId: type.value,
+    sort: sort.value ? [{ field: sort.value as ContentSort, isDescending: isDescending.value }] : [],
     skip: (page.value - 1) * count.value,
     limit: count.value,
   };
@@ -65,9 +69,9 @@ async function refresh(): Promise<void> {
   const now = Date.now();
   timestamp.value = now;
   try {
-    const results = await searchFieldTypes(payload);
+    const results = await searchContents(payload);
     if (now === timestamp.value) {
-      fieldTypes.value = results.items;
+      locales.value = results.items;
       total.value = results.total;
     }
   } catch (e: unknown) {
@@ -82,6 +86,7 @@ async function refresh(): Promise<void> {
 function setQuery(key: string, value: string): void {
   const query = { ...route.query, [key]: value };
   switch (key) {
+    case "language":
     case "search":
     case "type":
     case "count":
@@ -91,21 +96,22 @@ function setQuery(key: string, value: string): void {
   router.replace({ ...route, query });
 }
 
-function onCreated(fieldType: FieldType) {
-  toasts.success("fields.types.created");
-  router.push({ name: "FieldTypeEdit", params: { id: fieldType.id } });
+function onCreated(content: Content) {
+  toasts.success("contents.items.created");
+  router.push({ name: "ContentEdit", params: { id: content.id } });
 }
 
 watch(
   () => route,
   (route) => {
-    if (route.name === "FieldTypeList") {
+    if (route.name === "ContentList") {
       const { query } = route;
       if (!query.page || !query.count) {
         router.replace({
           ...route,
           query: isEmpty(query)
             ? {
+                language: "",
                 search: "",
                 type: "",
                 sort: "UpdatedOn",
@@ -130,7 +136,7 @@ watch(
 
 <template>
   <main class="container">
-    <h1>{{ t("fields.types.list") }}</h1>
+    <h1>{{ t("contents.items.list") }}</h1>
     <div class="my-3">
       <TarButton
         class="me-1"
@@ -141,13 +147,22 @@ watch(
         :text="t('actions.refresh')"
         @click="refresh()"
       />
-      <CreateFieldType class="ms-1" @created="onCreated" @error="handleError" />
+      <CreateContent class="ms-1" @created="onCreated" @error="handleError" />
     </div>
     <div class="row">
-      <DataTypeSelect class="col-lg-3" :model-value="type" no-status @update:model-value="setQuery('type', $event ?? '')" />
-      <SearchInput class="col-lg-3" :model-value="search" @update:model-value="setQuery('search', $event ?? '')" />
+      <ContentTypeSelect class="col-lg-6" :model-value="type" no-status placeholder="any" @update:model-value="setQuery('type', $event ?? '')" />
+      <LanguageSelect
+        class="col-lg-6"
+        :model-value="language"
+        no-status
+        placeholder="contents.items.invariant"
+        @update:model-value="setQuery('language', $event ?? '')"
+      />
+    </div>
+    <div class="row">
+      <SearchInput class="col-lg-4" :model-value="search" @update:model-value="setQuery('search', $event ?? '')" />
       <SortSelect
-        class="col-lg-3"
+        class="col-lg-4"
         :descending="isDescending"
         :model-value="sort"
         #
@@ -155,33 +170,37 @@ watch(
         @descending="setQuery('isDescending', $event.toString())"
         @update:model-value="setQuery('sort', $event ?? '')"
       />
-      <CountSelect class="col-lg-3" :model-value="count" @update:model-value="setQuery('count', ($event ?? 10).toString())" />
+      <CountSelect class="col-lg-4" :model-value="count" @update:model-value="setQuery('count', ($event ?? 10).toString())" />
     </div>
-    <template v-if="fieldTypes.length">
+    <template v-if="locales.length">
       <table class="table table-striped">
         <thead>
           <tr>
-            <th scope="col">{{ t("fields.types.sort.options.UniqueName") }}</th>
-            <th scope="col">{{ t("fields.types.sort.options.DisplayName") }}</th>
-            <th scope="col">{{ t("fields.types.dataType.label") }}</th>
-            <th scope="col">{{ t("fields.types.sort.options.UpdatedOn") }}</th>
+            <th scope="col">{{ t("contents.items.sort.options.UniqueName") }}</th>
+            <th scope="col">{{ t("contents.items.sort.options.DisplayName") }}</th>
+            <th scope="col">{{ t("contents.types.select.label") }}</th>
+            <th scope="col">{{ t("contents.items.sort.options.UpdatedOn") }}</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="fieldType in fieldTypes" :key="fieldType.id">
+          <tr v-for="locale in locales" :key="locale.content.id">
             <td>
-              <RouterLink :to="{ name: 'FieldTypeEdit', params: { id: fieldType.id } }">
-                <font-awesome-icon icon="fas fa-edit" /> {{ fieldType.uniqueName }}
+              <RouterLink :to="{ name: 'ContentEdit', params: { id: locale.content.id } }">
+                <font-awesome-icon icon="fas fa-edit" /> {{ locale.uniqueName }}
               </RouterLink>
             </td>
-            <td>{{ fieldType.displayName ?? "—" }}</td>
-            <td>{{ t(`fields.types.dataType.options.${fieldType.dataType}`) }}</td>
-            <td><StatusBlock :actor="fieldType.updatedBy" :date="fieldType.updatedOn" /></td>
+            <td>{{ locale.displayName ?? "—" }}</td>
+            <td>
+              <RouterLink :to="{ name: 'ContentTypeEdit', params: { id: locale.content.contentType.id } }" target="_blank">
+                {{ formatContentType(locale.content.contentType) }}
+              </RouterLink>
+            </td>
+            <td><StatusBlock :actor="locale.updatedBy" :date="locale.updatedOn" /></td>
           </tr>
         </tbody>
       </table>
       <AppPagination :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event.toString())" />
     </template>
-    <p v-else>{{ t("fields.types.empty") }}</p>
+    <p v-else>{{ t("contents.items.empty") }}</p>
   </main>
 </template>

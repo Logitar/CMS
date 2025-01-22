@@ -7,7 +7,7 @@ import { useI18n } from "vue-i18n";
 import InvariantCheckbox from "./InvariantCheckbox.vue";
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
 import type { CreateOrReplaceContentTypePayload, ContentType } from "@/types/contents";
-import { createContentType } from "@/api/contents";
+import { createContentType } from "@/api/contentTypes";
 
 const { t } = useI18n();
 

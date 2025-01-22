@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { TarTextarea, parsingUtils, type TextareaOptions, type TextareaStatus } from "logitar-vue3-ui";
+import { TarTextarea, type TextareaOptions, type TextareaStatus } from "logitar-vue3-ui";
 import { computed, ref } from "vue";
 import { nanoid } from "nanoid";
+import { parsingUtils } from "logitar-js";
 import { useField } from "vee-validate";
 import { useI18n } from "vue-i18n";
 

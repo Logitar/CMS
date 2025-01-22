@@ -35,7 +35,7 @@ import {
   compareStringProperties,
 } from "@/helpers/fields";
 import { handleErrorKey } from "@/inject/App";
-import { readFieldType, replaceFieldType } from "@/api/fields";
+import { readFieldType, replaceFieldType } from "@/api/fieldTypes";
 import { useToastStore } from "@/stores/toast";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
@@ -138,8 +138,8 @@ onMounted(async () => {
   try {
     const id = route.params.id?.toString();
     if (id) {
-      const language = await readFieldType(id);
-      setModel(language);
+      const fieldType: FieldType = await readFieldType(id);
+      setModel(fieldType);
     }
   } catch (e: unknown) {
     const { status } = e as ApiError;

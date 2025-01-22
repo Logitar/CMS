@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { TarSelect, parsingUtils, type SelectOption } from "logitar-vue3-ui";
+import { TarSelect, type SelectOption } from "logitar-vue3-ui";
+import { parsingUtils } from "logitar-js";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 

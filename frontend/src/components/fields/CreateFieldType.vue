@@ -7,10 +7,10 @@ import { useI18n } from "vue-i18n";
 import ContentTypeSelect from "@/components/contents/ContentTypeSelect.vue";
 import DataTypeSelect from "./DataTypeSelect.vue";
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
+import type { ContentType } from "@/types/contents";
 import type { CreateOrReplaceFieldTypePayload, DataType, FieldType } from "@/types/fields";
 import { FIELD_TYPE_UNIQUE_NAME_CHARACTERS } from "@/helpers/constants";
-import { createFieldType } from "@/api/fields";
-import type { ContentType } from "@/types/contents";
+import { createFieldType } from "@/api/fieldTypes";
 
 const { t } = useI18n();
 

@@ -1,39 +1,40 @@
 <script setup lang="ts">
 import type { SelectOption } from "logitar-vue3-ui";
-import { arrayUtils } from "logitar-js";
+import { arrayUtils, parsingUtils } from "logitar-js";
 import { computed, onMounted, ref } from "vue";
 
 import AppSelect from "@/components/shared/AppSelect.vue";
-import type { FieldType, SearchFieldTypesPayload } from "@/types/fields";
+import type { Language, SearchLanguagesPayload } from "@/types/languages";
 import type { SearchResults } from "@/types/search";
-import { formatFieldType } from "@/helpers/format";
-import { searchFieldTypes } from "@/api/fieldTypes";
+import { formatLanguage } from "@/helpers/format";
+import { searchLanguages } from "@/api/languages";
 
 const { orderBy } = arrayUtils;
+const { parseBoolean } = parsingUtils;
 
 withDefaults(
   defineProps<{
-    disabled?: boolean | string;
     id?: string;
     label?: string;
     modelValue?: string;
+    noStatus?: boolean | string;
     placeholder?: string;
     required?: boolean | string;
   }>(),
   {
-    id: "field-type",
-    label: "fields.types.select.label",
-    placeholder: "fields.types.select.placeholder",
+    id: "language",
+    label: "languages.select.label",
+    placeholder: "languages.select.placeholder",
   },
 );
 
-const fieldTypes = ref<FieldType[]>([]);
+const languages = ref<Language[]>([]);
 
 const options = computed<SelectOption[]>(() =>
   orderBy(
-    fieldTypes.value.map((fieldType) => ({
-      text: formatFieldType(fieldType),
-      value: fieldType.id,
+    languages.value.map((language) => ({
+      text: formatLanguage(language),
+      value: language.id,
     })),
     "text",
   ),
@@ -41,30 +42,30 @@ const options = computed<SelectOption[]>(() =>
 
 const emit = defineEmits<{
   (e: "error", value: unknown): void;
-  (e: "selected", value: FieldType | undefined): void;
+  (e: "selected", value: Language | undefined): void;
   (e: "update:model-value", value: string | undefined): void;
 }>();
 
 function onSelected(id: string | undefined): void {
   emit("update:model-value", id);
 
-  const index: number = fieldTypes.value.findIndex((fieldType) => fieldType.id === id);
+  const index: number = languages.value.findIndex((language) => language.id === id);
   if (index >= 0) {
-    emit("selected", fieldTypes.value[index]);
+    emit("selected", languages.value[index]);
   }
 }
 
 onMounted(async () => {
   try {
-    const payload: SearchFieldTypesPayload = {
+    const payload: SearchLanguagesPayload = {
       ids: [],
       search: { operator: "And", terms: [] },
       sort: [{ field: "DisplayName", isDescending: false }],
       skip: 0,
       limit: 0,
     };
-    const results: SearchResults<FieldType> = await searchFieldTypes(payload);
-    fieldTypes.value = results.items;
+    const results: SearchResults<Language> = await searchLanguages(payload);
+    languages.value = results.items;
   } catch (e: unknown) {
     emit("error", e);
   }
@@ -73,7 +74,6 @@ onMounted(async () => {
 
 <template>
   <AppSelect
-    :disabled="disabled"
     floating
     :id="id"
     :label="label"
@@ -81,6 +81,7 @@ onMounted(async () => {
     :options="options"
     :placeholder="placeholder ?? 'any'"
     :required="required"
+    :validation="parseBoolean(noStatus) ? 'server' : undefined"
     @update:model-value="onSelected"
   />
 </template>

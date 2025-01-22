@@ -18,7 +18,7 @@ import type { CreateOrReplaceContentTypePayload, ContentType } from "@/types/con
 import type { FieldDefinition } from "@/types/fields";
 import { formatFieldType } from "@/helpers/format";
 import { handleErrorKey } from "@/inject/App";
-import { readContentType, replaceContentType } from "@/api/contents";
+import { readContentType, replaceContentType } from "@/api/contentTypes";
 import { useToastStore } from "@/stores/toast";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
@@ -85,8 +85,8 @@ onMounted(async () => {
   try {
     const id = route.params.id?.toString();
     if (id) {
-      const language = await readContentType(id);
-      setModel(language);
+      const contentType: ContentType = await readContentType(id);
+      setModel(contentType);
     }
   } catch (e: unknown) {
     const { status } = e as ApiError;
@@ -122,7 +122,7 @@ onMounted(async () => {
           <div class="my-3">
             <FieldDefinitionEdit :content-type-id="contentType.id" @error="handleError" @saved="onFieldDefinitionAdded" />
           </div>
-          <table v-if="fields.length > 0" class="table table-striped">
+          <table v-if="fields.length" class="table table-striped">
             <thead>
               <tr>
                 <th scope="col">{{ t("uniqueName") }}</th>

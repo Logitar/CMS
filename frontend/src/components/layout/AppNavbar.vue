@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
-import { TarAvatar, parsingUtils } from "logitar-vue3-ui";
-import { arrayUtils, stringUtils } from "logitar-js";
+import { TarAvatar } from "logitar-vue3-ui";
+import { arrayUtils, parsingUtils, stringUtils } from "logitar-js";
 import { computed, watchEffect } from "vue";
 import { setLocale } from "@vee-validate/i18n";
 import { useI18n } from "vue-i18n";
@@ -106,6 +106,11 @@ watchEffect(() => {
             <li class="nav-item">
               <RouterLink :to="{ name: 'ContentTypeList' }" class="nav-link">
                 <font-awesome-icon icon="fas fa-list" /> {{ t("contents.types.list") }}
+              </RouterLink>
+            </li>
+            <li class="nav-item">
+              <RouterLink :to="{ name: 'ContentList' }" class="nav-link">
+                <font-awesome-icon icon="fas fa-cart-shopping" /> {{ t("contents.items.list") }}
               </RouterLink>
             </li>
           </template>

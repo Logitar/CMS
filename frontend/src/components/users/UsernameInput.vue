@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { parsingUtils } from "logitar-vue3-ui";
+import { parsingUtils } from "logitar-js";
 
 import AppInput from "@/components/shared/AppInput.vue";
 import type { UsernameSettings } from "@/types/settings";

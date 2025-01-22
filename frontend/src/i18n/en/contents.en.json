@@ -1,4 +1,20 @@
 {
+  "items": {
+    "create": "New Content",
+    "created": "The content has been created.",
+    "empty": "This list is empty.",
+    "invariant": "Invariant",
+    "list": "Contents",
+    "sort": {
+      "options": {
+        "CreatedOn": "Created on",
+        "DisplayName": "Display Name",
+        "UniqueName": "Unique Name",
+        "UpdatedOn": "Updated on"
+      }
+    },
+    "updated": "The content has been updated."
+  },
   "types": {
     "create": "New Content Type",
     "created": "The content type has been created.",

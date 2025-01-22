@@ -5,9 +5,11 @@ withDefaults(
   defineProps<{
     id?: string;
     modelValue?: string;
+    rows?: number | string;
   }>(),
   {
     id: "description",
+    rows: 15,
   },
 );
 
@@ -23,7 +25,7 @@ defineEmits<{
     label="description"
     :model-value="modelValue"
     placeholder="description"
-    rows="15"
+    :rows="rows"
     @update:model-value="$emit('update:model-value', $event)"
   />
 </template>
