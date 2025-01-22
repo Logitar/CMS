@@ -23,14 +23,14 @@ const { t } = useI18n();
 
 const content = ref<Content>();
 
-const locales = computed<ContentLocale[]>(() =>
-  content.value
-    ? orderBy(
-        content.value.locales.filter((locale) => Boolean(locale.language)),
-        "language.locale.displayName",
-      )
-    : [],
-);
+// const locales = computed<ContentLocale[]>(() =>
+//   content.value
+//     ? orderBy(
+//         content.value.locales.filter((locale) => Boolean(locale.language)),
+//         "language.locale.displayName",
+//       )
+//     : [],
+// ); // TODO(fpion): locales
 
 function setModel(model: Content): void {
   content.value = model;
@@ -68,9 +68,9 @@ onMounted(async () => {
         <TarTab active id="invariant" :title="t('contents.items.invariant')">
           <ContentLocaleEdit :content-id="content.id" :locale="content.invariant" @error="handleError" @saved="onSaved" />
         </TarTab>
-        <TarTab v-for="locale in locales" :key="locale.language?.id" :id="locale.language?.id" :title="formatLanguage(locale.language)">
+        <!-- <TarTab v-for="locale in locales" :key="locale.language?.id" :id="locale.language?.id" :title="formatLanguage(locale.language)">
           <ContentLocaleEdit :content-id="content.id" :locale="locale" @error="handleError" @saved="onSaved" />
-        </TarTab>
+        </TarTab> -->
       </TarTabs>
     </template>
   </main>

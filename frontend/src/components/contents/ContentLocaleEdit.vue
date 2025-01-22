@@ -72,5 +72,6 @@ watch(() => props.locale, reset, { deep: true, immediate: true });
       <DisplayNameInput class="col" :id="`display-name-${locale.language?.id ?? 'invariant'}`" v-model="displayName" />
     </div>
     <DescriptionTextarea :id="`description-${locale.language?.id ?? 'invariant'}`" rows="5" v-model="description" />
+    <!-- TODO(fpion): Field Values -->
   </form>
 </template>
