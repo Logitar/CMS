@@ -4,11 +4,17 @@ import { computed } from "vue";
 import AppInput from "@/components/shared/AppInput.vue";
 import type { ValidationRules } from "@/types/validation";
 
-const props = defineProps<{
-  allowedCharacters?: string;
-  modelValue?: string;
-  required?: boolean | string;
-}>();
+const props = withDefaults(
+  defineProps<{
+    allowedCharacters?: string;
+    id?: string;
+    modelValue?: string;
+    required?: boolean | string;
+  }>(),
+  {
+    id: "unique-name",
+  },
+);
 
 const rules = computed<ValidationRules>(() => {
   const rules: ValidationRules = {};
@@ -28,7 +34,7 @@ defineEmits<{
 <template>
   <AppInput
     floating
-    id="unique-name"
+    :id="id"
     label="uniqueName"
     max="255"
     :model-value="modelValue"

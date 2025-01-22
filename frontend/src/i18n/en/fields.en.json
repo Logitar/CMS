@@ -1,4 +1,16 @@
 {
+  "definitions": {
+    "create": "New Field Definition",
+    "created": "The field definition has been created.",
+    "indexed": "Indexed",
+    "invariant": "Invariant",
+    "list": "Field Definitions",
+    "placeholder": "Placeholder",
+    "required": "Required",
+    "unique": "Unique",
+    "update": "Edit Field Definition",
+    "updated": "The field definition has been updated."
+  },
   "types": {
     "create": "New Field Type",
     "created": "The field type has been created.",
@@ -34,6 +46,7 @@
     },
     "select": {
       "isMultiple": "Is Multiple?",
+      "label": "Field Type",
       "options": {
         "empty": "This list is empty.",
         "isDisabled": "Disabled",
@@ -42,7 +55,8 @@
         "text": "Text",
         "title": "Options",
         "value": "Value"
-      }
+      },
+      "placeholder": "Select a field type"
     },
     "sort": {
       "options": {

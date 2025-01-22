@@ -5,8 +5,8 @@
     "empty": "Cette liste est vide.",
     "fieldCount": "Nombre de champs",
     "invariant": "Invariant",
-    "isInvariant": "Est invariant ?",
     "list": "Types de contenu",
+    "properties": "Propriétés",
     "select": {
       "label": "Type de contenu",
       "placeholder": "Sélectionnez un type de contenu"

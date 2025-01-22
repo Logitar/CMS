@@ -1,4 +1,16 @@
 {
+  "definitions": {
+    "create": "Nouvelle définition de champs",
+    "created": "La définition de champs a été créée.",
+    "indexed": "Indexé",
+    "invariant": "Invariant",
+    "list": "Définitions de champs",
+    "placeholder": "Espace réservé (placeholder)",
+    "required": "Requis",
+    "unique": "Unique",
+    "update": "Éditer la définition de champs",
+    "updated": "La définition de champs a été enregistrée."
+  },
   "types": {
     "create": "Nouveau type de champs",
     "created": "Le type de champs a été créé.",
@@ -34,6 +46,7 @@
     },
     "select": {
       "isMultiple": "Sélection multiple",
+      "label": "Type de champs",
       "options": {
         "empty": "Cette liste est vide.",
         "isDisabled": "Désactivée",
@@ -42,7 +55,8 @@
         "text": "Texte",
         "title": "Options",
         "value": "Valeur"
-      }
+      },
+      "placeholder": "Sélectionnez un type de champs"
     },
     "sort": {
       "options": {
