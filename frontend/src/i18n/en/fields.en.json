@@ -32,6 +32,18 @@
       "maximumLength": "Maximum Length",
       "minimumLength": "Minimum Length"
     },
+    "select": {
+      "isMultiple": "Is Multiple?",
+      "options": {
+        "empty": "This list is empty.",
+        "isDisabled": "Disabled",
+        "isSelected": "Selected",
+        "label": "Label",
+        "text": "Text",
+        "title": "Options",
+        "value": "Value"
+      }
+    },
     "sort": {
       "options": {
         "CreatedOn": "Created on",

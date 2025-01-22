@@ -32,6 +32,18 @@
       "maximumLength": "Longueur maximale",
       "minimumLength": "Longueur minimale"
     },
+    "select": {
+      "isMultiple": "Sélection multiple",
+      "options": {
+        "empty": "Cette liste est vide.",
+        "isDisabled": "Désactivée",
+        "isSelected": "Sélectionnée",
+        "label": "Étiquette",
+        "text": "Texte",
+        "title": "Options",
+        "value": "Valeur"
+      }
+    },
     "sort": {
       "options": {
         "CreatedOn": "Date de création",

@@ -7,6 +7,10 @@
     "invariant": "Invariant",
     "isInvariant": "Est invariant ?",
     "list": "Types de contenu",
+    "select": {
+      "label": "Type de contenu",
+      "placeholder": "Sélectionnez un type de contenu"
+    },
     "sort": {
       "options": {
         "CreatedOn": "Date de création",
