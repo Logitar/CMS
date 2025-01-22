@@ -9,6 +9,7 @@ import ContentLocaleEdit from "@/components/contents/ContentLocaleEdit.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
 import type { ApiError } from "@/types/api";
 import type { Content, ContentLocale } from "@/types/contents";
+import { StatusCodes } from "@/enums/statusCodes";
 import { formatLanguage } from "@/helpers/format";
 import { handleErrorKey } from "@/inject/App";
 import { readContent } from "@/api/contents";
@@ -50,7 +51,7 @@ onMounted(async () => {
     }
   } catch (e: unknown) {
     const { status } = e as ApiError;
-    if (status === 404) {
+    if (status === StatusCodes.NotFound) {
       router.push({ path: "/not-found" });
     } else {
       handleError(e);

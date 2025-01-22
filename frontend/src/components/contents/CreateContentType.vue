@@ -8,6 +8,8 @@ import InvariantCheckbox from "./InvariantCheckbox.vue";
 import UniqueNameAlreadyUsed from "@/components/shared/UniqueNameAlreadyUsed.vue";
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
 import type { CreateOrReplaceContentTypePayload, ContentType } from "@/types/contents";
+import { ErrorCodes } from "@/enums/errorCodes";
+import { StatusCodes } from "@/enums/statusCodes";
 import { createContentType } from "@/api/contentTypes";
 import { isError } from "@/helpers/errors";
 
@@ -51,7 +53,7 @@ const onSubmit = handleSubmit(async () => {
     reset();
     hide();
   } catch (e: unknown) {
-    if (isError(e, 409, "UniqueNameAlreadyUsed")) {
+    if (isError(e, StatusCodes.Conflict, ErrorCodes.UniqueNameAlreadyUsed)) {
       uniqueNameAlreadyUsed.value = true;
     } else {
       emit("error", e);

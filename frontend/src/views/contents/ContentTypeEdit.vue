@@ -17,6 +17,8 @@ import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
 import type { ApiError } from "@/types/api";
 import type { CreateOrReplaceContentTypePayload, ContentType } from "@/types/contents";
 import type { FieldDefinition } from "@/types/fields";
+import { ErrorCodes } from "@/enums/errorCodes";
+import { StatusCodes } from "@/enums/statusCodes";
 import { formatFieldType } from "@/helpers/format";
 import { handleErrorKey } from "@/inject/App";
 import { isError } from "@/helpers/errors";
@@ -71,7 +73,7 @@ const onSubmit = handleSubmit(async () => {
       setModel(updatedContentType);
       toasts.success("contents.types.updated");
     } catch (e: unknown) {
-      if (isError(e, 409, "UniqueNameAlreadyUsed")) {
+      if (isError(e, StatusCodes.Conflict, ErrorCodes.UniqueNameAlreadyUsed)) {
         uniqueNameAlreadyUsed.value = true;
       } else {
         handleError(e);
@@ -98,7 +100,7 @@ onMounted(async () => {
     }
   } catch (e: unknown) {
     const { status } = e as ApiError;
-    if (status === 404) {
+    if (status === StatusCodes.NotFound) {
       router.push({ path: "/not-found" });
     } else {
       handleError(e);

@@ -7,6 +7,8 @@ import { useI18n } from "vue-i18n";
 import LocaleAlreadyUsed from "./LocaleAlreadyUsed.vue";
 import LocaleSelect from "@/components/shared/LocaleSelect.vue";
 import type { CreateOrReplaceLanguagePayload, Language } from "@/types/languages";
+import { ErrorCodes } from "@/enums/errorCodes";
+import { StatusCodes } from "@/enums/statusCodes";
 import { createLanguage } from "@/api/languages";
 import { isError } from "@/helpers/errors";
 
@@ -47,7 +49,7 @@ const onSubmit = handleSubmit(async () => {
     reset();
     hide();
   } catch (e: unknown) {
-    if (isError(e, 409, "LocaleAlreadyUsed")) {
+    if (isError(e, StatusCodes.Conflict, ErrorCodes.LocaleAlreadyUsed)) {
       localeAlreadyUsed.value = true;
     } else {
       emit("error", e);

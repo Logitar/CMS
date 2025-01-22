@@ -10,6 +10,8 @@ import LocaleSelect from "@/components/shared/LocaleSelect.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
 import type { ApiError } from "@/types/api";
 import type { CreateOrReplaceLanguagePayload, Language } from "@/types/languages";
+import { ErrorCodes } from "@/enums/errorCodes";
+import { StatusCodes } from "@/enums/statusCodes";
 import { handleErrorKey } from "@/inject/App";
 import { isError } from "@/helpers/errors";
 import { readLanguage, replaceLanguage } from "@/api/languages";
@@ -43,7 +45,7 @@ const onSubmit = handleSubmit(async () => {
       setModel(updatedLanguage);
       toasts.success("languages.updated");
     } catch (e: unknown) {
-      if (isError(e, 409, "LocaleAlreadyUsed")) {
+      if (isError(e, StatusCodes.Conflict, ErrorCodes.LocaleAlreadyUsed)) {
         localeAlreadyUsed.value = true;
       } else {
         handleError(e);
@@ -66,7 +68,7 @@ onMounted(async () => {
     }
   } catch (e: unknown) {
     const { status } = e as ApiError;
-    if (status === 404) {
+    if (status === StatusCodes.NotFound) {
       router.push({ path: "/not-found" });
     } else {
       handleError(e);

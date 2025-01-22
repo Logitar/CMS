@@ -1,2 +1,0 @@
-export const CONTENT_UNIQUE_NAME_CHARACTERS: string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-export const FIELD_TYPE_UNIQUE_NAME_CHARACTERS: string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";

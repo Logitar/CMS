@@ -10,7 +10,9 @@ import UniqueNameAlreadyUsed from "@/components/shared/UniqueNameAlreadyUsed.vue
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
 import type { ContentType } from "@/types/contents";
 import type { CreateOrReplaceFieldTypePayload, DataType, FieldType } from "@/types/fields";
-import { FIELD_TYPE_UNIQUE_NAME_CHARACTERS } from "@/helpers/constants";
+import { ErrorCodes } from "@/enums/errorCodes";
+import { FIELD_TYPE_UNIQUE_NAME_ALLOWED_CHARACTERS } from "@/constants/allowedCharacters";
+import { StatusCodes } from "@/enums/statusCodes";
 import { createFieldType } from "@/api/fieldTypes";
 import { isError } from "@/helpers/errors";
 
@@ -81,7 +83,7 @@ const onSubmit = handleSubmit(async () => {
     reset();
     hide();
   } catch (e: unknown) {
-    if (isError(e, 409, "UniqueNameAlreadyUsed")) {
+    if (isError(e, StatusCodes.Conflict, ErrorCodes.UniqueNameAlreadyUsed)) {
       uniqueNameAlreadyUsed.value = true;
     } else {
       emit("error", e);
@@ -96,7 +98,7 @@ const onSubmit = handleSubmit(async () => {
     <TarModal :close="t('actions.close')" id="create-field-type" ref="modalRef" size="large" :title="t('fields.types.create')">
       <UniqueNameAlreadyUsed v-model="uniqueNameAlreadyUsed" />
       <form>
-        <UniqueNameInput :allowed-characters="FIELD_TYPE_UNIQUE_NAME_CHARACTERS" required v-model="uniqueName" />
+        <UniqueNameInput :allowed-characters="FIELD_TYPE_UNIQUE_NAME_ALLOWED_CHARACTERS" required v-model="uniqueName" />
         <DataTypeSelect required v-model="dataType" />
         <ContentTypeSelect v-if="dataType === 'RelatedContent'" :model-value="contentType?.id" required @selected="contentType = $event" />
       </form>

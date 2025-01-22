@@ -9,7 +9,7 @@ import LanguageSelect from "@/components/languages/LanguageSelect.vue";
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
 import type { CreateOrReplaceContentPayload, Content, ContentType } from "@/types/contents";
 import type { Language } from "@/types/languages";
-import { CONTENT_UNIQUE_NAME_CHARACTERS } from "@/helpers/constants";
+import { CONTENT_UNIQUE_NAME_ALLOWED_CHARACTERS } from "@/constants/allowedCharacters";
 import { createContent } from "@/api/contents";
 
 const { t } = useI18n();
@@ -76,7 +76,7 @@ function setContentType(value?: ContentType): void {
           :required="Boolean(contentType && !contentType.isInvariant)"
           @selected="language = $event"
         />
-        <UniqueNameInput :allowed-characters="CONTENT_UNIQUE_NAME_CHARACTERS" required v-model="uniqueName" />
+        <UniqueNameInput :allowed-characters="CONTENT_UNIQUE_NAME_ALLOWED_CHARACTERS" required v-model="uniqueName" />
       </form>
       <template #footer>
         <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="onCancel" />

@@ -7,7 +7,7 @@ import DescriptionTextarea from "@/components/shared/DescriptionTextarea.vue";
 import DisplayNameInput from "@/components/shared/DisplayNameInput.vue";
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
 import type { Content, ContentLocale, CreateOrReplaceContentPayload } from "@/types/contents";
-import { CONTENT_UNIQUE_NAME_CHARACTERS } from "@/helpers/constants";
+import { CONTENT_UNIQUE_NAME_ALLOWED_CHARACTERS } from "@/constants/allowedCharacters";
 import { replaceContent } from "@/api/contents";
 
 const props = defineProps<{
@@ -64,7 +64,7 @@ watch(() => props.locale, reset, { deep: true, immediate: true });
     <div class="row">
       <UniqueNameInput
         class="col"
-        :allowed-characters="CONTENT_UNIQUE_NAME_CHARACTERS"
+        :allowed-characters="CONTENT_UNIQUE_NAME_ALLOWED_CHARACTERS"
         :id="`unique-name-${locale.language?.id ?? 'invariant'}`"
         required
         v-model="uniqueName"

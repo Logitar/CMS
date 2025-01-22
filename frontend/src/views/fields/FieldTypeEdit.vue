@@ -26,7 +26,9 @@ import type {
   SelectProperties,
   StringProperties,
 } from "@/types/fields";
-import { FIELD_TYPE_UNIQUE_NAME_CHARACTERS } from "@/helpers/constants";
+import { ErrorCodes } from "@/enums/errorCodes";
+import { FIELD_TYPE_UNIQUE_NAME_ALLOWED_CHARACTERS } from "@/constants/allowedCharacters";
+import { StatusCodes } from "@/enums/statusCodes";
 import {
   compareDateTimeProperties,
   compareNumberProperties,
@@ -133,7 +135,7 @@ const onSubmit = handleSubmit(async () => {
       setModel(updatedFieldType);
       toasts.success("fields.types.updated");
     } catch (e: unknown) {
-      if (isError(e, 409, "UniqueNameAlreadyUsed")) {
+      if (isError(e, StatusCodes.Conflict, ErrorCodes.UniqueNameAlreadyUsed)) {
         uniqueNameAlreadyUsed.value = true;
       } else {
         handleError(e);
@@ -151,7 +153,7 @@ onMounted(async () => {
     }
   } catch (e: unknown) {
     const { status } = e as ApiError;
-    if (status === 404) {
+    if (status === StatusCodes.NotFound) {
       router.push({ path: "/not-found" });
     } else {
       handleError(e);
@@ -168,7 +170,7 @@ onMounted(async () => {
       <form @submit.prevent="onSubmit">
         <UniqueNameAlreadyUsed v-model="uniqueNameAlreadyUsed" />
         <div class="row">
-          <UniqueNameInput :allowed-characters="FIELD_TYPE_UNIQUE_NAME_CHARACTERS" class="col" required v-model="uniqueName" />
+          <UniqueNameInput :allowed-characters="FIELD_TYPE_UNIQUE_NAME_ALLOWED_CHARACTERS" class="col" required v-model="uniqueName" />
           <DisplayNameInput class="col" v-model="displayName" />
         </div>
         <DescriptionTextarea v-model="description" />
