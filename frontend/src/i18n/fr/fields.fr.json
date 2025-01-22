@@ -2,6 +2,7 @@
   "definitions": {
     "create": "Nouvelle définition de champs",
     "created": "La définition de champs a été créée.",
+    "empty": "Cette liste est vide.",
     "indexed": "Indexé",
     "invariant": "Invariant",
     "list": "Définitions de champs",

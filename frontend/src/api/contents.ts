@@ -1,6 +1,6 @@
 import { urlUtils } from "logitar-js";
 
-import type { CreateOrReplaceContentPayload, Content, SearchContentsPayload } from "@/types/contents";
+import type { CreateOrReplaceContentPayload, Content, ContentLocale, SearchContentsPayload } from "@/types/contents";
 import type { SearchResults } from "@/types/search";
 import { get, post, put } from ".";
 
@@ -27,7 +27,7 @@ export async function replaceContent(contentId: string, languageId: string | und
   return (await put<CreateOrReplaceContentPayload, Content>(url, payload)).data;
 }
 
-export async function searchContents(payload: SearchContentsPayload): Promise<SearchResults<Content>> {
+export async function searchContents(payload: SearchContentsPayload): Promise<SearchResults<ContentLocale>> {
   const url: string = createUrlBuilder()
     .setQuery("ids", payload.ids)
     .setQuery("language", payload.languageId ?? "")
@@ -44,5 +44,5 @@ export async function searchContents(payload: SearchContentsPayload): Promise<Se
     .setQuery("skip", payload.skip.toString())
     .setQuery("limit", payload.limit.toString())
     .buildRelative();
-  return (await get<SearchResults<Content>>(url)).data;
+  return (await get<SearchResults<ContentLocale>>(url)).data;
 }

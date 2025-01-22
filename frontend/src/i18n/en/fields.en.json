@@ -2,6 +2,7 @@
   "definitions": {
     "create": "New Field Definition",
     "created": "The field definition has been created.",
+    "empty": "This list is empty.",
     "indexed": "Indexed",
     "invariant": "Invariant",
     "list": "Field Definitions",

@@ -4,10 +4,10 @@ import { arrayUtils, parsingUtils } from "logitar-js";
 import { computed, onMounted, ref } from "vue";
 
 import AppSelect from "@/components/shared/AppSelect.vue";
-import type { ContentType, SearchContentTypesPayload } from "@/types/contents";
+import type { Language, SearchLanguagesPayload } from "@/types/languages";
 import type { SearchResults } from "@/types/search";
-import { formatContentType } from "@/helpers/format";
-import { searchContentTypes } from "@/api/contentTypes";
+import { formatLanguage } from "@/helpers/format";
+import { searchLanguages } from "@/api/languages";
 
 const { orderBy } = arrayUtils;
 const { parseBoolean } = parsingUtils;
@@ -22,19 +22,19 @@ withDefaults(
     required?: boolean | string;
   }>(),
   {
-    id: "content-type",
-    label: "contents.types.select.label",
-    placeholder: "contents.types.select.placeholder",
+    id: "language",
+    label: "languages.select.label",
+    placeholder: "languages.select.placeholder",
   },
 );
 
-const contentTypes = ref<ContentType[]>([]);
+const languages = ref<Language[]>([]);
 
 const options = computed<SelectOption[]>(() =>
   orderBy(
-    contentTypes.value.map((contentType) => ({
-      text: formatContentType(contentType),
-      value: contentType.id,
+    languages.value.map((language) => ({
+      text: formatLanguage(language),
+      value: language.id,
     })),
     "text",
   ),
@@ -42,30 +42,30 @@ const options = computed<SelectOption[]>(() =>
 
 const emit = defineEmits<{
   (e: "error", value: unknown): void;
-  (e: "selected", value: ContentType | undefined): void;
+  (e: "selected", value: Language | undefined): void;
   (e: "update:model-value", value: string | undefined): void;
 }>();
 
 function onSelected(id: string | undefined): void {
   emit("update:model-value", id);
 
-  const index: number = contentTypes.value.findIndex((contentType) => contentType.id === id);
+  const index: number = languages.value.findIndex((language) => language.id === id);
   if (index >= 0) {
-    emit("selected", contentTypes.value[index]);
+    emit("selected", languages.value[index]);
   }
 }
 
 onMounted(async () => {
   try {
-    const payload: SearchContentTypesPayload = {
+    const payload: SearchLanguagesPayload = {
       ids: [],
       search: { operator: "And", terms: [] },
       sort: [{ field: "DisplayName", isDescending: false }],
       skip: 0,
       limit: 0,
     };
-    const results: SearchResults<ContentType> = await searchContentTypes(payload);
-    contentTypes.value = results.items;
+    const results: SearchResults<Language> = await searchLanguages(payload);
+    languages.value = results.items;
   } catch (e: unknown) {
     emit("error", e);
   }

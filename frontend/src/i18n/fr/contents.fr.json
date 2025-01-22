@@ -1,4 +1,19 @@
 {
+  "items": {
+    "create": "Nouveau contenu",
+    "created": "Le contenu a été créé.",
+    "empty": "Cette liste est vide.",
+    "invariant": "Invariant",
+    "list": "Contenus",
+    "sort": {
+      "options": {
+        "CreatedOn": "Date de création",
+        "DisplayName": "Nom d’affichage",
+        "UniqueName": "Nom unique",
+        "UpdatedOn": "Dernière modification"
+      }
+    }
+  },
   "types": {
     "create": "Nouveau type de contenu",
     "created": "Le type de contenu a été créé.",

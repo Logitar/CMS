@@ -9,6 +9,10 @@
   "identification": "Identification",
   "list": "Languages",
   "otherNames": "Other Names",
+  "select": {
+    "label": "Language",
+    "placeholder": "Select a language"
+  },
   "sort": {
     "options": {
       "Code": "Code",
