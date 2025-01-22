@@ -6,6 +6,8 @@ using MediatR;
 
 namespace Logitar.Cms.Core.Localization.Commands;
 
+/// <exception cref="LocaleAlreadyUsedException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record UpdateLanguageCommand(Guid Id, UpdateLanguagePayload Payload) : IRequest<LanguageModel?>;
 
 internal class UpdateLanguageCommandHandler : IRequestHandler<UpdateLanguageCommand, LanguageModel?>

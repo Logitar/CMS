@@ -4,6 +4,7 @@ using MediatR;
 
 namespace Logitar.Cms.Core.Localization.Commands;
 
+/// <exception cref="InvalidOperationException"></exception>
 public record SetDefaultLanguageCommand(Guid Id) : IRequest<LanguageModel?>;
 
 internal class SetDefaultLanguageCommandHandler : IRequestHandler<SetDefaultLanguageCommand, LanguageModel?>

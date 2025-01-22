@@ -3,6 +3,7 @@ using MediatR;
 
 namespace Logitar.Cms.Core.Localization.Queries;
 
+/// <exception cref="TooManyResultsException"></exception>
 public record ReadLanguageQuery(Guid? Id, string? Locale, bool IsDefault) : IRequest<LanguageModel?>;
 
 internal class ReadLanguageQueryHandler : IRequestHandler<ReadLanguageQuery, LanguageModel?>

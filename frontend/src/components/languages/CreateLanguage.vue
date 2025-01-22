@@ -4,13 +4,16 @@ import { ref } from "vue";
 import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
+import LocaleAlreadyUsed from "./LocaleAlreadyUsed.vue";
 import LocaleSelect from "@/components/shared/LocaleSelect.vue";
 import type { CreateOrReplaceLanguagePayload, Language } from "@/types/languages";
 import { createLanguage } from "@/api/languages";
+import { isError } from "@/helpers/errors";
 
 const { t } = useI18n();
 
 const locale = ref<string>("");
+const localeAlreadyUsed = ref<boolean>(false);
 const modalRef = ref<InstanceType<typeof TarModal> | null>(null);
 
 function hide(): void {
@@ -19,6 +22,7 @@ function hide(): void {
 
 function reset(): void {
   locale.value = "";
+  localeAlreadyUsed.value = false;
 }
 
 const emit = defineEmits<{
@@ -42,7 +46,11 @@ const onSubmit = handleSubmit(async () => {
     reset();
     hide();
   } catch (e: unknown) {
-    emit("error", e);
+    if (isError(e, 409, "LocaleAlreadyUsed")) {
+      localeAlreadyUsed.value = true;
+    } else {
+      emit("error", e);
+    }
   }
 });
 </script>
@@ -51,6 +59,7 @@ const onSubmit = handleSubmit(async () => {
   <span>
     <TarButton icon="fas fa-plus" :text="t('actions.create')" variant="success" data-bs-toggle="modal" data-bs-target="#create-language" />
     <TarModal :close="t('actions.close')" id="create-language" ref="modalRef" :title="t('languages.create')">
+      <LocaleAlreadyUsed v-model="localeAlreadyUsed" />
       <form>
         <LocaleSelect required v-model="locale" />
       </form>

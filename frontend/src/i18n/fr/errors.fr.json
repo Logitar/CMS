@@ -1,0 +1,10 @@
+{
+  "localeAlreadyUsed": {
+    "help": "Veuillez sélectionner une autre langue.",
+    "lead": "La langue existe déjà."
+  },
+  "uniqueNameAlreadyUsed": {
+    "help": "Veuillez entrer un autre nom unique.",
+    "lead": "Le nom unique est déjà utilisé."
+  }
+}

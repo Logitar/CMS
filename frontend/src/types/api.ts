@@ -16,12 +16,7 @@ export type ApiVersion = {
 export type Error = {
   code: string;
   message: string;
-  data: ErrorData[];
-};
-
-export type ErrorData = {
-  key: string;
-  value?: string;
+  data: any;
 };
 
 export type GraphQLError = {
@@ -51,13 +46,12 @@ export type GraphQLResponse<T> = {
   errors?: GraphQLError[];
 };
 
-export type PropertyError = Error & {
-  attemptedValue?: unknown;
-  propertyName?: string;
-};
-
-export type ValidationError = {
-  code: string;
-  message: string;
-  errors: PropertyError[];
+export type ProblemDetails = {
+  type?: string;
+  title?: string;
+  status?: number;
+  detail?: string;
+  instance?: string;
+  traceId?: string;
+  error?: Error;
 };

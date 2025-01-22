@@ -1,0 +1,10 @@
+{
+  "localeAlreadyUsed": {
+    "help": "Please select another locale.",
+    "lead": "The locale is already used."
+  },
+  "uniqueNameAlreadyUsed": {
+    "help": "Please enter a different unique name.",
+    "lead": "The unique name is already used."
+  }
+}
