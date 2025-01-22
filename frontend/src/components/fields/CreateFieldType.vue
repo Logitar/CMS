@@ -4,14 +4,17 @@ import { ref } from "vue";
 import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
+import ContentTypeSelect from "@/components/contents/ContentTypeSelect.vue";
 import DataTypeSelect from "./DataTypeSelect.vue";
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
 import type { CreateOrReplaceFieldTypePayload, DataType, FieldType } from "@/types/fields";
 import { FIELD_TYPE_UNIQUE_NAME_CHARACTERS } from "@/helpers/constants";
 import { createFieldType } from "@/api/fields";
+import type { ContentType } from "@/types/contents";
 
 const { t } = useI18n();
 
+const contentType = ref<ContentType>();
 const dataType = ref<DataType>();
 const modalRef = ref<InstanceType<typeof TarModal> | null>(null);
 const uniqueName = ref<string>("");
@@ -23,6 +26,7 @@ function hide(): void {
 function reset(): void {
   uniqueName.value = "";
   dataType.value = undefined;
+  contentType.value = undefined;
 }
 
 const emit = defineEmits<{
@@ -52,7 +56,7 @@ const onSubmit = handleSubmit(async () => {
         payload.number = {};
         break;
       case "RelatedContent":
-        payload.relatedContent = { contentTypeId: "TODO", isMultiple: false };
+        payload.relatedContent = { contentTypeId: contentType.value?.id ?? "", isMultiple: false };
         break;
       case "RichText":
         payload.richText = { contentType: "text/plain" };
@@ -84,6 +88,7 @@ const onSubmit = handleSubmit(async () => {
       <form>
         <UniqueNameInput :allowed-characters="FIELD_TYPE_UNIQUE_NAME_CHARACTERS" required v-model="uniqueName" />
         <DataTypeSelect required v-model="dataType" />
+        <ContentTypeSelect v-if="dataType === 'RelatedContent'" :model-value="contentType?.id" required @selected="contentType = $event" />
       </form>
       <template #footer>
         <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="onCancel" />

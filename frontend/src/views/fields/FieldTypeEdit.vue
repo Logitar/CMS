@@ -8,6 +8,7 @@ import DateTimePropertiesEdit from "@/components/fields/DateTimePropertiesEdit.v
 import DescriptionTextarea from "@/components/shared/DescriptionTextarea.vue";
 import DisplayNameInput from "@/components/shared/DisplayNameInput.vue";
 import NumberPropertiesEdit from "@/components/fields/NumberPropertiesEdit.vue";
+import RelatedContentPropertiesEdit from "@/components/fields/RelatedContentPropertiesEdit.vue";
 import RichTextPropertiesEdit from "@/components/fields/RichTextPropertiesEdit.vue";
 import SelectPropertiesEdit from "@/components/fields/SelectPropertiesEdit.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
@@ -164,7 +165,7 @@ onMounted(async () => {
         <DescriptionTextarea v-model="description" />
         <DateTimePropertiesEdit v-if="fieldType.dataType === 'DateTime'" v-model="dateTime" />
         <NumberPropertiesEdit v-else-if="fieldType.dataType === 'Number'" v-model="number" />
-        <!-- TODO(fpion): RelatedContentPropertiesEdit -->
+        <RelatedContentPropertiesEdit v-else-if="fieldType.dataType === 'RelatedContent'" v-model="relatedContent" />
         <RichTextPropertiesEdit v-else-if="fieldType.dataType === 'RichText'" v-model="richText" />
         <SelectPropertiesEdit v-else-if="fieldType.dataType === 'Select'" v-model="select" />
         <StringPropertiesEdit v-else-if="fieldType.dataType === 'String'" v-model="string" />
