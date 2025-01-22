@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { TarButton, parsingUtils, type SelectOption } from "logitar-vue3-ui";
+import { TarButton, type SelectOption } from "logitar-vue3-ui";
 import { arrayUtils, objectUtils } from "logitar-js";
 import { computed, inject, ref, watch } from "vue";
+import { parsingUtils } from "logitar-js";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 

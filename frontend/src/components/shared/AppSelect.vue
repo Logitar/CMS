@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { TarSelect, parsingUtils, type SelectOptions, type SelectStatus } from "logitar-vue3-ui";
+import { TarSelect, type SelectOptions, type SelectStatus } from "logitar-vue3-ui";
 import { computed, ref } from "vue";
 import { nanoid } from "nanoid";
+import { parsingUtils } from "logitar-js";
 import { useField } from "vee-validate";
 import { useI18n } from "vue-i18n";
 

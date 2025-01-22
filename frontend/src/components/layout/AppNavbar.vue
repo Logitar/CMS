@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
-import { TarAvatar, parsingUtils } from "logitar-vue3-ui";
-import { arrayUtils, stringUtils } from "logitar-js";
+import { TarAvatar } from "logitar-vue3-ui";
+import { arrayUtils, parsingUtils, stringUtils } from "logitar-js";
 import { computed, watchEffect } from "vue";
 import { setLocale } from "@vee-validate/i18n";
 import { useI18n } from "vue-i18n";

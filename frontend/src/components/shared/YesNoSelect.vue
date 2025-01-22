@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import type { SelectOption } from "logitar-vue3-ui";
 import { arrayUtils } from "logitar-js";
 import { nanoid } from "nanoid";
-import { parsingUtils, type SelectOption } from "logitar-vue3-ui";
+import { parsingUtils } from "logitar-js";
 import { useI18n } from "vue-i18n";
 
 import AppSelect from "./AppSelect.vue";

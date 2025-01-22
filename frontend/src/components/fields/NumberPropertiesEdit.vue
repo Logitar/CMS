@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { parsingUtils } from "logitar-vue3-ui";
+import { parsingUtils } from "logitar-js";
 import { useI18n } from "vue-i18n";
 
 import AppInput from "@/components/shared/AppInput.vue";
