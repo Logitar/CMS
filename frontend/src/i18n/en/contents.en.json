@@ -12,7 +12,8 @@
         "UniqueName": "Unique Name",
         "UpdatedOn": "Updated on"
       }
-    }
+    },
+    "updated": "The content has been updated."
   },
   "types": {
     "create": "New Content Type",

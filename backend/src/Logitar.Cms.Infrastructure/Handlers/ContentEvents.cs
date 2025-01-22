@@ -21,6 +21,7 @@ internal class ContentEvents : INotificationHandler<ContentCreated>,
   public async Task Handle(ContentCreated @event, CancellationToken cancellationToken)
   {
     ContentEntity? content = await _context.Contents.AsNoTracking()
+      .Include(x => x.ContentType)
       .SingleOrDefaultAsync(x => x.StreamId == @event.StreamId.Value, cancellationToken);
     if (content == null)
     {
@@ -42,6 +43,7 @@ internal class ContentEvents : INotificationHandler<ContentCreated>,
   public async Task Handle(ContentLocaleChanged @event, CancellationToken cancellationToken)
   {
     ContentEntity? content = await _context.Contents
+      .Include(x => x.ContentType)
       .Include(x => x.Locales)
       .SingleOrDefaultAsync(x => x.StreamId == @event.StreamId.Value, cancellationToken);
     if (content != null && content.Version == (@event.Version - 1))

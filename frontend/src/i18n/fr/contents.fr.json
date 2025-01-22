@@ -12,7 +12,8 @@
         "UniqueName": "Nom unique",
         "UpdatedOn": "Dernière modification"
       }
-    }
+    },
+    "updated": "Le contenu a été enregistré."
   },
   "types": {
     "create": "Nouveau type de contenu",
