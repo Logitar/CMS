@@ -3,6 +3,18 @@ import type { SearchPayload, SortOption } from "./search";
 
 export type BooleanProperties = {};
 
+export type CreateOrReplaceFieldDefinitionPayload = {
+  fieldTypeId?: string;
+  isInvariant: boolean;
+  isRequired: boolean;
+  isIndexed: boolean;
+  isUnique: boolean;
+  uniqueName: string;
+  displayName?: string;
+  description?: string;
+  placeholder?: string;
+};
+
 export type CreateOrReplaceFieldTypePayload = {
   uniqueName: string;
   displayName?: string;

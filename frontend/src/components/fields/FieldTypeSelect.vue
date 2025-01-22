@@ -4,15 +4,16 @@ import { arrayUtils } from "logitar-js";
 import { computed, onMounted, ref } from "vue";
 
 import AppSelect from "@/components/shared/AppSelect.vue";
-import type { ContentType, SearchContentTypesPayload } from "@/types/contents";
+import type { FieldType, SearchFieldTypesPayload } from "@/types/fields";
 import type { SearchResults } from "@/types/search";
-import { formatContentType } from "@/helpers/format";
-import { searchContentTypes } from "@/api/contents";
+import { formatFieldType } from "@/helpers/format";
+import { searchFieldTypes } from "@/api/fields";
 
 const { orderBy } = arrayUtils;
 
 withDefaults(
   defineProps<{
+    disabled?: boolean | string;
     id?: string;
     label?: string;
     modelValue?: string;
@@ -20,19 +21,19 @@ withDefaults(
     required?: boolean | string;
   }>(),
   {
-    id: "content-type",
-    label: "contents.types.select.label",
-    placeholder: "contents.types.select.placeholder",
+    id: "field-type",
+    label: "fields.types.select.label",
+    placeholder: "fields.types.select.placeholder",
   },
 );
 
-const contentTypes = ref<ContentType[]>([]);
+const fieldTypes = ref<FieldType[]>([]);
 
 const options = computed<SelectOption[]>(() =>
   orderBy(
-    contentTypes.value.map((contentType) => ({
-      text: formatContentType(contentType),
-      value: contentType.id,
+    fieldTypes.value.map((fieldType) => ({
+      text: formatFieldType(fieldType),
+      value: fieldType.id,
     })),
     "text",
   ),
@@ -40,30 +41,30 @@ const options = computed<SelectOption[]>(() =>
 
 const emit = defineEmits<{
   (e: "error", value: unknown): void;
-  (e: "selected", value: ContentType | undefined): void;
+  (e: "selected", value: FieldType | undefined): void;
   (e: "update:model-value", value: string | undefined): void;
 }>();
 
 function onSelected(id: string | undefined): void {
   emit("update:model-value", id);
 
-  const index: number = contentTypes.value.findIndex((contentType) => contentType.id === id);
+  const index: number = fieldTypes.value.findIndex((fieldType) => fieldType.id === id);
   if (index >= 0) {
-    emit("selected", contentTypes.value[index]);
+    emit("selected", fieldTypes.value[index]);
   }
 }
 
 onMounted(async () => {
   try {
-    const payload: SearchContentTypesPayload = {
+    const payload: SearchFieldTypesPayload = {
       ids: [],
       search: { operator: "And", terms: [] },
       sort: [{ field: "DisplayName", isDescending: false }],
       skip: 0,
       limit: 0,
     };
-    const results: SearchResults<ContentType> = await searchContentTypes(payload);
-    contentTypes.value = results.items;
+    const results: SearchResults<FieldType> = await searchFieldTypes(payload);
+    fieldTypes.value = results.items;
   } catch (e: unknown) {
     emit("error", e);
   }
@@ -72,6 +73,7 @@ onMounted(async () => {
 
 <template>
   <AppSelect
+    :disabled="disabled"
     floating
     :id="id"
     :label="label"

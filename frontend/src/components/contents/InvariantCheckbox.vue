@@ -17,7 +17,7 @@ defineEmits<{
   <TarCheckbox
     class="mb-3"
     id="invariant"
-    :label="t('contents.types.isInvariant')"
+    :label="t('contents.types.invariant')"
     :model-value="modelValue"
     @update:model-value="$emit('update:model-value', $event)"
   />

@@ -1,11 +1,19 @@
 import { urlUtils } from "logitar-js";
 
-import type { CreateOrReplaceFieldTypePayload, FieldType, SearchFieldTypesPayload } from "@/types/fields";
+import type { CreateOrReplaceFieldDefinitionPayload, CreateOrReplaceFieldTypePayload, FieldType, SearchFieldTypesPayload } from "@/types/fields";
 import type { SearchResults } from "@/types/search";
 import { get, post, put } from ".";
+import type { ContentType } from "@/types/contents";
 
 function createUrlBuilder(id?: string): urlUtils.IUrlBuilder {
   return id ? new urlUtils.UrlBuilder({ path: "/api/fields/types/{id}" }).setParameter("id", id) : new urlUtils.UrlBuilder({ path: "/api/fields/types" });
+}
+
+export async function createFieldDefinition(contentTypeId: string, payload: CreateOrReplaceFieldDefinitionPayload): Promise<ContentType> {
+  const url: string = new urlUtils.UrlBuilder({ path: "api/contents/types/{contentTypeId}/fields" })
+    .setParameter("contentTypeId", contentTypeId)
+    .buildRelative();
+  return (await post<CreateOrReplaceFieldDefinitionPayload, ContentType>(url, payload)).data;
 }
 
 export async function createFieldType(payload: CreateOrReplaceFieldTypePayload): Promise<FieldType> {
@@ -16,6 +24,14 @@ export async function createFieldType(payload: CreateOrReplaceFieldTypePayload):
 export async function readFieldType(id: string): Promise<FieldType> {
   const url: string = createUrlBuilder(id).buildRelative();
   return (await get<FieldType>(url)).data;
+}
+
+export async function replaceFieldDefinition(contentTypeId: string, fieldId: string, payload: CreateOrReplaceFieldDefinitionPayload): Promise<ContentType> {
+  const url: string = new urlUtils.UrlBuilder({ path: "api/contents/types/{contentTypeId}/fields/{fieldId}" })
+    .setParameter("contentTypeId", contentTypeId)
+    .setParameter("fieldId", fieldId)
+    .buildRelative();
+  return (await put<CreateOrReplaceFieldDefinitionPayload, ContentType>(url, payload)).data;
 }
 
 export async function replaceFieldType(id: string, payload: CreateOrReplaceFieldTypePayload, version?: number): Promise<FieldType> {

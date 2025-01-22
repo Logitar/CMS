@@ -146,7 +146,7 @@ watch(
       <YesNoSelect
         class="col-lg-3"
         id="is-invariant"
-        label="contents.types.isInvariant"
+        label="contents.types.invariant"
         :model-value="invariant"
         @update:model-value="setQuery('invariant', $event?.toString() ?? '')"
       />

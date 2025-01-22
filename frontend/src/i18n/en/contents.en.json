@@ -5,8 +5,8 @@
     "empty": "This list is empty.",
     "fieldCount": "Field Count",
     "invariant": "Invariant",
-    "isInvariant": "Is Invariant?",
     "list": "Content Types",
+    "properties": "Properties",
     "select": {
       "label": "Content Type",
       "placeholder": "Select a content type"

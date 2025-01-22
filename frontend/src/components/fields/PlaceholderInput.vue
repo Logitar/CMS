@@ -1,13 +1,16 @@
 <script setup lang="ts">
-import AppTextarea from "./AppTextarea.vue";
+import AppInput from "@/components/shared/AppInput.vue";
 
 withDefaults(
   defineProps<{
     id?: string;
+    label?: string;
     modelValue?: string;
+    required?: boolean | string;
   }>(),
   {
-    id: "description",
+    id: "placeholder",
+    label: "fields.definitions.placeholder",
   },
 );
 
@@ -17,13 +20,14 @@ defineEmits<{
 </script>
 
 <template>
-  <AppTextarea
+  <AppInput
     floating
     :id="id"
-    label="description"
+    :label="label"
+    max="255"
     :model-value="modelValue"
-    placeholder="description"
-    rows="15"
+    :placeholder="label"
+    :required="required"
     @update:model-value="$emit('update:model-value', $event)"
   />
 </template>
