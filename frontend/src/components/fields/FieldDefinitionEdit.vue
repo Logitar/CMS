@@ -8,15 +8,19 @@ import DescriptionTextarea from "@/components/shared/DescriptionTextarea.vue";
 import DisplayNameInput from "@/components/shared/DisplayNameInput.vue";
 import FieldTypeSelect from "./FieldTypeSelect.vue";
 import PlaceholderInput from "./PlaceholderInput.vue";
+import UniqueNameAlreadyUsed from "@/components/shared/UniqueNameAlreadyUsed.vue";
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
 import type { ContentType } from "@/types/contents";
 import type { CreateOrReplaceFieldDefinitionPayload, FieldDefinition } from "@/types/fields";
 import { createFieldDefinition, replaceFieldDefinition } from "@/api/fieldDefinitions";
+import { isError } from "@/helpers/errors";
+import { StatusCodes } from "@/enums/statusCodes";
+import { ErrorCodes } from "@/enums/errorCodes";
 
 const { t } = useI18n();
 
 const props = defineProps<{
-  contentTypeId: string;
+  contentType: ContentType;
   field?: FieldDefinition;
 }>();
 
@@ -30,6 +34,7 @@ const isUnique = ref<boolean>(false);
 const modalRef = ref<InstanceType<typeof TarModal> | null>(null);
 const placeholder = ref<string>("");
 const uniqueName = ref<string>("");
+const uniqueNameAlreadyUsed = ref<boolean>(false);
 
 const modalId = computed<string>(() => (props.field ? `edit-field-definition-${props.field.id}` : "create-field-definition"));
 
@@ -39,11 +44,12 @@ function hide(): void {
 
 function reset(): void {
   fieldTypeId.value = props.field?.fieldType.id;
+  uniqueNameAlreadyUsed.value = false;
   uniqueName.value = props.field?.uniqueName ?? "";
   displayName.value = props.field?.displayName ?? "";
   description.value = props.field?.description ?? "";
   placeholder.value = props.field?.placeholder ?? "";
-  isInvariant.value = props.field?.isInvariant ?? false;
+  isInvariant.value = props.contentType.isInvariant ? true : props.field?.isInvariant ?? false;
   isRequired.value = props.field?.isRequired ?? false;
   isIndexed.value = props.field?.isIndexed ?? false;
   isUnique.value = props.field?.isUnique ?? false;
@@ -61,6 +67,7 @@ function onCancel(): void {
 
 const { handleSubmit, isSubmitting } = useForm();
 const onSubmit = handleSubmit(async () => {
+  uniqueNameAlreadyUsed.value = false;
   try {
     const payload: CreateOrReplaceFieldDefinitionPayload = {
       fieldTypeId: fieldTypeId.value,
@@ -74,13 +81,17 @@ const onSubmit = handleSubmit(async () => {
       placeholder: placeholder.value,
     };
     const contentType: ContentType = props.field
-      ? await replaceFieldDefinition(props.contentTypeId, props.field.id, payload)
-      : await createFieldDefinition(props.contentTypeId, payload);
+      ? await replaceFieldDefinition(props.contentType.id, props.field.id, payload)
+      : await createFieldDefinition(props.contentType.id, payload);
     emit("saved", contentType);
     reset();
     hide();
   } catch (e: unknown) {
-    emit("error", e);
+    if (isError(e, StatusCodes.Conflict, ErrorCodes.UniqueNameAlreadyUsed)) {
+      uniqueNameAlreadyUsed.value = true;
+    } else {
+      emit("error", e);
+    }
   }
 });
 
@@ -99,6 +110,7 @@ watch(() => props.field, reset, { deep: true, immediate: true });
     <TarModal :close="t('actions.close')" :id="modalId" ref="modalRef" size="x-large" :title="t(`fields.definitions.${field ? 'update' : 'create'}`)">
       <form>
         <FieldTypeSelect :disabled="Boolean(field)" :id="field ? `field-type-${field.id}` : undefined" :required="!field" v-model="fieldTypeId" />
+        <UniqueNameAlreadyUsed v-model="uniqueNameAlreadyUsed" />
         <div class="row">
           <UniqueNameInput class="col" :id="field ? `unique-name-${field.id}` : undefined" required v-model="uniqueName" />
           <DisplayNameInput class="col" :id="field ? `display-name-${field.id}` : undefined" v-model="displayName" />
@@ -106,7 +118,12 @@ watch(() => props.field, reset, { deep: true, immediate: true });
         <PlaceholderInput :id="field ? `placeholder-${field.id}` : undefined" v-model="placeholder" />
         <DescriptionTextarea :id="field ? `description-${field.id}` : undefined" v-model="description" />
         <div>
-          <TarCheckbox :id="field ? `invariant-${field.id}` : 'invariant-field  '" :label="t('fields.definitions.invariant')" v-model="isInvariant" />
+          <TarCheckbox
+            :disabled="contentType.isInvariant"
+            :id="field ? `invariant-${field.id}` : 'invariant-field'"
+            :label="t('fields.definitions.invariant')"
+            v-model="isInvariant"
+          />
           <TarCheckbox :id="field ? `required-${field.id}` : 'required'" :label="t('fields.definitions.required')" v-model="isRequired" />
           <TarCheckbox :id="field ? `indexed-${field.id}` : 'indexed'" :label="t('fields.definitions.indexed')" v-model="isIndexed" />
           <TarCheckbox :id="field ? `unique-${field.id}` : 'unique'" :label="t('fields.definitions.unique')" v-model="isUnique" />

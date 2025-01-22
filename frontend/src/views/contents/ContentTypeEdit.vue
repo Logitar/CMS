@@ -131,7 +131,7 @@ onMounted(async () => {
         </TarTab>
         <TarTab id="field-definitions" :title="t('fields.definitions.list')">
           <div class="my-3">
-            <FieldDefinitionEdit :content-type-id="contentType.id" @error="handleError" @saved="onFieldDefinitionAdded" />
+            <FieldDefinitionEdit :content-type="contentType" @error="handleError" @saved="onFieldDefinitionAdded" />
           </div>
           <table v-if="fields.length" class="table table-striped">
             <thead>
@@ -159,7 +159,7 @@ onMounted(async () => {
                   </RouterLink>
                 </td>
                 <td>
-                  <FieldDefinitionEdit :content-type-id="contentType.id" :field="field" @error="handleError" @saved="onFieldDefinitionUpdated" />
+                  <FieldDefinitionEdit :content-type="contentType" :field="field" @error="handleError" @saved="onFieldDefinitionUpdated" />
                 </td>
               </tr>
             </tbody>

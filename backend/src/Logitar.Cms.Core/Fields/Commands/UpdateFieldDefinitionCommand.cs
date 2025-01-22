@@ -8,6 +8,8 @@ using MediatR;
 
 namespace Logitar.Cms.Core.Fields.Commands;
 
+/// <exception cref="UniqueNameAlreadyUsedException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record UpdateFieldDefinitionCommand(Guid ContentTypeId, Guid FieldId, UpdateFieldDefinitionPayload Payload) : IRequest<ContentTypeModel?>;
 
 internal class UpdateFieldDefinitionCommandHandler : IRequestHandler<UpdateFieldDefinitionCommand, ContentTypeModel?>
@@ -38,6 +40,8 @@ internal class UpdateFieldDefinitionCommandHandler : IRequestHandler<UpdateField
     {
       return null;
     }
+
+    // TODO(fpion): throw ValidationException when setting a variant field definition on an invariant content type.
 
     fieldDefinition = new(
       fieldDefinition.Id,
