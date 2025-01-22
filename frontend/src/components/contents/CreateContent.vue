@@ -6,11 +6,15 @@ import { useI18n } from "vue-i18n";
 
 import ContentTypeSelect from "./ContentTypeSelect.vue";
 import LanguageSelect from "@/components/languages/LanguageSelect.vue";
+import UniqueNameAlreadyUsed from "@/components/shared/UniqueNameAlreadyUsed.vue";
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
 import type { CreateOrReplaceContentPayload, Content, ContentType } from "@/types/contents";
 import type { Language } from "@/types/languages";
 import { CONTENT_UNIQUE_NAME_ALLOWED_CHARACTERS } from "@/constants/allowedCharacters";
+import { ErrorCodes } from "@/enums/errorCodes";
+import { StatusCodes } from "@/enums/statusCodes";
 import { createContent } from "@/api/contents";
+import { isError } from "@/helpers/errors";
 
 const { t } = useI18n();
 
@@ -18,6 +22,7 @@ const contentType = ref<ContentType>();
 const language = ref<Language>();
 const modalRef = ref<InstanceType<typeof TarModal> | null>(null);
 const uniqueName = ref<string>("");
+const uniqueNameAlreadyUsed = ref<boolean>(false);
 
 function hide(): void {
   modalRef.value?.hide();
@@ -26,6 +31,7 @@ function hide(): void {
 function reset(): void {
   contentType.value = undefined;
   language.value = undefined;
+  uniqueNameAlreadyUsed.value = false;
   uniqueName.value = "";
 }
 
@@ -41,6 +47,7 @@ function onCancel(): void {
 
 const { handleSubmit, isSubmitting } = useForm();
 const onSubmit = handleSubmit(async () => {
+  uniqueNameAlreadyUsed.value = false;
   if (contentType.value) {
     try {
       const payload: CreateOrReplaceContentPayload = {
@@ -53,7 +60,11 @@ const onSubmit = handleSubmit(async () => {
       reset();
       hide();
     } catch (e: unknown) {
-      emit("error", e);
+      if (isError(e, StatusCodes.Conflict, ErrorCodes.ContentUniqueNameAlreadyUsed)) {
+        uniqueNameAlreadyUsed.value = true;
+      } else {
+        emit("error", e);
+      }
     }
   }
 });
@@ -76,6 +87,7 @@ function setContentType(value?: ContentType): void {
           :required="Boolean(contentType && !contentType.isInvariant)"
           @selected="language = $event"
         />
+        <UniqueNameAlreadyUsed v-model="uniqueNameAlreadyUsed" />
         <UniqueNameInput :allowed-characters="CONTENT_UNIQUE_NAME_ALLOWED_CHARACTERS" required v-model="uniqueName" />
       </form>
       <template #footer>

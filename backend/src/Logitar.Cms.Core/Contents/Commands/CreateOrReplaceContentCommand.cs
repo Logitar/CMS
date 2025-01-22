@@ -12,6 +12,11 @@ namespace Logitar.Cms.Core.Contents.Commands;
 
 public record CreateOrReplaceContentResult(ContentModel? Content = null, bool Created = false);
 
+/// <exception cref="ContentFieldValueConflictException"></exception>
+/// <exception cref="ContentTypeNotFoundException"></exception>
+/// <exception cref="ContentUniqueNameAlreadyUsedException"></exception>
+/// <exception cref="LanguageNotFoundException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record CreateOrReplaceContentCommand(Guid? ContentId, Guid? LanguageId, CreateOrReplaceContentPayload Payload) : IRequest<CreateOrReplaceContentResult>;
 
 internal class CreateOrReplaceContentCommandHandler : IRequestHandler<CreateOrReplaceContentCommand, CreateOrReplaceContentResult>

@@ -3,6 +3,7 @@ using MediatR;
 
 namespace Logitar.Cms.Core.Contents.Queries;
 
+/// <exception cref="TooManyResultsException"></exception>
 public record ReadContentQuery(Guid? Id, ContentKey? Key) : IRequest<ContentModel?>;
 
 internal class ReadContentQueryHandler : IRequestHandler<ReadContentQuery, ContentModel?>

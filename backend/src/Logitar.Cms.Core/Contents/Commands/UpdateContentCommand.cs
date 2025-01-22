@@ -9,6 +9,10 @@ using MediatR;
 
 namespace Logitar.Cms.Core.Contents.Commands;
 
+/// <exception cref="ContentFieldValueConflictException"></exception>
+/// <exception cref="ContentUniqueNameAlreadyUsedException"></exception>
+/// <exception cref="LanguageNotFoundException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record UpdateContentCommand(Guid ContentId, Guid? LanguageId, UpdateContentPayload Payload) : IRequest<ContentModel?>;
 
 internal class UpdateContentCommandHandler : IRequestHandler<UpdateContentCommand, ContentModel?>

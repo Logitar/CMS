@@ -5,9 +5,13 @@ import { useForm } from "vee-validate";
 import AppSaveButton from "@/components/shared/AppSaveButton.vue";
 import DescriptionTextarea from "@/components/shared/DescriptionTextarea.vue";
 import DisplayNameInput from "@/components/shared/DisplayNameInput.vue";
+import UniqueNameAlreadyUsed from "@/components/shared/UniqueNameAlreadyUsed.vue";
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
 import type { Content, ContentLocale, CreateOrReplaceContentPayload } from "@/types/contents";
 import { CONTENT_UNIQUE_NAME_ALLOWED_CHARACTERS } from "@/constants/allowedCharacters";
+import { ErrorCodes } from "@/enums/errorCodes";
+import { StatusCodes } from "@/enums/statusCodes";
+import { isError } from "@/helpers/errors";
 import { replaceContent } from "@/api/contents";
 
 const props = defineProps<{
@@ -18,6 +22,7 @@ const props = defineProps<{
 const description = ref<string>("");
 const displayName = ref<string>("");
 const uniqueName = ref<string>("");
+const uniqueNameAlreadyUsed = ref<boolean>(false);
 
 const hasChanges = computed<boolean>(
   () =>
@@ -27,6 +32,7 @@ const hasChanges = computed<boolean>(
 );
 
 function reset(): void {
+  uniqueNameAlreadyUsed.value = false;
   uniqueName.value = props.locale.uniqueName;
   displayName.value = props.locale.displayName ?? "";
   description.value = props.locale.description ?? "";
@@ -39,6 +45,7 @@ const emit = defineEmits<{
 
 const { handleSubmit, isSubmitting } = useForm();
 const onSubmit = handleSubmit(async () => {
+  uniqueNameAlreadyUsed.value = false;
   try {
     const payload: CreateOrReplaceContentPayload = {
       uniqueName: uniqueName.value,
@@ -49,7 +56,11 @@ const onSubmit = handleSubmit(async () => {
     const content: Content = await replaceContent(props.contentId, props.locale.language?.id, payload);
     emit("saved", content);
   } catch (e: unknown) {
-    emit("error", e);
+    if (isError(e, StatusCodes.Conflict, ErrorCodes.ContentUniqueNameAlreadyUsed)) {
+      uniqueNameAlreadyUsed.value = true;
+    } else {
+      emit("error", e);
+    }
   }
 });
 
@@ -61,6 +72,7 @@ watch(() => props.locale, reset, { deep: true, immediate: true });
     <div class="mb-3">
       <AppSaveButton :disabled="isSubmitting || !hasChanges" :loading="isSubmitting" />
     </div>
+    <UniqueNameAlreadyUsed v-model="uniqueNameAlreadyUsed" />
     <div class="row">
       <UniqueNameInput
         class="col"

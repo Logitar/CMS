@@ -12,10 +12,10 @@ import UniqueNameAlreadyUsed from "@/components/shared/UniqueNameAlreadyUsed.vue
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
 import type { ContentType } from "@/types/contents";
 import type { CreateOrReplaceFieldDefinitionPayload, FieldDefinition } from "@/types/fields";
+import { ErrorCodes } from "@/enums/errorCodes";
+import { StatusCodes } from "@/enums/statusCodes";
 import { createFieldDefinition, replaceFieldDefinition } from "@/api/fieldDefinitions";
 import { isError } from "@/helpers/errors";
-import { StatusCodes } from "@/enums/statusCodes";
-import { ErrorCodes } from "@/enums/errorCodes";
 
 const { t } = useI18n();
 
