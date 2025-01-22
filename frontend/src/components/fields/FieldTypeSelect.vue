@@ -7,7 +7,7 @@ import AppSelect from "@/components/shared/AppSelect.vue";
 import type { FieldType, SearchFieldTypesPayload } from "@/types/fields";
 import type { SearchResults } from "@/types/search";
 import { formatFieldType } from "@/helpers/format";
-import { searchFieldTypes } from "@/api/fields";
+import { searchFieldTypes } from "@/api/fieldTypes";
 
 const { orderBy } = arrayUtils;
 

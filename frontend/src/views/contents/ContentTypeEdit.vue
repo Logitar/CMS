@@ -18,7 +18,7 @@ import type { CreateOrReplaceContentTypePayload, ContentType } from "@/types/con
 import type { FieldDefinition } from "@/types/fields";
 import { formatFieldType } from "@/helpers/format";
 import { handleErrorKey } from "@/inject/App";
-import { readContentType, replaceContentType } from "@/api/contents";
+import { readContentType, replaceContentType } from "@/api/contentTypes";
 import { useToastStore } from "@/stores/toast";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;

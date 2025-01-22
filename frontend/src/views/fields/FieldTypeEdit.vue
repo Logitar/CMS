@@ -35,7 +35,7 @@ import {
   compareStringProperties,
 } from "@/helpers/fields";
 import { handleErrorKey } from "@/inject/App";
-import { readFieldType, replaceFieldType } from "@/api/fields";
+import { readFieldType, replaceFieldType } from "@/api/fieldTypes";
 import { useToastStore } from "@/stores/toast";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;

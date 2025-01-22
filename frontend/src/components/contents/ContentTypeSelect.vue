@@ -7,7 +7,7 @@ import AppSelect from "@/components/shared/AppSelect.vue";
 import type { ContentType, SearchContentTypesPayload } from "@/types/contents";
 import type { SearchResults } from "@/types/search";
 import { formatContentType } from "@/helpers/format";
-import { searchContentTypes } from "@/api/contents";
+import { searchContentTypes } from "@/api/contentTypes";
 
 const { orderBy } = arrayUtils;
 

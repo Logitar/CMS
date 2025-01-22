@@ -14,7 +14,7 @@ import SortSelect from "@/components/shared/SortSelect.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
 import type { DataType, FieldType, FieldTypeSort, SearchFieldTypesPayload } from "@/types/fields";
 import { handleErrorKey } from "@/inject/App";
-import { searchFieldTypes } from "@/api/fields";
+import { searchFieldTypes } from "@/api/fieldTypes";
 import { useToastStore } from "@/stores/toast";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;

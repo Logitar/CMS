@@ -22,7 +22,10 @@ public class ContentController : ControllerBase
   }
 
   [HttpPost]
-  public async Task<ActionResult<ContentModel>> CreateAsync(Guid? languageId, [FromBody] CreateOrReplaceContentPayload payload, CancellationToken cancellationToken)
+  public async Task<ActionResult<ContentModel>> CreateAsync(
+    [FromQuery(Name = "language")] Guid? languageId,
+    [FromBody] CreateOrReplaceContentPayload payload,
+    CancellationToken cancellationToken)
   {
     CreateOrReplaceContentResult result = await _mediator.Send(new CreateOrReplaceContentCommand(ContentId: null, languageId, payload), cancellationToken);
     return ToActionResult(result);
@@ -44,7 +47,10 @@ public class ContentController : ControllerBase
   }
 
   [HttpPut("{contentId}")]
-  public async Task<ActionResult<ContentModel>> ReplaceAsync(Guid contentId, Guid? languageId, [FromBody] CreateOrReplaceContentPayload payload, CancellationToken cancellationToken)
+  public async Task<ActionResult<ContentModel>> ReplaceAsync(
+    Guid contentId,
+    [FromQuery(Name = "language")] Guid? languageId,
+    [FromBody] CreateOrReplaceContentPayload payload, CancellationToken cancellationToken)
   {
     CreateOrReplaceContentResult result = await _mediator.Send(new CreateOrReplaceContentCommand(contentId, languageId, payload), cancellationToken);
     return ToActionResult(result);

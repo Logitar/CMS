@@ -11,7 +11,7 @@ import PlaceholderInput from "./PlaceholderInput.vue";
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
 import type { ContentType } from "@/types/contents";
 import type { CreateOrReplaceFieldDefinitionPayload, FieldDefinition } from "@/types/fields";
-import { createFieldDefinition, replaceFieldDefinition } from "@/api/fields";
+import { createFieldDefinition, replaceFieldDefinition } from "@/api/fieldDefinitions";
 
 const { t } = useI18n();
 
