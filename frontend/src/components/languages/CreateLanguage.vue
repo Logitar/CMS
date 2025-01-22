@@ -37,6 +37,7 @@ function onCancel(): void {
 
 const { handleSubmit, isSubmitting } = useForm();
 const onSubmit = handleSubmit(async () => {
+  localeAlreadyUsed.value = false;
   try {
     const payload: CreateOrReplaceLanguagePayload = {
       locale: locale.value,

@@ -9,6 +9,8 @@ namespace Logitar.Cms.Core.Contents.Commands;
 
 public record CreateOrReplaceContentTypeResult(ContentTypeModel? ContentType = null, bool Created = false);
 
+/// <exception cref="UniqueNameAlreadyUsedException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record CreateOrReplaceContentTypeCommand(Guid? Id, CreateOrReplaceContentTypePayload Payload, long? Version) : IRequest<CreateOrReplaceContentTypeResult>;
 
 internal class CreateOrReplaceContentTypeCommandHandler : IRequestHandler<CreateOrReplaceContentTypeCommand, CreateOrReplaceContentTypeResult>

@@ -5,15 +5,18 @@ import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
 import InvariantCheckbox from "./InvariantCheckbox.vue";
+import UniqueNameAlreadyUsed from "@/components/shared/UniqueNameAlreadyUsed.vue";
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
 import type { CreateOrReplaceContentTypePayload, ContentType } from "@/types/contents";
 import { createContentType } from "@/api/contentTypes";
+import { isError } from "@/helpers/errors";
 
 const { t } = useI18n();
 
 const isInvariant = ref<boolean>(false);
 const modalRef = ref<InstanceType<typeof TarModal> | null>(null);
 const uniqueName = ref<string>("");
+const uniqueNameAlreadyUsed = ref<boolean>(false);
 
 function hide(): void {
   modalRef.value?.hide();
@@ -21,6 +24,7 @@ function hide(): void {
 
 function reset(): void {
   isInvariant.value = false;
+  uniqueNameAlreadyUsed.value = false;
   uniqueName.value = "";
 }
 
@@ -36,6 +40,7 @@ function onCancel(): void {
 
 const { handleSubmit, isSubmitting } = useForm();
 const onSubmit = handleSubmit(async () => {
+  uniqueNameAlreadyUsed.value = false;
   try {
     const payload: CreateOrReplaceContentTypePayload = {
       isInvariant: isInvariant.value,
@@ -46,7 +51,11 @@ const onSubmit = handleSubmit(async () => {
     reset();
     hide();
   } catch (e: unknown) {
-    emit("error", e);
+    if (isError(e, 409, "UniqueNameAlreadyUsed")) {
+      uniqueNameAlreadyUsed.value = true;
+    } else {
+      emit("error", e);
+    }
   }
 });
 </script>
@@ -57,6 +66,7 @@ const onSubmit = handleSubmit(async () => {
     <TarModal :close="t('actions.close')" id="create-content-type" ref="modalRef" :title="t('contents.types.create')">
       <form>
         <InvariantCheckbox v-model="isInvariant" />
+        <UniqueNameAlreadyUsed v-model="uniqueNameAlreadyUsed" />
         <UniqueNameInput required v-model="uniqueName" />
       </form>
       <template #footer>

@@ -12,12 +12,14 @@ import DisplayNameInput from "@/components/shared/DisplayNameInput.vue";
 import FieldDefinitionEdit from "@/components/fields/FieldDefinitionEdit.vue";
 import InvariantCheckbox from "@/components/contents/InvariantCheckbox.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
+import UniqueNameAlreadyUsed from "@/components/shared/UniqueNameAlreadyUsed.vue";
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
 import type { ApiError } from "@/types/api";
 import type { CreateOrReplaceContentTypePayload, ContentType } from "@/types/contents";
 import type { FieldDefinition } from "@/types/fields";
 import { formatFieldType } from "@/helpers/format";
 import { handleErrorKey } from "@/inject/App";
+import { isError } from "@/helpers/errors";
 import { readContentType, replaceContentType } from "@/api/contentTypes";
 import { useToastStore } from "@/stores/toast";
 
@@ -33,6 +35,7 @@ const displayName = ref<string>("");
 const contentType = ref<ContentType>();
 const isInvariant = ref<boolean>(false);
 const uniqueName = ref<string>("");
+const uniqueNameAlreadyUsed = ref<boolean>(false);
 
 const fields = computed<FieldDefinition[]>(() => (contentType.value ? orderBy(contentType.value.fields, "order") : []));
 const hasChanges = computed<boolean>(() =>
@@ -55,6 +58,7 @@ function setModel(model: ContentType): void {
 
 const { handleSubmit, isSubmitting } = useForm();
 const onSubmit = handleSubmit(async () => {
+  uniqueNameAlreadyUsed.value = false;
   if (contentType.value) {
     try {
       const payload: CreateOrReplaceContentTypePayload = {
@@ -67,7 +71,11 @@ const onSubmit = handleSubmit(async () => {
       setModel(updatedContentType);
       toasts.success("contents.types.updated");
     } catch (e: unknown) {
-      handleError(e);
+      if (isError(e, 409, "UniqueNameAlreadyUsed")) {
+        uniqueNameAlreadyUsed.value = true;
+      } else {
+        handleError(e);
+      }
     }
   }
 });
@@ -108,6 +116,7 @@ onMounted(async () => {
         <TarTab active id="content-type" :title="t('contents.types.properties')">
           <form @submit.prevent="onSubmit">
             <InvariantCheckbox v-model="isInvariant" />
+            <UniqueNameAlreadyUsed v-model="uniqueNameAlreadyUsed" />
             <div class="row">
               <UniqueNameInput class="col" required v-model="uniqueName" />
               <DisplayNameInput class="col" v-model="displayName" />

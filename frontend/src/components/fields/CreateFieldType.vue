@@ -45,6 +45,7 @@ function onCancel(): void {
 
 const { handleSubmit, isSubmitting } = useForm();
 const onSubmit = handleSubmit(async () => {
+  uniqueNameAlreadyUsed.value = false;
   try {
     const payload: CreateOrReplaceFieldTypePayload = {
       uniqueName: uniqueName.value,
