@@ -69,7 +69,7 @@ const onSubmit = handleSubmit(async () => {
       uniqueName: uniqueName.value,
       displayName: displayName.value,
       description: description.value,
-      fieldValues: [...fieldValues.value.entries()].filter(([, value]) => !isNullOrWhiteSpace(value)).map(([id, value]) => ({ id, value }) as FieldValue),
+      fieldValues: [...fieldValues.value.entries()].filter(([, value]) => !isNullOrWhiteSpace(value)).map(([id, value]) => ({ id, value }) as FieldValue), // TODO(fpion): we should not have to do this!
     };
     const content: Content = await replaceContent(props.content.id, props.locale.language?.id, payload);
     emit("saved", content);
