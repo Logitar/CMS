@@ -89,18 +89,4 @@ internal class RelatedContentValueValidator : IFieldValueValidator
     contentIds = deserialized ?? [];
     return deserialized != null;
   }
-
-  //private static IReadOnlyCollection<Guid> Parse(string value)
-  //{
-  //  IReadOnlyCollection<Guid>? contentIds = null;
-  //  try
-  //  {
-  //    contentIds = JsonSerializer.Deserialize<IReadOnlyCollection<Guid>>(value);
-  //  }
-  //  catch (Exception)
-  //  {
-  //  }
-
-  //  return contentIds ?? (Guid.TryParse(value, out Guid contentId) ? [contentId] : []);
-  //}
 }
