@@ -1,21 +1,20 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { parsingUtils } from "logitar-js";
 
-import AppCheckbox from "@/components/shared/AppCheckbox.vue";
-import AppInput from "@/components/shared/AppInput.vue";
-import AppTextarea from "@/components/shared/AppTextarea.vue";
-import DateTimeInput from "@/components/shared/DateTimeInput.vue";
-import type { FieldDefinition, FieldType } from "@/types/fields";
-
-const { parseBoolean } = parsingUtils;
+import BooleanFieldValueEdit from "./BooleanFieldValueEdit.vue";
+import DateTimeFieldValueEdit from "./DateTimeFieldValueEdit.vue";
+import NumberFieldValueEdit from "./NumberFieldValueEdit.vue";
+import RichTextFieldValueEdit from "./RichTextFieldValueEdit.vue";
+import SelectFieldValueEdit from "./SelectFieldValueEdit.vue";
+import StringFieldValueEdit from "./StringFieldValueEdit.vue";
+import type { DataType, FieldDefinition } from "@/types/fields";
 
 const props = defineProps<{
   definition: FieldDefinition;
   modelValue?: string;
 }>();
 
-const fieldType = computed<FieldType>(() => props.definition.fieldType);
+const dataType = computed<DataType>(() => props.definition.fieldType.dataType);
 
 defineEmits<{
   (e: "update:model-value", value: string): void;
@@ -24,78 +23,44 @@ defineEmits<{
 
 <template>
   <div>
-    <div v-if="fieldType.dataType === 'Boolean'" class="mb-3">
-      <AppCheckbox
-        :id="definition.id"
-        :label="definition.displayName ?? definition.uniqueName"
-        :model-value="parseBoolean(modelValue)"
-        :name="definition.uniqueName"
-        raw
-        @update:model-value="$emit('update:model-value', ($event as boolean).toString())"
-      />
-    </div>
-    <DateTimeInput
-      v-else-if="fieldType.dataType === 'DateTime'"
-      floating
-      :id="definition.id"
-      :label="definition.displayName ?? definition.uniqueName"
-      :min="fieldType.dateTime?.minimumValue ? new Date(fieldType.dateTime.minimumValue) : undefined"
-      :max="fieldType.dateTime?.maximumValue ? new Date(fieldType.dateTime.maximumValue) : undefined"
-      :model-value="modelValue ? new Date(modelValue) : undefined"
-      :name="definition.uniqueName"
-      raw
-      :required="definition.isRequired"
-      @update:model-value="$emit('update:model-value', $event?.toISOString() ?? '')"
-    />
-    <AppInput
-      v-else-if="fieldType.dataType === 'Number'"
-      floating
-      :id="definition.id"
-      :label="definition.displayName ?? definition.uniqueName"
-      :min="fieldType.number?.minimumValue"
-      :max="fieldType.number?.maximumValue"
+    <BooleanFieldValueEdit
+      v-if="dataType === 'Boolean'"
+      :definition="definition"
       :model-value="modelValue"
-      :name="definition.uniqueName"
-      :placeholder="definition.placeholder ?? definition.displayName ?? definition.uniqueName"
-      raw
-      :required="definition.isRequired"
-      :step="fieldType.number?.step"
-      type="number"
       @update:model-value="$emit('update:model-value', $event)"
     />
-    <AppTextarea
-      v-else-if="fieldType.dataType === 'RichText'"
-      floating
-      :id="definition.id"
-      :label="definition.displayName ?? definition.uniqueName"
-      :min="fieldType.string?.minimumLength"
-      :max="fieldType.string?.maximumLength"
+    <DateTimeFieldValueEdit
+      v-else-if="dataType === 'DateTime'"
+      :definition="definition"
       :model-value="modelValue"
-      :name="definition.uniqueName"
-      :placeholder="definition.placeholder ?? definition.displayName ?? definition.uniqueName"
-      raw
-      rows="5"
-      :required="definition.isRequired"
       @update:model-value="$emit('update:model-value', $event)"
     />
-    <AppInput
-      v-else-if="fieldType.dataType === 'String'"
-      floating
-      :id="definition.id"
-      :label="definition.displayName ?? definition.uniqueName"
-      :min="fieldType.string?.minimumLength"
-      :max="fieldType.string?.maximumLength"
+    <NumberFieldValueEdit
+      v-else-if="dataType === 'Number'"
+      :definition="definition"
       :model-value="modelValue"
-      :name="definition.uniqueName"
-      :pattern="fieldType.string?.pattern"
-      :placeholder="definition.placeholder ?? definition.displayName ?? definition.uniqueName"
-      raw
-      :required="definition.isRequired"
+      @update:model-value="$emit('update:model-value', $event)"
+    />
+    <RichTextFieldValueEdit
+      v-else-if="dataType === 'RichText'"
+      :definition="definition"
+      :model-value="modelValue"
+      @update:model-value="$emit('update:model-value', $event)"
+    />
+    <SelectFieldValueEdit
+      v-else-if="dataType === 'Select'"
+      :definition="definition"
+      :model-value="modelValue"
+      @update:model-value="$emit('update:model-value', $event)"
+    />
+    <StringFieldValueEdit
+      v-else-if="dataType === 'String'"
+      :definition="definition"
+      :model-value="modelValue"
       @update:model-value="$emit('update:model-value', $event)"
     />
     <!-- TODO(fpion): FieldDefinition.Description -->
     <!-- TODO(fpion): RelatedContent -->
-    <!-- TODO(fpion): Select -->
     <!-- TODO(fpion): Tags -->
   </div>
 </template>
