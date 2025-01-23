@@ -113,6 +113,7 @@ watch(() => props.locale, reset, { deep: true, immediate: true });
       v-for="fieldDefinition in fieldDefinitions"
       :key="fieldDefinition.id"
       :definition="fieldDefinition"
+      :language="locale.language"
       :model-value="getFieldValue(fieldDefinition.id)"
       @update:model-value="setFieldValue(fieldDefinition.id, $event)"
     />

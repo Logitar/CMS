@@ -49,9 +49,7 @@ function onSelected(id: string | undefined): void {
   emit("update:model-value", id);
 
   const index: number = fieldTypes.value.findIndex((fieldType) => fieldType.id === id);
-  if (index >= 0) {
-    emit("selected", fieldTypes.value[index]);
-  }
+  emit("selected", fieldTypes.value[index]);
 }
 
 onMounted(async () => {
