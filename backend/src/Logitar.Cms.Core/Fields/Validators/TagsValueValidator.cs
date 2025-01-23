@@ -15,7 +15,7 @@ internal class TagsValueValidator : IFieldValueValidator
       {
         ErrorCode = "NotEmptyValidator"
       };
-      failures.Add(failure);
+      failures.Add(failure); // TODO(fpion): why?
     }
 
     return Task.FromResult(new ValidationResult(failures));
