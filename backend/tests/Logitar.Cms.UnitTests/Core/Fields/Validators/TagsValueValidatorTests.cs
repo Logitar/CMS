@@ -18,21 +18,21 @@ public class TagsValueValidatorTests
 
   [Theory(DisplayName = "Validation should fail when the value could not be parsed.")]
   [InlineData("")]
-  [InlineData("[]")]
   [InlineData("    ")]
   [InlineData("invalid")]
   public async Task Given_NotParsed_When_ValidateAsync_Then_FailureResult(string value)
   {
     ValidationResult result = await _validator.ValidateAsync(value, PropertyName, _cancellationToken);
     Assert.False(result.IsValid);
-    Assert.Contains(result.Errors, e => e.ErrorCode == "NotEmptyValidator" && e.ErrorMessage == "The value cannot be empty."
+    Assert.Contains(result.Errors, e => e.ErrorCode == "TagsValueValidator" && e.ErrorMessage == "The value must be a JSON-serialized string array."
       && e.AttemptedValue.Equals(value) && e.PropertyName == PropertyName);
   }
 
-  [Fact(DisplayName = "Validation should succeed when the value is valid.")]
-  public async Task Given_ValidValue_When_ValidateAsync_Then_SuccessResult()
+  [Theory(DisplayName = "Validation should succeed when the value is valid.")]
+  [InlineData(" [] ")]
+  [InlineData(@"[""hello"", ""word""]")]
+  public async Task Given_ValidValue_When_ValidateAsync_Then_SuccessResult(string value)
   {
-    string value = @"[""hello"", ""word""]";
     ValidationResult result = await _validator.ValidateAsync(value, PropertyName, _cancellationToken);
     Assert.True(result.IsValid);
   }

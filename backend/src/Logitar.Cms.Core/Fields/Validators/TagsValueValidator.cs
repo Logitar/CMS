@@ -8,30 +8,37 @@ internal class TagsValueValidator : IFieldValueValidator
   {
     List<ValidationFailure> failures = new(capacity: 1);
 
-    IReadOnlyCollection<string> values = Parse(inputValue);
-    if (values.Count < 1)
+    if (!TryParse(inputValue, out _))
     {
-      ValidationFailure failure = new(propertyName, "The value cannot be empty.", inputValue)
+      ValidationFailure failure = new(propertyName, "The value must be a JSON-serialized string array.", inputValue)
       {
-        ErrorCode = "NotEmptyValidator"
+        ErrorCode = nameof(TagsValueValidator)
       };
-      failures.Add(failure); // TODO(fpion): why?
+      failures.Add(failure);
     }
 
     return Task.FromResult(new ValidationResult(failures));
   }
 
-  private static IReadOnlyCollection<string> Parse(string value)
+  private static bool TryParse(string value, out IReadOnlyCollection<string> tags)
   {
-    IReadOnlyCollection<string>? values = null;
+    IReadOnlyCollection<string>? values;
     try
     {
       values = JsonSerializer.Deserialize<IReadOnlyCollection<string>>(value);
     }
     catch (Exception)
     {
+      values = null;
     }
 
-    return values ?? [];
+    if (values == null)
+    {
+      tags = [];
+      return false;
+    }
+
+    tags = values;
+    return true;
   }
 }
