@@ -41,7 +41,7 @@ internal class UpdateFieldDefinitionCommandHandler : IRequestHandler<UpdateField
       return null;
     }
 
-    // TODO(fpion): throw ValidationException when setting a variant field definition on an invariant content type.
+    // ISSUE #94: https://github.com/Logitar/CMS/issues/94
 
     fieldDefinition = new(
       fieldDefinition.Id,
