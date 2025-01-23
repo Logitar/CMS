@@ -1,4 +1,5 @@
-﻿using Logitar.Cms.Core.Fields.Settings;
+﻿using FluentValidation.Results;
+using Logitar.Cms.Core.Fields.Settings;
 using System.Text.Json;
 using ValidationResult = FluentValidation.Results.ValidationResult;
 
@@ -23,25 +24,24 @@ public class SelectValueValidatorTests
     _validator = new(_settings);
   }
 
-  [Theory(DisplayName = "Validation should fail when the value is empty.")]
-  [InlineData("[]")]
-  [InlineData("[  ]")]
-  public async Task Given_Empty_When_ValidateAsync_Then_FailureResult(string value)
+  [Theory(DisplayName = "Validation should fail when the values are not valid.")]
+  [InlineData("")]
+  [InlineData("    ")]
+  [InlineData("linux_sysadmin")]
+  [InlineData(@"[linux_sysadmin]")]
+  public async Task Given_InvalidValues_When_ValidateAsync_Then_FailureResult(string value)
   {
-    ValidationResult result = await _validator.ValidateAsync(value, PropertyName, _cancellationToken);
-    Assert.False(result.IsValid);
-    Assert.Contains(result.Errors, e => e.ErrorCode == "NotEmptyValidator" && e.ErrorMessage == "The value cannot be empty."
-      && e.AttemptedValue.Equals(value) && e.PropertyName == PropertyName);
-  }
+    SelectSettings settings = new(isMultiple: true, _settings.Options);
+    SelectValueValidator validator = new(settings);
 
-  [Fact(DisplayName = "Validation should fail when there are too many values.")]
-  public async Task Given_NotMultiple_When_ValidateAsync_Then_FailureResult()
-  {
-    string value = @"[""linux_sysadmin"",""software-architecture""]";
-    ValidationResult result = await _validator.ValidateAsync(value, PropertyName, _cancellationToken);
+    ValidationResult result = await validator.ValidateAsync(value, PropertyName, _cancellationToken);
     Assert.False(result.IsValid);
-    Assert.Contains(result.Errors, e => e.ErrorCode == "MultipleValidator" && e.ErrorMessage == "Exactly one value is allowed."
-      && e.AttemptedValue.Equals(value) && e.PropertyName == PropertyName);
+
+    ValidationFailure failure = Assert.Single(result.Errors);
+    Assert.Equal(value, failure.AttemptedValue);
+    Assert.Equal("SelectValueValidator", failure.ErrorCode);
+    Assert.Equal("The value must be a JSON-serialized string array.", failure.ErrorMessage);
+    Assert.Equal(PropertyName, failure.PropertyName);
   }
 
   [Fact(DisplayName = "Validation should fail when values are not allowed.")]
@@ -60,13 +60,32 @@ public class SelectValueValidatorTests
       && e.AttemptedValue.Equals("hello-world") && e.PropertyName == PropertyName && customState == JsonSerializer.Serialize(e.CustomState, e.CustomState.GetType()));
   }
 
-  [Theory(DisplayName = "Validation should succeed when the value is valid.")]
-  [InlineData("linux_sysadmin")]
-  [InlineData(@"[ ""software-architecture"", ""linux_sysadmin"" ]")]
-  public async Task Given_ValidValue_When_ValidateAsync_Then_SuccessResult(string value)
+  [Fact(DisplayName = "Validation should succeed when the value is empty.")]
+  public async Task Given_Empty_When_ValidateAsync_Then_FailureResult()
   {
     SelectSettings settings = new(isMultiple: true, _settings.Options);
     SelectValueValidator validator = new(settings);
+
+    string value = " [  ] ";
+    ValidationResult result = await validator.ValidateAsync(value, PropertyName, _cancellationToken);
+    Assert.True(result.IsValid);
+  }
+
+  [Theory(DisplayName = "Validation should succeed when the value is valid.")]
+  [InlineData(false)]
+  [InlineData(true)]
+  public async Task Given_ValidValue_When_ValidateAsync_Then_SuccessResult(bool isMultiple)
+  {
+    string value = "linux_sysadmin";
+
+    SelectValueValidator validator = _validator;
+    if (isMultiple)
+    {
+      SelectSettings settings = new(isMultiple: true, _settings.Options);
+      validator = new(settings);
+
+      value = @"[ ""software-architecture"", ""linux_sysadmin"" ]";
+    }
 
     ValidationResult result = await validator.ValidateAsync(value, PropertyName, _cancellationToken);
     Assert.True(result.IsValid);
