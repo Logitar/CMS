@@ -4,37 +4,40 @@ import { arrayUtils, parsingUtils } from "logitar-js";
 import { computed, onMounted, ref } from "vue";
 
 import AppSelect from "@/components/shared/AppSelect.vue";
-import type { Language, SearchLanguagesPayload } from "@/types/languages";
+import type { ContentLocale, SearchContentsPayload } from "@/types/contents";
 import type { SearchResults } from "@/types/search";
-import { formatLanguage } from "@/helpers/format";
-import { searchLanguages } from "@/api/languages";
+import { formatContentLocale } from "@/helpers/format";
+import { searchContents } from "@/api/contents";
 
 const { orderBy } = arrayUtils;
 const { parseBoolean } = parsingUtils;
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
+    contentTypeId?: string;
     id?: string;
     label?: string;
+    languageId?: string;
     modelValue?: string;
     noStatus?: boolean | string;
     placeholder?: string;
+    raw?: boolean | string;
     required?: boolean | string;
   }>(),
   {
-    id: "language",
-    label: "languages.select.label",
-    placeholder: "languages.select.placeholder",
+    id: "content",
+    label: "contents.items.select.label",
+    placeholder: "contents.items.select.placeholder",
   },
 );
 
-const languages = ref<Language[]>([]);
+const locales = ref<ContentLocale[]>([]);
 
 const options = computed<SelectOption[]>(() =>
   orderBy(
-    languages.value.map((language) => ({
-      text: formatLanguage(language),
-      value: language.id,
+    locales.value.map((locale) => ({
+      text: formatContentLocale(locale),
+      value: locale.content.id,
     })),
     "text",
   ),
@@ -42,28 +45,30 @@ const options = computed<SelectOption[]>(() =>
 
 const emit = defineEmits<{
   (e: "error", value: unknown): void;
-  (e: "selected", value: Language | undefined): void;
+  (e: "selected", value: ContentLocale | undefined): void;
   (e: "update:model-value", value: string | undefined): void;
 }>();
 
 function onSelected(id: string | undefined): void {
   emit("update:model-value", id);
 
-  const index: number = languages.value.findIndex((language) => language.id === id);
-  emit("selected", languages.value[index]);
+  const index: number = locales.value.findIndex((locale) => locale.content.id === id);
+  emit("selected", locales.value[index]);
 }
 
 onMounted(async () => {
   try {
-    const payload: SearchLanguagesPayload = {
+    const payload: SearchContentsPayload = {
+      contentTypeId: props.contentTypeId,
       ids: [],
+      languageId: props.languageId,
       search: { operator: "And", terms: [] },
       sort: [{ field: "DisplayName", isDescending: false }],
       skip: 0,
       limit: 0,
     };
-    const results: SearchResults<Language> = await searchLanguages(payload);
-    languages.value = results.items;
+    const results: SearchResults<ContentLocale> = await searchContents(payload);
+    locales.value = results.items;
   } catch (e: unknown) {
     emit("error", e);
   }
@@ -78,6 +83,7 @@ onMounted(async () => {
     :model-value="modelValue?.toString()"
     :options="options"
     :placeholder="placeholder ?? 'any'"
+    :raw="raw"
     :required="required"
     :validation="parseBoolean(noStatus) ? 'server' : undefined"
     @update:model-value="onSelected"
