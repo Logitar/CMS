@@ -76,6 +76,5 @@ defineEmits<{
       :model-value="modelValue"
       @update:model-value="$emit('update:model-value', $event)"
     />
-    <!-- TODO(fpion): FieldDefinition.Description -->
   </div>
 </template>
