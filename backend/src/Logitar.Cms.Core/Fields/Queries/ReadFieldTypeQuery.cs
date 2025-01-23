@@ -3,6 +3,7 @@ using MediatR;
 
 namespace Logitar.Cms.Core.Fields.Queries;
 
+/// <exception cref="TooManyResultsException"></exception>
 public record ReadFieldTypeQuery(Guid? Id, string? UniqueName) : IRequest<FieldTypeModel?>;
 
 internal class ReadFieldTypeQueryHandler : IRequestHandler<ReadFieldTypeQuery, FieldTypeModel?>

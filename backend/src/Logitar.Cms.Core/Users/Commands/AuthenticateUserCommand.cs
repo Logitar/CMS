@@ -6,6 +6,12 @@ using MediatR;
 
 namespace Logitar.Cms.Core.Users.Commands;
 
+/// <exception cref="IncorrectUserPasswordException"></exception>
+/// <exception cref="TooManyResultsException"></exception>
+/// <exception cref="UserHasNoPasswordException"></exception>
+/// <exception cref="UserIsDisabledException"></exception>
+/// <exception cref="UserNotFoundException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record AuthenticateUserCommand(AuthenticateUserPayload Payload) : IRequest<UserModel>;
 
 internal class AuthenticateUserCommandHandler : IRequestHandler<AuthenticateUserCommand, UserModel>

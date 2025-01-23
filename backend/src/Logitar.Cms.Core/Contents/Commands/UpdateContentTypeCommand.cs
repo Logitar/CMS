@@ -7,6 +7,8 @@ using MediatR;
 
 namespace Logitar.Cms.Core.Contents.Commands;
 
+/// <exception cref="UniqueNameAlreadyUsedException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record UpdateContentTypeCommand(Guid Id, UpdateContentTypePayload Payload) : IRequest<ContentTypeModel?>;
 
 internal class UpdateContentTypeCommandHandler : IRequestHandler<UpdateContentTypeCommand, ContentTypeModel?>

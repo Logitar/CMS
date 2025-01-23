@@ -12,12 +12,16 @@ import DisplayNameInput from "@/components/shared/DisplayNameInput.vue";
 import FieldDefinitionEdit from "@/components/fields/FieldDefinitionEdit.vue";
 import InvariantCheckbox from "@/components/contents/InvariantCheckbox.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
+import UniqueNameAlreadyUsed from "@/components/shared/UniqueNameAlreadyUsed.vue";
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
 import type { ApiError } from "@/types/api";
 import type { CreateOrReplaceContentTypePayload, ContentType } from "@/types/contents";
 import type { FieldDefinition } from "@/types/fields";
+import { ErrorCodes } from "@/enums/errorCodes";
+import { StatusCodes } from "@/enums/statusCodes";
 import { formatFieldType } from "@/helpers/format";
 import { handleErrorKey } from "@/inject/App";
+import { isError } from "@/helpers/errors";
 import { readContentType, replaceContentType } from "@/api/contentTypes";
 import { useToastStore } from "@/stores/toast";
 
@@ -33,6 +37,7 @@ const displayName = ref<string>("");
 const contentType = ref<ContentType>();
 const isInvariant = ref<boolean>(false);
 const uniqueName = ref<string>("");
+const uniqueNameAlreadyUsed = ref<boolean>(false);
 
 const fields = computed<FieldDefinition[]>(() => (contentType.value ? orderBy(contentType.value.fields, "order") : []));
 const hasChanges = computed<boolean>(() =>
@@ -55,6 +60,7 @@ function setModel(model: ContentType): void {
 
 const { handleSubmit, isSubmitting } = useForm();
 const onSubmit = handleSubmit(async () => {
+  uniqueNameAlreadyUsed.value = false;
   if (contentType.value) {
     try {
       const payload: CreateOrReplaceContentTypePayload = {
@@ -67,7 +73,11 @@ const onSubmit = handleSubmit(async () => {
       setModel(updatedContentType);
       toasts.success("contents.types.updated");
     } catch (e: unknown) {
-      handleError(e);
+      if (isError(e, StatusCodes.Conflict, ErrorCodes.UniqueNameAlreadyUsed)) {
+        uniqueNameAlreadyUsed.value = true;
+      } else {
+        handleError(e);
+      }
     }
   }
 });
@@ -90,7 +100,7 @@ onMounted(async () => {
     }
   } catch (e: unknown) {
     const { status } = e as ApiError;
-    if (status === 404) {
+    if (status === StatusCodes.NotFound) {
       router.push({ path: "/not-found" });
     } else {
       handleError(e);
@@ -108,6 +118,7 @@ onMounted(async () => {
         <TarTab active id="content-type" :title="t('contents.types.properties')">
           <form @submit.prevent="onSubmit">
             <InvariantCheckbox v-model="isInvariant" />
+            <UniqueNameAlreadyUsed v-model="uniqueNameAlreadyUsed" />
             <div class="row">
               <UniqueNameInput class="col" required v-model="uniqueName" />
               <DisplayNameInput class="col" v-model="displayName" />
@@ -120,7 +131,7 @@ onMounted(async () => {
         </TarTab>
         <TarTab id="field-definitions" :title="t('fields.definitions.list')">
           <div class="my-3">
-            <FieldDefinitionEdit :content-type-id="contentType.id" @error="handleError" @saved="onFieldDefinitionAdded" />
+            <FieldDefinitionEdit :content-type="contentType" @error="handleError" @saved="onFieldDefinitionAdded" />
           </div>
           <table v-if="fields.length" class="table table-striped">
             <thead>
@@ -148,7 +159,7 @@ onMounted(async () => {
                   </RouterLink>
                 </td>
                 <td>
-                  <FieldDefinitionEdit :content-type-id="contentType.id" :field="field" @error="handleError" @saved="onFieldDefinitionUpdated" />
+                  <FieldDefinitionEdit :content-type="contentType" :field="field" @error="handleError" @saved="onFieldDefinitionUpdated" />
                 </td>
               </tr>
             </tbody>

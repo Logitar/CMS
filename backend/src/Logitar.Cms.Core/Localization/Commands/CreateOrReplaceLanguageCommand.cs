@@ -9,6 +9,8 @@ namespace Logitar.Cms.Core.Localization.Commands;
 
 public record CreateOrReplaceLanguageResult(LanguageModel? Language = null, bool Created = false);
 
+/// <exception cref="LocaleAlreadyUsedException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record CreateOrReplaceLanguageCommand(Guid? Id, CreateOrReplaceLanguagePayload Payload, long? Version) : IRequest<CreateOrReplaceLanguageResult>;
 
 internal class CreateOrReplaceLanguageCommandHandler : IRequestHandler<CreateOrReplaceLanguageCommand, CreateOrReplaceLanguageResult>

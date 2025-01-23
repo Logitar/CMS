@@ -11,6 +11,12 @@ using MediatR;
 
 namespace Logitar.Cms.Core.Sessions.Commands;
 
+/// <exception cref="IncorrectUserPasswordException"></exception>
+/// <exception cref="TooManyResultsException"></exception>
+/// <exception cref="UserHasNoPasswordException"></exception>
+/// <exception cref="UserIsDisabledException"></exception>
+/// <exception cref="UserNotFoundException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record SignInSessionCommand(SignInSessionPayload Payload) : IRequest<SessionModel>;
 
 internal class SignInSessionCommandHandler : IRequestHandler<SignInSessionCommand, SessionModel>

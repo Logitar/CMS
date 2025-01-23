@@ -9,6 +9,7 @@ import ContentLocaleEdit from "@/components/contents/ContentLocaleEdit.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
 import type { ApiError } from "@/types/api";
 import type { Content, ContentLocale } from "@/types/contents";
+import { StatusCodes } from "@/enums/statusCodes";
 import { formatLanguage } from "@/helpers/format";
 import { handleErrorKey } from "@/inject/App";
 import { readContent } from "@/api/contents";
@@ -50,7 +51,7 @@ onMounted(async () => {
     }
   } catch (e: unknown) {
     const { status } = e as ApiError;
-    if (status === 404) {
+    if (status === StatusCodes.NotFound) {
       router.push({ path: "/not-found" });
     } else {
       handleError(e);
@@ -66,10 +67,10 @@ onMounted(async () => {
       <StatusDetail :aggregate="content" />
       <TarTabs>
         <TarTab active id="invariant" :title="t('contents.items.invariant')">
-          <ContentLocaleEdit :content-id="content.id" :locale="content.invariant" @error="handleError" @saved="onSaved" />
+          <ContentLocaleEdit :content="content" :locale="content.invariant" @error="handleError" @saved="onSaved" />
         </TarTab>
         <!-- <TarTab v-for="locale in locales" :key="locale.language?.id" :id="locale.language?.id" :title="formatLanguage(locale.language)">
-          <ContentLocaleEdit :content-id="content.id" :locale="locale" @error="handleError" @saved="onSaved" />
+          <ContentLocaleEdit :content="content" :locale="locale" @error="handleError" @saved="onSaved" />
         </TarTab> -->
       </TarTabs>
     </template>

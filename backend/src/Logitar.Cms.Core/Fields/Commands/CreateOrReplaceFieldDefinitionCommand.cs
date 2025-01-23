@@ -9,6 +9,9 @@ using MediatR;
 
 namespace Logitar.Cms.Core.Fields.Commands;
 
+/// <exception cref="FieldTypeNotFoundException"></exception>
+/// <exception cref="UniqueNameAlreadyUsedException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record CreateOrReplaceFieldDefinitionCommand(Guid ContentTypeId, Guid? FieldId, CreateOrReplaceFieldDefinitionPayload Payload) : IRequest<ContentTypeModel?>;
 
 internal class CreateOrReplaceFieldDefinitionCommandHandler : IRequestHandler<CreateOrReplaceFieldDefinitionCommand, ContentTypeModel?>
