@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { arrayUtils } from "logitar-js";
 import { computed, ref, watch } from "vue";
-import { stringUtils } from "logitar-js";
 import { useForm } from "vee-validate";
 
 import AppSaveButton from "@/components/shared/AppSaveButton.vue";
@@ -18,7 +17,6 @@ import { StatusCodes } from "@/enums/statusCodes";
 import { isError } from "@/helpers/errors";
 import { replaceContent } from "@/api/contents";
 
-const { isNullOrWhiteSpace } = stringUtils;
 const { orderBy } = arrayUtils;
 
 const props = defineProps<{
@@ -69,7 +67,7 @@ const onSubmit = handleSubmit(async () => {
       uniqueName: uniqueName.value,
       displayName: displayName.value,
       description: description.value,
-      fieldValues: [...fieldValues.value.entries()].filter(([, value]) => !isNullOrWhiteSpace(value)).map(([id, value]) => ({ id, value }) as FieldValue), // TODO(fpion): we should not have to do this!
+      fieldValues: [...fieldValues.value.entries()].map(([id, value]) => ({ id, value }) as FieldValue),
     };
     const content: Content = await replaceContent(props.content.id, props.locale.language?.id, payload);
     emit("saved", content);

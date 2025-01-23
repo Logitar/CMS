@@ -380,15 +380,13 @@ public class CreateOrReplaceContentCommandHandlerTests
     CreateOrReplaceContentPayload payload = new()
     {
       UniqueName = new("MyBlogArticle!"),
-      DisplayName = RandomStringGenerator.GetString(999),
-      FieldValues = [new FieldValue(Guid.Empty, string.Empty)]
+      DisplayName = RandomStringGenerator.GetString(999)
     };
     CreateOrReplaceContentCommand command = new(ContentId: null, LanguageId: null, payload);
     var exception = await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
 
-    Assert.Equal(3, exception.Errors.Count());
+    Assert.Equal(2, exception.Errors.Count());
     Assert.Contains(exception.Errors, e => e.ErrorCode == "AllowedCharactersValidator" && e.PropertyName == "UniqueName");
     Assert.Contains(exception.Errors, e => e.ErrorCode == "MaximumLengthValidator" && e.PropertyName == "DisplayName");
-    Assert.Contains(exception.Errors, e => e.ErrorCode == "NotEmptyValidator" && e.PropertyName == "FieldValues[0].Value");
   }
 }
