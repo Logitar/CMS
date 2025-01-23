@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-import AppMultiSelect from "@/components/shared/AppMultiSelect.vue";
+import AppMultiselect from "@/components/shared/AppMultiselect.vue";
 import AppSelect from "@/components/shared/AppSelect.vue";
 import type { FieldDefinition, FieldType } from "@/types/fields";
 
@@ -23,7 +23,7 @@ function onValuesUpdate(values: string[]): void {
 </script>
 
 <template>
-  <AppMultiSelect
+  <AppMultiselect
     v-if="fieldType.select?.isMultiple"
     floating
     :id="definition.id"
