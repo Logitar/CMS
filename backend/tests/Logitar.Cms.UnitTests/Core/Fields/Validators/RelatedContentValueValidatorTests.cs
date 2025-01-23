@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using FluentValidation.Results;
 using Logitar.Cms.Core.Contents;
 using Logitar.Cms.Core.Fields.Settings;
 using Logitar.Identity.Core;
@@ -91,34 +92,52 @@ public class RelatedContentValueValidatorTests
       && e.AttemptedValue.Equals(missing2) && e.PropertyName == PropertyName);
   }
 
-  [Theory(DisplayName = "Validation should fail when the value is empty.")]
-  [InlineData("[]")]
-  [InlineData("[  ]")]
-  [InlineData(@"[""invalid""]")]
-  public async Task Given_Empty_When_ValidateAsync_Then_FailureResult(string value)
+  [Theory(DisplayName = "Validation should fail when the value is not valid.")]
+  [InlineData("")]
+  [InlineData("    ")]
+  [InlineData("invalid")]
+  [InlineData(@"[""7a9aed82-f486-4975-8078-bd562c045aa1""]")]
+  public async Task Given_InvalidValue_When_ValidateAsync_Then_FailureResult(string value)
   {
     ValidationResult result = await _validator.ValidateAsync(value, PropertyName, _cancellationToken);
     Assert.False(result.IsValid);
-    Assert.Contains(result.Errors, e => e.ErrorCode == "NotEmptyValidator" && e.ErrorMessage == "The value cannot be empty."
-      && e.AttemptedValue.Equals(value) && e.PropertyName == PropertyName);
+
+    ValidationFailure failure = Assert.Single(result.Errors);
+    Assert.Equal(value, failure.AttemptedValue);
+    Assert.Equal("RelatedContentValueValidator", failure.ErrorCode);
+    Assert.Equal("The value must be a valid content ID.", failure.ErrorMessage);
+    Assert.Equal(PropertyName, failure.PropertyName);
   }
 
-  [Fact(DisplayName = "Validation should fail when there are too many values.")]
-  public async Task Given_NotMultiple_When_ValidateAsync_Then_FailureResult()
+  [Theory(DisplayName = "Validation should fail when the values are not valid.")]
+  [InlineData("")]
+  [InlineData("    ")]
+  [InlineData("ca8289b5-68b9-4708-ba1a-65503202b911")]
+  [InlineData(@"[""invalid""]")]
+  public async Task Given_InvalidValues_When_ValidateAsync_Then_FailureResult(string value)
   {
-    _contentQuerier.Setup(x => x.FindContentTypeIdsAsync(
-      It.Is<IEnumerable<Guid>>(y => y.SequenceEqual(new Guid[] { _author1.Id.ToGuid(), _author2.Id.ToGuid() })),
-      _cancellationToken)).ReturnsAsync(new Dictionary<Guid, Guid>
-      {
-        [_author1.Id.ToGuid()] = _author1.ContentTypeId.ToGuid(),
-        [_author2.Id.ToGuid()] = _author2.ContentTypeId.ToGuid()
-      });
+    RelatedContentSettings settings = new(_settings.ContentTypeId, isMultiple: true);
+    RelatedContentValueValidator validator = new(_contentQuerier.Object, settings);
 
-    string value = $@"[""{_author1.Id.ToGuid()}"",""{_author2.Id.ToGuid()}""]";
-    ValidationResult result = await _validator.ValidateAsync(value, PropertyName, _cancellationToken);
+    ValidationResult result = await validator.ValidateAsync(value, PropertyName, _cancellationToken);
     Assert.False(result.IsValid);
-    Assert.Contains(result.Errors, e => e.ErrorCode == "MultipleValidator" && e.ErrorMessage == "Exactly one value is allowed."
-      && e.AttemptedValue.Equals(value) && e.PropertyName == PropertyName);
+
+    ValidationFailure failure = Assert.Single(result.Errors);
+    Assert.Equal(value, failure.AttemptedValue);
+    Assert.Equal("RelatedContentValueValidator", failure.ErrorCode);
+    Assert.Equal("The value must be a JSON-serialized content ID array.", failure.ErrorMessage);
+    Assert.Equal(PropertyName, failure.PropertyName);
+  }
+
+  [Fact(DisplayName = "Validation should succeed when the value is empty.")]
+  public async Task Given_Empty_When_ValidateAsync_Then_FailureResult()
+  {
+    RelatedContentSettings settings = new(_settings.ContentTypeId, isMultiple: true);
+    RelatedContentValueValidator validator = new(_contentQuerier.Object, settings);
+
+    string value = " [  ] ";
+    ValidationResult result = await validator.ValidateAsync(value, PropertyName, _cancellationToken);
+    Assert.True(result.IsValid);
   }
 
   [Theory(DisplayName = "Validation should succeed when the value is valid.")]

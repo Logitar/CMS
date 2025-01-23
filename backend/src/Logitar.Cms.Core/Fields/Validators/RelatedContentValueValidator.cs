@@ -17,26 +17,32 @@ internal class RelatedContentValueValidator : IFieldValueValidator
 
   public async Task<ValidationResult> ValidateAsync(string value, string propertyName, CancellationToken cancellationToken)
   {
-    IReadOnlyCollection<Guid> contentIds = Parse(value);
-    List<ValidationFailure> failures = new(capacity: 1 + contentIds.Count);
+    IReadOnlyCollection<Guid> contentIds;
+    if (_settings.IsMultiple)
+    {
+      if (!TryParse(value, out contentIds))
+      {
+        ValidationFailure failure = new(propertyName, "The value must be a JSON-serialized content ID array.", value)
+        {
+          ErrorCode = nameof(RelatedContentValueValidator)
+        };
+        return new ValidationResult([failure]);
+      }
+    }
+    else if (!Guid.TryParse(value, out Guid contentId))
+    {
+      ValidationFailure failure = new(propertyName, "The value must be a valid content ID.", value)
+      {
+        ErrorCode = nameof(RelatedContentValueValidator)
+      };
+      return new ValidationResult([failure]);
+    }
+    else
+    {
+      contentIds = [contentId];
+    }
 
-    if (contentIds.Count < 1)
-    {
-      ValidationFailure failure = new(propertyName, "The value cannot be empty.", value)
-      {
-        ErrorCode = "NotEmptyValidator"
-      };
-      failures.Add(failure);
-    }
-    else if (contentIds.Count > 1 && !_settings.IsMultiple)
-    {
-      ValidationFailure failure = new(propertyName, "Exactly one value is allowed.", value)
-      {
-        CustomState = new { contentIds.Count },
-        ErrorCode = "MultipleValidator"
-      };
-      failures.Add(failure);
-    }
+    List<ValidationFailure> failures = new(capacity: contentIds.Count);
 
     IReadOnlyDictionary<Guid, Guid> contentTypeIds = await _contentQuerier.FindContentTypeIdsAsync(contentIds, cancellationToken);
     Guid expectedContentTypeId = _settings.ContentTypeId.ToGuid();
@@ -69,17 +75,18 @@ internal class RelatedContentValueValidator : IFieldValueValidator
     return new ValidationResult(failures);
   }
 
-  private static IReadOnlyCollection<Guid> Parse(string value)
+  private static bool TryParse(string value, out IReadOnlyCollection<Guid> contentIds)
   {
-    IReadOnlyCollection<Guid>? contentIds = null;
+    IReadOnlyCollection<Guid>? deserialized = null;
     try
     {
-      contentIds = JsonSerializer.Deserialize<IReadOnlyCollection<Guid>>(value);
+      deserialized = JsonSerializer.Deserialize<IReadOnlyCollection<Guid>>(value);
     }
     catch (Exception)
     {
     }
 
-    return contentIds ?? (Guid.TryParse(value, out Guid contentId) ? [contentId] : []);
+    contentIds = deserialized ?? [];
+    return deserialized != null;
   }
 }
