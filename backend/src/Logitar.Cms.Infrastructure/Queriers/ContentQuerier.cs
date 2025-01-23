@@ -105,7 +105,7 @@ internal class ContentQuerier : IContentQuerier
   public async Task<ContentModel?> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
     ContentEntity? content = await _contents.AsNoTracking()
-      .Include(x => x.ContentType)
+      .Include(x => x.ContentType).ThenInclude(x => x!.Fields).ThenInclude(x => x.FieldType)
       .Include(x => x.Locales).ThenInclude(x => x.Language)
       .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
@@ -117,7 +117,7 @@ internal class ContentQuerier : IContentQuerier
     string uniqueNameNormalized = Helper.Normalize(key.UniqueName);
 
     ContentEntity? content = await _contents.AsNoTracking()
-      .Include(x => x.ContentType)
+      .Include(x => x.ContentType).ThenInclude(x => x!.Fields).ThenInclude(x => x.FieldType)
       .Include(x => x.Locales).ThenInclude(x => x.Language)
       .SingleOrDefaultAsync(x => x.ContentType!.Id == key.ContentTypeId
         && x.Locales.Any(l => (key.LanguageId.HasValue ? l.Language!.Id == key.LanguageId.Value : l.LanguageId == null)
