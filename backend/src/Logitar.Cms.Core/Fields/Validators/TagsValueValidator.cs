@@ -8,7 +8,8 @@ internal class TagsValueValidator : IFieldValueValidator
   {
     List<ValidationFailure> failures = new(capacity: 1);
 
-    if (!TryParse(value, out _))
+    IReadOnlyCollection<string>? tags = TryParse(value);
+    if (tags == null)
     {
       ValidationFailure failure = new(propertyName, "The value must be a JSON-serialized string array.", value)
       {
@@ -20,25 +21,16 @@ internal class TagsValueValidator : IFieldValueValidator
     return Task.FromResult(new ValidationResult(failures));
   }
 
-  private static bool TryParse(string value, out IReadOnlyCollection<string> tags)
+  private static IReadOnlyCollection<string>? TryParse(string value)
   {
-    IReadOnlyCollection<string>? values;
+    IReadOnlyCollection<string>? values = null;
     try
     {
       values = JsonSerializer.Deserialize<IReadOnlyCollection<string>>(value);
     }
     catch (Exception)
     {
-      values = null;
     }
-
-    if (values == null)
-    {
-      tags = [];
-      return false;
-    }
-
-    tags = values;
-    return true;
+    return values;
   }
 }
