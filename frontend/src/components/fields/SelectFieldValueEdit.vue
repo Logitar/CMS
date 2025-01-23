@@ -2,6 +2,7 @@
 import { computed } from "vue";
 
 import AppSelect from "@/components/shared/AppSelect.vue";
+import AppMultiSelect from "@/components/shared/AppMultiSelect.vue";
 import type { FieldDefinition, FieldType } from "@/types/fields";
 
 const props = defineProps<{
@@ -10,14 +11,33 @@ const props = defineProps<{
 }>();
 
 const fieldType = computed<FieldType>(() => props.definition.fieldType);
+const values = computed<string[] | undefined>(() => (props.modelValue ? JSON.parse(props.modelValue) : undefined));
 
-defineEmits<{
+const emit = defineEmits<{
   (e: "update:model-value", value: string): void;
 }>();
+
+function onValuesUpdate(values: string[]): void {
+  emit("update:model-value", JSON.stringify(values));
+}
 </script>
 
 <template>
+  <AppMultiSelect
+    v-if="fieldType.select?.isMultiple"
+    floating
+    :id="definition.id"
+    :label="definition.displayName ?? definition.uniqueName"
+    :model-value="values"
+    :name="definition.uniqueName"
+    :options="fieldType.select?.options"
+    :placeholder="definition.placeholder ?? definition.displayName ?? definition.uniqueName"
+    raw
+    :required="definition.isRequired"
+    @update:model-value="onValuesUpdate"
+  />
   <AppSelect
+    v-else
     floating
     :id="definition.id"
     :label="definition.displayName ?? definition.uniqueName"
@@ -29,5 +49,4 @@ defineEmits<{
     :required="definition.isRequired"
     @update:model-value="$emit('update:model-value', $event)"
   />
-  <!-- TODO(fpion): multiple -->
 </template>

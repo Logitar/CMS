@@ -2,10 +2,12 @@
 import type { SelectOption } from "logitar-vue3-ui";
 import { computed } from "vue";
 import { nanoid } from "nanoid";
+import { parsingUtils } from "logitar-js";
 import { useI18n } from "vue-i18n";
 
 import AppTextarea from "./AppTextarea.vue";
 
+const { parseBoolean } = parsingUtils;
 const { t } = useI18n();
 
 const props = withDefaults(
@@ -16,6 +18,7 @@ const props = withDefaults(
     name?: string;
     options?: SelectOption[];
     placeholder?: string;
+    raw?: boolean | string;
     required?: boolean | string;
   }>(),
   {
@@ -37,6 +40,7 @@ const indexedOptions = computed<Map<string, string>>(() => {
   });
   return index;
 });
+const isRaw = computed<boolean>(() => parseBoolean(props.raw) ?? false);
 const rows = computed<number>(() => 1 + props.modelValue.length);
 
 const emit = defineEmits<{
@@ -74,12 +78,13 @@ function toggle(option: SelectOption): void {
       :model-value="formattedValue"
       :name="name"
       :placeholder="label"
+      :raw="raw"
       readonly
       :required="required"
       :rows="rows"
     />
     <ul class="dropdown-menu">
-      <li v-if="placeholder" class="disabled dropdown-item">{{ t(placeholder) }}</li>
+      <li v-if="placeholder" class="disabled dropdown-item">{{ isRaw ? placeholder : t(placeholder) }}</li>
       <li v-for="option in options" :key="option.value" :class="{ active: isSelected(option), 'dropdown-item': true }" @click.prevent="toggle(option)">
         <font-awesome-icon v-if="isSelected(option)" icon="fas fa-check" /> {{ option.text }}
       </li>
