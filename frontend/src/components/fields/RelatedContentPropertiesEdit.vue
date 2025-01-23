@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { TarCheckbox } from "logitar-vue3-ui";
 import { useI18n } from "vue-i18n";
 
+import AppCheckbox from "@/components/shared/AppCheckbox.vue";
 import ContentTypeSelect from "@/components/contents/ContentTypeSelect.vue";
 import type { RelatedContentProperties } from "@/types/fields";
 
@@ -28,9 +28,7 @@ function setIsMultiple(isMultiple: boolean): void {
 <template>
   <div>
     <h3>{{ t("fields.types.properties", { type: t("fields.types.dataType.options.RelatedContent") }) }}</h3>
-    <div class="my-3">
-      <TarCheckbox id="multiple" :label="t('fields.types.select.isMultiple')" :model-value="modelValue.isMultiple" @update:model-value="setIsMultiple" />
-    </div>
+    <AppCheckbox id="multiple" label="fields.types.select.isMultiple" :model-value="modelValue.isMultiple" @update:model-value="setIsMultiple" />
     <ContentTypeSelect :model-value="modelValue.contentTypeId" required @update:model-value="setContentTypeId($event ?? '')" />
   </div>
 </template>
