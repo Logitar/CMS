@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { TarCheckbox } from "logitar-vue3-ui";
 import { computed } from "vue";
 import { parsingUtils } from "logitar-js";
 
+import AppCheckbox from "@/components/shared/AppCheckbox.vue";
 import AppInput from "@/components/shared/AppInput.vue";
 import AppTextarea from "@/components/shared/AppTextarea.vue";
 import DateTimeInput from "@/components/shared/DateTimeInput.vue";
@@ -25,11 +25,12 @@ defineEmits<{
 <template>
   <div>
     <div v-if="fieldType.dataType === 'Boolean'" class="mb-3">
-      <TarCheckbox
+      <AppCheckbox
         :id="definition.id"
         :label="definition.displayName ?? definition.uniqueName"
         :model-value="parseBoolean(modelValue)"
         :name="definition.uniqueName"
+        raw
         @update:model-value="$emit('update:model-value', ($event as boolean).toString())"
       />
     </div>

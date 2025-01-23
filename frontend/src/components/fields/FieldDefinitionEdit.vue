@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { TarButton, TarCheckbox, TarModal } from "logitar-vue3-ui";
+import { TarButton, TarModal } from "logitar-vue3-ui";
 import { computed, ref, watch } from "vue";
 import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
+import AppCheckbox from "@/components/shared/AppCheckbox.vue";
 import DescriptionTextarea from "@/components/shared/DescriptionTextarea.vue";
 import DisplayNameInput from "@/components/shared/DisplayNameInput.vue";
 import FieldTypeSelect from "./FieldTypeSelect.vue";
@@ -118,15 +119,16 @@ watch(() => props.field, reset, { deep: true, immediate: true });
         <PlaceholderInput :id="field ? `placeholder-${field.id}` : undefined" v-model="placeholder" />
         <DescriptionTextarea :id="field ? `description-${field.id}` : undefined" v-model="description" />
         <div>
-          <TarCheckbox
+          <AppCheckbox
             :disabled="contentType.isInvariant"
             :id="field ? `invariant-${field.id}` : 'invariant-field'"
-            :label="t('fields.definitions.invariant')"
+            label="fields.definitions.invariant"
+            tight
             v-model="isInvariant"
           />
-          <TarCheckbox :id="field ? `required-${field.id}` : 'required'" :label="t('fields.definitions.required')" v-model="isRequired" />
-          <TarCheckbox :id="field ? `indexed-${field.id}` : 'indexed'" :label="t('fields.definitions.indexed')" v-model="isIndexed" />
-          <TarCheckbox :id="field ? `unique-${field.id}` : 'unique'" :label="t('fields.definitions.unique')" v-model="isUnique" />
+          <AppCheckbox :id="field ? `required-${field.id}` : 'required'" label="fields.definitions.required" tight v-model="isRequired" />
+          <AppCheckbox :id="field ? `indexed-${field.id}` : 'indexed'" label="fields.definitions.indexed" tight v-model="isIndexed" />
+          <AppCheckbox :id="field ? `unique-${field.id}` : 'unique'" label="fields.definitions.unique" tight v-model="isUnique" />
         </div>
       </form>
       <template #footer>

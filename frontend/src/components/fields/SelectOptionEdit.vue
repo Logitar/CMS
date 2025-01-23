@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { TarButton, TarCheckbox } from "logitar-vue3-ui";
+import { TarButton } from "logitar-vue3-ui";
 import { nanoid } from "nanoid";
-import { useI18n } from "vue-i18n";
 
+import AppCheckbox from "@/components/shared/AppCheckbox.vue";
 import AppInput from "@/components/shared/AppInput.vue";
 import type { SelectOption } from "@/types/fields";
-
-const { t } = useI18n();
 
 const props = withDefaults(
   defineProps<{
@@ -77,16 +75,18 @@ function setValue(value: string): void {
     />
     <div class="col">
       <div class="float-start">
-        <TarCheckbox
+        <AppCheckbox
           :id="`${id}-disabled`"
-          :label="t('fields.types.select.options.isDisabled')"
+          label="fields.types.select.options.isDisabled"
           :model-value="modelValue.isDisabled"
+          tight
           @update:model-value="setIsDisabled"
         />
-        <TarCheckbox
+        <AppCheckbox
           :id="`${id}-selected`"
-          :label="t('fields.types.select.options.isSelected')"
+          label="fields.types.select.options.isSelected"
           :model-value="modelValue.isSelected"
+          tight
           @update:model-value="setIsSelected"
         />
       </div>

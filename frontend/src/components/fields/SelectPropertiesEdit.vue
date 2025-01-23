@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { TarButton, TarCheckbox } from "logitar-vue3-ui";
+import { TarButton } from "logitar-vue3-ui";
 import { useI18n } from "vue-i18n";
 
+import AppCheckbox from "@/components/shared/AppCheckbox.vue";
 import SelectOptionEdit from "./SelectOptionEdit.vue";
 import type { SelectOption, SelectProperties } from "@/types/fields";
 
@@ -40,9 +41,7 @@ function setOption(index: number, option: SelectOption): void {
 <template>
   <div>
     <h3>{{ t("fields.types.properties", { type: t("fields.types.dataType.options.Select") }) }}</h3>
-    <div class="my-3">
-      <TarCheckbox id="multiple" :label="t('fields.types.select.isMultiple')" :model-value="modelValue.isMultiple" @update:model-value="setIsMultiple" />
-    </div>
+    <AppCheckbox id="multiple" label="fields.types.select.isMultiple" :model-value="modelValue.isMultiple" @update:model-value="setIsMultiple" />
     <h5>{{ t("fields.types.select.options.title") }}</h5>
     <div class="my-3">
       <TarButton icon="fas fa-plus" :text="t('actions.add')" variant="success" @click="addOption" />
