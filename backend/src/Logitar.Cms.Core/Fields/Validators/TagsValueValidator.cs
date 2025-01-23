@@ -4,13 +4,13 @@ namespace Logitar.Cms.Core.Fields.Validators;
 
 internal class TagsValueValidator : IFieldValueValidator
 {
-  public Task<ValidationResult> ValidateAsync(string inputValue, string propertyName, CancellationToken cancellationToken)
+  public Task<ValidationResult> ValidateAsync(string value, string propertyName, CancellationToken cancellationToken)
   {
     List<ValidationFailure> failures = new(capacity: 1);
 
-    if (!TryParse(inputValue, out _))
+    if (!TryParse(value, out _))
     {
-      ValidationFailure failure = new(propertyName, "The value must be a JSON-serialized string array.", inputValue)
+      ValidationFailure failure = new(propertyName, "The value must be a JSON-serialized string array.", value)
       {
         ErrorCode = nameof(TagsValueValidator)
       };
