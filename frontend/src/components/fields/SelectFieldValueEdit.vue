@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-import AppSelect from "@/components/shared/AppSelect.vue";
 import AppMultiSelect from "@/components/shared/AppMultiSelect.vue";
+import AppSelect from "@/components/shared/AppSelect.vue";
 import type { FieldDefinition, FieldType } from "@/types/fields";
 
 const props = defineProps<{
