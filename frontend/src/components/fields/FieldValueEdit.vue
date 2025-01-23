@@ -7,6 +7,7 @@ import NumberFieldValueEdit from "./NumberFieldValueEdit.vue";
 import RichTextFieldValueEdit from "./RichTextFieldValueEdit.vue";
 import SelectFieldValueEdit from "./SelectFieldValueEdit.vue";
 import StringFieldValueEdit from "./StringFieldValueEdit.vue";
+import TagsFieldValueEdit from "./TagsFieldValueEdit.vue";
 import type { DataType, FieldDefinition } from "@/types/fields";
 
 const props = defineProps<{
@@ -47,6 +48,7 @@ defineEmits<{
       :model-value="modelValue"
       @update:model-value="$emit('update:model-value', $event)"
     />
+    <!-- TODO(fpion): RelatedContent -->
     <SelectFieldValueEdit
       v-else-if="dataType === 'Select'"
       :definition="definition"
@@ -59,8 +61,12 @@ defineEmits<{
       :model-value="modelValue"
       @update:model-value="$emit('update:model-value', $event)"
     />
+    <TagsFieldValueEdit
+      v-else-if="dataType === 'Tags'"
+      :definition="definition"
+      :model-value="modelValue"
+      @update:model-value="$emit('update:model-value', $event)"
+    />
     <!-- TODO(fpion): FieldDefinition.Description -->
-    <!-- TODO(fpion): RelatedContent -->
-    <!-- TODO(fpion): Tags -->
   </div>
 </template>
