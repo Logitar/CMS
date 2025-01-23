@@ -40,7 +40,8 @@ const hasChanges = computed<boolean>(
   () =>
     uniqueName.value !== props.locale.uniqueName ||
     displayName.value !== (props.locale.displayName ?? "") ||
-    description.value !== (props.locale.description ?? ""),
+    description.value !== (props.locale.description ?? "") ||
+    JSON.stringify([...fieldValues.value.entries()].map(([id, value]) => ({ id, value }) as FieldValue)) !== JSON.stringify(props.locale.fieldValues),
 );
 
 function reset(): void {

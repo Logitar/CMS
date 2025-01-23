@@ -14,6 +14,7 @@ const { t } = useI18n();
 const props = withDefaults(
   defineProps<
     SelectOptions & {
+      raw?: boolean | string;
       rules?: ValidationRules;
       showStatus?: ShowStatus;
       validation?: ValidationType;
@@ -31,6 +32,7 @@ const selectRef = ref<InstanceType<typeof TarSelect> | null>(null);
 const describedBy = computed<string>(() => `${props.id}_invalid-feedback`);
 const inputName = computed<string>(() => props.name ?? props.id);
 const inputRequired = computed<boolean | "label">(() => (parseBoolean(props.required) ? (props.validation === "server" ? true : "label") : false));
+const isRaw = computed<boolean>(() => parseBoolean(props.raw) ?? false);
 
 const validationRules = computed<ValidationRules>(() => {
   const rules: ValidationRules = {};
@@ -45,7 +47,7 @@ const validationRules = computed<ValidationRules>(() => {
 
   return { ...rules, ...props.rules };
 });
-const displayLabel = computed<string>(() => (props.label ? t(props.label).toLowerCase() : inputName.value));
+const displayLabel = computed<string>(() => (props.label ? (isRaw.value ? props.label : t(props.label)).toLowerCase() : inputName.value));
 const { errorMessage, handleChange, meta, value } = useField<string>(inputName, validationRules, {
   initialValue: props.modelValue,
   label: displayLabel,
@@ -70,17 +72,17 @@ defineExpose({ focus });
 
 <template>
   <TarSelect
-    :aria-label="ariaLabel ? t(ariaLabel) : undefined"
+    :aria-label="ariaLabel ? (isRaw ? ariaLabel : t(ariaLabel)) : undefined"
     :described-by="describedBy"
     :disabled="disabled"
     :floating="floating"
     :id="id"
-    :label="label ? t(label) : undefined"
+    :label="label ? (isRaw ? label : t(label)) : undefined"
     :model-value="validation === 'server' ? modelValue : value"
     :multiple="multiple"
     :name="name"
     :options="options"
-    :placeholder="placeholder ? t(placeholder) : undefined"
+    :placeholder="placeholder ? (isRaw ? placeholder : t(placeholder)) : undefined"
     ref="selectRef"
     :required="inputRequired"
     :size="size"
