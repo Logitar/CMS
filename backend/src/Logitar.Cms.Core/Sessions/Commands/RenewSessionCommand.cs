@@ -9,6 +9,12 @@ using MediatR;
 
 namespace Logitar.Cms.Core.Sessions.Commands;
 
+/// <exception cref="IncorrectSessionSecretException"></exception>
+/// <exception cref="InvalidRefreshTokenException"></exception>
+/// <exception cref="SessionIsNotActiveException"></exception>
+/// <exception cref="SessionIsNotPersistentException"></exception>
+/// <exception cref="SessionNotFoundException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record RenewSessionCommand(RenewSessionPayload Payload) : IRequest<SessionModel>;
 
 internal class RenewSessionCommandHandler : IRequestHandler<RenewSessionCommand, SessionModel>

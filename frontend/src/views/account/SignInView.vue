@@ -5,11 +5,13 @@ import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
-import UsernameInput from "@/components/users/UsernameInput.vue";
-import PasswordInput from "@/components/users/PasswordInput.vue";
 import AppInput from "@/components/shared/AppInput.vue";
-import type { ApiError, Error } from "@/types/api";
+import PasswordInput from "@/components/users/PasswordInput.vue";
+import UsernameInput from "@/components/users/UsernameInput.vue";
+import { ErrorCodes } from "@/enums/errorCodes";
+import { StatusCodes } from "@/enums/statusCodes";
 import { handleErrorKey } from "@/inject/App";
+import { isError } from "@/helpers/errors";
 import { signIn } from "@/api/account";
 import { useAccountStore } from "@/stores/account";
 
@@ -33,8 +35,7 @@ const onSubmit = handleSubmit(async () => {
     const redirect: string | undefined = route.query.redirect?.toString();
     router.push(redirect ?? { name: "Profile" });
   } catch (e: unknown) {
-    const { data, status } = e as ApiError;
-    if (status === 400 && (data as Error)?.code === "InvalidCredentials") {
+    if (isError(e, StatusCodes.BadRequest, ErrorCodes.InvalidCredentials)) {
       invalidCredentials.value = true;
       password.value = "";
       passwordRef.value?.focus();

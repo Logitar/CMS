@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
 using Logitar.Cms.Core;
+using Logitar.Identity.Core;
+using Logitar.Identity.Core.Users;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
@@ -114,11 +116,12 @@ public class ExceptionHandler : IExceptionHandler
 
   private static int? GetStatusCode(Exception exception)
   {
-    if (exception is ValidationException || exception is BadRequestException)
+    if (exception is ValidationException || exception is BadRequestException || exception is InvalidCredentialsException)
     {
       return StatusCodes.Status400BadRequest;
     }
-    if (exception is ConflictException)
+    if (exception is ConflictException || exception is CustomIdentifierAlreadyUsedException || exception is EmailAddressAlreadyUsedException
+      || exception is Identity.Core.UniqueNameAlreadyUsedException)
     {
       return StatusCodes.Status409Conflict;
     }
