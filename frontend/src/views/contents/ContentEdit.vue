@@ -21,7 +21,19 @@ const { t } = useI18n();
 
 const content = ref<Content>();
 
-const locales = computed<ContentLocale[]>(() => (content.value ? content.value.locales.filter((locale) => Boolean(locale.language)) : [])); // TODO(fpion): sorting
+const isInvariant = computed<boolean>(() => Boolean(content.value && content.value.contentType.isInvariant));
+const locales = computed<ContentLocale[]>(() => (content.value ? content.value.locales.filter((locale) => Boolean(locale.language)) : []).sort(compare));
+
+function compare(left: ContentLocale, right: ContentLocale): -1 | 0 | 1 {
+  if (left.language && right.language) {
+    if (left.language.locale.displayName < right.language.locale.displayName) {
+      return -1;
+    } else if (left.language.locale.displayName > right.language.locale.displayName) {
+      return 1;
+    }
+  }
+  return 0;
+}
 
 function setModel(model: Content): void {
   content.value = model;
@@ -55,15 +67,18 @@ onMounted(async () => {
     <template v-if="content">
       <h1>{{ content.invariant.displayName ?? content.invariant.uniqueName }}</h1>
       <StatusDetail :aggregate="content" />
-      <ContentLocaleEdit v-if="content.contentType.isInvariant" :content="content" :locale="content.invariant" @error="handleError" @saved="onSaved" />
-      <TarTabs v-else>
-        <TarTab active id="invariant" :title="t('contents.items.invariant')">
-          <ContentLocaleEdit :content="content" :locale="content.invariant" @error="handleError" @saved="onSaved" />
-        </TarTab>
-        <TarTab v-for="locale in locales" :key="locale.language?.id" :id="locale.language?.id" :title="locale.language?.locale.displayName">
-          <ContentLocaleEdit :content="content" :locale="locale" @error="handleError" @saved="onSaved" />
-        </TarTab>
-      </TarTabs>
+      <ContentLocaleEdit v-if="isInvariant" :content="content" :locale="content.invariant" @error="handleError" @saved="onSaved" />
+      <template v-else>
+        <p>TODO: add locale</p>
+        <TarTabs>
+          <TarTab active id="invariant" :title="t('contents.items.invariant')">
+            <ContentLocaleEdit :content="content" :locale="content.invariant" @error="handleError" @saved="onSaved" />
+          </TarTab>
+          <TarTab v-for="locale in locales" :key="locale.language?.id" :id="locale.language?.id" :title="locale.language?.locale.displayName">
+            <ContentLocaleEdit :content="content" :locale="locale" @error="handleError" @saved="onSaved" />
+          </TarTab>
+        </TarTabs>
+      </template>
     </template>
   </main>
 </template>
