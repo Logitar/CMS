@@ -55,7 +55,8 @@ onMounted(async () => {
     <template v-if="content">
       <h1>{{ content.invariant.displayName ?? content.invariant.uniqueName }}</h1>
       <StatusDetail :aggregate="content" />
-      <TarTabs>
+      <ContentLocaleEdit v-if="content.contentType.isInvariant" :content="content" :locale="content.invariant" @error="handleError" @saved="onSaved" />
+      <TarTabs v-else>
         <TarTab active id="invariant" :title="t('contents.items.invariant')">
           <ContentLocaleEdit :content="content" :locale="content.invariant" @error="handleError" @saved="onSaved" />
         </TarTab>
