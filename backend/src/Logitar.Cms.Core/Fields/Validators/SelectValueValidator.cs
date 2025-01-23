@@ -14,26 +14,24 @@ internal class SelectValueValidator : IFieldValueValidator
 
   public Task<ValidationResult> ValidateAsync(string inputValue, string propertyName, CancellationToken cancellationToken)
   {
-    IReadOnlyCollection<string> values = Parse(inputValue);
-    List<ValidationFailure> failures = new(capacity: 1 + values.Count);
+    IReadOnlyCollection<string> values;
+    if (_settings.IsMultiple)
+    {
+      if (!TryParse(inputValue, out values))
+      {
+        ValidationFailure failure = new(propertyName, "The value must be a JSON-serialized string array.", inputValue)
+        {
+          ErrorCode = nameof(SelectValueValidator)
+        };
+        return Task.FromResult(new ValidationResult([failure]));
+      }
+    }
+    else
+    {
+      values = [inputValue];
+    }
 
-    if (values.Count < 1)
-    {
-      ValidationFailure failure = new(propertyName, "The value cannot be empty.", inputValue)
-      {
-        ErrorCode = "NotEmptyValidator"
-      };
-      failures.Add(failure);
-    }
-    else if (values.Count > 1 && !_settings.IsMultiple)
-    {
-      ValidationFailure failure = new(propertyName, "Exactly one value is allowed.", inputValue)
-      {
-        CustomState = new { values.Count },
-        ErrorCode = "MultipleValidator"
-      };
-      failures.Add(failure);
-    }
+    List<ValidationFailure> failures = new(capacity: values.Count);
 
     HashSet<string> allowedValues = _settings.Options.Select(option => option.Value ?? option.Text).ToHashSet();
     foreach (string value in values)
@@ -52,20 +50,18 @@ internal class SelectValueValidator : IFieldValueValidator
     return Task.FromResult(new ValidationResult(failures));
   }
 
-  private static IReadOnlyCollection<string> Parse(string value)
+  private static bool TryParse(string value, out IReadOnlyCollection<string> values)
   {
-    IReadOnlyCollection<string>? values = null;
-    if (value.StartsWith('[') && value.EndsWith(']'))
+    IReadOnlyCollection<string>? deserialized = null;
+    try
     {
-      try
-      {
-        values = JsonSerializer.Deserialize<IReadOnlyCollection<string>>(value);
-      }
-      catch (Exception)
-      {
-      }
+      deserialized = JsonSerializer.Deserialize<IReadOnlyCollection<string>>(value);
+    }
+    catch (Exception)
+    {
     }
 
-    return values ?? [value];
+    values = deserialized ?? [];
+    return deserialized != null;
   }
 }
