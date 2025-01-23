@@ -25,7 +25,10 @@ public record ContentLocale
     {
       foreach (KeyValuePair<Guid, string> fieldValue in fieldValues)
       {
-        cleanValues[fieldValue.Key] = fieldValue.Value.Trim();
+        if (!string.IsNullOrWhiteSpace(fieldValue.Value))
+        {
+          cleanValues[fieldValue.Key] = fieldValue.Value.Trim();
+        }
       }
     }
     FieldValues = cleanValues.AsReadOnly();
