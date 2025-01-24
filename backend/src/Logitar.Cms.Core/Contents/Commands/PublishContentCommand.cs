@@ -39,7 +39,7 @@ internal class PublishContentCommandHandler : IRequestHandler<PublishContentComm
     if (command.LanguageId.HasValue)
     {
       LanguageId languageId = new(command.LanguageId.Value);
-      if (!content.HasLocale(languageId))
+      if (!content.HasLocale(languageId)) // TODO(fpion): refactor, with PublishLocale?
       {
         return null;
       }
