@@ -30,7 +30,6 @@ public class PublishedContentEntity
   }
   public string? DisplayName { get; private set; }
   public string? Description { get; private set; }
-
   public string? FieldValues { get; private set; }
 
   public string? PublishedBy { get; private set; }
@@ -73,7 +72,6 @@ public class PublishedContentEntity
     UniqueName = contentLocale.UniqueName;
     DisplayName = contentLocale.DisplayName;
     Description = contentLocale.Description;
-
     FieldValues = contentLocale.FieldValues;
 
     PublishedBy = @event.ActorId?.Value;

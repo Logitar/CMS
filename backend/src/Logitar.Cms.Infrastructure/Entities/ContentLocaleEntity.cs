@@ -102,7 +102,7 @@ public class ContentLocaleEntity
     }
     else
     {
-      PublishedContent.Update(@event);
+      PublishedContent.Update(this, @event);
     }
   }
 
