@@ -14,6 +14,7 @@ public class ContentEntity : AggregateEntity
 
   public List<FieldIndexEntity> FieldIndex { get; private set; } = [];
   public List<ContentLocaleEntity> Locales { get; private set; } = [];
+  public List<PublishedContentEntity> PublishedContents { get; private set; } = [];
   public List<UniqueIndexEntity> UniqueIndex { get; private set; } = [];
 
   public ContentEntity(ContentTypeEntity contentType, ContentCreated @event) : base(@event)
