@@ -16,11 +16,11 @@ export type ContentLocale = {
   uniqueName: string;
   displayName?: string;
   description?: string;
+  fieldValues: FieldValue[];
   createdBy: Actor;
   createdOn: string;
   updatedBy: Actor;
   updatedOn: string;
-  fieldValues: FieldValue[];
 };
 
 export type ContentSort = "CreatedOn" | "DisplayName" | "UniqueName" | "UpdatedOn";

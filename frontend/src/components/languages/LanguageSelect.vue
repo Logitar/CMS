@@ -12,9 +12,10 @@ import { searchLanguages } from "@/api/languages";
 const { orderBy } = arrayUtils;
 const { parseBoolean } = parsingUtils;
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     id?: string;
+    exclude?: string[];
     label?: string;
     modelValue?: string;
     noStatus?: boolean | string;
@@ -22,6 +23,7 @@ withDefaults(
     required?: boolean | string;
   }>(),
   {
+    exclude: () => [],
     id: "language",
     label: "languages.select.label",
     placeholder: "languages.select.placeholder",
@@ -32,10 +34,12 @@ const languages = ref<Language[]>([]);
 
 const options = computed<SelectOption[]>(() =>
   orderBy(
-    languages.value.map((language) => ({
-      text: formatLanguage(language),
-      value: language.id,
-    })),
+    languages.value
+      .filter(({ id }) => !props.exclude.includes(id))
+      .map((language) => ({
+        text: formatLanguage(language),
+        value: language.id,
+      })),
     "text",
   ),
 );
@@ -81,5 +85,9 @@ onMounted(async () => {
     :required="required"
     :validation="parseBoolean(noStatus) ? 'server' : undefined"
     @update:model-value="onSelected"
-  />
+  >
+    <template #append>
+      <slot name="append"></slot>
+    </template>
+  </AppSelect>
 </template>

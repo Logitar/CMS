@@ -13,13 +13,13 @@ public record ContentLocaleModel
   public string? DisplayName { get; set; }
   public string? Description { get; set; }
 
+  public List<FieldValue> FieldValues { get; set; } = [];
+
   public ActorModel CreatedBy { get; set; } = new();
   public DateTime CreatedOn { get; set; }
 
   public ActorModel UpdatedBy { get; set; } = new();
   public DateTime UpdatedOn { get; set; }
-
-  public List<FieldValue> FieldValues { get; set; } = [];
 
   public ContentLocaleModel(ContentModel content)
   {
