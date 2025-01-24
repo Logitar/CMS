@@ -71,6 +71,7 @@ internal class ContentManager : IContentManager
           throw new ContentUniqueNameAlreadyUsedException(content, languageId, invariantOrLocale, conflictId.Value);
         }
 
+        // TODO(fpion): isPublished
         await ValidateAsync(contentType, fieldTypes, content.Id, languageId, invariantOrLocale.FieldValues, isPublished: false, cancellationToken);
       }
     }
