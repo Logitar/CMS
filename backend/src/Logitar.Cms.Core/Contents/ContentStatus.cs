@@ -1,4 +1,4 @@
-﻿namespace Logitar.Cms.Infrastructure;
+﻿namespace Logitar.Cms.Core.Contents;
 
 public enum ContentStatus
 {

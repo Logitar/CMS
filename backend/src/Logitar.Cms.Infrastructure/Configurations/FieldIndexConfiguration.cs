@@ -1,4 +1,5 @@
-﻿using Logitar.Cms.Infrastructure.Entities;
+﻿using Logitar.Cms.Core.Contents;
+using Logitar.Cms.Infrastructure.Entities;
 using Logitar.Identity.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

@@ -1,4 +1,5 @@
-﻿using Logitar.Cms.Core.Contents.Events;
+﻿using Logitar.Cms.Core.Contents;
+using Logitar.Cms.Core.Contents.Events;
 using Logitar.Cms.Infrastructure.Entities;
 using Logitar.Data;
 using MediatR;
