@@ -54,6 +54,12 @@ internal class LanguageEvents : INotificationHandler<LanguageCreated>,
         .Where(new OperatorCondition(CmsDb.UniqueIndex.LanguageId, Operators.IsEqualTo(language.LanguageId)))
         .Build();
       await _context.Database.ExecuteSqlRawAsync(command.Text, command.Parameters.ToArray(), cancellationToken);
+
+      command = _commandHelper.Update()
+        .Set(new Update(CmsDb.PublishedContents.LanguageCode, language.CodeNormalized))
+        .Where(new OperatorCondition(CmsDb.PublishedContents.LanguageId, Operators.IsEqualTo(language.LanguageId)))
+        .Build();
+      await _context.Database.ExecuteSqlRawAsync(command.Text, command.Parameters.ToArray(), cancellationToken);
     }
   }
 

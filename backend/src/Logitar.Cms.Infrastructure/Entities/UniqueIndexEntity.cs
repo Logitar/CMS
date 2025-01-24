@@ -1,4 +1,5 @@
-﻿using Logitar.Identity.EntityFrameworkCore.Relational.IdentityDb;
+﻿using Logitar.Cms.Core.Contents;
+using Logitar.Identity.EntityFrameworkCore.Relational.IdentityDb;
 
 namespace Logitar.Cms.Infrastructure.Entities;
 

@@ -1,7 +1,6 @@
 ﻿using Bogus;
 using Logitar.Cms.Core.Fields.Settings;
 using Logitar.Security.Cryptography;
-using System.Reflection;
 using ValidationResult = FluentValidation.Results.ValidationResult;
 
 namespace Logitar.Cms.Core.Fields.Validators;

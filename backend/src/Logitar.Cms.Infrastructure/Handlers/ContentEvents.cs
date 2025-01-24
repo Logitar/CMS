@@ -1,4 +1,5 @@
-﻿using Logitar.Cms.Core.Contents.Events;
+﻿using Logitar.Cms.Core.Contents;
+using Logitar.Cms.Core.Contents.Events;
 using Logitar.Cms.Infrastructure.Entities;
 using Logitar.Data;
 using MediatR;
@@ -7,7 +8,8 @@ using Microsoft.EntityFrameworkCore;
 namespace Logitar.Cms.Infrastructure.Handlers;
 
 internal class ContentEvents : INotificationHandler<ContentCreated>,
-  INotificationHandler<ContentLocaleChanged>
+  INotificationHandler<ContentLocaleChanged>,
+  INotificationHandler<ContentLocalePublished>
 {
   private readonly ICommandHelper _commandHelper;
   private readonly CmsContext _context;
@@ -75,6 +77,24 @@ internal class ContentEvents : INotificationHandler<ContentCreated>,
       await _context.Database.ExecuteSqlRawAsync(command.Text, command.Parameters.ToArray(), cancellationToken);
 
       await UpdateIndicesAsync(locale, ContentStatus.Latest, cancellationToken);
+    }
+  }
+
+  public async Task Handle(ContentLocalePublished @event, CancellationToken cancellationToken)
+  {
+    ContentEntity? content = await _context.Contents
+      .Include(x => x.ContentType).ThenInclude(x => x!.Fields).ThenInclude(x => x.FieldType)
+      .Include(x => x.Locales).ThenInclude(x => x.Language)
+      .Include(x => x.Locales).ThenInclude(x => x.PublishedContent)
+      .SingleOrDefaultAsync(x => x.StreamId == @event.StreamId.Value, cancellationToken);
+    if (content != null && content.Version == (@event.Version - 1))
+    {
+      ContentLocaleEntity? locale = content.Publish(@event)
+        ?? throw new InvalidOperationException($"The content 'StreamId={@event.StreamId}' locale 'LanguageId={@event.LanguageId}' could not be found.");
+
+      await _context.SaveChangesAsync(cancellationToken);
+
+      await UpdateIndicesAsync(locale, ContentStatus.Published, cancellationToken);
     }
   }
 

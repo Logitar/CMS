@@ -15,9 +15,11 @@ public class Content : AggregateRoot
   public ContentTypeId ContentTypeId { get; private set; }
 
   private ContentLocale? _invariant = null;
+  private ContentStatus _invariantStatus;
   public ContentLocale Invariant => _invariant ?? throw new InvalidOperationException($"The {nameof(Invariant)} has not been initialized yet.");
 
   private readonly Dictionary<LanguageId, ContentLocale> _locales = [];
+  private readonly Dictionary<LanguageId, ContentStatus> _localeStatuses = [];
   public IReadOnlyDictionary<LanguageId, ContentLocale> Locales => _locales.AsReadOnly();
 
   public Content() : base()
@@ -33,6 +35,7 @@ public class Content : AggregateRoot
     ContentTypeId = @event.ContentTypeId;
 
     _invariant = @event.Invariant;
+    _invariantStatus = ContentStatus.Latest;
   }
 
   public ContentLocale FindLocale(Language language) => FindLocale(language.Id);
@@ -43,6 +46,50 @@ public class Content : AggregateRoot
 
   public bool HasLocale(Language language) => HasLocale(language.Id);
   public bool HasLocale(LanguageId languageId) => _locales.ContainsKey(languageId);
+
+  public bool IsInvariantPublished() => _invariantStatus == ContentStatus.Published;
+  public bool IsLocalePublished(Language language) => IsLocalePublished(language.Id);
+  public bool IsLocalePublished(LanguageId languageId) => _localeStatuses.TryGetValue(languageId, out ContentStatus status) && status == ContentStatus.Published;
+  public bool IsPublished(LanguageId? languageId) => languageId.HasValue ? IsLocalePublished(languageId.Value) : IsInvariantPublished();
+
+  public void Publish(ActorId? actorId = null)
+  {
+    PublishInvariant(actorId);
+
+    foreach (LanguageId languageId in _locales.Keys)
+    {
+      PublishLocale(languageId, actorId);
+    }
+  }
+  public void PublishInvariant(ActorId? actorId = null)
+  {
+    if (_invariantStatus != ContentStatus.Published)
+    {
+      Raise(new ContentLocalePublished(LanguageId: null), actorId);
+    }
+  }
+  public bool PublishLocale(Language language, ActorId? actorId = null) => PublishLocale(language.Id, actorId);
+  public bool PublishLocale(LanguageId languageId, ActorId? actorId = null)
+  {
+    if (!HasLocale(languageId))
+    {
+      return false;
+    }
+
+    Raise(new ContentLocalePublished(languageId), actorId);
+    return true;
+  }
+  protected virtual void Handle(ContentLocalePublished @event)
+  {
+    if (@event.LanguageId.HasValue)
+    {
+      _localeStatuses[@event.LanguageId.Value] = ContentStatus.Published;
+    }
+    else
+    {
+      _invariantStatus = ContentStatus.Published;
+    }
+  }
 
   public void SetInvariant(ContentLocale invariant, ActorId? actorId = null)
   {
@@ -64,10 +111,12 @@ public class Content : AggregateRoot
     if (@event.LanguageId.HasValue)
     {
       _locales[@event.LanguageId.Value] = @event.Locale;
+      _localeStatuses[@event.LanguageId.Value] = ContentStatus.Latest;
     }
     else
     {
       _invariant = @event.Locale;
+      _invariantStatus = ContentStatus.Latest;
     }
   }
 

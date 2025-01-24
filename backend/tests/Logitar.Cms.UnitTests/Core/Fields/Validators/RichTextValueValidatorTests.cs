@@ -1,7 +1,6 @@
 ﻿using Logitar.Cms.Core.Fields.Settings;
 using Logitar.Security.Cryptography;
 using System.Net.Mime; // NOTE(fpion): cannot be added to CSPROJ due to ContentType aggregate.
-using System.Reflection;
 using ValidationResult = FluentValidation.Results.ValidationResult;
 
 namespace Logitar.Cms.Core.Fields.Validators;

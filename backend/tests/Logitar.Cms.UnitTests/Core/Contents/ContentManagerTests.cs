@@ -80,10 +80,10 @@ public class ContentManagerTests
     _contentRepository.Verify(x => x.SaveAsync(content, _cancellationToken), Times.Once);
   }
 
-  [Fact(DisplayName = "It should save contents when the field values are vaid.")]
+  [Fact(DisplayName = "It should save contents when the field values are valid.")]
   public async Task Given_ValidFieldValues_When_SaveAsync_Then_Saved()
   {
-    FieldTypeId[] fieldTypeIds = [_personNameType.Id];
+    FieldTypeId[] fieldTypeIds = [_emailAddressType.Id, _personNameType.Id];
     _fieldTypeRepository.Setup(x => x.LoadAsync(It.Is<IEnumerable<FieldTypeId>>(y => y.SequenceEqual(fieldTypeIds)), _cancellationToken))
       .ReturnsAsync([_personNameType]);
 
@@ -99,7 +99,32 @@ public class ContentManagerTests
         [_lastName.Id] = _faker.Person.LastName
       });
     Content content = new(_authorType, invariant);
-    content.ClearChanges();
+
+    await _manager.SaveAsync(content, _authorType, _cancellationToken);
+
+    _contentRepository.Verify(x => x.SaveAsync(content, _cancellationToken), Times.Once);
+  }
+
+  [Fact(DisplayName = "It should save published contents when the field values are valid.")]
+  public async Task Given_PublishedValidFieldValues_When_SaveAsync_Then_Saved()
+  {
+    FieldTypeId[] fieldTypeIds = [_emailAddressType.Id, _personNameType.Id];
+    _fieldTypeRepository.Setup(x => x.LoadAsync(It.Is<IEnumerable<FieldTypeId>>(y => y.SequenceEqual(fieldTypeIds)), _cancellationToken))
+      .ReturnsAsync([_personNameType]);
+
+    _fieldValueValidatorFactory.Setup(x => x.Create(_personNameType)).Returns(new StringValueValidator((StringSettings)_personNameType.Settings));
+
+    ContentLocale invariant = new(
+      new UniqueName(Content.UniqueNameSettings, _faker.Person.UserName),
+      new DisplayName(_faker.Person.FullName),
+      description: null,
+      fieldValues: new Dictionary<Guid, string>
+      {
+        [_firstName.Id] = _faker.Person.FirstName,
+        [_lastName.Id] = _faker.Person.LastName
+      });
+    Content content = new(_authorType, invariant);
+    content.PublishInvariant();
 
     await _manager.SaveAsync(content, _authorType, _cancellationToken);
 
@@ -244,5 +269,26 @@ public class ContentManagerTests
       && e.AttemptedValue.Equals(birthdateId) && e.PropertyName == "FieldValues");
     Assert.Contains(exception.Errors, e => e.ErrorCode == "UnexpectedFieldValidator" && e.ErrorMessage == "The specified field was not expected."
       && e.AttemptedValue.Equals(genderId) && e.PropertyName == "FieldValues");
+  }
+
+  [Fact(DisplayName = "It should throw ValidationException when published contents are missing fields.")]
+  public async Task Given_TODO_When_SaveAsync_Then_ValidationException()
+  {
+    FieldTypeId[] fieldTypeIds = [_emailAddressType.Id, _personNameType.Id];
+    _fieldTypeRepository.Setup(x => x.LoadAsync(It.Is<IEnumerable<FieldTypeId>>(y => y.SequenceEqual(fieldTypeIds)), _cancellationToken))
+      .ReturnsAsync([_personNameType]);
+
+    _fieldValueValidatorFactory.Setup(x => x.Create(_personNameType)).Returns(new StringValueValidator((StringSettings)_personNameType.Settings));
+
+    ContentLocale invariant = new(new UniqueName(Content.UniqueNameSettings, _faker.Person.UserName), new DisplayName(_faker.Person.FullName));
+    Content content = new(_authorType, invariant);
+    content.PublishInvariant();
+
+    var exception = await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await _manager.SaveAsync(content, _authorType, _cancellationToken));
+    Assert.Equal(2, exception.Errors.Count());
+    Assert.Contains(exception.Errors, e => e.ErrorCode == "RequiredFieldValidator" && e.ErrorMessage == "The specified field is missing."
+      && e.AttemptedValue.Equals(_firstName.Id) && e.PropertyName == "FieldValues");
+    Assert.Contains(exception.Errors, e => e.ErrorCode == "RequiredFieldValidator" && e.ErrorMessage == "The specified field is missing."
+      && e.AttemptedValue.Equals(_lastName.Id) && e.PropertyName == "FieldValues");
   }
 }

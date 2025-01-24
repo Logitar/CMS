@@ -14,6 +14,7 @@ public class ContentEntity : AggregateEntity
 
   public List<FieldIndexEntity> FieldIndex { get; private set; } = [];
   public List<ContentLocaleEntity> Locales { get; private set; } = [];
+  public List<PublishedContentEntity> PublishedContents { get; private set; } = [];
   public List<UniqueIndexEntity> UniqueIndex { get; private set; } = [];
 
   public ContentEntity(ContentTypeEntity contentType, ContentCreated @event) : base(@event)
@@ -47,6 +48,22 @@ public class ContentEntity : AggregateEntity
       }
     }
     return actorIds.AsReadOnly();
+  }
+
+  public ContentLocaleEntity? Publish(ContentLocalePublished @event)
+  {
+    Update(@event);
+
+    ContentLocaleEntity? locale = Locales.SingleOrDefault(l => @event.LanguageId.HasValue
+      ? (l.Language != null && l.Language.Id == @event.LanguageId.Value.ToGuid())
+      : (l.Language == null));
+    if (locale == null)
+    {
+      return null;
+    }
+
+    locale.Publish(@event);
+    return locale;
   }
 
   public void SetLocale(LanguageEntity? language, ContentLocaleChanged @event)

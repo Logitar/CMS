@@ -31,6 +31,20 @@ public class ContentController : ControllerBase
     return ToActionResult(result);
   }
 
+  [HttpPatch("{contentId}/publish/all")]
+  public async Task<ActionResult<ContentModel>> PublishAllAsync(Guid contentId, CancellationToken cancellationToken)
+  {
+    ContentModel? content = await _mediator.Send(new PublishContentCommand(contentId), cancellationToken);
+    return content == null ? NotFound() : Ok(contentId);
+  }
+
+  [HttpPatch("{contentId}/publish")]
+  public async Task<ActionResult<ContentModel>> PublishAsync(Guid contentId, [FromQuery(Name = "language")] Guid? languageId, CancellationToken cancellationToken)
+  {
+    ContentModel? content = await _mediator.Send(new PublishContentCommand(contentId, languageId), cancellationToken);
+    return content == null ? NotFound() : Ok(contentId);
+  }
+
   [HttpGet("{id}")]
   public async Task<ActionResult<ContentModel>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {

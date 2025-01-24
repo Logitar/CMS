@@ -1,4 +1,5 @@
-﻿using Logitar.Cms.Core.Fields;
+﻿using Logitar.Cms.Core.Contents;
+using Logitar.Cms.Core.Fields;
 
 namespace Logitar.Cms.Infrastructure.Entities;
 

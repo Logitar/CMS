@@ -35,6 +35,7 @@ public class ContentLocaleEntity
 
   public string? FieldValues { get; private set; }
 
+  public PublishedContentEntity? PublishedContent { get; private set; }
   public List<FieldIndexEntity> FieldIndex { get; private set; } = [];
   public List<UniqueIndexEntity> UniqueIndex { get; private set; } = [];
 
@@ -91,6 +92,18 @@ public class ContentLocaleEntity
       actorIds.AddRange(Language.GetActorIds());
     }
     return actorIds.AsReadOnly();
+  }
+
+  public void Publish(ContentLocalePublished @event)
+  {
+    if (PublishedContent == null)
+    {
+      PublishedContent = new(this, @event);
+    }
+    else
+    {
+      PublishedContent.Update(this, @event);
+    }
   }
 
   public void Update(ContentLocale locale, DomainEvent @event)
