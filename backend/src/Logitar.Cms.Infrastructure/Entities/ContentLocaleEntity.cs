@@ -82,6 +82,10 @@ public class ContentLocaleEntity
     {
       actorIds.Add(new ActorId(UpdatedBy));
     }
+    if (PublishedBy != null)
+    {
+      actorIds.Add(new ActorId(PublishedBy));
+    }
     if (ContentType != null)
     {
       actorIds.AddRange(ContentType.GetActorIds());

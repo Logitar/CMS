@@ -21,6 +21,10 @@ public record ContentLocaleModel
   public ActorModel UpdatedBy { get; set; } = new();
   public DateTime UpdatedOn { get; set; }
 
+  public bool IsPublished { get; set; }
+  public ActorModel? PublishedBy { get; set; }
+  public DateTime? PublishedOn { get; set; }
+
   public ContentLocaleModel(ContentModel content)
   {
     Content = content;
