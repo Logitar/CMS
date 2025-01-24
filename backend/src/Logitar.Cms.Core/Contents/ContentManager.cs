@@ -53,6 +53,10 @@ internal class ContentManager : IContentManager
       {
         languageIds.Add(localeChanged.LanguageId);
       }
+      else if (change is ContentLocalePublished localePublished)
+      {
+        languageIds.Add(localePublished.LanguageId);
+      }
     }
 
     if (languageIds.Count > 0)
@@ -71,8 +75,8 @@ internal class ContentManager : IContentManager
           throw new ContentUniqueNameAlreadyUsedException(content, languageId, invariantOrLocale, conflictId.Value);
         }
 
-        // TODO(fpion): isPublished
-        await ValidateAsync(contentType, fieldTypes, content.Id, languageId, invariantOrLocale.FieldValues, isPublished: false, cancellationToken);
+        bool isPublished = content.IsPublished(languageId);
+        await ValidateAsync(contentType, fieldTypes, content.Id, languageId, invariantOrLocale.FieldValues, isPublished, cancellationToken);
       }
     }
 

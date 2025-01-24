@@ -39,16 +39,14 @@ internal class PublishContentCommandHandler : IRequestHandler<PublishContentComm
     if (command.LanguageId.HasValue)
     {
       LanguageId languageId = new(command.LanguageId.Value);
-      if (!content.HasLocale(languageId)) // TODO(fpion): refactor, with PublishLocale?
+      if (!content.PublishLocale(languageId))
       {
         return null;
       }
-
-      // TODO(fpion): publish locale (languageId)
     }
     else
     {
-      // TODO(fpion): publish invariant
+      content.PublishInvariant(actorId);
     }
 
     await _contentManager.SaveAsync(content, cancellationToken);
