@@ -2,6 +2,7 @@
 using Logitar.Cms.Core.Contents.Events;
 using Logitar.Cms.Core.Contents.Models;
 using Logitar.Cms.Core.Localization;
+using Logitar.EventSourcing;
 using Logitar.Identity.Core;
 using Moq;
 
@@ -10,6 +11,7 @@ namespace Logitar.Cms.Core.Contents.Commands;
 [Trait(Traits.Category, Categories.Unit)]
 public class PublishContentCommandHandlerTests
 {
+  private readonly ActorId _actorId = ActorId.NewId();
   private readonly CancellationToken _cancellationToken = default;
   private readonly Faker _faker = new();
 
@@ -28,6 +30,8 @@ public class PublishContentCommandHandlerTests
   public PublishContentCommandHandlerTests()
   {
     _handler = new(_applicationContext.Object, _contentManager.Object, _contentQuerier.Object, _contentRepository.Object);
+
+    _applicationContext.Setup(x => x.ActorId).Returns(_actorId); // TODO(fpion): implement
 
     _content = new(_contentType, new ContentLocale(new UniqueName(Content.UniqueNameSettings, "my-blog-article")));
     _content.SetLocale(_language, _content.Invariant);
