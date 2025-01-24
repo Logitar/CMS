@@ -8,7 +8,8 @@ using Microsoft.EntityFrameworkCore;
 namespace Logitar.Cms.Infrastructure.Handlers;
 
 internal class ContentEvents : INotificationHandler<ContentCreated>,
-  INotificationHandler<ContentLocaleChanged>
+  INotificationHandler<ContentLocaleChanged>,
+  INotificationHandler<ContentLocalePublished>
 {
   private readonly ICommandHelper _commandHelper;
   private readonly CmsContext _context;
@@ -76,6 +77,34 @@ internal class ContentEvents : INotificationHandler<ContentCreated>,
       await _context.Database.ExecuteSqlRawAsync(command.Text, command.Parameters.ToArray(), cancellationToken);
 
       await UpdateIndicesAsync(locale, ContentStatus.Latest, cancellationToken);
+    }
+  }
+
+  public async Task Handle(ContentLocalePublished @event, CancellationToken cancellationToken)
+  {
+    ContentEntity? content = await _context.Contents
+      .Include(x => x.ContentType).ThenInclude(x => x!.Fields).ThenInclude(x => x.FieldType)
+      .Include(x => x.Locales)
+      .SingleOrDefaultAsync(x => x.StreamId == @event.StreamId.Value, cancellationToken);
+    if (content != null && content.Version == (@event.Version - 1))
+    {
+      LanguageEntity? language = null;
+      if (@event.LanguageId.HasValue)
+      {
+        language = await _context.Languages
+          .SingleOrDefaultAsync(x => x.StreamId == @event.LanguageId.Value.Value, cancellationToken)
+          ?? throw new InvalidOperationException($"The language entity 'StreamId={@event.LanguageId}' could not be found.");
+      }
+
+      #region TODO(fpion): publish
+      //content.SetLocale(language, @event);
+
+      //await _context.SaveChangesAsync(cancellationToken);
+      #endregion
+
+      ContentLocaleEntity locale = content.Locales.Single(l => l.LanguageId == language?.LanguageId);
+
+      await UpdateIndicesAsync(locale, ContentStatus.Published, cancellationToken);
     }
   }
 
