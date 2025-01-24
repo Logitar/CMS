@@ -80,7 +80,7 @@ public class ContentManagerTests
     _contentRepository.Verify(x => x.SaveAsync(content, _cancellationToken), Times.Once);
   }
 
-  [Fact(DisplayName = "It should save contents when the field values are vaid.")]
+  [Fact(DisplayName = "It should save contents when the field values are valid.")]
   public async Task Given_ValidFieldValues_When_SaveAsync_Then_Saved()
   {
     FieldTypeId[] fieldTypeIds = [_personNameType.Id];
