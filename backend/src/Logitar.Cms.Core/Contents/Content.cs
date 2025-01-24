@@ -75,8 +75,11 @@ public class Content : AggregateRoot
     {
       return false;
     }
+    else if (!IsPublished(languageId))
+    {
+      Raise(new ContentLocalePublished(languageId), actorId);
+    }
 
-    Raise(new ContentLocalePublished(languageId), actorId);
     return true;
   }
   protected virtual void Handle(ContentLocalePublished @event)
@@ -122,6 +125,48 @@ public class Content : AggregateRoot
 
   public ContentLocale? TryGetLocale(Language language) => TryGetLocale(language.Id);
   public ContentLocale? TryGetLocale(LanguageId languageId) => _locales.TryGetValue(languageId, out ContentLocale? locale) ? locale : null;
+
+  public void Unpublish(ActorId? actorId = null)
+  {
+    UnpublishInvariant(actorId);
+
+    foreach (LanguageId languageId in _locales.Keys)
+    {
+      UnpublishLocale(languageId, actorId);
+    }
+  }
+  public void UnpublishInvariant(ActorId? actorId = null)
+  {
+    if (_invariantStatus == ContentStatus.Published)
+    {
+      Raise(new ContentLocaleUnpublished(LanguageId: null), actorId);
+    }
+  }
+  public bool UnpublishLocale(Language language, ActorId? actorId = null) => UnpublishLocale(language.Id, actorId);
+  public bool UnpublishLocale(LanguageId languageId, ActorId? actorId = null)
+  {
+    if (!HasLocale(languageId))
+    {
+      return false;
+    }
+    else if (IsPublished(languageId))
+    {
+      Raise(new ContentLocaleUnpublished(languageId), actorId);
+    }
+
+    return true;
+  }
+  protected virtual void Handle(ContentLocaleUnpublished @event)
+  {
+    if (@event.LanguageId.HasValue)
+    {
+      _localeStatuses[@event.LanguageId.Value] = ContentStatus.Latest;
+    }
+    else
+    {
+      _invariantStatus = ContentStatus.Latest;
+    }
+  }
 
   public override string ToString() => $"{Invariant.DisplayName?.Value ?? Invariant.UniqueName.Value} | {base.ToString()}";
 }

@@ -272,7 +272,7 @@ public class ContentManagerTests
   }
 
   [Fact(DisplayName = "It should throw ValidationException when published contents are missing fields.")]
-  public async Task Given_TODO_When_SaveAsync_Then_ValidationException()
+  public async Task Given_MissingFields_When_SaveAsync_Then_ValidationException()
   {
     FieldTypeId[] fieldTypeIds = [_emailAddressType.Id, _personNameType.Id];
     _fieldTypeRepository.Setup(x => x.LoadAsync(It.Is<IEnumerable<FieldTypeId>>(y => y.SequenceEqual(fieldTypeIds)), _cancellationToken))

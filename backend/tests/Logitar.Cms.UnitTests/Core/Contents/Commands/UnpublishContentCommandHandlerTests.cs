@@ -9,7 +9,7 @@ using Moq;
 namespace Logitar.Cms.Core.Contents.Commands;
 
 [Trait(Traits.Category, Categories.Unit)]
-public class PublishContentCommandHandlerTests
+public class UnpublishContentCommandHandlerTests
 {
   private readonly ActorId _actorId = ActorId.NewId();
   private readonly CancellationToken _cancellationToken = default;
@@ -20,14 +20,14 @@ public class PublishContentCommandHandlerTests
   private readonly Mock<IContentQuerier> _contentQuerier = new();
   private readonly Mock<IContentRepository> _contentRepository = new();
 
-  private readonly PublishContentCommandHandler _handler;
+  private readonly UnpublishContentCommandHandler _handler;
 
   private readonly Language _language = new(new Locale("en"), isDefault: true);
   private readonly ContentType _contentType = new(new Identifier("BlogArticle"), isInvariant: false);
   private readonly Content _content;
   private readonly ContentModel _model = new();
 
-  public PublishContentCommandHandlerTests()
+  public UnpublishContentCommandHandlerTests()
   {
     _handler = new(_applicationContext.Object, _contentManager.Object, _contentQuerier.Object, _contentRepository.Object);
 
@@ -35,58 +35,60 @@ public class PublishContentCommandHandlerTests
 
     _content = new(_contentType, new ContentLocale(new UniqueName(Content.UniqueNameSettings, "my-blog-article")));
     _content.SetLocale(_language, _content.Invariant);
+    _content.PublishInvariant();
+    _content.PublishLocale(_language);
     _contentQuerier.Setup(x => x.ReadAsync(_content, _cancellationToken)).ReturnsAsync(_model);
     _contentRepository.Setup(x => x.LoadAsync(_content.Id, _cancellationToken)).ReturnsAsync(_content);
   }
 
-  [Fact(DisplayName = "It should publish a locale.")]
-  public async Task Given_Locale_When_Handle_Then_LocalePublished()
+  [Fact(DisplayName = "It should unpublish a locale.")]
+  public async Task Given_Locale_When_Handle_Then_LocaleUnpublished()
   {
-    PublishContentCommand command = new(_content.Id.ToGuid(), _language.Id.ToGuid());
+    UnpublishContentCommand command = new(_content.Id.ToGuid(), _language.Id.ToGuid());
     ContentModel? model = await _handler.Handle(command, _cancellationToken);
     Assert.NotNull(model);
     Assert.Same(_model, model);
 
     _contentManager.Verify(x => x.SaveAsync(_content, _cancellationToken), Times.Once);
 
-    Assert.Contains(_content.Changes, change => change is ContentLocalePublished published
-      && published.LanguageId == _language.Id && published.ActorId == _actorId);
+    Assert.Contains(_content.Changes, change => change is ContentLocaleUnpublished unpublished
+      && unpublished.LanguageId == _language.Id && unpublished.ActorId == _actorId);
   }
 
-  [Fact(DisplayName = "It should publish content invariant and all locales.")]
-  public async Task Given_Content_When_Handle_Then_InvariantAndLocalesPublished()
+  [Fact(DisplayName = "It should unpublish content invariant and all locales.")]
+  public async Task Given_Content_When_Handle_Then_InvariantAndLocalesUnpublished()
   {
-    PublishContentCommand command = new(_content.Id.ToGuid());
+    UnpublishContentCommand command = new(_content.Id.ToGuid());
     ContentModel? model = await _handler.Handle(command, _cancellationToken);
     Assert.NotNull(model);
     Assert.Same(_model, model);
 
     _contentManager.Verify(x => x.SaveAsync(_content, _cancellationToken), Times.Once);
 
-    Assert.Contains(_content.Changes, change => change is ContentLocalePublished published
-      && published.LanguageId == null && published.ActorId == _actorId);
-    Assert.Contains(_content.Changes, change => change is ContentLocalePublished published
-      && published.LanguageId == _language.Id && published.ActorId == _actorId);
+    Assert.Contains(_content.Changes, change => change is ContentLocaleUnpublished unpublished
+      && unpublished.LanguageId == null && unpublished.ActorId == _actorId);
+    Assert.Contains(_content.Changes, change => change is ContentLocaleUnpublished unpublished
+      && unpublished.LanguageId == _language.Id && unpublished.ActorId == _actorId);
   }
 
-  [Fact(DisplayName = "It should publish the invariant.")]
-  public async Task Given_Invariant_When_Handle_Then_InvariantPublished()
+  [Fact(DisplayName = "It should unpublish the invariant.")]
+  public async Task Given_Invariant_When_Handle_Then_InvariantUnpublished()
   {
-    PublishContentCommand command = new(_content.Id.ToGuid(), languageId: null);
+    UnpublishContentCommand command = new(_content.Id.ToGuid(), languageId: null);
     ContentModel? model = await _handler.Handle(command, _cancellationToken);
     Assert.NotNull(model);
     Assert.Same(_model, model);
 
     _contentManager.Verify(x => x.SaveAsync(_content, _cancellationToken), Times.Once);
 
-    Assert.Contains(_content.Changes, change => change is ContentLocalePublished published
-      && published.LanguageId == null && published.ActorId == _actorId);
+    Assert.Contains(_content.Changes, change => change is ContentLocaleUnpublished unpublished
+      && unpublished.LanguageId == null && unpublished.ActorId == _actorId);
   }
 
   [Fact(DisplayName = "It should return null when the content could not be found.")]
   public async Task Given_ContentNotFound_When_Handle_Then_NullReturned()
   {
-    PublishContentCommand command = new(Guid.NewGuid());
+    UnpublishContentCommand command = new(Guid.NewGuid());
     ContentModel? content = await _handler.Handle(command, _cancellationToken);
     Assert.Null(content);
   }
@@ -98,7 +100,7 @@ public class PublishContentCommandHandlerTests
     Content content = new(contentType, new ContentLocale(new UniqueName(Content.UniqueNameSettings, _faker.Person.UserName)));
     _contentRepository.Setup(x => x.LoadAsync(content.Id, _cancellationToken)).ReturnsAsync(content);
 
-    PublishContentCommand command = new(content.Id.ToGuid(), Guid.NewGuid());
+    UnpublishContentCommand command = new(content.Id.ToGuid(), Guid.NewGuid());
     ContentModel? result = await _handler.Handle(command, _cancellationToken);
     Assert.Null(result);
   }

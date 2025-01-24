@@ -81,4 +81,20 @@ public class ContentEntity : AggregateEntity
       locale.Update(@event.Locale, @event);
     }
   }
+
+  public ContentLocaleEntity? Unpublish(ContentLocaleUnpublished @event)
+  {
+    Update(@event);
+
+    ContentLocaleEntity? locale = Locales.SingleOrDefault(l => @event.LanguageId.HasValue
+      ? (l.Language != null && l.Language.Id == @event.LanguageId.Value.ToGuid())
+      : (l.Language == null));
+    if (locale == null)
+    {
+      return null;
+    }
+
+    locale.Unpublish(@event);
+    return locale;
+  }
 }

@@ -9,7 +9,8 @@ namespace Logitar.Cms.Infrastructure.Handlers;
 
 internal class ContentEvents : INotificationHandler<ContentCreated>,
   INotificationHandler<ContentLocaleChanged>,
-  INotificationHandler<ContentLocalePublished>
+  INotificationHandler<ContentLocalePublished>,
+  INotificationHandler<ContentLocaleUnpublished>
 {
   private readonly ICommandHelper _commandHelper;
   private readonly CmsContext _context;
@@ -95,6 +96,41 @@ internal class ContentEvents : INotificationHandler<ContentCreated>,
       await _context.SaveChangesAsync(cancellationToken);
 
       await UpdateIndicesAsync(locale, ContentStatus.Published, cancellationToken);
+    }
+  }
+
+  public async Task Handle(ContentLocaleUnpublished @event, CancellationToken cancellationToken)
+  {
+    ContentEntity? content = await _context.Contents
+      .Include(x => x.ContentType).ThenInclude(x => x!.Fields).ThenInclude(x => x.FieldType)
+      .Include(x => x.Locales).ThenInclude(x => x.Language)
+      .Include(x => x.Locales).ThenInclude(x => x.PublishedContent)
+      .SingleOrDefaultAsync(x => x.StreamId == @event.StreamId.Value, cancellationToken);
+    if (content != null && content.Version == (@event.Version - 1))
+    {
+      ContentLocaleEntity? locale = content.Unpublish(@event)
+        ?? throw new InvalidOperationException($"The content 'StreamId={@event.StreamId}' locale 'LanguageId={@event.LanguageId}' could not be found.");
+
+      if (locale.PublishedContent != null)
+      {
+        _context.PublishedContents.Remove(locale.PublishedContent);
+      }
+
+      await _context.SaveChangesAsync(cancellationToken);
+
+      ICommand command = _commandHelper.Delete(CmsDb.FieldIndex.Table)
+        .Where(
+          new OperatorCondition(CmsDb.FieldIndex.ContentLocaleId, Operators.IsEqualTo(locale.ContentLocaleId)),
+          new OperatorCondition(CmsDb.FieldIndex.Status, Operators.IsEqualTo(ContentStatus.Published.ToString())))
+        .Build();
+      await _context.Database.ExecuteSqlRawAsync(command.Text, command.Parameters.ToArray(), cancellationToken);
+
+      command = _commandHelper.Delete(CmsDb.FieldIndex.Table)
+        .Where(
+          new OperatorCondition(CmsDb.UniqueIndex.ContentLocaleId, Operators.IsEqualTo(locale.ContentLocaleId)),
+          new OperatorCondition(CmsDb.UniqueIndex.Status, Operators.IsEqualTo(ContentStatus.Published.ToString())))
+        .Build();
+      await _context.Database.ExecuteSqlRawAsync(command.Text, command.Parameters.ToArray(), cancellationToken);
     }
   }
 

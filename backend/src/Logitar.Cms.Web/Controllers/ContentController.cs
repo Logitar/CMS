@@ -77,6 +77,20 @@ public class ContentController : ControllerBase
     return Ok(contents);
   }
 
+  [HttpPatch("{contentId}/unpublish/all")]
+  public async Task<ActionResult<ContentModel>> UnpublishAllAsync(Guid contentId, CancellationToken cancellationToken)
+  {
+    ContentModel? content = await _mediator.Send(new UnpublishContentCommand(contentId), cancellationToken);
+    return content == null ? NotFound() : Ok(contentId);
+  }
+
+  [HttpPatch("{contentId}/unpublish")]
+  public async Task<ActionResult<ContentModel>> UnpublishAsync(Guid contentId, [FromQuery(Name = "language")] Guid? languageId, CancellationToken cancellationToken)
+  {
+    ContentModel? content = await _mediator.Send(new UnpublishContentCommand(contentId, languageId), cancellationToken);
+    return content == null ? NotFound() : Ok(contentId);
+  }
+
   [HttpPatch("{contentId}")]
   public async Task<ActionResult<ContentModel>> UpdateAsync(Guid contentId, Guid? languageId, [FromBody] UpdateContentPayload payload, CancellationToken cancellationToken)
   {
