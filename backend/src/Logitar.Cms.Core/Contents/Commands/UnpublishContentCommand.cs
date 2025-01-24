@@ -60,7 +60,7 @@ internal class UnpublishContentCommandHandler : IRequestHandler<UnpublishContent
     else if (command.LanguageId.HasValue)
     {
       LanguageId languageId = new(command.LanguageId.Value);
-      if (!content.UnpublishLocale(languageId))
+      if (!content.UnpublishLocale(languageId, actorId))
       {
         return null;
       }

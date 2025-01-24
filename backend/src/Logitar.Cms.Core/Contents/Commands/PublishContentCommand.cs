@@ -60,7 +60,7 @@ internal class PublishContentCommandHandler : IRequestHandler<PublishContentComm
     else if (command.LanguageId.HasValue)
     {
       LanguageId languageId = new(command.LanguageId.Value);
-      if (!content.PublishLocale(languageId))
+      if (!content.PublishLocale(languageId, actorId))
       {
         return null;
       }

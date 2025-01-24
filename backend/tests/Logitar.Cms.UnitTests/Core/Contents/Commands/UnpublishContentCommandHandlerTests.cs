@@ -31,7 +31,7 @@ public class UnpublishContentCommandHandlerTests
   {
     _handler = new(_applicationContext.Object, _contentManager.Object, _contentQuerier.Object, _contentRepository.Object);
 
-    _applicationContext.Setup(x => x.ActorId).Returns(_actorId); // TODO(fpion): implement
+    _applicationContext.Setup(x => x.ActorId).Returns(_actorId);
 
     _content = new(_contentType, new ContentLocale(new UniqueName(Content.UniqueNameSettings, "my-blog-article")));
     _content.SetLocale(_language, _content.Invariant);
@@ -51,7 +51,8 @@ public class UnpublishContentCommandHandlerTests
 
     _contentManager.Verify(x => x.SaveAsync(_content, _cancellationToken), Times.Once);
 
-    Assert.Contains(_content.Changes, change => change is ContentLocaleUnpublished unpublished && unpublished.LanguageId == _language.Id);
+    Assert.Contains(_content.Changes, change => change is ContentLocaleUnpublished unpublished
+      && unpublished.LanguageId == _language.Id && unpublished.ActorId == _actorId);
   }
 
   [Fact(DisplayName = "It should unpublish content invariant and all locales.")]
@@ -64,8 +65,10 @@ public class UnpublishContentCommandHandlerTests
 
     _contentManager.Verify(x => x.SaveAsync(_content, _cancellationToken), Times.Once);
 
-    Assert.Contains(_content.Changes, change => change is ContentLocaleUnpublished unpublished && unpublished.LanguageId == null);
-    Assert.Contains(_content.Changes, change => change is ContentLocaleUnpublished unpublished && unpublished.LanguageId == _language.Id);
+    Assert.Contains(_content.Changes, change => change is ContentLocaleUnpublished unpublished
+      && unpublished.LanguageId == null && unpublished.ActorId == _actorId);
+    Assert.Contains(_content.Changes, change => change is ContentLocaleUnpublished unpublished
+      && unpublished.LanguageId == _language.Id && unpublished.ActorId == _actorId);
   }
 
   [Fact(DisplayName = "It should unpublish the invariant.")]
@@ -78,7 +81,8 @@ public class UnpublishContentCommandHandlerTests
 
     _contentManager.Verify(x => x.SaveAsync(_content, _cancellationToken), Times.Once);
 
-    Assert.Contains(_content.Changes, change => change is ContentLocaleUnpublished unpublished && unpublished.LanguageId == null);
+    Assert.Contains(_content.Changes, change => change is ContentLocaleUnpublished unpublished
+      && unpublished.LanguageId == null && unpublished.ActorId == _actorId);
   }
 
   [Fact(DisplayName = "It should return null when the content could not be found.")]
