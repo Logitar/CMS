@@ -15,12 +15,12 @@ public class PublishedContentEntity
   public ContentTypeEntity? ContentType { get; private set; }
   public int ContentTypeId { get; private set; }
   public Guid ContentTypeUid { get; private set; }
-  public string ContentTypeName { get; private set; } = string.Empty;
+  public string ContentTypeName { get; private set; } = string.Empty; // TODO(fpion): update in event handlers
 
   public LanguageEntity? Language { get; private set; }
   public int? LanguageId { get; private set; }
   public Guid? LanguageUid { get; private set; }
-  public string? LanguageCode { get; private set; }
+  public string? LanguageCode { get; private set; } // TODO(fpion): update in event handlers
 
   public string UniqueName { get; private set; } = string.Empty;
   public string UniqueNameNormalized
