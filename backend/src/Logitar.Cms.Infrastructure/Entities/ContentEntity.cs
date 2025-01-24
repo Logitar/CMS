@@ -94,6 +94,7 @@ public class ContentEntity : AggregateEntity
       return null;
     }
 
+    locale.Unpublish(@event);
     return locale;
   }
 }

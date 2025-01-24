@@ -26,6 +26,7 @@ public class ContentLocaleEntity
   }
   public string? DisplayName { get; private set; }
   public string? Description { get; private set; }
+  public string? FieldValues { get; private set; }
 
   public string? CreatedBy { get; private set; }
   public DateTime CreatedOn { get; private set; }
@@ -33,7 +34,9 @@ public class ContentLocaleEntity
   public string? UpdatedBy { get; private set; }
   public DateTime UpdatedOn { get; private set; }
 
-  public string? FieldValues { get; private set; }
+  public bool IsPublished { get; private set; }
+  public string? PublishedBy { get; private set; }
+  public DateTime? PublishedOn { get; private set; }
 
   public PublishedContentEntity? PublishedContent { get; private set; }
   public List<FieldIndexEntity> FieldIndex { get; private set; } = [];
@@ -104,6 +107,17 @@ public class ContentLocaleEntity
     {
       PublishedContent.Update(this, @event);
     }
+
+    IsPublished = true;
+    PublishedBy = @event.ActorId?.Value;
+    PublishedOn = @event.OccurredOn.AsUniversalTime();
+  }
+
+  public void Unpublish(ContentLocaleUnpublished _)
+  {
+    IsPublished = false;
+    PublishedBy = null;
+    PublishedOn = null;
   }
 
   public void Update(ContentLocale locale, DomainEvent @event)

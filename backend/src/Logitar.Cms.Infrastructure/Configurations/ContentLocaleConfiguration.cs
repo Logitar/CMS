@@ -21,12 +21,16 @@ internal class ContentLocaleConfiguration : IEntityTypeConfiguration<ContentLoca
     builder.HasIndex(x => x.CreatedOn);
     builder.HasIndex(x => x.UpdatedBy);
     builder.HasIndex(x => x.UpdatedOn);
+    builder.HasIndex(x => x.IsPublished);
+    builder.HasIndex(x => x.PublishedBy);
+    builder.HasIndex(x => x.PublishedOn);
 
     builder.Property(x => x.UniqueName).HasMaxLength(UniqueName.MaximumLength);
     builder.Property(x => x.UniqueNameNormalized).HasMaxLength(UniqueName.MaximumLength);
     builder.Property(x => x.DisplayName).HasMaxLength(DisplayName.MaximumLength);
     builder.Property(x => x.CreatedBy).HasMaxLength(ActorId.MaximumLength);
     builder.Property(x => x.UpdatedBy).HasMaxLength(ActorId.MaximumLength);
+    builder.Property(x => x.PublishedBy).HasMaxLength(ActorId.MaximumLength);
 
     builder.HasOne(x => x.Content).WithMany(x => x.Locales)
       .HasPrincipalKey(x => x.ContentId).HasForeignKey(x => x.ContentId)
