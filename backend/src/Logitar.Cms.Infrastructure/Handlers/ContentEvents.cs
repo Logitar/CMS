@@ -89,7 +89,8 @@ internal class ContentEvents : INotificationHandler<ContentCreated>,
       .SingleOrDefaultAsync(x => x.StreamId == @event.StreamId.Value, cancellationToken);
     if (content != null && content.Version == (@event.Version - 1))
     {
-      ContentLocaleEntity? locale = content.Publish(@event) ?? throw new NotImplementedException(); // TODO(fpion): typed exception
+      ContentLocaleEntity? locale = content.Publish(@event)
+        ?? throw new InvalidOperationException($"The content 'StreamId={@event.StreamId}' locale 'LanguageId={@event.LanguageId}' could not be found.");
 
       await _context.SaveChangesAsync(cancellationToken);
 
