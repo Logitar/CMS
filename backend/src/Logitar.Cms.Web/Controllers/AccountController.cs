@@ -102,6 +102,25 @@ public class AccountController : ControllerBase
     return NoContent();
   }
 
+  [HttpPatch("profile")]
+  [Authorize]
+  public async Task<ActionResult<UserProfile>> UpdateProfileAsync([FromBody] SaveProfilePayload input, CancellationToken cancellationToken)
+  {
+    try
+    {
+      UserModel user = HttpContext.GetUser() ?? throw new InvalidOperationException("An authorized user is required.");
+      UpdateUserPayload payload = input.ToUpdateUserPayload();
+      UpdateUserCommand command = new(user.Id, payload);
+      user = await _mediator.Send(command, cancellationToken) ?? throw new InvalidOperationException("The update user should not be null.");
+      UserProfile profile = new(user);
+      return Ok(profile);
+    }
+    catch (InvalidCredentialsException)
+    {
+      return InvalidCredentials();
+    }
+  }
+
   private ObjectResult InvalidCredentials()
   {
     Error error = new("InvalidCredentials", "The specified credentials did not match.");

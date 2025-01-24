@@ -24,8 +24,8 @@ function onSaved(profile: UserProfile, message?: string) {
   user.value = profile;
   account.signIn({
     displayName: profile.fullName ?? profile.username,
-    emailAddress: profile.email?.address,
-    pictureUrl: profile.picture,
+    emailAddress: profile.emailAddress,
+    pictureUrl: profile.pictureUrl,
   });
   toasts.success(message ?? "users.profile.saved");
 }
