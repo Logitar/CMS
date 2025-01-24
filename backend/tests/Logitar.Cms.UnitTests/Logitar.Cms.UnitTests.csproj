@@ -34,8 +34,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Using Include="System.Reflection" />
     <Using Include="System.Security.Cryptography" />
     <Using Include="System.Text" />
+    <Using Include="System.Text.Json" />
     <Using Include="Xunit" />
   </ItemGroup>
 

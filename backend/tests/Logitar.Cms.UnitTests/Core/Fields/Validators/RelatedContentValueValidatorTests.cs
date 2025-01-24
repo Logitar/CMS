@@ -4,7 +4,6 @@ using Logitar.Cms.Core.Contents;
 using Logitar.Cms.Core.Fields.Settings;
 using Logitar.Identity.Core;
 using Moq;
-using System.Reflection;
 using ValidationResult = FluentValidation.Results.ValidationResult;
 
 namespace Logitar.Cms.Core.Fields.Validators;
