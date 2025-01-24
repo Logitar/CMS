@@ -1,18 +1,23 @@
 <script setup lang="ts">
-import { TarTab, TarTabs } from "logitar-vue3-ui";
+import { TarButton, TarTab, TarTabs } from "logitar-vue3-ui";
 import { computed, inject, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
 import ContentLocaleEdit from "@/components/contents/ContentLocaleEdit.vue";
+import LanguageSelect from "@/components/languages/LanguageSelect.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
+import type { Actor } from "@/types/actor";
 import type { ApiError } from "@/types/api";
 import type { Content, ContentLocale } from "@/types/contents";
+import type { Language } from "@/types/languages";
 import { StatusCodes } from "@/enums/statusCodes";
 import { handleErrorKey } from "@/inject/App";
 import { readContent } from "@/api/contents";
+import { useAccountStore } from "@/stores/account";
 import { useToastStore } from "@/stores/toast";
 
+const account = useAccountStore();
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const route = useRoute();
 const router = useRouter();
@@ -20,9 +25,34 @@ const toasts = useToastStore();
 const { t } = useI18n();
 
 const content = ref<Content>();
+const language = ref<Language>();
 
 const isInvariant = computed<boolean>(() => Boolean(content.value && content.value.contentType.isInvariant));
+const languageIds = computed<string[]>(
+  () => content.value?.locales.filter((locale) => Boolean(locale.language)).map((locale) => locale.language?.id ?? "") ?? [],
+);
 const locales = computed<ContentLocale[]>(() => (content.value ? content.value.locales.filter((locale) => Boolean(locale.language)) : []).sort(compare));
+
+function addLocale(): void {
+  if (content.value && language.value) {
+    const actor: Actor = account.getActor();
+    const now: string = new Date().toISOString();
+    const locale: ContentLocale = {
+      content: content.value,
+      language: language.value,
+      uniqueName: "",
+      displayName: undefined,
+      description: undefined,
+      fieldValues: [],
+      createdBy: actor,
+      createdOn: now,
+      updatedBy: actor,
+      updatedOn: now,
+    };
+    content.value.locales.push(locale);
+    language.value = undefined;
+  }
+}
 
 function compare(left: ContentLocale, right: ContentLocale): -1 | 0 | 1 {
   if (left.language && right.language) {
@@ -35,13 +65,13 @@ function compare(left: ContentLocale, right: ContentLocale): -1 | 0 | 1 {
   return 0;
 }
 
-function setModel(model: Content): void {
-  content.value = model;
-}
-
 function onSaved(content: Content): void {
   setModel(content);
   toasts.success("contents.items.updated");
+}
+
+function setModel(model: Content): void {
+  content.value = model;
 }
 
 onMounted(async () => {
@@ -69,7 +99,11 @@ onMounted(async () => {
       <StatusDetail :aggregate="content" />
       <ContentLocaleEdit v-if="isInvariant" :content="content" :locale="content.invariant" @error="handleError" @saved="onSaved" />
       <template v-else>
-        <p>TODO: add locale</p>
+        <LanguageSelect :exclude="languageIds" no-status :model-value="language?.id" @selected="language = $event">
+          <template #append>
+            <TarButton :disabled="!language" icon="fas fa-plus" :text="t('actions.add')" variant="success" @click="addLocale" />
+          </template>
+        </LanguageSelect>
         <TarTabs>
           <TarTab active id="invariant" :title="t('contents.items.invariant')">
             <ContentLocaleEdit :content="content" :locale="content.invariant" @error="handleError" @saved="onSaved" />
