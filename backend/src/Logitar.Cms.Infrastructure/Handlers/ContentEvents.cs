@@ -118,7 +118,19 @@ internal class ContentEvents : INotificationHandler<ContentCreated>,
 
       await _context.SaveChangesAsync(cancellationToken);
 
-      //await UpdateIndicesAsync(locale, ContentStatus.Published, cancellationToken); // TODO(fpion): remove indices where Status=Published
+      ICommand command = _commandHelper.Delete(CmsDb.FieldIndex.Table)
+        .Where(
+          new OperatorCondition(CmsDb.FieldIndex.ContentLocaleId, Operators.IsEqualTo(locale.ContentLocaleId)),
+          new OperatorCondition(CmsDb.FieldIndex.Status, Operators.IsEqualTo(ContentStatus.Published.ToString())))
+        .Build();
+      await _context.Database.ExecuteSqlRawAsync(command.Text, command.Parameters.ToArray(), cancellationToken);
+
+      command = _commandHelper.Delete(CmsDb.FieldIndex.Table)
+        .Where(
+          new OperatorCondition(CmsDb.UniqueIndex.ContentLocaleId, Operators.IsEqualTo(locale.ContentLocaleId)),
+          new OperatorCondition(CmsDb.UniqueIndex.Status, Operators.IsEqualTo(ContentStatus.Published.ToString())))
+        .Build();
+      await _context.Database.ExecuteSqlRawAsync(command.Text, command.Parameters.ToArray(), cancellationToken);
     }
   }
 
