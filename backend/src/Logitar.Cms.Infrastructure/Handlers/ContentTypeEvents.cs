@@ -86,6 +86,12 @@ internal class ContentTypeEvents : INotificationHandler<ContentTypeCreated>,
         .Where(new OperatorCondition(CmsDb.UniqueIndex.ContentTypeId, Operators.IsEqualTo(contentType.ContentTypeId)))
         .Build();
       await _context.Database.ExecuteSqlRawAsync(command.Text, command.Parameters.ToArray(), cancellationToken);
+
+      command = _commandHelper.Update()
+        .Set(new Update(CmsDb.PublishedContents.ContentTypeName, contentType.UniqueNameNormalized))
+        .Where(new OperatorCondition(CmsDb.PublishedContents.ContentTypeId, Operators.IsEqualTo(contentType.ContentTypeId)))
+        .Build();
+      await _context.Database.ExecuteSqlRawAsync(command.Text, command.Parameters.ToArray(), cancellationToken);
     }
   }
 
