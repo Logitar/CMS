@@ -52,6 +52,15 @@ public class Content : AggregateRoot
   public bool IsLocalePublished(LanguageId languageId) => _localeStatuses.TryGetValue(languageId, out ContentStatus status) && status == ContentStatus.Published;
   public bool IsPublished(LanguageId? languageId) => languageId.HasValue ? IsLocalePublished(languageId.Value) : IsInvariantPublished();
 
+  public void Publish(ActorId? actorId = null)
+  {
+    PublishInvariant(actorId);
+
+    foreach (LanguageId languageId in _locales.Keys)
+    {
+      PublishLocale(languageId, actorId);
+    }
+  }
   public void PublishInvariant(ActorId? actorId = null)
   {
     if (_invariantStatus != ContentStatus.Published)

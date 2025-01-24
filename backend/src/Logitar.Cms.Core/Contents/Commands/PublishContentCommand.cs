@@ -5,7 +5,24 @@ using MediatR;
 
 namespace Logitar.Cms.Core.Contents.Commands;
 
-public record PublishContentCommand(Guid ContentId, Guid? LanguageId) : IRequest<ContentModel?>;
+public record PublishContentCommand : IRequest<ContentModel?>
+{
+  public Guid ContentId { get; }
+  public Guid? LanguageId { get; }
+  public bool All { get; }
+
+  public PublishContentCommand(Guid contentId)
+  {
+    ContentId = contentId;
+    All = true;
+  }
+
+  public PublishContentCommand(Guid contentId, Guid? languageId)
+  {
+    ContentId = contentId;
+    LanguageId = languageId;
+  }
+}
 
 internal class PublishContentCommandHandler : IRequestHandler<PublishContentCommand, ContentModel?>
 {
@@ -36,7 +53,11 @@ internal class PublishContentCommandHandler : IRequestHandler<PublishContentComm
     }
 
     ActorId? actorId = _applicationContext.ActorId;
-    if (command.LanguageId.HasValue)
+    if (command.All)
+    {
+      content.Publish(actorId);
+    }
+    else if (command.LanguageId.HasValue)
     {
       LanguageId languageId = new(command.LanguageId.Value);
       if (!content.PublishLocale(languageId))
