@@ -6,9 +6,11 @@ import { useI18n } from "vue-i18n";
 
 import PasswordInput from "./PasswordInput.vue";
 import UsernameInput from "./UsernameInput.vue";
-import type { ApiError, Error } from "@/types/api";
 import type { PasswordSettings } from "@/types/settings";
-import type { UserProfile } from "@/types/account";
+import type { SaveProfilePayload, UserProfile } from "@/types/account";
+import { ErrorCodes } from "@/enums/errorCodes";
+import { StatusCodes } from "@/enums/statusCodes";
+import { isError } from "@/helpers/errors";
 import { saveProfile } from "@/api/account";
 
 const passwordSettings: PasswordSettings = {
@@ -49,19 +51,17 @@ const { handleSubmit, isSubmitting } = useForm();
 const onSubmit = handleSubmit(async () => {
   try {
     invalidCredentials.value = false;
-    const user: UserProfile = await saveProfile({
-      authenticationInformation: {
-        password: {
-          current: currentPassword.value,
-          new: newPassword.value,
-        },
+    const payload: SaveProfilePayload = {
+      password: {
+        current: currentPassword.value,
+        new: newPassword.value,
       },
-    });
+    };
+    const user: UserProfile = await saveProfile(payload);
     reset();
     emit("saved", user);
   } catch (e: unknown) {
-    const { data, status } = e as ApiError;
-    if (status === 400 && (data as Error)?.code === "InvalidCredentials") {
+    if (isError(e, StatusCodes.BadRequest, ErrorCodes.InvalidCredentials)) {
       invalidCredentials.value = true;
       reset();
     } else {
