@@ -1,28 +1,24 @@
 ﻿namespace Logitar.Cms.Core.Contents.Models;
 
-public class PublishedContent // TODO(fpion): implement
+public class PublishedContent
 {
-  //public Guid Id { get; set; }
-  //public long Version { get; set; }
+  public Guid Id { get; set; }
 
-  //public ActorModel CreatedBy { get; set; } = new();
-  //public DateTime CreatedOn { get; set; }
+  public ContentTypeModel ContentType { get; set; } = new();
 
-  //public ActorModel UpdatedBy { get; set; } = new();
-  //public DateTime UpdatedOn { get; set; }
+  public PublishedContentLocale Invariant { get; set; }
+  public List<PublishedContentLocale> Locales { get; set; } = [];
 
-  //public ContentTypeModel ContentType { get; set; } = new();
+  public PublishedContent()
+  {
+    Invariant = new(this);
+  }
 
-  //public ContentLocaleModel Invariant { get; set; }
-  //public List<ContentLocaleModel> Locales { get; set; } = [];
+  // TODO(fpion): FindLocale
+  // TODO(fpion): HasLocale
+  // TODO(fpion): TryGetLocale
 
-  //public ContentModel()
-  //{
-  //  Invariant = new(this);
-  //}
-
-  //public override bool Equals(object? obj) => obj is AggregateModel aggregate && aggregate.Id == Id;
-  //public override int GetHashCode() => Id.GetHashCode();
-  //public override string ToString() => $"{GetType()} (Id={Id})";
-  //public override string ToString() => $"{Invariant} | {base.ToString()}";
+  public override bool Equals(object? obj) => obj is PublishedContent content && content.Id == Id;
+  public override int GetHashCode() => Id.GetHashCode();
+  public override string ToString() => $"{Invariant} | {GetType()} (Id={Id})";
 }

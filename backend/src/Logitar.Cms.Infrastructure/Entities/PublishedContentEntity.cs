@@ -1,4 +1,5 @@
 ﻿using Logitar.Cms.Core.Contents.Events;
+using Logitar.EventSourcing;
 using Logitar.Identity.EntityFrameworkCore.Relational.IdentityDb;
 
 namespace Logitar.Cms.Infrastructure.Entities;
@@ -66,6 +67,8 @@ public class PublishedContentEntity
   private PublishedContentEntity()
   {
   }
+
+  public IReadOnlyCollection<ActorId> GetActorIds() => PublishedBy == null ? [] : [new ActorId(PublishedBy)];
 
   public void Update(ContentLocaleEntity contentLocale, ContentLocalePublished @event)
   {
