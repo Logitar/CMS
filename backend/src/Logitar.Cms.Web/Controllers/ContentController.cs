@@ -53,7 +53,7 @@ public class ContentController : ControllerBase
   }
 
   [HttpGet("types/{contentTypeId}/unique-name:{uniqueName}")]
-  public async Task<ActionResult<ContentModel>> ReadAsync(Guid contentTypeId, string uniqueName, Guid? languageId, CancellationToken cancellationToken)
+  public async Task<ActionResult<ContentModel>> ReadAsync(Guid contentTypeId, string uniqueName, [FromQuery(Name = "language")] Guid? languageId, CancellationToken cancellationToken)
   {
     ContentKey key = new(contentTypeId, languageId, uniqueName);
     ContentModel? content = await _mediator.Send(new ReadContentQuery(Id: null, key), cancellationToken);
@@ -64,7 +64,8 @@ public class ContentController : ControllerBase
   public async Task<ActionResult<ContentModel>> ReplaceAsync(
     Guid contentId,
     [FromQuery(Name = "language")] Guid? languageId,
-    [FromBody] CreateOrReplaceContentPayload payload, CancellationToken cancellationToken)
+    [FromBody] CreateOrReplaceContentPayload payload,
+    CancellationToken cancellationToken)
   {
     CreateOrReplaceContentResult result = await _mediator.Send(new CreateOrReplaceContentCommand(contentId, languageId, payload), cancellationToken);
     return ToActionResult(result);

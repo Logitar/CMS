@@ -26,6 +26,7 @@ public class ContentLocaleEntity
   }
   public string? DisplayName { get; private set; }
   public string? Description { get; private set; }
+
   public string? FieldValues { get; private set; }
 
   public string? CreatedBy { get; private set; }
@@ -81,6 +82,10 @@ public class ContentLocaleEntity
     if (UpdatedBy != null)
     {
       actorIds.Add(new ActorId(UpdatedBy));
+    }
+    if (PublishedBy != null)
+    {
+      actorIds.Add(new ActorId(PublishedBy));
     }
     if (ContentType != null)
     {

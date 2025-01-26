@@ -1,4 +1,5 @@
 ﻿using Logitar.Cms.Core.Contents.Events;
+using Logitar.EventSourcing;
 using Logitar.Identity.EntityFrameworkCore.Relational.IdentityDb;
 
 namespace Logitar.Cms.Infrastructure.Entities;
@@ -30,6 +31,7 @@ public class PublishedContentEntity
   }
   public string? DisplayName { get; private set; }
   public string? Description { get; private set; }
+
   public string? FieldValues { get; private set; }
 
   public string? PublishedBy { get; private set; }
@@ -65,6 +67,13 @@ public class PublishedContentEntity
 
   private PublishedContentEntity()
   {
+  }
+
+  public IReadOnlyCollection<ActorId> GetActorIds() => PublishedBy == null ? [] : [new ActorId(PublishedBy)];
+
+  public Dictionary<Guid, string> GetFieldValues()
+  {
+    return (FieldValues == null ? null : JsonSerializer.Deserialize<Dictionary<Guid, string>>(FieldValues)) ?? [];
   }
 
   public void Update(ContentLocaleEntity contentLocale, ContentLocalePublished @event)
