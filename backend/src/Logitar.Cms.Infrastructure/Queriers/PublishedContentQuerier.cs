@@ -12,11 +12,13 @@ namespace Logitar.Cms.Infrastructure.Queriers;
 internal class PublishedContentQuerier : IPublishedContentQuerier
 {
   private readonly IActorService _actorService;
+  private readonly DbSet<LanguageEntity> _languages;
   private readonly DbSet<PublishedContentEntity> _publishedContents;
 
   public PublishedContentQuerier(IActorService actorService, CmsContext context)
   {
     _actorService = actorService;
+    _languages = context.Languages;
     _publishedContents = context.PublishedContents;
   }
 
@@ -49,6 +51,11 @@ internal class PublishedContentQuerier : IPublishedContentQuerier
 
   private async Task<IReadOnlyCollection<PublishedContent>> MapAsync(IEnumerable<PublishedContentEntity> locales, CancellationToken cancellationToken)
   {
+    int defaultLanguageId = (await _languages.AsNoTracking()
+      .Where(x => x.IsDefault)
+      .Select(x => (int?)x.LanguageId)
+      .SingleOrDefaultAsync(cancellationToken)) ?? throw new InvalidOperationException("The default language entity could not be found.");
+
     IEnumerable<ActorId> actorIds = locales.SelectMany(locale => locale.GetActorIds());
     IReadOnlyCollection<ActorModel> actors = await _actorService.FindAsync(actorIds, cancellationToken);
     Mapper mapper = new(actors);
@@ -83,7 +90,7 @@ internal class PublishedContentQuerier : IPublishedContentQuerier
       {
         language = new()
         {
-          IsDefault = false // TODO(fpion): implement
+          IsDefault = locale.LanguageId.Value == defaultLanguageId
         };
         if (locale.LanguageUid.HasValue)
         {
