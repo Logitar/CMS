@@ -60,18 +60,14 @@ internal class PublishedContentQuerier : IPublishedContentQuerier
     IReadOnlyCollection<ActorModel> actors = await _actorService.FindAsync(actorIds, cancellationToken);
     Mapper mapper = new(actors);
 
-    Dictionary<int, ContentTypeModel> contentTypes = [];
+    Dictionary<int, ContentTypeSummary> contentTypes = [];
     Dictionary<int, LanguageModel> languages = [];
     Dictionary<int, PublishedContent> publishedContents = [];
     foreach (PublishedContentEntity locale in locales)
     {
-      if (!contentTypes.TryGetValue(locale.ContentTypeId, out ContentTypeModel? contentType))
+      if (!contentTypes.TryGetValue(locale.ContentTypeId, out ContentTypeSummary? contentType))
       {
-        contentType = new()
-        {
-          Id = locale.ContentTypeUid,
-          UniqueName = locale.ContentTypeName
-        };
+        contentType = new(locale.ContentTypeUid, locale.ContentTypeName);
         contentTypes[locale.ContentTypeId] = contentType;
       }
 
