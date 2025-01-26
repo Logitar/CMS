@@ -54,6 +54,55 @@ internal class PublishedContentQuerier : IPublishedContentQuerier
     return (await MapContentsAsync(locales, cancellationToken)).Single();
   }
 
+  public async Task<PublishedContent?> ReadAsync(PublishedContentKey key, CancellationToken cancellationToken)
+  {
+    if (int.TryParse(key.ContentType, out int contentTypeId))
+    {
+      if (key.Language != null && int.TryParse(key.Language, out int languageId))
+      {
+        return await ReadAsync(contentTypeId, languageId, key.UniqueName, cancellationToken);
+      }
+      else if (key.Language != null && Guid.TryParse(key.Language, out Guid languageUid))
+      {
+        return await ReadAsync(contentTypeId, languageUid, key.UniqueName, cancellationToken);
+      }
+      else
+      {
+        return await ReadAsync(contentTypeId, key.Language, key.UniqueName, cancellationToken);
+      }
+    }
+    else if (Guid.TryParse(key.ContentType, out Guid contentTypeUid))
+    {
+      if (key.Language != null && int.TryParse(key.Language, out int languageId))
+      {
+        return await ReadAsync(contentTypeUid, languageId, key.UniqueName, cancellationToken);
+      }
+      else if (key.Language != null && Guid.TryParse(key.Language, out Guid languageUid))
+      {
+        return await ReadAsync(contentTypeUid, languageUid, key.UniqueName, cancellationToken);
+      }
+      else
+      {
+        return await ReadAsync(contentTypeUid, key.Language, key.UniqueName, cancellationToken);
+      }
+    }
+    else
+    {
+      if (key.Language != null && int.TryParse(key.Language, out int languageId))
+      {
+        return await ReadAsync(key.ContentType, languageId, key.UniqueName, cancellationToken);
+      }
+      else if (key.Language != null && Guid.TryParse(key.Language, out Guid languageUid))
+      {
+        return await ReadAsync(key.ContentType, languageUid, key.UniqueName, cancellationToken);
+      }
+      else
+      {
+        return await ReadAsync(key.ContentType, key.Language, key.UniqueName, cancellationToken);
+      }
+    }
+  }
+
   public async Task<PublishedContent?> ReadAsync(int contentTypeId, int? languageId, string uniqueName, CancellationToken cancellationToken)
   {
     string uniqueNameNormalized = Helper.Normalize(uniqueName);
