@@ -26,6 +26,7 @@ public class ContentLocaleEntity
   }
   public string? DisplayName { get; private set; }
   public string? Description { get; private set; }
+
   public string? FieldValues { get; private set; }
 
   public string? CreatedBy { get; private set; }
