@@ -10,7 +10,7 @@ public record LanguageSortOption : SortOption
     set => base.Field = value.ToString();
   }
 
-  public LanguageSortOption() : this(LanguageSort.DisplayName, isDescending: true)
+  public LanguageSortOption() : this(LanguageSort.DisplayName, isDescending: false)
   {
   }
 

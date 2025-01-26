@@ -10,7 +10,7 @@ public record FieldTypeSortOption : SortOption
     set => base.Field = value.ToString();
   }
 
-  public FieldTypeSortOption() : this(FieldTypeSort.DisplayName, isDescending: true)
+  public FieldTypeSortOption() : this(FieldTypeSort.DisplayName, isDescending: false)
   {
   }
 

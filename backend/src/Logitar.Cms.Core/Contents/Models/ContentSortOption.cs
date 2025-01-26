@@ -10,7 +10,7 @@ public record ContentSortOption : SortOption
     set => base.Field = value.ToString();
   }
 
-  public ContentSortOption() : this(ContentSort.DisplayName, isDescending: true)
+  public ContentSortOption() : this(ContentSort.DisplayName, isDescending: false)
   {
   }
 
