@@ -2,8 +2,10 @@
 using Logitar.Cms.Core.Contents;
 using Logitar.Cms.Core.Contents.Models;
 using Logitar.Cms.Core.Localization.Models;
+using Logitar.Cms.Core.Search;
 using Logitar.Cms.Infrastructure.Actors;
 using Logitar.Cms.Infrastructure.Entities;
+using Logitar.Data;
 using Logitar.EventSourcing;
 using Logitar.Identity.EntityFrameworkCore.Relational.IdentityDb;
 using Microsoft.EntityFrameworkCore;
@@ -15,12 +17,14 @@ internal class PublishedContentQuerier : IPublishedContentQuerier
   private readonly IActorService _actorService;
   private readonly DbSet<LanguageEntity> _languages;
   private readonly DbSet<PublishedContentEntity> _publishedContents;
+  private readonly IQueryHelper _queryHelper;
 
-  public PublishedContentQuerier(IActorService actorService, CmsContext context)
+  public PublishedContentQuerier(IActorService actorService, CmsContext context, IQueryHelper queryHelper)
   {
     _actorService = actorService;
     _languages = context.Languages;
     _publishedContents = context.PublishedContents;
+    _queryHelper = queryHelper;
   }
 
   public async Task<PublishedContent?> ReadAsync(int contentId, CancellationToken cancellationToken)
@@ -34,7 +38,7 @@ internal class PublishedContentQuerier : IPublishedContentQuerier
       return null;
     }
 
-    return (await MapAsync(locales, cancellationToken)).Single();
+    return (await MapContentsAsync(locales, cancellationToken)).Single();
   }
   public async Task<PublishedContent?> ReadAsync(Guid contentId, CancellationToken cancellationToken)
   {
@@ -47,7 +51,7 @@ internal class PublishedContentQuerier : IPublishedContentQuerier
       return null;
     }
 
-    return (await MapAsync(locales, cancellationToken)).Single();
+    return (await MapContentsAsync(locales, cancellationToken)).Single();
   }
 
   public async Task<PublishedContent?> ReadAsync(int contentTypeId, int? languageId, string uniqueName, CancellationToken cancellationToken)
@@ -165,7 +169,71 @@ internal class PublishedContentQuerier : IPublishedContentQuerier
     return contentId.HasValue ? await ReadAsync(contentId.Value, cancellationToken) : null;
   }
 
-  private async Task<IReadOnlyCollection<PublishedContent>> MapAsync(IEnumerable<PublishedContentEntity> locales, CancellationToken cancellationToken)
+  public async Task<SearchResults<PublishedContentLocale>> SearchAsync(SearchPublishedContentsPayload payload, CancellationToken cancellationToken)
+  {
+    IQueryBuilder builder = _queryHelper.From(CmsDb.PublishedContents.Table).SelectAll(CmsDb.PublishedContents.Table);
+    _queryHelper.ApplyTextSearch(builder, payload.Search, CmsDb.PublishedContents.UniqueName, CmsDb.PublishedContents.DisplayName);
+
+    if (payload.Content.Ids.Count > 0)
+    {
+      builder.Where(CmsDb.PublishedContents.ContentId, Operators.IsIn(payload.Content.Ids.ToArray()));
+    }
+    if (payload.Content.Uids.Count > 0)
+    {
+      builder.Where(CmsDb.PublishedContents.ContentUid, Operators.IsIn(payload.Content.Uids.ToArray()));
+    }
+
+    if (payload.ContentType.Ids.Count > 0)
+    {
+      builder.Where(CmsDb.PublishedContents.ContentTypeId, Operators.IsIn(payload.ContentType.Ids.ToArray()));
+    }
+    if (payload.ContentType.Uids.Count > 0)
+    {
+      builder.Where(CmsDb.PublishedContents.ContentTypeUid, Operators.IsIn(payload.ContentType.Uids.ToArray()));
+    }
+    if (payload.ContentType.Names.Count > 0)
+    {
+      string[] contentTypeNames = payload.ContentType.Names.Select(Helper.Normalize).ToArray();
+      builder.Where(CmsDb.PublishedContents.ContentTypeName, Operators.IsIn(contentTypeNames));
+    }
+
+    IQueryable<PublishedContentEntity> query = _publishedContents.FromQuery(builder).AsNoTracking();
+
+    long total = await query.LongCountAsync(cancellationToken);
+
+    IOrderedQueryable<PublishedContentEntity>? ordered = null;
+    foreach (PublishedContentSortOption sort in payload.Sort)
+    {
+      switch (sort.Field)
+      {
+        case PublishedContentSort.DisplayName:
+          ordered = (ordered == null)
+            ? (sort.IsDescending ? query.OrderByDescending(x => x.DisplayName) : query.OrderBy(x => x.DisplayName))
+            : (sort.IsDescending ? ordered.ThenByDescending(x => x.DisplayName) : ordered.ThenBy(x => x.DisplayName));
+          break;
+        case PublishedContentSort.PublishedOn:
+          ordered = (ordered == null)
+            ? (sort.IsDescending ? query.OrderByDescending(x => x.PublishedOn) : query.OrderBy(x => x.PublishedOn))
+            : (sort.IsDescending ? ordered.ThenByDescending(x => x.PublishedOn) : ordered.ThenBy(x => x.PublishedOn));
+          break;
+        case PublishedContentSort.UniqueName:
+          ordered = (ordered == null)
+            ? (sort.IsDescending ? query.OrderByDescending(x => x.UniqueName) : query.OrderBy(x => x.UniqueName))
+            : (sort.IsDescending ? ordered.ThenByDescending(x => x.UniqueName) : ordered.ThenBy(x => x.UniqueName));
+          break;
+      }
+    }
+    query = ordered ?? query;
+
+    query = query.ApplyPaging(payload.Skip, payload.Limit);
+
+    PublishedContentEntity[] publishedContents = await query.ToArrayAsync(cancellationToken);
+    IReadOnlyCollection<PublishedContentLocale> items = await MapLocalesAsync(publishedContents, cancellationToken);
+
+    return new SearchResults<PublishedContentLocale>(items, total);
+  }
+
+  private async Task<IReadOnlyCollection<PublishedContent>> MapContentsAsync(IEnumerable<PublishedContentEntity> locales, CancellationToken cancellationToken)
   {
     int defaultLanguageId = (await _languages.AsNoTracking()
       .Where(x => x.IsDefault)
@@ -227,5 +295,71 @@ internal class PublishedContentQuerier : IPublishedContentQuerier
     }
 
     return publishedContents.Values;
+  }
+
+  private async Task<IReadOnlyCollection<PublishedContentLocale>> MapLocalesAsync(IEnumerable<PublishedContentEntity> locales, CancellationToken cancellationToken)
+  {
+    int defaultLanguageId = (await _languages.AsNoTracking()
+      .Where(x => x.IsDefault)
+      .Select(x => (int?)x.LanguageId)
+      .SingleOrDefaultAsync(cancellationToken)) ?? throw new InvalidOperationException("The default language entity could not be found.");
+
+    IEnumerable<ActorId> actorIds = locales.SelectMany(locale => locale.GetActorIds());
+    IReadOnlyCollection<ActorModel> actors = await _actorService.FindAsync(actorIds, cancellationToken);
+    Mapper mapper = new(actors);
+
+    Dictionary<int, ContentTypeSummary> contentTypes = [];
+    Dictionary<int, LanguageSummary> languages = [];
+    Dictionary<int, PublishedContent> publishedContents = [];
+    List<PublishedContentLocale> publishedLocales = [];
+    foreach (PublishedContentEntity locale in locales)
+    {
+      if (!contentTypes.TryGetValue(locale.ContentTypeId, out ContentTypeSummary? contentType))
+      {
+        contentType = new(locale.ContentTypeUid, locale.ContentTypeName);
+        contentTypes[locale.ContentTypeId] = contentType;
+      }
+
+      if (!publishedContents.TryGetValue(locale.ContentId, out PublishedContent? publishedContent))
+      {
+        publishedContent = new()
+        {
+          Id = locale.ContentUid,
+          ContentType = contentType
+        };
+        publishedContents[locale.ContentId] = publishedContent;
+      }
+
+      LanguageSummary? language = null;
+      if (locale.LanguageId.HasValue && !languages.TryGetValue(locale.LanguageId.Value, out language))
+      {
+        language = new()
+        {
+          IsDefault = locale.LanguageId.Value == defaultLanguageId
+        };
+        if (locale.LanguageUid.HasValue)
+        {
+          language.Id = locale.LanguageUid.Value;
+        }
+        if (locale.LanguageCode != null)
+        {
+          language.Locale = new(locale.LanguageCode);
+        }
+        languages[locale.LanguageId.Value] = language;
+      }
+
+      PublishedContentLocale publishedLocale = mapper.ToPublishedContentLocale(locale, publishedContent, language);
+      if (language == null)
+      {
+        publishedContent.Invariant = publishedLocale;
+      }
+      else
+      {
+        publishedContent.Locales.Add(publishedLocale);
+      }
+      publishedLocales.Add(publishedLocale);
+    }
+
+    return publishedLocales.AsReadOnly();
   }
 }

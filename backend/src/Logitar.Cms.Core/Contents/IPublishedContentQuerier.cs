@@ -1,4 +1,5 @@
 ﻿using Logitar.Cms.Core.Contents.Models;
+using Logitar.Cms.Core.Search;
 
 namespace Logitar.Cms.Core.Contents;
 
@@ -16,4 +17,6 @@ public interface IPublishedContentQuerier
   Task<PublishedContent?> ReadAsync(int contentTypeId, string? languageCode, string uniqueName, CancellationToken cancellationToken = default);
   Task<PublishedContent?> ReadAsync(Guid contentTypeId, string? languageCode, string uniqueName, CancellationToken cancellationToken = default);
   Task<PublishedContent?> ReadAsync(string contentTypeName, string? languageCode, string uniqueName, CancellationToken cancellationToken = default);
+
+  Task<SearchResults<PublishedContentLocale>> SearchAsync(SearchPublishedContentsPayload payload, CancellationToken cancellationToken = default);
 }
