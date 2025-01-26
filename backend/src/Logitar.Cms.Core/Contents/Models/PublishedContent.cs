@@ -14,8 +14,10 @@ public class PublishedContent
     Invariant = new(this);
   }
 
+  // TODO(fpion): FindDefaultLocale
   // TODO(fpion): FindLocale
   // TODO(fpion): HasLocale
+  // TODO(fpion): TryGetDefaultLocale
   // TODO(fpion): TryGetLocale
 
   public override bool Equals(object? obj) => obj is PublishedContent content && content.Id == Id;
