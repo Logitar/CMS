@@ -218,6 +218,26 @@ public class Mapper
     return destination;
   }
 
+  public PublishedContentLocale ToPublishedContentLocale(PublishedContentEntity source, PublishedContent content, LanguageModel? language)
+  {
+    PublishedContentLocale destination = new(content)
+    {
+      Language = language,
+      UniqueName = source.UniqueName,
+      DisplayName = source.DisplayName,
+      Description = source.Description,
+      PublishedBy = TryFindActor(source.PublishedBy) ?? _system,
+      PublishedOn = source.PublishedOn.AsUniversalTime()
+    };
+
+    foreach (KeyValuePair<Guid, string> fieldValue in source.GetFieldValues())
+    {
+      destination.FieldValues.Add(new FieldValue(fieldValue));
+    }
+
+    return destination;
+  }
+
   public RoleModel ToRole(RoleEntity source)
   {
     RoleModel destination = new(source.UniqueName)

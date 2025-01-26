@@ -7,7 +7,7 @@ namespace Logitar.Cms.Core.Contents.Models;
 public record PublishedContentLocale
 {
   public PublishedContent Content { get; set; }
-  public LanguageModel? Language { get; set; }
+  public LanguageModel? Language { get; set; } // TODO(fpion): LanguageSummary
 
   public string UniqueName { get; set; } = string.Empty;
   public string? DisplayName { get; set; }
@@ -15,7 +15,6 @@ public record PublishedContentLocale
 
   public List<FieldValue> FieldValues { get; set; } = [];
 
-  public bool IsPublished { get; set; }
   public ActorModel PublishedBy { get; set; } = new();
   public DateTime PublishedOn { get; set; }
 

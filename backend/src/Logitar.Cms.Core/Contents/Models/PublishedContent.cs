@@ -4,7 +4,7 @@ public class PublishedContent
 {
   public Guid Id { get; set; }
 
-  public ContentTypeModel ContentType { get; set; } = new();
+  public ContentTypeModel ContentType { get; set; } = new(); // TODO(fpion): ContentTypeSummary
 
   public PublishedContentLocale Invariant { get; set; }
   public List<PublishedContentLocale> Locales { get; set; } = [];

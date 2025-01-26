@@ -1,6 +1,7 @@
 ﻿using Logitar.Cms.Core.Actors;
 using Logitar.Cms.Core.Contents;
 using Logitar.Cms.Core.Contents.Models;
+using Logitar.Cms.Core.Localization.Models;
 using Logitar.Cms.Infrastructure.Actors;
 using Logitar.Cms.Infrastructure.Entities;
 using Logitar.EventSourcing;
@@ -52,8 +53,60 @@ internal class PublishedContentQuerier : IPublishedContentQuerier
     IReadOnlyCollection<ActorModel> actors = await _actorService.FindAsync(actorIds, cancellationToken);
     Mapper mapper = new(actors);
 
-    // TODO(fpion): do we want to include Languages?
-    // TODO(fpion): do we want to include ContentTypes, FieldDefinitions and FieldTypes?
-    throw new NotImplementedException();
+    Dictionary<int, ContentTypeModel> contentTypes = [];
+    Dictionary<int, LanguageModel> languages = [];
+    Dictionary<int, PublishedContent> publishedContents = [];
+    foreach (PublishedContentEntity locale in locales)
+    {
+      if (!contentTypes.TryGetValue(locale.ContentTypeId, out ContentTypeModel? contentType))
+      {
+        contentType = new()
+        {
+          Id = locale.ContentTypeUid,
+          UniqueName = locale.ContentTypeName
+        };
+        contentTypes[locale.ContentTypeId] = contentType;
+      }
+
+      if (!publishedContents.TryGetValue(locale.ContentId, out PublishedContent? publishedContent))
+      {
+        publishedContent = new()
+        {
+          Id = locale.ContentUid,
+          ContentType = contentType
+        };
+        publishedContents[locale.ContentId] = publishedContent;
+      }
+
+      LanguageModel? language = null;
+      if (locale.LanguageId.HasValue && !languages.TryGetValue(locale.LanguageId.Value, out language))
+      {
+        language = new()
+        {
+          IsDefault = false // TODO(fpion): implement
+        };
+        if (locale.LanguageUid.HasValue)
+        {
+          language.Id = locale.LanguageUid.Value;
+        }
+        if (locale.LanguageCode != null)
+        {
+          language.Locale = new(locale.LanguageCode);
+        }
+        languages[locale.LanguageId.Value] = language;
+      }
+
+      PublishedContentLocale publishedLocale = mapper.ToPublishedContentLocale(locale, publishedContent, language);
+      if (language == null)
+      {
+        publishedContent.Invariant = publishedLocale;
+      }
+      else
+      {
+        publishedContent.Locales.Add(publishedLocale);
+      }
+    }
+
+    return publishedContents.Values;
   }
 }

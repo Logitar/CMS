@@ -70,6 +70,11 @@ public class PublishedContentEntity
 
   public IReadOnlyCollection<ActorId> GetActorIds() => PublishedBy == null ? [] : [new ActorId(PublishedBy)];
 
+  public Dictionary<Guid, string> GetFieldValues()
+  {
+    return (FieldValues == null ? null : JsonSerializer.Deserialize<Dictionary<Guid, string>>(FieldValues)) ?? [];
+  }
+
   public void Update(ContentLocaleEntity contentLocale, ContentLocalePublished @event)
   {
     UniqueName = contentLocale.UniqueName;
