@@ -5,6 +5,7 @@ using Logitar.Cms.Core.Localization.Models;
 using Logitar.Cms.Infrastructure.Actors;
 using Logitar.Cms.Infrastructure.Entities;
 using Logitar.EventSourcing;
+using Logitar.Identity.EntityFrameworkCore.Relational.IdentityDb;
 using Microsoft.EntityFrameworkCore;
 
 namespace Logitar.Cms.Infrastructure.Queriers;
@@ -47,6 +48,121 @@ internal class PublishedContentQuerier : IPublishedContentQuerier
     }
 
     return (await MapAsync(locales, cancellationToken)).Single();
+  }
+
+  public async Task<PublishedContent?> ReadAsync(int contentTypeId, int? languageId, string uniqueName, CancellationToken cancellationToken)
+  {
+    string uniqueNameNormalized = Helper.Normalize(uniqueName);
+
+    int? contentId = await _publishedContents.AsNoTracking()
+      .Where(x => x.ContentTypeId == contentTypeId && x.LanguageId == languageId && x.UniqueNameNormalized == uniqueNameNormalized)
+      .Select(x => (int?)x.ContentId)
+      .SingleOrDefaultAsync(cancellationToken);
+
+    return contentId.HasValue ? await ReadAsync(contentId.Value, cancellationToken) : null;
+  }
+  public async Task<PublishedContent?> ReadAsync(Guid contentTypeId, int? languageId, string uniqueName, CancellationToken cancellationToken)
+  {
+    string uniqueNameNormalized = Helper.Normalize(uniqueName);
+
+    int? contentId = await _publishedContents.AsNoTracking()
+      .Where(x => x.ContentTypeUid == contentTypeId && x.LanguageId == languageId && x.UniqueNameNormalized == uniqueNameNormalized)
+      .Select(x => (int?)x.ContentId)
+      .SingleOrDefaultAsync(cancellationToken);
+
+    return contentId.HasValue ? await ReadAsync(contentId.Value, cancellationToken) : null;
+  }
+  public async Task<PublishedContent?> ReadAsync(string contentTypeName, int? languageId, string uniqueName, CancellationToken cancellationToken)
+  {
+    contentTypeName = Helper.Normalize(contentTypeName);
+    string uniqueNameNormalized = Helper.Normalize(uniqueName);
+
+    int? contentId = await _publishedContents.AsNoTracking()
+      .Where(x => x.ContentTypeName == contentTypeName && x.LanguageId == languageId && x.UniqueNameNormalized == uniqueNameNormalized)
+      .Select(x => (int?)x.ContentId)
+      .SingleOrDefaultAsync(cancellationToken);
+
+    return contentId.HasValue ? await ReadAsync(contentId.Value, cancellationToken) : null;
+  }
+  public async Task<PublishedContent?> ReadAsync(int contentTypeId, Guid? languageId, string uniqueName, CancellationToken cancellationToken)
+  {
+    string uniqueNameNormalized = Helper.Normalize(uniqueName);
+
+    int? contentId = await _publishedContents.AsNoTracking()
+      .Where(x => x.ContentTypeId == contentTypeId && x.LanguageUid == languageId && x.UniqueNameNormalized == uniqueNameNormalized)
+      .Select(x => (int?)x.ContentId)
+      .SingleOrDefaultAsync(cancellationToken);
+
+    return contentId.HasValue ? await ReadAsync(contentId.Value, cancellationToken) : null;
+  }
+  public async Task<PublishedContent?> ReadAsync(Guid contentTypeId, Guid? languageId, string uniqueName, CancellationToken cancellationToken)
+  {
+    string uniqueNameNormalized = Helper.Normalize(uniqueName);
+
+    int? contentId = await _publishedContents.AsNoTracking()
+      .Where(x => x.ContentTypeUid == contentTypeId && x.LanguageUid == languageId && x.UniqueNameNormalized == uniqueNameNormalized)
+      .Select(x => (int?)x.ContentId)
+      .SingleOrDefaultAsync(cancellationToken);
+
+    return contentId.HasValue ? await ReadAsync(contentId.Value, cancellationToken) : null;
+  }
+  public async Task<PublishedContent?> ReadAsync(string contentTypeName, Guid? languageId, string uniqueName, CancellationToken cancellationToken)
+  {
+    contentTypeName = Helper.Normalize(contentTypeName);
+    string uniqueNameNormalized = Helper.Normalize(uniqueName);
+
+    int? contentId = await _publishedContents.AsNoTracking()
+      .Where(x => x.ContentTypeName == contentTypeName && x.LanguageUid == languageId && x.UniqueNameNormalized == uniqueNameNormalized)
+      .Select(x => (int?)x.ContentId)
+      .SingleOrDefaultAsync(cancellationToken);
+
+    return contentId.HasValue ? await ReadAsync(contentId.Value, cancellationToken) : null;
+  }
+  public async Task<PublishedContent?> ReadAsync(int contentTypeId, string? languageCode, string uniqueName, CancellationToken cancellationToken)
+  {
+    if (languageCode != null)
+    {
+      languageCode = Helper.Normalize(languageCode);
+    }
+    string uniqueNameNormalized = Helper.Normalize(uniqueName);
+
+    int? contentId = await _publishedContents.AsNoTracking()
+      .Where(x => x.ContentTypeId == contentTypeId && x.LanguageCode == languageCode && x.UniqueNameNormalized == uniqueNameNormalized)
+      .Select(x => (int?)x.ContentId)
+      .SingleOrDefaultAsync(cancellationToken);
+
+    return contentId.HasValue ? await ReadAsync(contentId.Value, cancellationToken) : null;
+  }
+  public async Task<PublishedContent?> ReadAsync(Guid contentTypeId, string? languageCode, string uniqueName, CancellationToken cancellationToken)
+  {
+    if (languageCode != null)
+    {
+      languageCode = Helper.Normalize(languageCode);
+    }
+    string uniqueNameNormalized = Helper.Normalize(uniqueName);
+
+    int? contentId = await _publishedContents.AsNoTracking()
+      .Where(x => x.ContentTypeUid == contentTypeId && x.LanguageCode == languageCode && x.UniqueNameNormalized == uniqueNameNormalized)
+      .Select(x => (int?)x.ContentId)
+      .SingleOrDefaultAsync(cancellationToken);
+
+    return contentId.HasValue ? await ReadAsync(contentId.Value, cancellationToken) : null;
+  }
+  public async Task<PublishedContent?> ReadAsync(string contentTypeName, string? languageCode, string uniqueName, CancellationToken cancellationToken)
+  {
+    contentTypeName = Helper.Normalize(contentTypeName);
+    if (languageCode != null)
+    {
+      languageCode = Helper.Normalize(languageCode);
+    }
+    string uniqueNameNormalized = Helper.Normalize(uniqueName);
+
+    int? contentId = await _publishedContents.AsNoTracking()
+      .Where(x => x.ContentTypeName == contentTypeName && x.LanguageCode == languageCode && x.UniqueNameNormalized == uniqueNameNormalized)
+      .Select(x => (int?)x.ContentId)
+      .SingleOrDefaultAsync(cancellationToken);
+
+    return contentId.HasValue ? await ReadAsync(contentId.Value, cancellationToken) : null;
   }
 
   private async Task<IReadOnlyCollection<PublishedContent>> MapAsync(IEnumerable<PublishedContentEntity> locales, CancellationToken cancellationToken)
