@@ -14,6 +14,10 @@
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <StaticWebAssetBasePath Condition="$(StaticWebAssetBasePath) == ''">/</StaticWebAssetBasePath>
+  </PropertyGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\Logitar.Cms.Infrastructure\Logitar.Cms.Infrastructure.csproj" />
   </ItemGroup>
