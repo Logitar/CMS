@@ -22,7 +22,6 @@ internal class PublishedContentQuerier : IPublishedContentQuerier
   public async Task<PublishedContent?> ReadAsync(int contentId, CancellationToken cancellationToken)
   {
     PublishedContentEntity[] locales = await _publishedContents.AsNoTracking()
-      .Include(x => x.Language)
       .Where(x => x.ContentId == contentId)
       .ToArrayAsync(cancellationToken);
 
@@ -36,7 +35,6 @@ internal class PublishedContentQuerier : IPublishedContentQuerier
   public async Task<PublishedContent?> ReadAsync(Guid contentId, CancellationToken cancellationToken)
   {
     PublishedContentEntity[] locales = await _publishedContents.AsNoTracking()
-      .Include(x => x.Language)
       .Where(x => x.ContentUid == contentId)
       .ToArrayAsync(cancellationToken);
 
@@ -54,6 +52,8 @@ internal class PublishedContentQuerier : IPublishedContentQuerier
     IReadOnlyCollection<ActorModel> actors = await _actorService.FindAsync(actorIds, cancellationToken);
     Mapper mapper = new(actors);
 
-    throw new NotImplementedException(); // TODO(fpion): implement
+    // TODO(fpion): do we want to include Languages?
+    // TODO(fpion): do we want to include ContentTypes, FieldDefinitions and FieldTypes?
+    throw new NotImplementedException();
   }
 }
