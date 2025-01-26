@@ -61,7 +61,7 @@ internal class PublishedContentQuerier : IPublishedContentQuerier
     Mapper mapper = new(actors);
 
     Dictionary<int, ContentTypeSummary> contentTypes = [];
-    Dictionary<int, LanguageModel> languages = [];
+    Dictionary<int, LanguageSummary> languages = [];
     Dictionary<int, PublishedContent> publishedContents = [];
     foreach (PublishedContentEntity locale in locales)
     {
@@ -81,7 +81,7 @@ internal class PublishedContentQuerier : IPublishedContentQuerier
         publishedContents[locale.ContentId] = publishedContent;
       }
 
-      LanguageModel? language = null;
+      LanguageSummary? language = null;
       if (locale.LanguageId.HasValue && !languages.TryGetValue(locale.LanguageId.Value, out language))
       {
         language = new()

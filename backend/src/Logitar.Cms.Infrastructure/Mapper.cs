@@ -218,7 +218,7 @@ public class Mapper
     return destination;
   }
 
-  public PublishedContentLocale ToPublishedContentLocale(PublishedContentEntity source, PublishedContent content, LanguageModel? language)
+  public PublishedContentLocale ToPublishedContentLocale(PublishedContentEntity source, PublishedContent content, LanguageSummary? language)
   {
     PublishedContentLocale destination = new(content)
     {

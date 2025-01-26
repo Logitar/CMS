@@ -7,7 +7,7 @@ namespace Logitar.Cms.Core.Contents.Models;
 public record PublishedContentLocale
 {
   public PublishedContent Content { get; set; }
-  public LanguageModel? Language { get; set; } // TODO(fpion): LanguageSummary
+  public LanguageSummary? Language { get; set; }
 
   public string UniqueName { get; set; } = string.Empty;
   public string? DisplayName { get; set; }
