@@ -100,7 +100,6 @@ export type SearchFieldTypesPayload = SearchPayload & {
 
 export type SelectOption = {
   isDisabled: boolean;
-  isSelected: boolean;
   text: string;
   label?: string;
   value?: string;

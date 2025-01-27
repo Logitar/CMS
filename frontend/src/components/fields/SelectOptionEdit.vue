@@ -25,10 +25,6 @@ function setIsDisabled(isDisabled: boolean): void {
   const option: SelectOption = { ...props.modelValue, isDisabled };
   emit("update:model-value", option);
 }
-function setIsSelected(isSelected: boolean): void {
-  const option: SelectOption = { ...props.modelValue, isSelected };
-  emit("update:model-value", option);
-}
 function setLabel(label: string): void {
   const option: SelectOption = { ...props.modelValue, label };
   emit("update:model-value", option);
@@ -81,13 +77,6 @@ function setValue(value: string): void {
           :model-value="modelValue.isDisabled"
           tight
           @update:model-value="setIsDisabled"
-        />
-        <AppCheckbox
-          :id="`${id}-selected`"
-          label="fields.types.select.options.isSelected"
-          :model-value="modelValue.isSelected"
-          tight
-          @update:model-value="setIsSelected"
         />
       </div>
       <div class="float-end">

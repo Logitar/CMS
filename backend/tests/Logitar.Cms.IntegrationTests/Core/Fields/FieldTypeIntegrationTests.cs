@@ -238,7 +238,7 @@ public class FieldTypeIntegrationTests : IntegrationTests
         Options =
         [
           new SelectOptionModel { IsDisabled = true, Text = "None" },
-          new SelectOptionModel { IsSelected = true, Text = "May be?", Value = "may_be" },
+          new SelectOptionModel { Text = "May be?", Value = "may_be" },
           new SelectOptionModel { Text = "True", Value = "true" },
           new SelectOptionModel { Text = "False", Value = "false" }
         ]

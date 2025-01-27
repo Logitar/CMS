@@ -23,7 +23,7 @@ function setIsMultiple(isMultiple: boolean): void {
 
 function addOption(): void {
   const value: SelectProperties = { ...props.modelValue };
-  value.options.push({ isDisabled: false, isSelected: false, text: "" });
+  value.options.push({ isDisabled: false, text: "" });
   emit("update:model-value", value);
 }
 function removeOption(index: number): void {
