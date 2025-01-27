@@ -1,4 +1,5 @@
-﻿using Logitar.Cms.Core.Contents;
+﻿using Logitar.Cms.Core.Caching;
+using Logitar.Cms.Core.Contents;
 using Logitar.Cms.Core.Fields;
 using Logitar.Cms.Core.Localization;
 using Logitar.Cms.Core.Sessions;

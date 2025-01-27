@@ -1,4 +1,5 @@
 ﻿using Logitar.Cms.Core.Actors;
+using Logitar.Cms.Core.Caching;
 using Logitar.Cms.Infrastructure.Settings;
 using Logitar.EventSourcing;
 using Microsoft.Extensions.Caching.Memory;
@@ -17,6 +18,10 @@ internal class CacheService : ICacheService
   }
 
   public ActorModel? GetActor(ActorId id) => TryGetValue<ActorModel>(GetActorKey(id));
+  public void RemoveActor(ActorId id)
+  {
+    RemoveValue(GetActorKey(id));
+  }
   public void SetActor(ActorModel actor)
   {
     SetValue(GetActorKey(new ActorId(actor.Id)), actor, _settings.ActorLifetime);
@@ -24,7 +29,8 @@ internal class CacheService : ICacheService
   private static string GetActorKey(ActorId id) => $"Actor.Id:{id}";
 
   private T? TryGetValue<T>(object key) => _cache.TryGetValue(key, out object? value) ? (T?)value : default;
-  void SetValue<T>(object key, T value, TimeSpan duration)
+  private void RemoveValue(object key) => _cache.Remove(key);
+  private void SetValue<T>(object key, T value, TimeSpan duration)
   {
     _cache.Set(key, value, duration);
   }
