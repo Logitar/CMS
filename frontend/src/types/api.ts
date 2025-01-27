@@ -54,4 +54,16 @@ export type ProblemDetails = {
   instance?: string;
   traceId?: string;
   error?: Error;
+  errors?: ValidationFailure[];
+};
+
+export type Severity = "Error" | "Warning" | "Info";
+
+export type ValidationFailure = {
+  attemptedValue?: unknown;
+  customState?: unknown;
+  errorCode?: string;
+  errorMessage?: string;
+  propertyName?: string;
+  severity: Severity;
 };
