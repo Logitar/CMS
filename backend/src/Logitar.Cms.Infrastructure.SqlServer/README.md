@@ -1,6 +1,6 @@
 ﻿# Logitar.Cms.Infrastructure.SqlServer
 
-Provides an implementation of a relational event store to be used with content management system, Entity Framework Core and Microsoft SQL Server.
+Provides an implementation of a relational event store to be used with Logitar Content Management System, Entity Framework Core and Microsoft SQL Server.
 
 ## Migrations
 
