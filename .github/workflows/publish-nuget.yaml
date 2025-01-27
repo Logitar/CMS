@@ -5,10 +5,6 @@ on:
     types: [published]
   workflow_dispatch:
 
-defaults:
-  run:
-    working-directory: ./backend
-
 jobs:
   publish:
     name: Publish NuGet Packages
@@ -22,7 +18,7 @@ jobs:
           cd ./frontend
           npm clean-install
           npm run build
-          cd ../
+          cd ../backend
 
       - name: Setup .NET9
         uses: actions/setup-dotnet@v4
