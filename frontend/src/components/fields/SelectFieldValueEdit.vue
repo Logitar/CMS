@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { SelectOption } from "logitar-vue3-ui";
 import { computed } from "vue";
 
 import AppMultiselect from "@/components/shared/AppMultiselect.vue";
@@ -11,6 +12,18 @@ const props = defineProps<{
 }>();
 
 const fieldType = computed<FieldType>(() => props.definition.fieldType);
+const options = computed<SelectOption[]>(
+  () =>
+    fieldType.value.select?.options.map(
+      (option) =>
+        ({
+          disabled: option.isDisabled,
+          label: option.label || undefined,
+          text: option.text,
+          value: option.value || option.text,
+        }) as SelectOption,
+    ) ?? [],
+);
 const values = computed<string[] | undefined>(() => (props.modelValue ? JSON.parse(props.modelValue) : undefined));
 
 const emit = defineEmits<{
@@ -30,7 +43,7 @@ function onValuesUpdate(values: string[]): void {
     :label="definition.displayName ?? definition.uniqueName"
     :model-value="values"
     :name="definition.uniqueName"
-    :options="fieldType.select?.options"
+    :options="options"
     :placeholder="definition.placeholder ?? definition.displayName ?? definition.uniqueName"
     raw
     :required="definition.isRequired"
@@ -43,7 +56,7 @@ function onValuesUpdate(values: string[]): void {
     :label="definition.displayName ?? definition.uniqueName"
     :model-value="modelValue"
     :name="definition.uniqueName"
-    :options="fieldType.select?.options"
+    :options="options"
     :placeholder="definition.placeholder ?? definition.displayName ?? definition.uniqueName"
     raw
     :required="definition.isRequired"
