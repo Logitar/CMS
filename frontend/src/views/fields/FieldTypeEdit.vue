@@ -105,7 +105,11 @@ const onSubmit = handleSubmit(async () => {
           payload.dateTime = dateTime.value;
           break;
         case "Number":
-          payload.number = number.value;
+          payload.number = {
+            minimumValue: number.value.minimumValue,
+            maximumValue: number.value.maximumValue,
+            step: number.value.step || undefined,
+          };
           break;
         case "RelatedContent":
           payload.relatedContent = relatedContent.value;
