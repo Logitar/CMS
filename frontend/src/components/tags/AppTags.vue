@@ -39,7 +39,9 @@ function onUpdate(index: number, tag: string): void {
 
 <template>
   <div class="form-control mb-3">
-    <label v-if="label" :for="id" class="mb-2">{{ label }}</label>
+    <slot name="label-override">
+      <label v-if="label" :for="id" class="mb-2">{{ label }}</label>
+    </slot>
     <br />
     <AppTag v-for="(tag, index) in modelValue" :key="index" class="mb-2 me-2 tag" :value="tag" @removed="onRemove(index)" @updated="onUpdate(index, $event)" />
     <AppNewTag class="tag" :id="id" @added="onAdd" />
