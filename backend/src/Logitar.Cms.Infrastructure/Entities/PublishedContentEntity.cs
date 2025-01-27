@@ -88,4 +88,8 @@ public class PublishedContentEntity
     PublishedBy = @event.ActorId?.Value;
     PublishedOn = @event.OccurredOn.AsUniversalTime();
   }
+
+  public override bool Equals(object? obj) => obj is PublishedContentEntity publishedContent && publishedContent.ContentLocaleId == ContentLocaleId;
+  public override int GetHashCode() => ContentLocaleId.GetHashCode();
+  public override string ToString() => $"{DisplayName ?? UniqueName} | {GetType()} (ContentLocaleId={ContentLocaleId})";
 }

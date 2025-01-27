@@ -4,8 +4,10 @@ using Logitar.Cms.Core.Actors;
 using Logitar.Cms.Core.Commands;
 using Logitar.Cms.Infrastructure;
 using Logitar.Cms.Infrastructure.Commands;
+using Logitar.Cms.Infrastructure.PostgreSQL;
 using Logitar.Cms.Infrastructure.SqlServer;
 using Logitar.Data;
+using Logitar.Data.PostgreSQL;
 using Logitar.Data.SqlServer;
 using Logitar.EventSourcing;
 using Logitar.EventSourcing.EntityFrameworkCore.Relational;
@@ -52,10 +54,15 @@ public abstract class IntegrationTests : IAsyncLifetime
 
     services.AddLogitarCmsCore();
     services.AddLogitarCmsInfrastructure();
+    string connectionString;
     switch (_databaseProvider)
     {
+      case DatabaseProvider.PostgreSQL:
+        connectionString = Configuration.GetValue<string>("POSTGRESQLCONNSTR_Cms")?.Replace("{Database}", GetType().Name) ?? string.Empty;
+        services.AddLogitarCmsWithPostgreSQL(connectionString);
+        break;
       case DatabaseProvider.SqlServer:
-        string connectionString = Configuration.GetValue<string>("SQLCONNSTR_Cms")?.Replace("{Database}", GetType().Name) ?? string.Empty;
+        connectionString = Configuration.GetValue<string>("SQLCONNSTR_Cms")?.Replace("{Database}", GetType().Name) ?? string.Empty;
         services.AddLogitarCmsWithSqlServer(connectionString);
         break;
       default:
@@ -78,6 +85,9 @@ public abstract class IntegrationTests : IAsyncLifetime
     StringBuilder sql = new();
     TableId[] tables =
     [
+      CmsDb.UniqueIndex.Table,
+      CmsDb.FieldIndex.Table,
+      CmsDb.PublishedContents.Table,
       CmsDb.Contents.Table,
       CmsDb.ContentTypes.Table,
       CmsDb.FieldTypes.Table,
@@ -101,6 +111,7 @@ public abstract class IntegrationTests : IAsyncLifetime
   }
   protected IDeleteBuilder CreateDeleteBuilder(TableId table) => _databaseProvider switch
   {
+    DatabaseProvider.PostgreSQL => new PostgresDeleteBuilder(table),
     DatabaseProvider.SqlServer => new SqlServerDeleteBuilder(table),
     _ => throw new DatabaseProviderNotSupportedException(_databaseProvider),
   };
