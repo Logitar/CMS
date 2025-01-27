@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { arrayUtils } from "logitar-js";
 import { computed, ref, watch } from "vue";
+import { parsingUtils } from "logitar-js";
 import { useForm } from "vee-validate";
 
 import AppSaveButton from "@/components/shared/AppSaveButton.vue";
@@ -20,10 +21,12 @@ import { isError } from "@/helpers/errors";
 import { publishContent, replaceContent, unpublishContent } from "@/api/contents";
 
 const { orderBy } = arrayUtils;
+const { parseBoolean } = parsingUtils;
 
 const props = defineProps<{
   content: Content;
   locale: ContentLocale;
+  new?: boolean | string;
 }>();
 
 const description = ref<string>("");
@@ -46,6 +49,7 @@ const hasChanges = computed<boolean>(
     description.value !== (props.locale.description ?? "") ||
     JSON.stringify([...fieldValues.value.entries()].map(([id, value]) => ({ id, value }) as FieldValue)) !== JSON.stringify(props.locale.fieldValues),
 );
+const isNew = computed<boolean>(() => parseBoolean(props.new) ?? false);
 
 function reset(): void {
   uniqueNameAlreadyUsed.value = false;
@@ -116,15 +120,19 @@ watch(() => props.locale, reset, { deep: true, immediate: true });
 
 <template>
   <form @submit.prevent="onSubmit">
+    <p v-if="!isNew">
+      <StatusInfo :actor="locale.createdBy" :date="locale.createdOn" format="status.createdOn" />
+      <br />
+      <StatusInfo :actor="locale.updatedBy" :date="locale.updatedOn" format="status.updatedOn" />
+      <template v-if="locale.publishedBy && locale.publishedOn">
+        <br />
+        <StatusInfo :actor="locale.publishedBy" :date="locale.publishedOn" format="contents.items.publishedOn" />
+      </template>
+    </p>
     <div class="mb-3">
       <AppSaveButton class="me-1" :disabled="isSubmitting || !hasChanges" :loading="isSubmitting" />
-      <PublishButton class="ms-1" :loading="isPublishing" :published="locale.isPublished" @click="onPublish" />
-      <!-- TODO(fpion): cannot publish a content that is not saved -->
-      <!-- TODO(fpion): disabled when hasChanges -->
+      <PublishButton v-if="!isNew" class="ms-1" :disabled="hasChanges" :loading="isPublishing" :published="locale.isPublished" @click="onPublish" />
     </div>
-    <p v-if="locale.publishedBy && locale.publishedOn">
-      <StatusInfo :actor="locale.publishedBy" :date="locale.publishedOn" format="contents.items.publishedOn" />
-    </p>
     <UniqueNameAlreadyUsed v-model="uniqueNameAlreadyUsed" />
     <div class="row">
       <UniqueNameInput
