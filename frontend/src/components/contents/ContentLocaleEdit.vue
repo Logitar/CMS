@@ -119,6 +119,8 @@ watch(() => props.locale, reset, { deep: true, immediate: true });
     <div class="mb-3">
       <AppSaveButton class="me-1" :disabled="isSubmitting || !hasChanges" :loading="isSubmitting" />
       <PublishButton class="ms-1" :loading="isPublishing" :published="locale.isPublished" @click="onPublish" />
+      <!-- TODO(fpion): cannot publish a content that is not saved -->
+      <!-- TODO(fpion): disabled when hasChanges -->
     </div>
     <p v-if="locale.publishedBy && locale.publishedOn">
       <StatusInfo :actor="locale.publishedBy" :date="locale.publishedOn" format="contents.items.publishedOn" />

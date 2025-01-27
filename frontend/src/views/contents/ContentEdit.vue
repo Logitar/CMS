@@ -109,6 +109,7 @@ onMounted(async () => {
     <template v-if="content">
       <h1>{{ content.invariant.displayName ?? content.invariant.uniqueName }}</h1>
       <StatusDetail :aggregate="content" />
+      <!-- TODO(fpion): global (un)publish -->
       <ContentLocaleEdit
         v-if="isInvariant"
         :content="content"
