@@ -223,25 +223,45 @@ internal class PublishedContentQuerier : IPublishedContentQuerier
 
     if (payload.Content.Ids.Count > 0)
     {
-      builder.Where(CmsDb.PublishedContents.ContentId, Operators.IsIn(payload.Content.Ids.ToArray()));
+      object[] contentIds = payload.Content.Ids.Select(id => (object)id).ToArray();
+      builder.Where(CmsDb.PublishedContents.ContentId, Operators.IsIn(contentIds));
     }
     if (payload.Content.Uids.Count > 0)
     {
-      builder.Where(CmsDb.PublishedContents.ContentUid, Operators.IsIn(payload.Content.Uids.ToArray()));
+      object[] contentUids = payload.Content.Uids.Select(id => (object)id).ToArray();
+      builder.Where(CmsDb.PublishedContents.ContentUid, Operators.IsIn(contentUids));
     }
 
     if (payload.ContentType.Ids.Count > 0)
     {
-      builder.Where(CmsDb.PublishedContents.ContentTypeId, Operators.IsIn(payload.ContentType.Ids.ToArray()));
+      object[] contentTypeIds = payload.ContentType.Ids.Select(id => (object)id).ToArray();
+      builder.Where(CmsDb.PublishedContents.ContentTypeId, Operators.IsIn(contentTypeIds));
     }
     if (payload.ContentType.Uids.Count > 0)
     {
-      builder.Where(CmsDb.PublishedContents.ContentTypeUid, Operators.IsIn(payload.ContentType.Uids.ToArray()));
+      object[] contentTypeUids = payload.ContentType.Uids.Select(id => (object)id).ToArray();
+      builder.Where(CmsDb.PublishedContents.ContentTypeUid, Operators.IsIn(contentTypeUids));
     }
     if (payload.ContentType.Names.Count > 0)
     {
       string[] contentTypeNames = payload.ContentType.Names.Select(Helper.Normalize).ToArray();
       builder.Where(CmsDb.PublishedContents.ContentTypeName, Operators.IsIn(contentTypeNames));
+    }
+
+    if (payload.Language.Ids.Count > 0)
+    {
+      object[] languageIds = payload.Language.Ids.Select(id => (object)id).ToArray();
+      builder.Where(CmsDb.PublishedContents.LanguageId, Operators.IsIn(languageIds));
+    }
+    if (payload.Language.Uids.Count > 0)
+    {
+      object[] languageUids = payload.Language.Uids.Select(id => (object)id).ToArray();
+      builder.Where(CmsDb.PublishedContents.LanguageUid, Operators.IsIn(languageUids));
+    }
+    if (payload.Language.Codes.Count > 0)
+    {
+      string[] languageCodes = payload.Language.Codes.Select(Helper.Normalize).ToArray();
+      builder.Where(CmsDb.PublishedContents.LanguageCode, Operators.IsIn(languageCodes));
     }
 
     IQueryable<PublishedContentEntity> query = _publishedContents.FromQuery(builder).AsNoTracking();
