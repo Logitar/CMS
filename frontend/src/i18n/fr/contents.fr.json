@@ -5,6 +5,8 @@
     "empty": "Cette liste est vide.",
     "invariant": "Invariant",
     "list": "Contenus",
+    "published": "Le contenu a été publié.",
+    "publishedOn": "Dernière publication le {date} par",
     "sort": {
       "options": {
         "CreatedOn": "Date de création",
@@ -13,6 +15,7 @@
         "UpdatedOn": "Dernière modification"
       }
     },
+    "unpublished": "Le contenu a été dépublié.",
     "updated": "Le contenu a été enregistré."
   },
   "types": {

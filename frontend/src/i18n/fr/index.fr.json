@@ -8,8 +8,10 @@
     "create": "Créer",
     "delete": "Supprimer",
     "edit": "Éditer",
+    "publish": "Publier",
     "refresh": "Rafraîchir",
-    "save": "Enregistrer"
+    "save": "Enregistrer",
+    "unpublish": "Dépublier"
   },
   "any": "Tous",
   "brand": "LogitarCMS",

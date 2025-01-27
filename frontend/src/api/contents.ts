@@ -2,7 +2,7 @@ import { urlUtils } from "logitar-js";
 
 import type { CreateOrReplaceContentPayload, Content, ContentLocale, SearchContentsPayload } from "@/types/contents";
 import type { SearchResults } from "@/types/search";
-import { get, post, put } from ".";
+import { get, patch, post, put } from ".";
 
 function createUrlBuilder(id?: string): urlUtils.IUrlBuilder {
   return id ? new urlUtils.UrlBuilder({ path: "/api/contents/{id}" }).setParameter("id", id) : new urlUtils.UrlBuilder({ path: "/api/contents" });
@@ -13,6 +13,14 @@ export async function createContent(languageId: string | undefined, payload: Cre
     .setQuery("language", languageId ?? "")
     .buildRelative();
   return (await post<CreateOrReplaceContentPayload, Content>(url, payload)).data;
+}
+
+export async function publishContent(id: string, languageId?: string): Promise<Content> {
+  const url: string = new urlUtils.UrlBuilder({ path: "/api/contents/{id}/publish" })
+    .setParameter("id", id)
+    .setQuery("language", languageId ?? "")
+    .buildRelative();
+  return (await patch<void, Content>(url)).data;
 }
 
 export async function readContent(id: string): Promise<Content> {
@@ -45,4 +53,12 @@ export async function searchContents(payload: SearchContentsPayload): Promise<Se
     .setQuery("limit", payload.limit.toString())
     .buildRelative();
   return (await get<SearchResults<ContentLocale>>(url)).data;
+}
+
+export async function unpublishContent(id: string, languageId?: string): Promise<Content> {
+  const url: string = new urlUtils.UrlBuilder({ path: "/api/contents/{id}/unpublish" })
+    .setParameter("id", id)
+    .setQuery("language", languageId ?? "")
+    .buildRelative();
+  return (await patch<void, Content>(url)).data;
 }
