@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
 {
     [DbContext(typeof(CmsContext))]
-    [Migration("20250127021734_AddLanguageIsDefaultColumns")]
-    partial class AddLanguageIsDefaultColumns
+    [Migration("20250127023615_Cms_Release_1_0_0")]
+    partial class Cms_Release_1_0_0
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

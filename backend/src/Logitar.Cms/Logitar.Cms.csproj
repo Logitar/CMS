@@ -39,6 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Logitar.Cms.Infrastructure.PostgreSQL\Logitar.Cms.Infrastructure.PostgreSQL.csproj" />
     <ProjectReference Include="..\Logitar.Cms.Infrastructure.SqlServer\Logitar.Cms.Infrastructure.SqlServer.csproj" />
     <ProjectReference Include="..\Logitar.Cms.Web\Logitar.Cms.Web.csproj" />
   </ItemGroup>

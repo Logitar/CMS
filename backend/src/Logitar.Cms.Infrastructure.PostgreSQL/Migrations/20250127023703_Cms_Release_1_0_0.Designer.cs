@@ -2,17 +2,17 @@
 using Logitar.Cms.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
+namespace Logitar.Cms.Infrastructure.PostgreSQL.Migrations
 {
     [DbContext(typeof(CmsContext))]
-    [Migration("20250108062112_AddFieldIndexRelatedContent")]
-    partial class AddFieldIndexRelatedContent
+    [Migration("20250127023703_Cms_Release_1_0_0")]
+    partial class Cms_Release_1_0_0
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,42 +20,42 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "9.0.0")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Logitar.Cms.Infrastructure.Entities.ContentEntity", b =>
                 {
                     b.Property<int>("ContentId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ContentId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ContentId"));
 
                     b.Property<int>("ContentTypeId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("StreamId")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<long>("Version")
                         .HasColumnType("bigint");
@@ -87,52 +87,62 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                 {
                     b.Property<int>("ContentLocaleId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ContentLocaleId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ContentLocaleId"));
 
                     b.Property<int>("ContentId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("ContentTypeId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("DisplayName")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("FieldValues")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsPublished")
+                        .HasColumnType("boolean");
 
                     b.Property<int?>("LanguageId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
+
+                    b.Property<string>("PublishedBy")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime?>("PublishedOn")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UniqueName")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("UniqueNameNormalized")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("ContentLocaleId");
 
@@ -142,7 +152,13 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
 
                     b.HasIndex("DisplayName");
 
+                    b.HasIndex("IsPublished");
+
                     b.HasIndex("LanguageId");
+
+                    b.HasIndex("PublishedBy");
+
+                    b.HasIndex("PublishedOn");
 
                     b.HasIndex("UniqueName");
 
@@ -151,12 +167,10 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                     b.HasIndex("UpdatedOn");
 
                     b.HasIndex("ContentId", "LanguageId")
-                        .IsUnique()
-                        .HasFilter("[LanguageId] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("ContentTypeId", "LanguageId", "UniqueNameNormalized")
-                        .IsUnique()
-                        .HasFilter("[LanguageId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("ContentLocales", (string)null);
                 });
@@ -165,54 +179,54 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                 {
                     b.Property<int>("ContentTypeId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ContentTypeId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ContentTypeId"));
 
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("DisplayName")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<int>("FieldCount")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("IsInvariant")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<string>("StreamId")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("UniqueName")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("UniqueNameNormalized")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<long>("Version")
                         .HasColumnType("bigint");
@@ -253,54 +267,54 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                 {
                     b.Property<int>("FieldDefinitionId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FieldDefinitionId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("FieldDefinitionId"));
 
                     b.Property<int>("ContentTypeId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("DisplayName")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<int>("FieldTypeId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("IsIndexed")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("IsInvariant")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("IsRequired")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("IsUnique")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<int>("Order")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Placeholder")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("UniqueName")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("UniqueNameNormalized")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.HasKey("FieldDefinitionId");
 
@@ -322,96 +336,99 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                 {
                     b.Property<int>("FieldIndexId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FieldIndexId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("FieldIndexId"));
 
                     b.Property<bool?>("Boolean")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<int>("ContentId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("ContentLocaleId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("ContentLocaleName")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<int>("ContentTypeId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("ContentTypeName")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<Guid>("ContentTypeUid")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("ContentUid")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("DateTime")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("FieldDefinitionId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("FieldDefinitionName")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<Guid>("FieldDefinitionUid")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<int>("FieldTypeId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("FieldTypeName")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<Guid>("FieldTypeUid")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("LanguageCode")
                         .HasMaxLength(16)
-                        .HasColumnType("nvarchar(16)");
+                        .HasColumnType("character varying(16)");
 
                     b.Property<int?>("LanguageId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("LanguageIsDefault")
+                        .HasColumnType("boolean");
 
                     b.Property<Guid?>("LanguageUid")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<double?>("Number")
-                        .HasColumnType("float");
+                        .HasColumnType("double precision");
 
                     b.Property<string>("RelatedContent")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("RichText")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Select")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("character varying(10)");
 
                     b.Property<string>("String")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("Tags")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("FieldIndexId");
 
@@ -449,6 +466,8 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
 
                     b.HasIndex("LanguageId");
 
+                    b.HasIndex("LanguageIsDefault");
+
                     b.HasIndex("LanguageUid");
 
                     b.HasIndex("Number");
@@ -467,56 +486,56 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                 {
                     b.Property<int>("FieldTypeId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FieldTypeId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("FieldTypeId"));
 
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("DataType")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("DisplayName")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Settings")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("StreamId")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("UniqueName")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("UniqueNameNormalized")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<long>("Version")
                         .HasColumnType("bigint");
@@ -555,62 +574,62 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                 {
                     b.Property<int>("LanguageId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LanguageId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("LanguageId"));
 
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasMaxLength(16)
-                        .HasColumnType("nvarchar(16)");
+                        .HasColumnType("character varying(16)");
 
                     b.Property<string>("CodeNormalized")
                         .IsRequired()
                         .HasMaxLength(16)
-                        .HasColumnType("nvarchar(16)");
+                        .HasColumnType("character varying(16)");
 
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("EnglishName")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("IsDefault")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<int>("LCID")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("NativeName")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("StreamId")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<long>("Version")
                         .HasColumnType("bigint");
@@ -651,90 +670,188 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                     b.ToTable("Languages", (string)null);
                 });
 
-            modelBuilder.Entity("Logitar.Cms.Infrastructure.Entities.UniqueIndexEntity", b =>
+            modelBuilder.Entity("Logitar.Cms.Infrastructure.Entities.PublishedContentEntity", b =>
                 {
-                    b.Property<int>("UniqueIndexId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UniqueIndexId"));
+                    b.Property<int>("ContentLocaleId")
+                        .HasColumnType("integer");
 
                     b.Property<int>("ContentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ContentLocaleId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ContentLocaleName")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("integer");
 
                     b.Property<int>("ContentTypeId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("ContentTypeName")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<Guid>("ContentTypeUid")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("ContentUid")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("DisplayName")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("FieldValues")
+                        .HasColumnType("text");
+
+                    b.Property<string>("LanguageCode")
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
+
+                    b.Property<int?>("LanguageId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("LanguageIsDefault")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid?>("LanguageUid")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("PublishedBy")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime>("PublishedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UniqueName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("UniqueNameNormalized")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.HasKey("ContentLocaleId");
+
+                    b.HasIndex("ContentId");
+
+                    b.HasIndex("ContentTypeId");
+
+                    b.HasIndex("ContentTypeName");
+
+                    b.HasIndex("ContentTypeUid");
+
+                    b.HasIndex("ContentUid");
+
+                    b.HasIndex("DisplayName");
+
+                    b.HasIndex("LanguageCode");
+
+                    b.HasIndex("LanguageId");
+
+                    b.HasIndex("LanguageIsDefault");
+
+                    b.HasIndex("LanguageUid");
+
+                    b.HasIndex("PublishedBy");
+
+                    b.HasIndex("PublishedOn");
+
+                    b.HasIndex("UniqueName");
+
+                    b.HasIndex("UniqueNameNormalized");
+
+                    b.ToTable("PublishedContents", (string)null);
+                });
+
+            modelBuilder.Entity("Logitar.Cms.Infrastructure.Entities.UniqueIndexEntity", b =>
+                {
+                    b.Property<int>("UniqueIndexId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UniqueIndexId"));
+
+                    b.Property<int>("ContentId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ContentLocaleId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ContentLocaleName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<int>("ContentTypeId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ContentTypeName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<Guid>("ContentTypeUid")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ContentUid")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("FieldDefinitionId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("FieldDefinitionName")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<Guid>("FieldDefinitionUid")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<int>("FieldTypeId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("FieldTypeName")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<Guid>("FieldTypeUid")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Key")
                         .IsRequired()
                         .HasMaxLength(278)
-                        .HasColumnType("nvarchar(278)");
+                        .HasColumnType("character varying(278)");
 
                     b.Property<string>("LanguageCode")
                         .HasMaxLength(16)
-                        .HasColumnType("nvarchar(16)");
+                        .HasColumnType("character varying(16)");
 
                     b.Property<int?>("LanguageId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("LanguageIsDefault")
+                        .HasColumnType("boolean");
 
                     b.Property<Guid?>("LanguageUid")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("character varying(10)");
 
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("ValueNormalized")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.HasKey("UniqueIndexId");
 
@@ -770,6 +887,8 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
 
                     b.HasIndex("LanguageId");
 
+                    b.HasIndex("LanguageIsDefault");
+
                     b.HasIndex("LanguageUid");
 
                     b.HasIndex("Status");
@@ -779,8 +898,7 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                     b.HasIndex("ValueNormalized");
 
                     b.HasIndex("FieldDefinitionId", "LanguageId", "Status", "ValueNormalized")
-                        .IsUnique()
-                        .HasFilter("[LanguageId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("UniqueIndex", (string)null);
                 });
@@ -891,6 +1009,40 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                     b.Navigation("Language");
                 });
 
+            modelBuilder.Entity("Logitar.Cms.Infrastructure.Entities.PublishedContentEntity", b =>
+                {
+                    b.HasOne("Logitar.Cms.Infrastructure.Entities.ContentEntity", "Content")
+                        .WithMany("PublishedContents")
+                        .HasForeignKey("ContentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Logitar.Cms.Infrastructure.Entities.ContentLocaleEntity", "ContentLocale")
+                        .WithOne("PublishedContent")
+                        .HasForeignKey("Logitar.Cms.Infrastructure.Entities.PublishedContentEntity", "ContentLocaleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Logitar.Cms.Infrastructure.Entities.ContentTypeEntity", "ContentType")
+                        .WithMany("PublishedContents")
+                        .HasForeignKey("ContentTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Logitar.Cms.Infrastructure.Entities.LanguageEntity", "Language")
+                        .WithMany("PublishedContents")
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Content");
+
+                    b.Navigation("ContentLocale");
+
+                    b.Navigation("ContentType");
+
+                    b.Navigation("Language");
+                });
+
             modelBuilder.Entity("Logitar.Cms.Infrastructure.Entities.UniqueIndexEntity", b =>
                 {
                     b.HasOne("Logitar.Cms.Infrastructure.Entities.ContentEntity", "Content")
@@ -947,12 +1099,16 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
 
                     b.Navigation("Locales");
 
+                    b.Navigation("PublishedContents");
+
                     b.Navigation("UniqueIndex");
                 });
 
             modelBuilder.Entity("Logitar.Cms.Infrastructure.Entities.ContentLocaleEntity", b =>
                 {
                     b.Navigation("FieldIndex");
+
+                    b.Navigation("PublishedContent");
 
                     b.Navigation("UniqueIndex");
                 });
@@ -966,6 +1122,8 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                     b.Navigation("FieldIndex");
 
                     b.Navigation("Fields");
+
+                    b.Navigation("PublishedContents");
 
                     b.Navigation("UniqueIndex");
                 });
@@ -991,6 +1149,8 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                     b.Navigation("ContentLocales");
 
                     b.Navigation("FieldIndex");
+
+                    b.Navigation("PublishedContents");
 
                     b.Navigation("UniqueIndex");
                 });
