@@ -19,6 +19,7 @@ public class UniqueIndexEntity
   public int? LanguageId { get; private set; }
   public Guid? LanguageUid { get; private set; }
   public string? LanguageCode { get; private set; }
+  public bool LanguageIsDefault { get; private set; }
 
   public FieldTypeEntity? FieldType { get; private set; }
   public int FieldTypeId { get; private set; }
@@ -74,6 +75,7 @@ public class UniqueIndexEntity
       LanguageId = language.LanguageId;
       LanguageUid = language.Id;
       LanguageCode = language.CodeNormalized;
+      LanguageIsDefault = language.IsDefault;
     }
 
     FieldType = fieldType;

@@ -20,6 +20,7 @@ internal class UniqueIndexConfiguration : IEntityTypeConfiguration<UniqueIndexEn
     builder.HasIndex(x => x.LanguageId);
     builder.HasIndex(x => x.LanguageUid);
     builder.HasIndex(x => x.LanguageCode);
+    builder.HasIndex(x => x.LanguageIsDefault);
     builder.HasIndex(x => x.FieldTypeId);
     builder.HasIndex(x => x.FieldTypeUid);
     builder.HasIndex(x => x.FieldTypeName);

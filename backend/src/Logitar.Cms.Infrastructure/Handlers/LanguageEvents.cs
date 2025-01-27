@@ -72,6 +72,24 @@ internal class LanguageEvents : INotificationHandler<LanguageCreated>,
       language.SetDefault(@event);
 
       await _context.SaveChangesAsync(cancellationToken);
+
+      ICommand command = _commandHelper.Update()
+        .Set(new Update(CmsDb.FieldIndex.LanguageIsDefault, language.IsDefault))
+        .Where(new OperatorCondition(CmsDb.FieldIndex.LanguageId, Operators.IsEqualTo(language.LanguageId)))
+        .Build();
+      await _context.Database.ExecuteSqlRawAsync(command.Text, command.Parameters.ToArray(), cancellationToken);
+
+      command = _commandHelper.Update()
+        .Set(new Update(CmsDb.UniqueIndex.LanguageIsDefault, language.IsDefault))
+        .Where(new OperatorCondition(CmsDb.UniqueIndex.LanguageId, Operators.IsEqualTo(language.LanguageId)))
+        .Build();
+      await _context.Database.ExecuteSqlRawAsync(command.Text, command.Parameters.ToArray(), cancellationToken);
+
+      command = _commandHelper.Update()
+        .Set(new Update(CmsDb.PublishedContents.LanguageIsDefault, language.IsDefault))
+        .Where(new OperatorCondition(CmsDb.PublishedContents.LanguageId, Operators.IsEqualTo(language.LanguageId)))
+        .Build();
+      await _context.Database.ExecuteSqlRawAsync(command.Text, command.Parameters.ToArray(), cancellationToken);
     }
   }
 }

@@ -18,6 +18,7 @@ public static class PublishedContents
   public static readonly ColumnId FieldValues = new(nameof(PublishedContentEntity.FieldValues), Table);
   public static readonly ColumnId LanguageCode = new(nameof(PublishedContentEntity.LanguageCode), Table);
   public static readonly ColumnId LanguageId = new(nameof(PublishedContentEntity.LanguageId), Table);
+  public static readonly ColumnId LanguageIsDefault = new(nameof(PublishedContentEntity.LanguageIsDefault), Table);
   public static readonly ColumnId LanguageUid = new(nameof(PublishedContentEntity.LanguageUid), Table);
   public static readonly ColumnId PublishedBy = new(nameof(PublishedContentEntity.PublishedBy), Table);
   public static readonly ColumnId PublishedOn = new(nameof(PublishedContentEntity.PublishedOn), Table);
