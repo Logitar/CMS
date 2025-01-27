@@ -18,6 +18,7 @@ internal class PublishedContentConfiguration : IEntityTypeConfiguration<Publishe
     builder.HasIndex(x => x.ContentTypeName);
     builder.HasIndex(x => x.LanguageUid);
     builder.HasIndex(x => x.LanguageCode);
+    builder.HasIndex(x => x.LanguageIsDefault);
     builder.HasIndex(x => x.UniqueName);
     builder.HasIndex(x => x.UniqueNameNormalized);
     builder.HasIndex(x => x.DisplayName);

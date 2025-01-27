@@ -15,14 +15,12 @@ namespace Logitar.Cms.Infrastructure.Queriers;
 internal class PublishedContentQuerier : IPublishedContentQuerier
 {
   private readonly IActorService _actorService;
-  private readonly DbSet<LanguageEntity> _languages;
   private readonly DbSet<PublishedContentEntity> _publishedContents;
   private readonly IQueryHelper _queryHelper;
 
   public PublishedContentQuerier(IActorService actorService, CmsContext context, IQueryHelper queryHelper)
   {
     _actorService = actorService;
-    _languages = context.Languages;
     _publishedContents = context.PublishedContents;
     _queryHelper = queryHelper;
   }
@@ -284,11 +282,6 @@ internal class PublishedContentQuerier : IPublishedContentQuerier
 
   private async Task<IReadOnlyCollection<PublishedContent>> MapContentsAsync(IEnumerable<PublishedContentEntity> locales, CancellationToken cancellationToken)
   {
-    int defaultLanguageId = (await _languages.AsNoTracking()
-      .Where(x => x.IsDefault)
-      .Select(x => (int?)x.LanguageId)
-      .SingleOrDefaultAsync(cancellationToken)) ?? throw new InvalidOperationException("The default language entity could not be found.");
-
     IEnumerable<ActorId> actorIds = locales.SelectMany(locale => locale.GetActorIds());
     IReadOnlyCollection<ActorModel> actors = await _actorService.FindAsync(actorIds, cancellationToken);
     Mapper mapper = new(actors);
@@ -319,7 +312,7 @@ internal class PublishedContentQuerier : IPublishedContentQuerier
       {
         language = new()
         {
-          IsDefault = locale.LanguageId.Value == defaultLanguageId
+          IsDefault = locale.LanguageIsDefault
         };
         if (locale.LanguageUid.HasValue)
         {
@@ -348,11 +341,6 @@ internal class PublishedContentQuerier : IPublishedContentQuerier
 
   private async Task<IReadOnlyCollection<PublishedContentLocale>> MapLocalesAsync(IEnumerable<PublishedContentEntity> locales, CancellationToken cancellationToken)
   {
-    int defaultLanguageId = (await _languages.AsNoTracking()
-      .Where(x => x.IsDefault)
-      .Select(x => (int?)x.LanguageId)
-      .SingleOrDefaultAsync(cancellationToken)) ?? throw new InvalidOperationException("The default language entity could not be found.");
-
     IEnumerable<ActorId> actorIds = locales.SelectMany(locale => locale.GetActorIds());
     IReadOnlyCollection<ActorModel> actors = await _actorService.FindAsync(actorIds, cancellationToken);
     Mapper mapper = new(actors);
@@ -384,7 +372,7 @@ internal class PublishedContentQuerier : IPublishedContentQuerier
       {
         language = new()
         {
-          IsDefault = locale.LanguageId.Value == defaultLanguageId
+          IsDefault = locale.LanguageIsDefault
         };
         if (locale.LanguageUid.HasValue)
         {

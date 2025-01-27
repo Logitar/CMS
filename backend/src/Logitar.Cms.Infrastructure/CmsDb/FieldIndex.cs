@@ -23,6 +23,7 @@ public static class FieldIndex
   public static readonly ColumnId FieldTypeUid = new(nameof(FieldIndexEntity.FieldTypeUid), Table);
   public static readonly ColumnId LanguageCode = new(nameof(FieldIndexEntity.LanguageCode), Table);
   public static readonly ColumnId LanguageId = new(nameof(FieldIndexEntity.LanguageId), Table);
+  public static readonly ColumnId LanguageIsDefault = new(nameof(FieldIndexEntity.LanguageIsDefault), Table);
   public static readonly ColumnId LanguageUid = new(nameof(FieldIndexEntity.LanguageUid), Table);
   public static readonly ColumnId Status = new(nameof(FieldIndexEntity.Status), Table);
 

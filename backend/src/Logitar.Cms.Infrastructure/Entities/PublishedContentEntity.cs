@@ -22,6 +22,7 @@ public class PublishedContentEntity
   public int? LanguageId { get; private set; }
   public Guid? LanguageUid { get; private set; }
   public string? LanguageCode { get; private set; }
+  public bool LanguageIsDefault { get; private set; }
 
   public string UniqueName { get; private set; } = string.Empty;
   public string UniqueNameNormalized
@@ -60,6 +61,7 @@ public class PublishedContentEntity
       LanguageId = language.LanguageId;
       LanguageUid = language.Id;
       LanguageCode = language.CodeNormalized;
+      LanguageIsDefault = language.IsDefault;
     }
 
     Update(contentLocale, @event);
