@@ -1,4 +1,8 @@
 {
+  "contentFieldValueConflicts": {
+    "help": "Please enter different field values for the following fields.",
+    "lead": "One or more field values are already used."
+  },
   "localeAlreadyUsed": {
     "help": "Please select another locale.",
     "lead": "The locale is already used."

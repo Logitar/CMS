@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { arrayUtils } from "logitar-js";
+import { arrayUtils, parsingUtils } from "logitar-js";
 import { computed, ref, watch } from "vue";
-import { parsingUtils } from "logitar-js";
 import { useForm } from "vee-validate";
 
 import AppSaveButton from "@/components/shared/AppSaveButton.vue";
+import ContentFieldValueConflicts from "./ContentFieldValueConflicts.vue";
 import DescriptionTextarea from "@/components/shared/DescriptionTextarea.vue";
 import DisplayNameInput from "@/components/shared/DisplayNameInput.vue";
 import FieldValueEdit from "@/components/fields/FieldValueEdit.vue";
@@ -12,6 +12,7 @@ import PublishButton from "./PublishButton.vue";
 import StatusInfo from "@/components/shared/StatusInfo.vue";
 import UniqueNameAlreadyUsed from "@/components/shared/UniqueNameAlreadyUsed.vue";
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
+import type { ApiError, ProblemDetails } from "@/types/api";
 import type { Content, ContentLocale, CreateOrReplaceContentPayload } from "@/types/contents";
 import type { FieldDefinition, FieldValue } from "@/types/fields";
 import { CONTENT_UNIQUE_NAME_ALLOWED_CHARACTERS } from "@/constants/allowedCharacters";
@@ -29,6 +30,7 @@ const props = defineProps<{
   new?: boolean | string;
 }>();
 
+const contentFieldValueConflicts = ref<string[]>([]);
 const description = ref<string>("");
 const displayName = ref<string>("");
 const fieldValues = ref<Map<string, string>>(new Map<string, string>());
@@ -53,6 +55,7 @@ const isNew = computed<boolean>(() => parseBoolean(props.new) ?? false);
 
 function reset(): void {
   uniqueNameAlreadyUsed.value = false;
+  contentFieldValueConflicts.value = [];
   uniqueName.value = props.locale.uniqueName;
   displayName.value = props.locale.displayName ?? "";
   description.value = props.locale.description ?? "";
@@ -71,6 +74,7 @@ const emit = defineEmits<{
 const { handleSubmit, isSubmitting } = useForm();
 const onSubmit = handleSubmit(async () => {
   uniqueNameAlreadyUsed.value = false;
+  contentFieldValueConflicts.value = [];
   try {
     const payload: CreateOrReplaceContentPayload = {
       uniqueName: uniqueName.value,
@@ -83,6 +87,15 @@ const onSubmit = handleSubmit(async () => {
   } catch (e: unknown) {
     if (isError(e, StatusCodes.Conflict, ErrorCodes.ContentUniqueNameAlreadyUsed)) {
       uniqueNameAlreadyUsed.value = true;
+    } else if (isError(e, StatusCodes.Conflict, ErrorCodes.ContentFieldValueConflict)) {
+      const apiError = e as ApiError;
+      const problemDetails = apiError.data as ProblemDetails;
+      Object.keys(problemDetails.error?.data.ConflictIds).forEach((fieldId) => {
+        const field: FieldDefinition | undefined = props.content.contentType.fields.find(({ id }) => id === fieldId);
+        if (field) {
+          contentFieldValueConflicts.value.push(field.displayName ?? field.uniqueName);
+        }
+      });
     } else {
       emit("error", e);
     }
@@ -134,6 +147,7 @@ watch(() => props.locale, reset, { deep: true, immediate: true });
       <PublishButton v-if="!isNew" class="ms-1" :disabled="hasChanges" :loading="isPublishing" :published="locale.isPublished" @click="onPublish" />
     </div>
     <UniqueNameAlreadyUsed v-model="uniqueNameAlreadyUsed" />
+    <ContentFieldValueConflicts v-model="contentFieldValueConflicts" />
     <div class="row">
       <UniqueNameInput
         class="col"
