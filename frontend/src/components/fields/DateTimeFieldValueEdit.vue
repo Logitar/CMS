@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { useI18n } from "vue-i18n";
 
 import DateTimeInput from "@/components/shared/DateTimeInput.vue";
+import FieldValueLabel from "./FieldValueLabel.vue";
 import type { FieldDefinition, FieldType } from "@/types/fields";
-
-const { t } = useI18n();
 
 const props = defineProps<{
   definition: FieldDefinition;
@@ -32,10 +30,7 @@ defineEmits<{
     @update:model-value="$emit('update:model-value', $event?.toISOString() ?? '')"
   >
     <template #label-override>
-      <label :for="definition.id">
-        {{ definition.displayName ?? definition.uniqueName }}
-        <i v-if="definition.isRequired" class="text-secondary">({{ t("fields.definitions.required") }})</i>
-      </label>
+      <FieldValueLabel :definition="definition" />
     </template>
   </DateTimeInput>
 </template>
