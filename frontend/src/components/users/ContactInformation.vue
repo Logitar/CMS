@@ -27,7 +27,7 @@ const { handleSubmit, isSubmitting } = useForm();
 const onSubmit = handleSubmit(async () => {
   try {
     const payload: SaveProfilePayload = {
-      emailAddress: { value: emailAddress.value },
+      emailAddress: { value: emailAddress.value || undefined },
     };
     const user: UserProfile = await saveProfile(payload);
     emit("saved", user);
@@ -50,6 +50,6 @@ watch(
     <div class="mb-3">
       <AppSaveButton :disabled="isSubmitting || !hasChanges" exists :loading="isSubmitting" />
     </div>
-    <EmailAddressInput required v-model="emailAddress" />
+    <EmailAddressInput v-model="emailAddress" />
   </form>
 </template>
