@@ -5,16 +5,14 @@ namespace Logitar.Cms.Core.Fields.Settings;
 public record SelectOption : ISelectOption
 {
   public bool IsDisabled { get; }
-  public bool IsSelected { get; }
   public string Text { get; }
   public string? Label { get; }
   public string? Value { get; }
 
   [JsonConstructor]
-  public SelectOption(string text, bool isDisabled = false, bool isSelected = false, string? label = null, string? value = null)
+  public SelectOption(string text, bool isDisabled = false, string? label = null, string? value = null)
   {
     IsDisabled = isDisabled;
-    IsSelected = isSelected;
     Text = text.Trim();
     Label = label?.CleanTrim();
     Value = value?.CleanTrim();
@@ -24,7 +22,6 @@ public record SelectOption : ISelectOption
   public SelectOption(ISelectOption option)
   {
     IsDisabled = option.IsDisabled;
-    IsSelected = option.IsSelected;
     Text = option.Text.Trim();
     Label = option.Label?.CleanTrim();
     Value = option.Value?.CleanTrim();
