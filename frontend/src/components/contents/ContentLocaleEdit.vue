@@ -7,6 +7,8 @@ import AppSaveButton from "@/components/shared/AppSaveButton.vue";
 import DescriptionTextarea from "@/components/shared/DescriptionTextarea.vue";
 import DisplayNameInput from "@/components/shared/DisplayNameInput.vue";
 import FieldValueEdit from "@/components/fields/FieldValueEdit.vue";
+import PublishButton from "./PublishButton.vue";
+import StatusInfo from "@/components/shared/StatusInfo.vue";
 import UniqueNameAlreadyUsed from "@/components/shared/UniqueNameAlreadyUsed.vue";
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
 import type { Content, ContentLocale, CreateOrReplaceContentPayload } from "@/types/contents";
@@ -15,7 +17,7 @@ import { CONTENT_UNIQUE_NAME_ALLOWED_CHARACTERS } from "@/constants/allowedChara
 import { ErrorCodes } from "@/enums/errorCodes";
 import { StatusCodes } from "@/enums/statusCodes";
 import { isError } from "@/helpers/errors";
-import { replaceContent } from "@/api/contents";
+import { publishContent, replaceContent, unpublishContent } from "@/api/contents";
 
 const { orderBy } = arrayUtils;
 
@@ -27,6 +29,7 @@ const props = defineProps<{
 const description = ref<string>("");
 const displayName = ref<string>("");
 const fieldValues = ref<Map<string, string>>(new Map<string, string>());
+const isPublishing = ref<boolean>(false);
 const uniqueName = ref<string>("");
 const uniqueNameAlreadyUsed = ref<boolean>(false);
 
@@ -56,6 +59,8 @@ function reset(): void {
 
 const emit = defineEmits<{
   (e: "error", value: unknown): void;
+  (e: "published", value: Content): void;
+  (e: "unpublished", value: Content): void;
   (e: "saved", value: Content): void;
 }>();
 
@@ -80,6 +85,25 @@ const onSubmit = handleSubmit(async () => {
   }
 });
 
+async function onPublish(): Promise<void> {
+  if (!isPublishing.value) {
+    isPublishing.value = true;
+    try {
+      if (props.locale.isPublished) {
+        const content: Content = await unpublishContent(props.content.id, props.locale.language?.id);
+        emit("unpublished", content);
+      } else {
+        const content: Content = await publishContent(props.content.id, props.locale.language?.id);
+        emit("published", content);
+      }
+    } catch (e: unknown) {
+      emit("error", e);
+    } finally {
+      isPublishing.value = false;
+    }
+  }
+}
+
 function getFieldValue(id: string): string | undefined {
   return fieldValues.value.get(id);
 }
@@ -93,8 +117,12 @@ watch(() => props.locale, reset, { deep: true, immediate: true });
 <template>
   <form @submit.prevent="onSubmit">
     <div class="mb-3">
-      <AppSaveButton :disabled="isSubmitting || !hasChanges" :loading="isSubmitting" />
+      <AppSaveButton class="me-1" :disabled="isSubmitting || !hasChanges" :loading="isSubmitting" />
+      <PublishButton class="ms-1" :loading="isPublishing" :published="locale.isPublished" @click="onPublish" />
     </div>
+    <p v-if="locale.publishedBy && locale.publishedOn">
+      <StatusInfo :actor="locale.publishedBy" :date="locale.publishedOn" format="contents.items.publishedOn" />
+    </p>
     <UniqueNameAlreadyUsed v-model="uniqueNameAlreadyUsed" />
     <div class="row">
       <UniqueNameInput

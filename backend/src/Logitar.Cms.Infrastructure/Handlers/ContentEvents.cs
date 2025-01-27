@@ -125,7 +125,7 @@ internal class ContentEvents : INotificationHandler<ContentCreated>,
         .Build();
       await _context.Database.ExecuteSqlRawAsync(command.Text, command.Parameters.ToArray(), cancellationToken);
 
-      command = _commandHelper.Delete(CmsDb.FieldIndex.Table)
+      command = _commandHelper.Delete(CmsDb.UniqueIndex.Table)
         .Where(
           new OperatorCondition(CmsDb.UniqueIndex.ContentLocaleId, Operators.IsEqualTo(locale.ContentLocaleId)),
           new OperatorCondition(CmsDb.UniqueIndex.Status, Operators.IsEqualTo(ContentStatus.Published.ToString())))

@@ -35,14 +35,14 @@ public class ContentController : ControllerBase
   public async Task<ActionResult<ContentModel>> PublishAllAsync(Guid contentId, CancellationToken cancellationToken)
   {
     ContentModel? content = await _mediator.Send(new PublishContentCommand(contentId), cancellationToken);
-    return content == null ? NotFound() : Ok(contentId);
+    return content == null ? NotFound() : Ok(content);
   }
 
   [HttpPatch("{contentId}/publish")]
   public async Task<ActionResult<ContentModel>> PublishAsync(Guid contentId, [FromQuery(Name = "language")] Guid? languageId, CancellationToken cancellationToken)
   {
     ContentModel? content = await _mediator.Send(new PublishContentCommand(contentId, languageId), cancellationToken);
-    return content == null ? NotFound() : Ok(contentId);
+    return content == null ? NotFound() : Ok(content);
   }
 
   [HttpGet("{id}")]
@@ -82,14 +82,14 @@ public class ContentController : ControllerBase
   public async Task<ActionResult<ContentModel>> UnpublishAllAsync(Guid contentId, CancellationToken cancellationToken)
   {
     ContentModel? content = await _mediator.Send(new UnpublishContentCommand(contentId), cancellationToken);
-    return content == null ? NotFound() : Ok(contentId);
+    return content == null ? NotFound() : Ok(content);
   }
 
   [HttpPatch("{contentId}/unpublish")]
   public async Task<ActionResult<ContentModel>> UnpublishAsync(Guid contentId, [FromQuery(Name = "language")] Guid? languageId, CancellationToken cancellationToken)
   {
     ContentModel? content = await _mediator.Send(new UnpublishContentCommand(contentId, languageId), cancellationToken);
-    return content == null ? NotFound() : Ok(contentId);
+    return content == null ? NotFound() : Ok(content);
   }
 
   [HttpPatch("{contentId}")]

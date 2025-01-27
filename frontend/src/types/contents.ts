@@ -21,6 +21,9 @@ export type ContentLocale = {
   createdOn: string;
   updatedBy: Actor;
   updatedOn: string;
+  isPublished: boolean;
+  publishedBy?: Actor;
+  publishedOn?: string;
 };
 
 export type ContentSort = "CreatedOn" | "DisplayName" | "UniqueName" | "UpdatedOn";

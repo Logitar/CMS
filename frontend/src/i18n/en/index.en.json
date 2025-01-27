@@ -8,8 +8,10 @@
     "create": "Create",
     "delete": "Delete",
     "edit": "Edit",
+    "publish": "Publish",
     "refresh": "Refresh",
-    "save": "Save"
+    "save": "Save",
+    "unpublish": "Unpublish"
   },
   "any": "Any",
   "brand": "LogitarCMS",

@@ -48,6 +48,9 @@ function addLocale(): void {
       createdOn: now,
       updatedBy: actor,
       updatedOn: now,
+      isPublished: false,
+      publishedBy: undefined,
+      publishedOn: undefined,
     };
     content.value.locales.push(locale);
     language.value = undefined;
@@ -63,6 +66,15 @@ function compare(left: ContentLocale, right: ContentLocale): -1 | 0 | 1 {
     }
   }
   return 0;
+}
+
+function onPublished(content: Content): void {
+  setModel(content);
+  toasts.success("contents.items.published");
+}
+function onUnpublished(content: Content): void {
+  setModel(content);
+  toasts.success("contents.items.unpublished");
 }
 
 function onSaved(content: Content): void {
@@ -97,7 +109,15 @@ onMounted(async () => {
     <template v-if="content">
       <h1>{{ content.invariant.displayName ?? content.invariant.uniqueName }}</h1>
       <StatusDetail :aggregate="content" />
-      <ContentLocaleEdit v-if="isInvariant" :content="content" :locale="content.invariant" @error="handleError" @saved="onSaved" />
+      <ContentLocaleEdit
+        v-if="isInvariant"
+        :content="content"
+        :locale="content.invariant"
+        @error="handleError"
+        @published="onPublished"
+        @saved="onSaved"
+        @unpublished="onUnpublished"
+      />
       <template v-else>
         <LanguageSelect :exclude="languageIds" no-status :model-value="language?.id" @selected="language = $event">
           <template #append>
@@ -106,10 +126,24 @@ onMounted(async () => {
         </LanguageSelect>
         <TarTabs>
           <TarTab active id="invariant" :title="t('contents.items.invariant')">
-            <ContentLocaleEdit :content="content" :locale="content.invariant" @error="handleError" @saved="onSaved" />
+            <ContentLocaleEdit
+              :content="content"
+              :locale="content.invariant"
+              @error="handleError"
+              @published="onPublished"
+              @saved="onSaved"
+              @unpublished="onUnpublished"
+            />
           </TarTab>
           <TarTab v-for="locale in locales" :key="locale.language?.id" :id="locale.language?.id" :title="locale.language?.locale.displayName">
-            <ContentLocaleEdit :content="content" :locale="locale" @error="handleError" @saved="onSaved" />
+            <ContentLocaleEdit
+              :content="content"
+              :locale="locale"
+              @error="handleError"
+              @published="onPublished"
+              @saved="onSaved"
+              @unpublished="onUnpublished"
+            />
           </TarTab>
         </TarTabs>
       </template>
