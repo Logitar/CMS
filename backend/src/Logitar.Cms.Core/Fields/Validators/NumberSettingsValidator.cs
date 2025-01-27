@@ -13,11 +13,7 @@ public class NumberSettingsValidator : AbstractValidator<INumberSettings>
       RuleFor(x => x.MaximumValue!.Value).GreaterThan(x => x.MinimumValue!.Value);
     });
 
-    When(x => x.MinimumValue.HasValue && x.Step.HasValue, () =>
-    {
-      RuleFor(x => x.MinimumValue!.Value).LessThanOrEqualTo(x => x.Step!.Value);
-      RuleFor(x => x.Step!.Value).GreaterThanOrEqualTo(x => x.MinimumValue!.Value);
-    });
+    When(x => x.Step.HasValue, () => RuleFor(x => x.Step!.Value).GreaterThan(0.0));
 
     When(x => x.MaximumValue.HasValue && x.Step.HasValue, () =>
     {

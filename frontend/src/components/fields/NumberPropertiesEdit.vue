@@ -61,10 +61,11 @@ function setStep(step: number | undefined): void {
         floating
         id="step"
         label="fields.types.number.step"
-        :min="modelValue.minimumValue"
+        min="0"
         :max="modelValue.maximumValue"
         :model-value="modelValue.step?.toString()"
         placeholder="fields.types.number.step"
+        step="any"
         type="number"
         @update:model-value="setStep(parseNumber($event))"
       />
