@@ -157,25 +157,6 @@ public class CreateOrReplaceFieldDefinitionCommandHandlerTests
     Assert.Equal("FieldTypeId", exception.PropertyName);
   }
 
-  [Fact(DisplayName = "It should throw ValidationException when the content type is invariant, but the field definition is not.")]
-  public async Task Given_ContentTypeInvariantFieldNot_When_Handle_Then_ValidationException()
-  {
-    ContentType contentType = new(new Identifier("BlogArticle"), isInvariant: true);
-    _contentTypeRepository.Setup(x => x.LoadAsync(contentType.Id, _cancellationToken)).ReturnsAsync(contentType);
-
-    CreateOrReplaceFieldDefinitionPayload payload = new()
-    {
-      IsInvariant = false,
-      UniqueName = "ArticleTitle"
-    };
-    CreateOrReplaceFieldDefinitionCommand command = new(contentType.Id.ToGuid(), FieldId: null, payload);
-    var exception = await Assert.ThrowsAsync<ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
-
-    ValidationFailure error = Assert.Single(exception.Errors);
-    Assert.Equal("InvariantValidator", error.ErrorCode);
-    Assert.Equal("IsInvariant", error.PropertyName);
-  }
-
   [Fact(DisplayName = "It should throw ValidationException when creating a field definition, but the field type ID is null.")]
   public async Task Given_NewFieldDefinitionFieldTypeIdNull_When_Handle_Then_ValidationException()
   {

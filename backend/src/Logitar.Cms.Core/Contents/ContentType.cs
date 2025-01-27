@@ -1,4 +1,6 @@
-﻿using Logitar.Cms.Core.Contents.Events;
+﻿using FluentValidation;
+using FluentValidation.Results;
+using Logitar.Cms.Core.Contents.Events;
 using Logitar.Cms.Core.Fields;
 using Logitar.EventSourcing;
 using Logitar.Identity.Core;
@@ -79,6 +81,15 @@ public class ContentType : AggregateRoot
 
   public void SetField(FieldDefinition fieldDefinition, ActorId? actorId = null)
   {
+    if (IsInvariant && !fieldDefinition.IsInvariant)
+    {
+      ValidationFailure failure = new(nameof(fieldDefinition.IsInvariant), "'IsInvariant' must be true. Invariant content types cannot define variant fields.", fieldDefinition.IsInvariant)
+      {
+        ErrorCode = "InvariantValidator"
+      };
+      throw new ValidationException([failure]);
+    }
+
     if (!_fieldsById.TryGetValue(fieldDefinition.Id, out int index))
     {
       index = -1;
