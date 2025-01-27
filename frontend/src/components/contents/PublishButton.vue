@@ -8,10 +8,12 @@ const { parseBoolean } = parsingUtils;
 const { t } = useI18n();
 
 const props = defineProps<{
+  disabled?: boolean | string;
   loading?: boolean | string;
   published?: boolean | string;
 }>();
 
+const isDisabled = computed<boolean>(() => parseBoolean(props.disabled) || isLoading.value);
 const isLoading = computed<boolean>(() => parseBoolean(props.loading) ?? false);
 const isPublished = computed<boolean>(() => parseBoolean(props.published) ?? false);
 
@@ -22,7 +24,7 @@ defineEmits<{
 
 <template>
   <TarButton
-    :disabled="isLoading"
+    :disabled="isDisabled"
     :icon="`fas fa-${isPublished ? 'lock' : 'book'}`"
     :loading="isLoading"
     :text="t(`actions.${isPublished ? 'unpublish' : 'publish'}`)"

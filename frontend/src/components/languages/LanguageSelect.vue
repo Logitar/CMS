@@ -76,6 +76,7 @@ onMounted(async () => {
 
 <template>
   <AppSelect
+    :disabled="options.length < 1"
     floating
     :id="id"
     :label="label"

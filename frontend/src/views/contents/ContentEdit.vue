@@ -26,10 +26,11 @@ const { t } = useI18n();
 
 const content = ref<Content>();
 const language = ref<Language>();
+const newLocales = ref<ContentLocale[]>([]);
 
 const isInvariant = computed<boolean>(() => Boolean(content.value && content.value.contentType.isInvariant));
-const languageIds = computed<string[]>(
-  () => content.value?.locales.filter((locale) => Boolean(locale.language)).map((locale) => locale.language?.id ?? "") ?? [],
+const languageIds = computed<string[]>(() =>
+  (content.value?.locales ?? []).map((locale) => locale.language?.id ?? "").concat(newLocales.value.map((locale) => locale.language?.id ?? "")),
 );
 const locales = computed<ContentLocale[]>(() => (content.value ? content.value.locales.filter((locale) => Boolean(locale.language)) : []).sort(compare));
 
@@ -52,7 +53,7 @@ function addLocale(): void {
       publishedBy: undefined,
       publishedOn: undefined,
     };
-    content.value.locales.push(locale);
+    newLocales.value.push(locale);
     language.value = undefined;
   }
 }
@@ -108,8 +109,7 @@ onMounted(async () => {
   <main class="container">
     <template v-if="content">
       <h1>{{ content.invariant.displayName ?? content.invariant.uniqueName }}</h1>
-      <StatusDetail :aggregate="content" />
-      <!-- TODO(fpion): global (un)publish -->
+      <StatusDetail v-if="!content.contentType.isInvariant" :aggregate="content" />
       <ContentLocaleEdit
         v-if="isInvariant"
         :content="content"
@@ -140,6 +140,17 @@ onMounted(async () => {
             <ContentLocaleEdit
               :content="content"
               :locale="locale"
+              @error="handleError"
+              @published="onPublished"
+              @saved="onSaved"
+              @unpublished="onUnpublished"
+            />
+          </TarTab>
+          <TarTab v-for="locale in newLocales" :key="locale.language?.id" :id="locale.language?.id" :title="locale.language?.locale.displayName">
+            <ContentLocaleEdit
+              :content="content"
+              :locale="locale"
+              new
               @error="handleError"
               @published="onPublished"
               @saved="onSaved"
