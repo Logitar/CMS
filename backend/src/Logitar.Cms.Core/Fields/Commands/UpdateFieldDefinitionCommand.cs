@@ -41,8 +41,6 @@ internal class UpdateFieldDefinitionCommandHandler : IRequestHandler<UpdateField
       return null;
     }
 
-    // ISSUE #94: https://github.com/Logitar/CMS/issues/94
-
     fieldDefinition = new(
       fieldDefinition.Id,
       fieldDefinition.FieldTypeId,

@@ -1,4 +1,6 @@
-﻿using Logitar.Cms.Core.Fields;
+﻿using FluentValidation;
+using FluentValidation.Results;
+using Logitar.Cms.Core.Fields;
 using Logitar.Cms.Core.Fields.Settings;
 using Logitar.Identity.Core;
 
@@ -42,5 +44,30 @@ public class ContentTypeTests
     Assert.Equal(field.Id, exception.EntityId);
     Assert.Equal(field.UniqueName.Value, exception.UniqueName);
     Assert.Equal("UniqueName", exception.PropertyName);
+  }
+
+  [Fact(DisplayName = "SetField: it should throw ValidationException when setting a variant field definition on an invariant content type.")]
+  public void Given_InvariantContentTypeVariantFieldDefinition_When_SetField_Then_ValidationException()
+  {
+    ContentType contentType = new(new Identifier("BlogAuthor"));
+
+    FieldDefinition field = new(
+      Guid.NewGuid(),
+      FieldTypeId.NewId(),
+      IsInvariant: false,
+      IsRequired: false,
+      IsIndexed: false,
+      IsUnique: false,
+      new Identifier("Biography"),
+      DisplayName: null,
+      Description: null,
+      Placeholder: null);
+    var exception = Assert.Throws<ValidationException>(() => contentType.SetField(field));
+
+    ValidationFailure failure = Assert.Single(exception.Errors);
+    Assert.Equal(field.IsInvariant, failure.AttemptedValue);
+    Assert.Equal("InvariantValidator", failure.ErrorCode);
+    Assert.Equal("'IsInvariant' must be true. Invariant content types cannot define variant fields.", failure.ErrorMessage);
+    Assert.Equal("IsInvariant", failure.PropertyName);
   }
 }
