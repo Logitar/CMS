@@ -6,7 +6,7 @@
     "invariant": "Invariant",
     "list": "Contents",
     "published": "The content has been published.",
-    "updatedOn": "Last publication on {date} by",
+    "publishedOn": "Last publication on {date} by",
     "sort": {
       "options": {
         "CreatedOn": "Created on",
