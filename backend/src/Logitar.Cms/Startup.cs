@@ -1,5 +1,6 @@
 ﻿using Logitar.Cms.Core;
 using Logitar.Cms.Infrastructure;
+using Logitar.Cms.Infrastructure.PostgreSQL;
 using Logitar.Cms.Infrastructure.SqlServer;
 using Logitar.Cms.Web;
 using Logitar.Cms.Web.Authentication;
@@ -63,6 +64,12 @@ internal class Startup : StartupBase
     DatabaseProvider databaseProvider = _configuration.GetValue<DatabaseProvider?>("DatabaseProvider") ?? DatabaseProvider.SqlServer;
     switch (databaseProvider)
     {
+      case DatabaseProvider.PostgreSQL:
+        services.AddLogitarCmsWithPostgreSQL(_configuration);
+        healthChecks.AddDbContextCheck<EventContext>();
+        healthChecks.AddDbContextCheck<IdentityContext>();
+        healthChecks.AddDbContextCheck<CmsContext>();
+        break;
       case DatabaseProvider.SqlServer:
         services.AddLogitarCmsWithSqlServer(_configuration);
         healthChecks.AddDbContextCheck<EventContext>();
