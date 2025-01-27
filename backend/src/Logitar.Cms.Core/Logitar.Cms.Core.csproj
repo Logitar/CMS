@@ -4,6 +4,27 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>Logitar.Cms.Core</Title>
+    <Authors>Francis Pion</Authors>
+    <Company>Logitar</Company>
+    <Product>LogitarCMS</Product>
+    <Description>Domain business and application core logic of the Logitar Content Management System.</Description>
+    <Copyright>© 2025 Logitar All Rights Reserved.</Copyright>
+    <PackageIcon>logitar_cms.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/Logitar/CMS</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <AssemblyVersion>0.1.0.0</AssemblyVersion>
+    <FileVersion>$(AssemblyVersion)</FileVersion>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <Version>0.1.0</Version>
+    <NeutralLanguage>en-CA</NeutralLanguage>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
+    <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
+    <PackageTags>logitar;content;management;system;domain;application;business;core;logic</PackageTags>
+    <PackageProjectUrl>https://github.com/Logitar/CMS/tree/main/backend/src/Logitar.Cms.Core</PackageProjectUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -32,6 +53,21 @@
   <ItemGroup>
     <InternalsVisibleTo Include="Logitar.Cms.IntegrationTests" />
     <InternalsVisibleTo Include="Logitar.Cms.UnitTests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="LICENSE">
+      <PackagePath>\</PackagePath>
+      <Pack>True</Pack>
+    </None>
+    <None Update="logitar_cms.png">
+      <PackagePath>\</PackagePath>
+      <Pack>True</Pack>
+    </None>
+    <None Update="README.md">
+      <PackagePath>\</PackagePath>
+      <Pack>True</Pack>
+    </None>
   </ItemGroup>
 
 </Project>
