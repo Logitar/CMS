@@ -56,6 +56,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Caching\ICacheService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="LICENSE">
       <PackagePath>\</PackagePath>
       <Pack>True</Pack>

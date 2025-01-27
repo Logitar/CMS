@@ -1,5 +1,5 @@
 ﻿using Logitar.Cms.Core.Actors;
-using Logitar.Cms.Infrastructure.Caching;
+using Logitar.Cms.Core.Caching;
 using Logitar.EventSourcing;
 using Logitar.Identity.EntityFrameworkCore.Relational;
 using Logitar.Identity.EntityFrameworkCore.Relational.Entities;
