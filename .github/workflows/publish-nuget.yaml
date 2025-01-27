@@ -15,7 +15,7 @@ jobs:
 
       - name: Build CMS Frontend
         run: |
-          cd ./frontend
+          cd ../frontend
           npm clean-install
           npm run build
           cd ../backend
