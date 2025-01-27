@@ -2,6 +2,7 @@
 import { computed } from "vue";
 
 import AppInput from "@/components/shared/AppInput.vue";
+import FieldValueDescription from "./FieldValueDescription.vue";
 import FieldValueLabel from "./FieldValueLabel.vue";
 import type { FieldDefinition, FieldType } from "@/types/fields";
 
@@ -10,6 +11,7 @@ const props = defineProps<{
   modelValue?: string;
 }>();
 
+const descriptionId = computed<string>(() => `${props.definition.id}-description`);
 const fieldType = computed<FieldType>(() => props.definition.fieldType);
 
 defineEmits<{
@@ -19,6 +21,7 @@ defineEmits<{
 
 <template>
   <AppInput
+    :described-by="descriptionId"
     floating
     :id="definition.id"
     :min="fieldType.string?.minimumLength"
@@ -32,6 +35,9 @@ defineEmits<{
   >
     <template #label-override>
       <FieldValueLabel :definition="definition" />
+    </template>
+    <template #after v-if="definition.description">
+      <FieldValueDescription :definition="definition" :id="descriptionId" />
     </template>
   </AppInput>
 </template>

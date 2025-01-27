@@ -4,6 +4,7 @@ import { computed } from "vue";
 
 import AppMultiselect from "@/components/shared/AppMultiselect.vue";
 import AppSelect from "@/components/shared/AppSelect.vue";
+import FieldValueDescription from "./FieldValueDescription.vue";
 import FieldValueLabel from "./FieldValueLabel.vue";
 import type { FieldDefinition, FieldType } from "@/types/fields";
 
@@ -12,6 +13,7 @@ const props = defineProps<{
   modelValue?: string;
 }>();
 
+const descriptionId = computed<string>(() => `${props.definition.id}-description`);
 const fieldType = computed<FieldType>(() => props.definition.fieldType);
 const options = computed<SelectOption[]>(
   () =>
@@ -39,6 +41,7 @@ function onValuesUpdate(values: string[]): void {
 <template>
   <AppMultiselect
     v-if="fieldType.select?.isMultiple"
+    :described-by="descriptionId"
     floating
     :id="definition.id"
     :label="definition.displayName ?? definition.uniqueName"
@@ -52,9 +55,13 @@ function onValuesUpdate(values: string[]): void {
     <template #label-override>
       <FieldValueLabel :definition="definition" />
     </template>
+    <template #after v-if="definition.description">
+      <FieldValueDescription :definition="definition" :id="descriptionId" />
+    </template>
   </AppMultiselect>
   <AppSelect
     v-else
+    :described-by="descriptionId"
     floating
     :id="definition.id"
     :label="definition.displayName ?? definition.uniqueName"
@@ -67,6 +74,9 @@ function onValuesUpdate(values: string[]): void {
   >
     <template #label-override>
       <FieldValueLabel :definition="definition" />
+    </template>
+    <template #after v-if="definition.description">
+      <FieldValueDescription :definition="definition" :id="descriptionId" />
     </template>
   </AppSelect>
 </template>

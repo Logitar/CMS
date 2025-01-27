@@ -38,13 +38,23 @@ function onUpdate(index: number, tag: string): void {
 </script>
 
 <template>
-  <div class="form-control mb-3">
-    <slot name="label-override">
-      <label v-if="label" :for="id" class="mb-2">{{ label }}</label>
-    </slot>
-    <br />
-    <AppTag v-for="(tag, index) in modelValue" :key="index" class="mb-2 me-2 tag" :value="tag" @removed="onRemove(index)" @updated="onUpdate(index, $event)" />
-    <AppNewTag class="tag" :id="id" @added="onAdd" />
+  <div class="mb-3">
+    <div class="form-control">
+      <slot name="label-override">
+        <label v-if="label" :for="id" class="mb-2">{{ label }}</label>
+      </slot>
+      <br />
+      <AppTag
+        v-for="(tag, index) in modelValue"
+        :key="index"
+        class="mb-2 me-2 tag"
+        :value="tag"
+        @removed="onRemove(index)"
+        @updated="onUpdate(index, $event)"
+      />
+      <AppNewTag class="tag" :id="id" @added="onAdd" />
+    </div>
+    <slot name="after"></slot>
   </div>
 </template>
 

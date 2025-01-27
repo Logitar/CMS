@@ -11,6 +11,7 @@ import type { SearchResults } from "@/types/search";
 const { orderBy } = arrayUtils;
 
 const props = defineProps<{
+  describedBy?: string;
   contentTypeId?: string;
   id?: string;
   label?: string;
@@ -57,6 +58,7 @@ onMounted(async () => {
 
 <template>
   <AppMultiselect
+    :described-by="describedBy"
     :id="id"
     :label="label"
     :model-value="modelValue"
@@ -69,6 +71,9 @@ onMounted(async () => {
   >
     <template #label-override>
       <slot name="label-override"></slot>
+    </template>
+    <template #after>
+      <slot name="after"></slot>
     </template>
   </AppMultiselect>
 </template>

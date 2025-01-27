@@ -15,6 +15,7 @@ const { parseBoolean } = parsingUtils;
 const props = withDefaults(
   defineProps<{
     contentTypeId?: string;
+    describedBy?: string;
     id?: string;
     label?: string;
     languageId?: string;
@@ -77,6 +78,7 @@ onMounted(async () => {
 
 <template>
   <AppSelect
+    :described-by="describedBy"
     floating
     :id="id"
     :label="label"
@@ -90,6 +92,9 @@ onMounted(async () => {
   >
     <template #label-override>
       <slot name="label-override"></slot>
+    </template>
+    <template #after>
+      <slot name="after"></slot>
     </template>
   </AppSelect>
 </template>
