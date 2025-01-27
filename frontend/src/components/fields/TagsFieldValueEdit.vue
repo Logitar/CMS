@@ -2,6 +2,7 @@
 import { computed } from "vue";
 
 import AppTags from "@/components/tags/AppTags.vue";
+import FieldValueLabel from "./FieldValueLabel.vue";
 import type { FieldDefinition } from "@/types/fields";
 
 const props = defineProps<{
@@ -21,10 +22,9 @@ function onModelValueUpdate(tags: string[]): void {
 </script>
 
 <template>
-  <AppTags
-    :id="`tags-${definition.id}`"
-    :label="definition.displayName ?? definition.uniqueName"
-    :model-value="tags"
-    @update:model-value="onModelValueUpdate"
-  />
+  <AppTags :id="`tags-${definition.id}`" :label="definition.displayName ?? definition.uniqueName" :model-value="tags" @update:model-value="onModelValueUpdate">
+    <template #label-override>
+      <FieldValueLabel :definition="definition" />
+    </template>
+  </AppTags>
 </template>

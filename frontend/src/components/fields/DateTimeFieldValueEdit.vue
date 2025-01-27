@@ -2,6 +2,7 @@
 import { computed } from "vue";
 
 import DateTimeInput from "@/components/shared/DateTimeInput.vue";
+import FieldValueLabel from "./FieldValueLabel.vue";
 import type { FieldDefinition, FieldType } from "@/types/fields";
 
 const props = defineProps<{
@@ -26,7 +27,10 @@ defineEmits<{
     :model-value="modelValue ? new Date(modelValue) : undefined"
     :name="definition.uniqueName"
     raw
-    :required="definition.isRequired"
     @update:model-value="$emit('update:model-value', $event?.toISOString() ?? '')"
-  />
+  >
+    <template #label-override>
+      <FieldValueLabel :definition="definition" />
+    </template>
+  </DateTimeInput>
 </template>

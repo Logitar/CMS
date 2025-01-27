@@ -7,6 +7,10 @@
     "help": "Veuillez sélectionner une autre langue.",
     "lead": "La langue existe déjà."
   },
+  "missingFieldValues": {
+    "help": "Veuillez fournir une valeur pour les champs suivants.",
+    "lead": "Une ou plusieurs valeurs de champs requis sont manquantes."
+  },
   "uniqueNameAlreadyUsed": {
     "help": "Veuillez entrer un autre nom unique.",
     "lead": "Le nom unique est déjà utilisé."

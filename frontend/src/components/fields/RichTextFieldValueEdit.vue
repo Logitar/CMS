@@ -2,6 +2,7 @@
 import { computed } from "vue";
 
 import AppTextarea from "@/components/shared/AppTextarea.vue";
+import FieldValueLabel from "./FieldValueLabel.vue";
 import type { FieldDefinition, FieldType } from "@/types/fields";
 
 const props = defineProps<{
@@ -28,7 +29,10 @@ defineEmits<{
     :placeholder="definition.placeholder ?? definition.displayName ?? definition.uniqueName"
     raw
     rows="5"
-    :required="definition.isRequired"
     @update:model-value="$emit('update:model-value', $event)"
-  />
+  >
+    <template #label-override>
+      <FieldValueLabel :definition="definition" />
+    </template>
+  </AppTextarea>
 </template>

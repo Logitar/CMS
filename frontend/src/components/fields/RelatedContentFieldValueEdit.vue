@@ -3,6 +3,7 @@ import { computed } from "vue";
 
 import ContentMultiselect from "@/components/contents/ContentMultiselect.vue";
 import ContentSelect from "@/components/contents/ContentSelect.vue";
+import FieldValueLabel from "./FieldValueLabel.vue";
 import type { FieldDefinition, FieldType } from "@/types/fields";
 import type { Language } from "@/types/languages";
 
@@ -35,9 +36,12 @@ function onContentIdsUpdate(contentIds: string[]): void {
     :name="definition.uniqueName"
     :placeholder="definition.placeholder ?? definition.displayName ?? definition.uniqueName"
     raw
-    :required="definition.isRequired"
     @update:model-value="onContentIdsUpdate"
-  />
+  >
+    <template #label-override>
+      <FieldValueLabel :definition="definition" />
+    </template>
+  </ContentMultiselect>
   <ContentSelect
     v-else
     :content-type-id="fieldType.relatedContent?.contentTypeId"
@@ -48,7 +52,10 @@ function onContentIdsUpdate(contentIds: string[]): void {
     :name="definition.uniqueName"
     :placeholder="definition.placeholder ?? definition.displayName ?? definition.uniqueName"
     raw
-    :required="definition.isRequired"
     @update:model-value="$emit('update:model-value', $event ?? '')"
-  />
+  >
+    <template #label-override>
+      <FieldValueLabel :definition="definition" />
+    </template>
+  </ContentSelect>
 </template>

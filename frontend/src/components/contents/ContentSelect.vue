@@ -87,5 +87,9 @@ onMounted(async () => {
     :required="required"
     :validation="parseBoolean(noStatus) ? 'server' : undefined"
     @update:model-value="onSelected"
-  />
+  >
+    <template #label-override>
+      <slot name="label-override"></slot>
+    </template>
+  </AppSelect>
 </template>

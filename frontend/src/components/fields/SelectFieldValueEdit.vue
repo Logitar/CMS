@@ -4,6 +4,7 @@ import { computed } from "vue";
 
 import AppMultiselect from "@/components/shared/AppMultiselect.vue";
 import AppSelect from "@/components/shared/AppSelect.vue";
+import FieldValueLabel from "./FieldValueLabel.vue";
 import type { FieldDefinition, FieldType } from "@/types/fields";
 
 const props = defineProps<{
@@ -46,9 +47,12 @@ function onValuesUpdate(values: string[]): void {
     :options="options"
     :placeholder="definition.placeholder ?? definition.displayName ?? definition.uniqueName"
     raw
-    :required="definition.isRequired"
     @update:model-value="onValuesUpdate"
-  />
+  >
+    <template #label-override>
+      <FieldValueLabel :definition="definition" />
+    </template>
+  </AppMultiselect>
   <AppSelect
     v-else
     floating
@@ -59,7 +63,10 @@ function onValuesUpdate(values: string[]): void {
     :options="options"
     :placeholder="definition.placeholder ?? definition.displayName ?? definition.uniqueName"
     raw
-    :required="definition.isRequired"
     @update:model-value="$emit('update:model-value', $event)"
-  />
+  >
+    <template #label-override>
+      <FieldValueLabel :definition="definition" />
+    </template>
+  </AppSelect>
 </template>

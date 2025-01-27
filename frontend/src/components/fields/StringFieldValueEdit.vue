@@ -2,6 +2,7 @@
 import { computed } from "vue";
 
 import AppInput from "@/components/shared/AppInput.vue";
+import FieldValueLabel from "./FieldValueLabel.vue";
 import type { FieldDefinition, FieldType } from "@/types/fields";
 
 const props = defineProps<{
@@ -20,7 +21,6 @@ defineEmits<{
   <AppInput
     floating
     :id="definition.id"
-    :label="definition.displayName ?? definition.uniqueName"
     :min="fieldType.string?.minimumLength"
     :max="fieldType.string?.maximumLength"
     :model-value="modelValue"
@@ -28,7 +28,10 @@ defineEmits<{
     :pattern="fieldType.string?.pattern"
     :placeholder="definition.placeholder ?? definition.displayName ?? definition.uniqueName"
     raw
-    :required="definition.isRequired"
     @update:model-value="$emit('update:model-value', $event)"
-  />
+  >
+    <template #label-override>
+      <FieldValueLabel :definition="definition" />
+    </template>
+  </AppInput>
 </template>

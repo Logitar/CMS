@@ -8,6 +8,7 @@ import ContentFieldValueConflicts from "./ContentFieldValueConflicts.vue";
 import DescriptionTextarea from "@/components/shared/DescriptionTextarea.vue";
 import DisplayNameInput from "@/components/shared/DisplayNameInput.vue";
 import FieldValueEdit from "@/components/fields/FieldValueEdit.vue";
+import MissingFieldValues from "./MissingFieldValues.vue";
 import PublishButton from "./PublishButton.vue";
 import StatusInfo from "@/components/shared/StatusInfo.vue";
 import UniqueNameAlreadyUsed from "@/components/shared/UniqueNameAlreadyUsed.vue";
@@ -35,6 +36,7 @@ const description = ref<string>("");
 const displayName = ref<string>("");
 const fieldValues = ref<Map<string, string>>(new Map<string, string>());
 const isPublishing = ref<boolean>(false);
+const missingFieldValues = ref<string[]>([]);
 const uniqueName = ref<string>("");
 const uniqueNameAlreadyUsed = ref<boolean>(false);
 
@@ -55,6 +57,7 @@ const isNew = computed<boolean>(() => parseBoolean(props.new) ?? false);
 
 function reset(): void {
   uniqueNameAlreadyUsed.value = false;
+  missingFieldValues.value = [];
   contentFieldValueConflicts.value = [];
   uniqueName.value = props.locale.uniqueName;
   displayName.value = props.locale.displayName ?? "";
@@ -105,6 +108,7 @@ const onSubmit = handleSubmit(async () => {
 async function onPublish(): Promise<void> {
   if (!isPublishing.value) {
     isPublishing.value = true;
+    missingFieldValues.value = [];
     try {
       if (props.locale.isPublished) {
         const content: Content = await unpublishContent(props.content.id, props.locale.language?.id);
@@ -114,7 +118,20 @@ async function onPublish(): Promise<void> {
         emit("published", content);
       }
     } catch (e: unknown) {
-      emit("error", e);
+      if (isError(e, StatusCodes.BadRequest, ErrorCodes.Validation)) {
+        const apiError = e as ApiError;
+        const problemDetails = apiError.data as ProblemDetails;
+        problemDetails.errors?.forEach(({ attemptedValue }) => {
+          if (typeof attemptedValue === "string") {
+            const field: FieldDefinition | undefined = props.content.contentType.fields.find(({ id }) => id === attemptedValue);
+            if (field) {
+              missingFieldValues.value.push(field.displayName ?? field.uniqueName);
+            }
+          }
+        });
+      } else {
+        emit("error", e);
+      }
     } finally {
       isPublishing.value = false;
     }
@@ -147,6 +164,7 @@ watch(() => props.locale, reset, { deep: true, immediate: true });
       <PublishButton v-if="!isNew" class="ms-1" :disabled="hasChanges" :loading="isPublishing" :published="locale.isPublished" @click="onPublish" />
     </div>
     <UniqueNameAlreadyUsed v-model="uniqueNameAlreadyUsed" />
+    <MissingFieldValues v-model="missingFieldValues" />
     <ContentFieldValueConflicts v-model="contentFieldValueConflicts" />
     <div class="row">
       <UniqueNameInput

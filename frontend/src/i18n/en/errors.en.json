@@ -7,6 +7,10 @@
     "help": "Please select another locale.",
     "lead": "The locale is already used."
   },
+  "missingFieldValues": {
+    "help": "Please provide a value for the following fields.",
+    "lead": "One or more required field values are missing."
+  },
   "uniqueNameAlreadyUsed": {
     "help": "Please enter a different unique name.",
     "lead": "The unique name is already used."

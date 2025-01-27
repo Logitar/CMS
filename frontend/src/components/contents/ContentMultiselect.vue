@@ -66,5 +66,9 @@ onMounted(async () => {
     :raw="raw"
     :required="required"
     @update:model-value="$emit('update:model-value', $event)"
-  />
+  >
+    <template #label-override>
+      <slot name="label-override"></slot>
+    </template>
+  </AppMultiselect>
 </template>
