@@ -57,5 +57,9 @@ function onModelValueUpdate(value: string): void {
     :step="step"
     type="datetime-local"
     @update:model-value="onModelValueUpdate"
-  />
+  >
+    <template #label-override>
+      <slot name="label-override"></slot>
+    </template>
+  </AppInput>
 </template>

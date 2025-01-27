@@ -82,7 +82,11 @@ function toggle(option: SelectOption): void {
       readonly
       :required="required"
       :rows="rows"
-    />
+    >
+      <template #label-override>
+        <slot name="label-override"></slot>
+      </template>
+    </AppTextarea>
     <ul class="dropdown-menu">
       <li v-if="placeholder" class="disabled dropdown-item">{{ isRaw ? placeholder : t(placeholder) }}</li>
       <li v-for="option in options" :key="option.value" :class="{ active: isSelected(option), 'dropdown-item': true }" @click.prevent="toggle(option)">

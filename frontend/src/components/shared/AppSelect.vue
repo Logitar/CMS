@@ -95,6 +95,9 @@ defineExpose({ focus });
     <template #prepend>
       <slot name="prepend"></slot>
     </template>
+    <template #label-override>
+      <slot name="label-override"></slot>
+    </template>
     <template #append>
       <slot name="append"></slot>
     </template>

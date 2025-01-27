@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import { useI18n } from "vue-i18n";
 
 import ContentMultiselect from "@/components/contents/ContentMultiselect.vue";
 import ContentSelect from "@/components/contents/ContentSelect.vue";
 import type { FieldDefinition, FieldType } from "@/types/fields";
 import type { Language } from "@/types/languages";
+
+const { t } = useI18n();
 
 const props = defineProps<{
   definition: FieldDefinition;
@@ -35,9 +38,15 @@ function onContentIdsUpdate(contentIds: string[]): void {
     :name="definition.uniqueName"
     :placeholder="definition.placeholder ?? definition.displayName ?? definition.uniqueName"
     raw
-    :required="definition.isRequired"
     @update:model-value="onContentIdsUpdate"
-  />
+  >
+    <template #label-override>
+      <label :for="definition.id">
+        {{ definition.displayName ?? definition.uniqueName }}
+        <i v-if="definition.isRequired" class="text-secondary">({{ t("fields.definitions.required") }})</i>
+      </label>
+    </template>
+  </ContentMultiselect>
   <ContentSelect
     v-else
     :content-type-id="fieldType.relatedContent?.contentTypeId"
@@ -48,7 +57,13 @@ function onContentIdsUpdate(contentIds: string[]): void {
     :name="definition.uniqueName"
     :placeholder="definition.placeholder ?? definition.displayName ?? definition.uniqueName"
     raw
-    :required="definition.isRequired"
     @update:model-value="$emit('update:model-value', $event ?? '')"
-  />
+  >
+    <template #label-override>
+      <label :for="definition.id">
+        {{ definition.displayName ?? definition.uniqueName }}
+        <i v-if="definition.isRequired" class="text-secondary">({{ t("fields.definitions.required") }})</i>
+      </label>
+    </template>
+  </ContentSelect>
 </template>

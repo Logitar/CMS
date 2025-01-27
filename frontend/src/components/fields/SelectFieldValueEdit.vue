@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import type { SelectOption } from "logitar-vue3-ui";
 import { computed } from "vue";
+import { useI18n } from "vue-i18n";
 
 import AppMultiselect from "@/components/shared/AppMultiselect.vue";
 import AppSelect from "@/components/shared/AppSelect.vue";
 import type { FieldDefinition, FieldType } from "@/types/fields";
+
+const { t } = useI18n();
 
 const props = defineProps<{
   definition: FieldDefinition;
@@ -46,9 +49,15 @@ function onValuesUpdate(values: string[]): void {
     :options="options"
     :placeholder="definition.placeholder ?? definition.displayName ?? definition.uniqueName"
     raw
-    :required="definition.isRequired"
     @update:model-value="onValuesUpdate"
-  />
+  >
+    <template #label-override>
+      <label :for="definition.id">
+        {{ definition.displayName ?? definition.uniqueName }}
+        <i v-if="definition.isRequired" class="text-secondary">({{ t("fields.definitions.required") }})</i>
+      </label>
+    </template>
+  </AppMultiselect>
   <AppSelect
     v-else
     floating
@@ -59,7 +68,13 @@ function onValuesUpdate(values: string[]): void {
     :options="options"
     :placeholder="definition.placeholder ?? definition.displayName ?? definition.uniqueName"
     raw
-    :required="definition.isRequired"
     @update:model-value="$emit('update:model-value', $event)"
-  />
+  >
+    <template #label-override>
+      <label :for="definition.id">
+        {{ definition.displayName ?? definition.uniqueName }}
+        <i v-if="definition.isRequired" class="text-secondary">({{ t("fields.definitions.required") }})</i>
+      </label>
+    </template>
+  </AppSelect>
 </template>
