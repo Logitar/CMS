@@ -45,5 +45,6 @@ defineEmits<{
       :value="value"
       @update:model-value="$emit('update:model-value', $event)"
     />
+    <slot name="after"></slot>
   </div>
 </template>

@@ -29,7 +29,14 @@ const props = withDefaults(
 
 const textareaRef = ref<InstanceType<typeof TarTextarea> | null>(null);
 
-const describedBy = computed<string>(() => `${props.id}_invalid-feedback`);
+const describedBy = computed<string>(() => {
+  const ids: string[] = [];
+  if (props.describedBy) {
+    ids.push(props.describedBy);
+  }
+  ids.push(`${props.id}_invalid-feedback`);
+  return ids.join(" ");
+});
 const inputName = computed<string>(() => props.name ?? props.id);
 const inputRequired = computed<boolean | "label">(() => (parseBoolean(props.required) ? (props.validation === "server" ? true : "label") : false));
 const isRaw = computed<boolean>(() => parseBoolean(props.raw) ?? false);

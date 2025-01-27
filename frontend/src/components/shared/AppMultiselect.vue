@@ -12,6 +12,7 @@ const { t } = useI18n();
 
 const props = withDefaults(
   defineProps<{
+    describedBy?: string;
     id?: string;
     label?: string;
     modelValue?: string[];
@@ -72,6 +73,7 @@ function toggle(option: SelectOption): void {
       aria-expanded="false"
       data-bs-auto-close="outside"
       data-bs-toggle="dropdown"
+      :described-by="describedBy"
       floating
       :id="id"
       :label="label"
@@ -85,6 +87,9 @@ function toggle(option: SelectOption): void {
     >
       <template #label-override>
         <slot name="label-override"></slot>
+      </template>
+      <template #after>
+        <slot name="after"></slot>
       </template>
     </AppTextarea>
     <ul class="dropdown-menu">

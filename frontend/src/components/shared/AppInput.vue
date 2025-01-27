@@ -31,7 +31,14 @@ const props = withDefaults(
 
 const inputRef = ref<InstanceType<typeof TarInput> | null>(null);
 
-const describedBy = computed<string>(() => `${props.id}_invalid-feedback`);
+const describedBy = computed<string>(() => {
+  const ids: string[] = [];
+  if (props.describedBy) {
+    ids.push(props.describedBy);
+  }
+  ids.push(`${props.id}_invalid-feedback`);
+  return ids.join(" ");
+});
 const inputMax = computed<number | string | undefined>(() => (props.validation === "server" || isDateTimeInput(props.type) ? props.max : undefined));
 const inputMin = computed<number | string | undefined>(() => (props.validation === "server" || isDateTimeInput(props.type) ? props.min : undefined));
 const inputName = computed<string>(() => props.name ?? props.id);

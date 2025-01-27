@@ -61,5 +61,8 @@ function onModelValueUpdate(value: string): void {
     <template #label-override>
       <slot name="label-override"></slot>
     </template>
+    <template #after>
+      <slot name="after"></slot>
+    </template>
   </AppInput>
 </template>

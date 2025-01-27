@@ -2,6 +2,7 @@
 import { computed } from "vue";
 
 import AppTags from "@/components/tags/AppTags.vue";
+import FieldValueDescription from "./FieldValueDescription.vue";
 import FieldValueLabel from "./FieldValueLabel.vue";
 import type { FieldDefinition } from "@/types/fields";
 
@@ -10,6 +11,7 @@ const props = defineProps<{
   modelValue?: string;
 }>();
 
+const descriptionId = computed<string>(() => `${props.definition.id}-description`);
 const tags = computed<string[]>(() => (props.modelValue ? JSON.parse(props.modelValue) : []));
 
 const emit = defineEmits<{
@@ -25,6 +27,9 @@ function onModelValueUpdate(tags: string[]): void {
   <AppTags :id="`tags-${definition.id}`" :label="definition.displayName ?? definition.uniqueName" :model-value="tags" @update:model-value="onModelValueUpdate">
     <template #label-override>
       <FieldValueLabel :definition="definition" />
+    </template>
+    <template #after>
+      <FieldValueDescription :definition="definition" :id="descriptionId" />
     </template>
   </AppTags>
 </template>

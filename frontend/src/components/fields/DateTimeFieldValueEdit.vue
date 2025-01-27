@@ -2,6 +2,7 @@
 import { computed } from "vue";
 
 import DateTimeInput from "@/components/shared/DateTimeInput.vue";
+import FieldValueDescription from "./FieldValueDescription.vue";
 import FieldValueLabel from "./FieldValueLabel.vue";
 import type { FieldDefinition, FieldType } from "@/types/fields";
 
@@ -10,6 +11,7 @@ const props = defineProps<{
   modelValue?: string;
 }>();
 
+const descriptionId = computed<string>(() => `${props.definition.id}-description`);
 const fieldType = computed<FieldType>(() => props.definition.fieldType);
 
 defineEmits<{
@@ -19,6 +21,7 @@ defineEmits<{
 
 <template>
   <DateTimeInput
+    :described-by="descriptionId"
     floating
     :id="definition.id"
     :label="definition.displayName ?? definition.uniqueName"
@@ -31,6 +34,9 @@ defineEmits<{
   >
     <template #label-override>
       <FieldValueLabel :definition="definition" />
+    </template>
+    <template #after>
+      <FieldValueDescription :definition="definition" :id="descriptionId" />
     </template>
   </DateTimeInput>
 </template>
