@@ -169,7 +169,7 @@ watch(
               </RouterLink>
               <template v-if="language.isDefault">
                 <br />
-                <TarBadge variant="info">{{ t("languages.default.label") }}</TarBadge>
+                <TarBadge variant="info"><font-awesome-icon icon="fas fa-check" /> {{ t("languages.default.label") }}</TarBadge>
               </template>
             </td>
             <td>

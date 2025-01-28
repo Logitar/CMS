@@ -5,7 +5,10 @@
     "empty": "This list is empty.",
     "invariant": "Invariant",
     "list": "Contents",
-    "published": "The content has been published.",
+    "published": {
+      "label": "Published",
+      "success": "The content has been published."
+    },
     "publishedOn": "Last publication on {date} by",
     "sort": {
       "options": {

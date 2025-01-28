@@ -168,6 +168,7 @@ internal class ContentEvents : INotificationHandler<ContentCreated>,
       }
     }
 
+    long revision = (status == ContentStatus.Published ? locale.PublishedRevision : null) ?? locale.Revision;
     foreach (KeyValuePair<Guid, string> fieldValue in fieldValues)
     {
       FieldDefinitionEntity fieldDefinition = fieldDefinitions[fieldValue.Key];
@@ -177,7 +178,7 @@ internal class ContentEvents : INotificationHandler<ContentCreated>,
       {
         if (indexedFields.TryGetValue(fieldValue.Key, out FieldIndexEntity? indexedField))
         {
-          indexedField.Update(fieldValue.Value);
+          indexedField.Update(revision, fieldValue.Value);
         }
         else
         {
@@ -192,7 +193,7 @@ internal class ContentEvents : INotificationHandler<ContentCreated>,
       {
         if (uniqueFields.TryGetValue(fieldValue.Key, out UniqueIndexEntity? uniqueField))
         {
-          uniqueField.Update(fieldValue.Value);
+          uniqueField.Update(revision, fieldValue.Value);
         }
         else
         {

@@ -29,6 +29,8 @@ public class ContentLocaleEntity
 
   public string? FieldValues { get; private set; }
 
+  public long Revision { get; private set; }
+
   public string? CreatedBy { get; private set; }
   public DateTime CreatedOn { get; private set; }
 
@@ -36,6 +38,7 @@ public class ContentLocaleEntity
   public DateTime UpdatedOn { get; private set; }
 
   public bool IsPublished { get; private set; }
+  public long? PublishedRevision { get; private set; }
   public string? PublishedBy { get; private set; }
   public DateTime? PublishedOn { get; private set; }
 
@@ -53,6 +56,8 @@ public class ContentLocaleEntity
   }
   private ContentLocaleEntity(ContentEntity content, LanguageEntity? language, ContentLocale locale, DomainEvent @event)
   {
+    Revision = 1;
+
     ContentType = content.ContentType;
     ContentTypeId = content.ContentTypeId;
 
@@ -114,6 +119,7 @@ public class ContentLocaleEntity
     }
 
     IsPublished = true;
+    PublishedRevision = Revision;
     PublishedBy = @event.ActorId?.Value;
     PublishedOn = @event.OccurredOn.AsUniversalTime();
   }
@@ -121,12 +127,15 @@ public class ContentLocaleEntity
   public void Unpublish(ContentLocaleUnpublished _)
   {
     IsPublished = false;
+    PublishedRevision = null;
     PublishedBy = null;
     PublishedOn = null;
   }
 
   public void Update(ContentLocale locale, DomainEvent @event)
   {
+    Revision++;
+
     UniqueName = locale.UniqueName.Value;
     DisplayName = locale.DisplayName?.Value;
     Description = locale.Description?.Value;

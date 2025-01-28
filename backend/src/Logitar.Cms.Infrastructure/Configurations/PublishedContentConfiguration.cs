@@ -22,6 +22,7 @@ internal class PublishedContentConfiguration : IEntityTypeConfiguration<Publishe
     builder.HasIndex(x => x.UniqueName);
     builder.HasIndex(x => x.UniqueNameNormalized);
     builder.HasIndex(x => x.DisplayName);
+    builder.HasIndex(x => x.Revision);
     builder.HasIndex(x => x.PublishedBy);
     builder.HasIndex(x => x.PublishedOn);
 

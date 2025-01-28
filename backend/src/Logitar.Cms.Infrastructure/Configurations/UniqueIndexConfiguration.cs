@@ -27,6 +27,7 @@ internal class UniqueIndexConfiguration : IEntityTypeConfiguration<UniqueIndexEn
     builder.HasIndex(x => x.FieldDefinitionId);
     builder.HasIndex(x => x.FieldDefinitionUid);
     builder.HasIndex(x => x.FieldDefinitionName);
+    builder.HasIndex(x => x.Revision);
     builder.HasIndex(x => x.Status);
     builder.HasIndex(x => x.Value);
     builder.HasIndex(x => x.ValueNormalized);

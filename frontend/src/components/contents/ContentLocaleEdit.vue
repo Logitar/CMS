@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { arrayUtils, parsingUtils } from "logitar-js";
+import { arrayUtils } from "logitar-js";
 import { computed, ref, watch } from "vue";
 import { useForm } from "vee-validate";
 
@@ -13,6 +13,7 @@ import PublishButton from "./PublishButton.vue";
 import StatusInfo from "@/components/shared/StatusInfo.vue";
 import UniqueNameAlreadyUsed from "@/components/shared/UniqueNameAlreadyUsed.vue";
 import UniqueNameInput from "@/components/shared/UniqueNameInput.vue";
+import UnpublishButton from "./UnpublishButton.vue";
 import type { ApiError, ProblemDetails } from "@/types/api";
 import type { Content, ContentLocale, CreateOrReplaceContentPayload } from "@/types/contents";
 import type { FieldDefinition, FieldValue } from "@/types/fields";
@@ -23,12 +24,10 @@ import { isError } from "@/helpers/errors";
 import { publishContent, replaceContent, unpublishContent } from "@/api/contents";
 
 const { orderBy } = arrayUtils;
-const { parseBoolean } = parsingUtils;
 
 const props = defineProps<{
   content: Content;
   locale: ContentLocale;
-  new?: boolean | string;
 }>();
 
 const contentFieldValueConflicts = ref<string[]>([]);
@@ -40,6 +39,8 @@ const missingFieldValues = ref<string[]>([]);
 const uniqueName = ref<string>("");
 const uniqueNameAlreadyUsed = ref<boolean>(false);
 
+const canPublish = computed<boolean>(() => !hasChanges.value && props.locale.revision !== props.locale.publishedRevision);
+const canUnpublish = computed<boolean>(() => !hasChanges.value && props.locale.isPublished);
 const fieldDefinitions = computed<FieldDefinition[]>(() =>
   orderBy(
     props.content.contentType.fields.filter(({ isInvariant }) => isInvariant === !props.locale.language),
@@ -53,7 +54,6 @@ const hasChanges = computed<boolean>(
     description.value !== (props.locale.description ?? "") ||
     JSON.stringify([...fieldValues.value.entries()].map(([id, value]) => ({ id, value }) as FieldValue)) !== JSON.stringify(props.locale.fieldValues),
 );
-const isNew = computed<boolean>(() => parseBoolean(props.new) ?? false);
 
 function reset(): void {
   uniqueNameAlreadyUsed.value = false;
@@ -110,13 +110,8 @@ async function onPublish(): Promise<void> {
     isPublishing.value = true;
     missingFieldValues.value = [];
     try {
-      if (props.locale.isPublished) {
-        const content: Content = await unpublishContent(props.content.id, props.locale.language?.id);
-        emit("unpublished", content);
-      } else {
-        const content: Content = await publishContent(props.content.id, props.locale.language?.id);
-        emit("published", content);
-      }
+      const content: Content = await publishContent(props.content.id, props.locale.language?.id);
+      emit("published", content);
     } catch (e: unknown) {
       if (isError(e, StatusCodes.BadRequest, ErrorCodes.Validation)) {
         const apiError = e as ApiError;
@@ -137,6 +132,19 @@ async function onPublish(): Promise<void> {
     }
   }
 }
+async function onUnpublish(): Promise<void> {
+  if (!isPublishing.value) {
+    isPublishing.value = true;
+    try {
+      const content: Content = await unpublishContent(props.content.id, props.locale.language?.id);
+      emit("unpublished", content);
+    } catch (e: unknown) {
+      emit("error", e);
+    } finally {
+      isPublishing.value = false;
+    }
+  }
+}
 
 function getFieldValue(id: string): string | undefined {
   return fieldValues.value.get(id);
@@ -150,18 +158,21 @@ watch(() => props.locale, reset, { deep: true, immediate: true });
 
 <template>
   <form @submit.prevent="onSubmit">
-    <p v-if="!isNew">
+    <p v-if="locale.revision > 0">
       <StatusInfo :actor="locale.createdBy" :date="locale.createdOn" format="status.createdOn" />
       <br />
-      <StatusInfo :actor="locale.updatedBy" :date="locale.updatedOn" format="status.updatedOn" />
-      <template v-if="locale.publishedBy && locale.publishedOn">
+      <StatusInfo :actor="locale.updatedBy" :date="locale.updatedOn" format="status.updatedOn" :revision="locale.revision" />
+      <template v-if="locale.publishedRevision && locale.publishedBy && locale.publishedOn">
         <br />
-        <StatusInfo :actor="locale.publishedBy" :date="locale.publishedOn" format="contents.items.publishedOn" />
+        <StatusInfo :actor="locale.publishedBy" :date="locale.publishedOn" format="contents.items.publishedOn" :revision="locale.publishedRevision" />
       </template>
     </p>
     <div class="mb-3">
       <AppSaveButton class="me-1" :disabled="isSubmitting || !hasChanges" :loading="isSubmitting" />
-      <PublishButton v-if="!isNew" class="ms-1" :disabled="hasChanges" :loading="isPublishing" :published="locale.isPublished" @click="onPublish" />
+      <template v-if="locale.revision > 0">
+        <PublishButton class="mx-1" :disabled="!canPublish" :loading="isPublishing" @click="onPublish" />
+        <UnpublishButton class="ms-1" :disabled="!canUnpublish" :loading="isPublishing" @click="onUnpublish" />
+      </template>
     </div>
     <UniqueNameAlreadyUsed v-model="uniqueNameAlreadyUsed" />
     <MissingFieldValues v-model="missingFieldValues" />

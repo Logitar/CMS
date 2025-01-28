@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
 {
     [DbContext(typeof(CmsContext))]
-    [Migration("20250127023615_Cms_Release_1_0_0")]
+    [Migration("20250128023410_Cms_Release_1_0_0")]
     partial class Cms_Release_1_0_0
     {
         /// <inheritdoc />
@@ -127,6 +127,12 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                     b.Property<DateTime?>("PublishedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<long?>("PublishedRevision")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Revision")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("UniqueName")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -159,6 +165,10 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                     b.HasIndex("PublishedBy");
 
                     b.HasIndex("PublishedOn");
+
+                    b.HasIndex("PublishedRevision");
+
+                    b.HasIndex("Revision");
 
                     b.HasIndex("UniqueName");
 
@@ -414,6 +424,9 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                     b.Property<string>("RelatedContent")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long>("Revision")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("RichText")
                         .HasColumnType("nvarchar(max)");
 
@@ -473,6 +486,8 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                     b.HasIndex("LanguageUid");
 
                     b.HasIndex("Number");
+
+                    b.HasIndex("Revision");
 
                     b.HasIndex("Status");
 
@@ -724,6 +739,9 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                     b.Property<DateTime>("PublishedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<long>("Revision")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("UniqueName")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -759,6 +777,8 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                     b.HasIndex("PublishedBy");
 
                     b.HasIndex("PublishedOn");
+
+                    b.HasIndex("Revision");
 
                     b.HasIndex("UniqueName");
 
@@ -840,6 +860,9 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                     b.Property<Guid?>("LanguageUid")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<long>("Revision")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(10)
@@ -892,6 +915,8 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                     b.HasIndex("LanguageIsDefault");
 
                     b.HasIndex("LanguageUid");
+
+                    b.HasIndex("Revision");
 
                     b.HasIndex("Status");
 

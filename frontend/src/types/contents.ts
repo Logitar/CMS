@@ -17,11 +17,13 @@ export type ContentLocale = {
   displayName?: string;
   description?: string;
   fieldValues: FieldValue[];
+  revision: number;
   createdBy: Actor;
   createdOn: string;
   updatedBy: Actor;
   updatedOn: string;
   isPublished: boolean;
+  publishedRevision?: number;
   publishedBy?: Actor;
   publishedOn?: string;
 };

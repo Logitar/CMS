@@ -15,6 +15,8 @@ public record ContentLocaleModel
 
   public List<FieldValue> FieldValues { get; set; } = [];
 
+  public long Revision { get; set; }
+
   public ActorModel CreatedBy { get; set; } = new();
   public DateTime CreatedOn { get; set; }
 
@@ -22,6 +24,7 @@ public record ContentLocaleModel
   public DateTime UpdatedOn { get; set; }
 
   public bool IsPublished { get; set; }
+  public long? PublishedRevision { get; set; }
   public ActorModel? PublishedBy { get; set; }
   public DateTime? PublishedOn { get; set; }
 

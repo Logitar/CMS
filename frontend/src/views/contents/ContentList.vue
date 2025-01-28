@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TarButton, type SelectOption } from "logitar-vue3-ui";
+import { TarBadge, TarButton, type SelectOption } from "logitar-vue3-ui";
 import { arrayUtils, objectUtils } from "logitar-js";
 import { computed, inject, ref, watch } from "vue";
 import { parsingUtils } from "logitar-js";
@@ -188,6 +188,10 @@ watch(
               <RouterLink :to="{ name: 'ContentEdit', params: { id: locale.content.id } }">
                 <font-awesome-icon icon="fas fa-edit" /> {{ locale.uniqueName }}
               </RouterLink>
+              <template v-if="locale.isPublished">
+                <br />
+                <TarBadge variant="info"><font-awesome-icon icon="fas fa-bullhorn" /> {{ t("contents.items.published.label") }}</TarBadge>
+              </template>
             </td>
             <td>{{ locale.displayName ?? "—" }}</td>
             <td>

@@ -35,6 +35,7 @@ public class PublishedContentEntity
 
   public string? FieldValues { get; private set; }
 
+  public long Revision { get; private set; }
   public string? PublishedBy { get; private set; }
   public DateTime PublishedOn { get; private set; }
 
@@ -85,6 +86,7 @@ public class PublishedContentEntity
     Description = contentLocale.Description;
     FieldValues = contentLocale.FieldValues;
 
+    Revision = contentLocale.Revision;
     PublishedBy = @event.ActorId?.Value;
     PublishedOn = @event.OccurredOn.AsUniversalTime();
   }

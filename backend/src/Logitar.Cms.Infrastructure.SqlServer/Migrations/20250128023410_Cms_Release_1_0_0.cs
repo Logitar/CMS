@@ -163,11 +163,13 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                     DisplayName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FieldValues = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Revision = table.Column<long>(type: "bigint", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedBy = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsPublished = table.Column<bool>(type: "bit", nullable: false),
+                    PublishedRevision = table.Column<long>(type: "bigint", nullable: true),
                     PublishedBy = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     PublishedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -217,6 +219,7 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                     ContentUid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ContentLocaleId = table.Column<int>(type: "int", nullable: false),
                     ContentLocaleName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Revision = table.Column<long>(type: "bigint", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     Boolean = table.Column<bool>(type: "bit", nullable: true),
                     DateTime = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -285,6 +288,7 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                     DisplayName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FieldValues = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Revision = table.Column<long>(type: "bigint", nullable: false),
                     PublishedBy = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     PublishedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -336,6 +340,7 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                     FieldDefinitionId = table.Column<int>(type: "int", nullable: false),
                     FieldDefinitionUid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FieldDefinitionName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Revision = table.Column<long>(type: "bigint", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     Value = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     ValueNormalized = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
@@ -432,6 +437,16 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                 name: "IX_ContentLocales_PublishedOn",
                 table: "ContentLocales",
                 column: "PublishedOn");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ContentLocales_PublishedRevision",
+                table: "ContentLocales",
+                column: "PublishedRevision");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ContentLocales_Revision",
+                table: "ContentLocales",
+                column: "Revision");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContentLocales_UniqueName",
@@ -683,6 +698,11 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                 column: "Number");
 
             migrationBuilder.CreateIndex(
+                name: "IX_FieldIndex_Revision",
+                table: "FieldIndex",
+                column: "Revision");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_FieldIndex_Status",
                 table: "FieldIndex",
                 column: "Status");
@@ -884,6 +904,11 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                 column: "PublishedOn");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PublishedContents_Revision",
+                table: "PublishedContents",
+                column: "Revision");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PublishedContents_UniqueName",
                 table: "PublishedContents",
                 column: "UniqueName");
@@ -989,6 +1014,11 @@ namespace Logitar.Cms.Infrastructure.SqlServer.Migrations
                 name: "IX_UniqueIndex_LanguageUid",
                 table: "UniqueIndex",
                 column: "LanguageUid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UniqueIndex_Revision",
+                table: "UniqueIndex",
+                column: "Revision");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UniqueIndex_Status",
