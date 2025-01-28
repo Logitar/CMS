@@ -6,14 +6,16 @@ import { useRoute, useRouter } from "vue-router";
 
 import ContentLocaleEdit from "@/components/contents/ContentLocaleEdit.vue";
 import LanguageSelect from "@/components/languages/LanguageSelect.vue";
+import PublishButton from "@/components/contents/PublishButton.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
+import UnpublishButton from "@/components/contents/UnpublishButton.vue";
 import type { Actor } from "@/types/actor";
 import type { ApiError } from "@/types/api";
 import type { Content, ContentLocale } from "@/types/contents";
 import type { Language } from "@/types/languages";
 import { StatusCodes } from "@/enums/statusCodes";
 import { handleErrorKey } from "@/inject/App";
-import { readContent } from "@/api/contents";
+import { publishAllContent, readContent, unpublishAllContent } from "@/api/contents";
 import { useAccountStore } from "@/stores/account";
 import { useToastStore } from "@/stores/toast";
 
@@ -25,9 +27,12 @@ const toasts = useToastStore();
 const { t } = useI18n();
 
 const content = ref<Content>();
+const isPublishing = ref<boolean>(false);
 const language = ref<Language>();
 
-const isInvariant = computed<boolean>(() => Boolean(content.value && content.value.contentType.isInvariant));
+const canPublish = computed<boolean>(() => content.value?.locales.some((locale) => locale.revision !== (locale.publishedRevision ?? 0)) ?? false);
+const canUnpublish = computed<boolean>(() => content.value?.locales.some((locale) => locale.isPublished) ?? false);
+const isInvariant = computed<boolean>(() => content.value?.contentType.isInvariant ?? false);
 const languageIds = computed<string[]>(() => (content.value?.locales ?? []).map((locale) => locale.language?.id ?? ""));
 const locales = computed<ContentLocale[]>(() => (content.value ? content.value.locales.filter((locale) => Boolean(locale.language)) : []).sort(compare));
 
@@ -67,9 +72,36 @@ function compare(left: ContentLocale, right: ContentLocale): -1 | 0 | 1 {
   return 0;
 }
 
+async function onPublish(): Promise<void> {
+  if (content.value && !isPublishing.value) {
+    isPublishing.value = true;
+    try {
+      const publishedContent: Content = await publishAllContent(content.value.id);
+      onPublished(publishedContent);
+    } catch (e: unknown) {
+      handleError(e);
+    } finally {
+      isPublishing.value = false;
+    }
+  }
+}
 function onPublished(content: Content): void {
   setModel(content);
   toasts.success("contents.items.published");
+}
+
+async function onUnpublish(): Promise<void> {
+  if (content.value && !isPublishing.value) {
+    isPublishing.value = true;
+    try {
+      const unpublishedContent: Content = await unpublishAllContent(content.value.id);
+      onUnpublished(unpublishedContent);
+    } catch (e: unknown) {
+      handleError(e);
+    } finally {
+      isPublishing.value = false;
+    }
+  }
 }
 function onUnpublished(content: Content): void {
   setModel(content);
@@ -118,6 +150,10 @@ onMounted(async () => {
         @unpublished="onUnpublished"
       />
       <template v-else>
+        <div class="mb-3">
+          <PublishButton class="me-1" :disabled="!canPublish" :loading="isPublishing" @click="onPublish" />
+          <UnpublishButton class="ms-1" :disabled="!canUnpublish" :loading="isPublishing" @click="onUnpublish" />
+        </div>
         <LanguageSelect :exclude="languageIds" no-status :model-value="language?.id" @selected="language = $event">
           <template #append>
             <TarButton :disabled="!language" icon="fas fa-plus" :text="t('actions.add')" variant="success" @click="addLocale" />

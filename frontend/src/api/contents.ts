@@ -15,6 +15,11 @@ export async function createContent(languageId: string | undefined, payload: Cre
   return (await post<CreateOrReplaceContentPayload, Content>(url, payload)).data;
 }
 
+export async function publishAllContent(id: string): Promise<Content> {
+  const url: string = new urlUtils.UrlBuilder({ path: "/api/contents/{id}/publish/all" }).setParameter("id", id).buildRelative();
+  return (await patch<void, Content>(url)).data;
+}
+
 export async function publishContent(id: string, languageId?: string): Promise<Content> {
   const url: string = new urlUtils.UrlBuilder({ path: "/api/contents/{id}/publish" })
     .setParameter("id", id)
@@ -53,6 +58,11 @@ export async function searchContents(payload: SearchContentsPayload): Promise<Se
     .setQuery("limit", payload.limit.toString())
     .buildRelative();
   return (await get<SearchResults<ContentLocale>>(url)).data;
+}
+
+export async function unpublishAllContent(id: string): Promise<Content> {
+  const url: string = new urlUtils.UrlBuilder({ path: "/api/contents/{id}/unpublish/all" }).setParameter("id", id).buildRelative();
+  return (await patch<void, Content>(url)).data;
 }
 
 export async function unpublishContent(id: string, languageId?: string): Promise<Content> {
