@@ -7,7 +7,6 @@
     "list": "Contenus",
     "published": "Le contenu a été publié.",
     "publishedOn": "Dernière publication le {date} par",
-    "revision": "révision {revision}",
     "sort": {
       "options": {
         "CreatedOn": "Date de création",

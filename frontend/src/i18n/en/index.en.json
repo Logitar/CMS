@@ -38,6 +38,7 @@
     "next": "Next",
     "previous": "Previous"
   },
+  "revision": " (revision {revision})",
   "search": "Search",
   "sort": {
     "isDescending": "Is descending",
