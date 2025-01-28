@@ -9,13 +9,18 @@ import type { Actor } from "@/types/actor";
 const { d, t } = useI18n();
 const { parseNumber } = parsingUtils;
 
-const props = defineProps<{
-  actor: Actor;
-  date: string;
-  format: string;
-  revision?: number;
-  revisionFormat?: string;
-}>();
+const props = withDefaults(
+  defineProps<{
+    actor: Actor;
+    date: string;
+    format: string;
+    revision?: number;
+    revisionFormat?: string;
+  }>(),
+  {
+    revisionFormat: "revision",
+  },
+);
 
 const displayName = computed<string>(() => {
   const { displayName, type } = props.actor;
@@ -41,6 +46,6 @@ const variant = computed<string | undefined>(() => (props.actor.type === "ApiKey
     {{ t(format, { date: d(date, "medium") }) }}
     <TarAvatar :display-name="displayName" :email-address="actor.emailAddress" :icon="icon" :size="24" :url="actor.pictureUrl" :variant="variant" />
     {{ displayName }}
-    <template v-if="parsedRevision"> {{ t(revisionFormat ?? "revision", { revision: parsedRevision }) }}</template>
+    <template v-if="parsedRevision"> {{ t(revisionFormat, { revision: parsedRevision }) }}</template>
   </span>
 </template>
