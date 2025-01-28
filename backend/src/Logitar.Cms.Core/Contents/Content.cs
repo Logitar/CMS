@@ -62,7 +62,7 @@ public class Content : AggregateRoot
   }
   public void PublishInvariant(ActorId? actorId = null)
   {
-    if (!IsInvariantPublished())
+    if (_invariantStatus != ContentStatus.Latest)
     {
       Raise(new ContentLocalePublished(LanguageId: null), actorId);
     }
@@ -74,7 +74,7 @@ public class Content : AggregateRoot
     {
       return false;
     }
-    else if (!IsPublished(languageId))
+    else if (!_localeStatuses.TryGetValue(languageId, out ContentStatus status) || status != ContentStatus.Latest)
     {
       Raise(new ContentLocalePublished(languageId), actorId);
     }
@@ -113,12 +113,20 @@ public class Content : AggregateRoot
     if (@event.LanguageId.HasValue)
     {
       _locales[@event.LanguageId.Value] = @event.Locale;
-      _localeStatuses[@event.LanguageId.Value] = ContentStatus.Published;
+
+      if (_localeStatuses.TryGetValue(@event.LanguageId.Value, out ContentStatus status) && status == ContentStatus.Latest)
+      {
+        _localeStatuses[@event.LanguageId.Value] = ContentStatus.Published;
+      }
     }
     else
     {
       _invariant = @event.Locale;
-      _invariantStatus = ContentStatus.Published;
+
+      if (_invariantStatus == ContentStatus.Latest)
+      {
+        _invariantStatus = ContentStatus.Published;
+      }
     }
   }
 
