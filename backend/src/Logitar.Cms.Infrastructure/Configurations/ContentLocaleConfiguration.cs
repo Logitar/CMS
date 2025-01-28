@@ -13,6 +13,7 @@ internal class ContentLocaleConfiguration : IEntityTypeConfiguration<ContentLoca
     builder.ToTable(CmsDb.ContentLocales.Table.Table ?? string.Empty, CmsDb.ContentLocales.Table.Schema);
     builder.HasKey(x => x.ContentLocaleId);
 
+    builder.HasIndex(x => x.Revision);
     builder.HasIndex(x => new { x.ContentId, x.LanguageId }).IsUnique();
     builder.HasIndex(x => x.UniqueName);
     builder.HasIndex(x => new { x.ContentTypeId, x.LanguageId, x.UniqueNameNormalized }).IsUnique();
@@ -22,6 +23,7 @@ internal class ContentLocaleConfiguration : IEntityTypeConfiguration<ContentLoca
     builder.HasIndex(x => x.UpdatedBy);
     builder.HasIndex(x => x.UpdatedOn);
     builder.HasIndex(x => x.IsPublished);
+    builder.HasIndex(x => x.PublishedRevision);
     builder.HasIndex(x => x.PublishedBy);
     builder.HasIndex(x => x.PublishedOn);
 

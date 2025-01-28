@@ -35,6 +35,8 @@ public class PublishedContentEntity
 
   public string? FieldValues { get; private set; }
 
+  // TODO(fpion): Revision; feed until persisted; return to model
+
   public string? PublishedBy { get; private set; }
   public DateTime PublishedOn { get; private set; }
 
