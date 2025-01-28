@@ -108,8 +108,28 @@ function onUnpublished(content: Content): void {
   toasts.success("contents.items.unpublished");
 }
 
-function onSaved(content: Content): void {
-  setModel(content);
+function onSaved(model: Content, language?: Language): void {
+  if (content.value) {
+    content.value.version = model.version;
+    content.value.updatedBy = { ...model.updatedBy };
+    content.value.updatedOn = model.updatedOn;
+
+    if (language) {
+      const locale: ContentLocale | undefined = model.locales.find((locale) => locale.language?.id === language.id);
+      if (locale) {
+        const index: number = content.value.locales.findIndex((locale) => locale.language?.id === language.id);
+        if (index < 0) {
+          content.value.locales.push({ ...locale });
+        } else {
+          content.value.locales.splice(index, 1, { ...locale });
+        }
+      }
+    } else {
+      content.value.invariant = { ...model.invariant };
+    }
+  } else {
+    setModel(model);
+  }
   toasts.success("contents.items.updated");
 }
 
@@ -176,7 +196,7 @@ onMounted(async () => {
               :locale="locale"
               @error="handleError"
               @published="onPublished"
-              @saved="onSaved"
+              @saved="onSaved($event, locale.language)"
               @unpublished="onUnpublished"
             />
           </TarTab>

@@ -86,8 +86,16 @@ function onFieldDefinitionAdded(contentType: ContentType): void {
   setModel(contentType);
   toasts.success("fields.definitions.created");
 }
-function onFieldDefinitionUpdated(contentType: ContentType): void {
-  setModel(contentType);
+function onFieldDefinitionUpdated(model: ContentType): void {
+  if (contentType.value) {
+    contentType.value.version = model.version;
+    contentType.value.updatedBy = { ...model.updatedBy };
+    contentType.value.updatedOn = model.updatedOn;
+    contentType.value.fieldCount = model.fieldCount;
+    contentType.value.fields = [...model.fields];
+  } else {
+    setModel(model);
+  }
   toasts.success("fields.definitions.updated");
 }
 
