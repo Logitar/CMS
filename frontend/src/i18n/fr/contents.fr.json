@@ -5,7 +5,10 @@
     "empty": "Cette liste est vide.",
     "invariant": "Invariant",
     "list": "Contenus",
-    "published": "Le contenu a été publié.",
+    "published": {
+      "label": "Publié",
+      "success": "Le contenu a été publié."
+    },
     "publishedOn": "Dernière publication le {date} par",
     "sort": {
       "options": {

@@ -87,7 +87,7 @@ async function onPublish(): Promise<void> {
 }
 function onPublished(content: Content): void {
   setModel(content);
-  toasts.success("contents.items.published");
+  toasts.success("contents.items.published.success");
 }
 
 async function onUnpublish(): Promise<void> {
