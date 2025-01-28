@@ -26,7 +26,6 @@ const { t } = useI18n();
 
 const content = ref<Content>();
 const language = ref<Language>();
-const newLocales = ref<Set<string>>(new Set<string>());
 
 const isInvariant = computed<boolean>(() => Boolean(content.value && content.value.contentType.isInvariant));
 const languageIds = computed<string[]>(() => (content.value?.locales ?? []).map((locale) => locale.language?.id ?? ""));
@@ -48,11 +47,11 @@ function addLocale(): void {
       updatedBy: actor,
       updatedOn: now,
       isPublished: false,
+      revision: 0,
       publishedBy: undefined,
       publishedOn: undefined,
     };
     content.value.locales.push(locale);
-    newLocales.value.add(language.value.id);
     language.value = undefined;
   }
 }
@@ -68,10 +67,6 @@ function compare(left: ContentLocale, right: ContentLocale): -1 | 0 | 1 {
   return 0;
 }
 
-function isNewLocale(locale: ContentLocale): boolean {
-  return Boolean(locale.language && newLocales.value.has(locale.language.id));
-}
-
 function onPublished(content: Content): void {
   setModel(content);
   toasts.success("contents.items.published");
@@ -81,11 +76,7 @@ function onUnpublished(content: Content): void {
   toasts.success("contents.items.unpublished");
 }
 
-function onSaved(content: Content, language?: Language): void {
-  if (language) {
-    newLocales.value.delete(language.id);
-  }
-
+function onSaved(content: Content): void {
   setModel(content);
   toasts.success("contents.items.updated");
 }
@@ -147,10 +138,9 @@ onMounted(async () => {
             <ContentLocaleEdit
               :content="content"
               :locale="locale"
-              :new="isNewLocale(locale)"
               @error="handleError"
               @published="onPublished"
-              @saved="onSaved($event, locale.language)"
+              @saved="onSaved"
               @unpublished="onUnpublished"
             />
           </TarTab>

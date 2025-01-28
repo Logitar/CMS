@@ -21,5 +21,5 @@ defineEmits<{
 </script>
 
 <template>
-  <TarButton :disabled="isDisabled" icon="fas fa-bullhorn" :loading="isLoading" :text="t('actions.publish')" variant="warning" @click="$emit('click')" />
+  <TarButton :disabled="isDisabled" icon="fas fa-mask" :loading="isLoading" :text="t('actions.unpublish')" variant="warning" @click="$emit('click')" />
 </template>
