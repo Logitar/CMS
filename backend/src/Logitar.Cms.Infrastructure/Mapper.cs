@@ -228,6 +228,7 @@ public class Mapper
       UniqueName = source.UniqueName,
       DisplayName = source.DisplayName,
       Description = source.Description,
+      Revision = source.Revision,
       PublishedBy = TryFindActor(source.PublishedBy) ?? _system,
       PublishedOn = source.PublishedOn.AsUniversalTime()
     };

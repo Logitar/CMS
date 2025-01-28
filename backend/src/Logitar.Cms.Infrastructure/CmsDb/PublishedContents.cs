@@ -22,6 +22,7 @@ public static class PublishedContents
   public static readonly ColumnId LanguageUid = new(nameof(PublishedContentEntity.LanguageUid), Table);
   public static readonly ColumnId PublishedBy = new(nameof(PublishedContentEntity.PublishedBy), Table);
   public static readonly ColumnId PublishedOn = new(nameof(PublishedContentEntity.PublishedOn), Table);
+  public static readonly ColumnId Revision = new(nameof(PublishedContentEntity.Revision), Table);
   public static readonly ColumnId UniqueName = new(nameof(PublishedContentEntity.UniqueName), Table);
   public static readonly ColumnId UniqueNameNormalized = new(nameof(PublishedContentEntity.UniqueNameNormalized), Table);
 }
