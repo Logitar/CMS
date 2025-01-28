@@ -2,6 +2,7 @@
 import { arrayUtils, parsingUtils } from "logitar-js";
 import { computed, ref, watch } from "vue";
 import { useForm } from "vee-validate";
+import { useI18n } from "vue-i18n";
 
 import AppSaveButton from "@/components/shared/AppSaveButton.vue";
 import ContentFieldValueConflicts from "./ContentFieldValueConflicts.vue";
@@ -24,6 +25,7 @@ import { publishContent, replaceContent, unpublishContent } from "@/api/contents
 
 const { orderBy } = arrayUtils;
 const { parseBoolean } = parsingUtils;
+const { t } = useI18n();
 
 const props = defineProps<{
   content: Content;
@@ -154,9 +156,11 @@ watch(() => props.locale, reset, { deep: true, immediate: true });
       <StatusInfo :actor="locale.createdBy" :date="locale.createdOn" format="status.createdOn" />
       <br />
       <StatusInfo :actor="locale.updatedBy" :date="locale.updatedOn" format="status.updatedOn" />
+      ({{ t("contents.items.revision", { revision: locale.revision }) }})
       <template v-if="locale.publishedBy && locale.publishedOn">
         <br />
         <StatusInfo :actor="locale.publishedBy" :date="locale.publishedOn" format="contents.items.publishedOn" />
+        <template v-if="locale.publishedRevision"> ({{ t("contents.items.revision", { revision: locale.publishedRevision }) }})</template>
       </template>
     </p>
     <div class="mb-3">
