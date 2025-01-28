@@ -38,6 +38,7 @@ public class FieldIndexEntity
   public int ContentLocaleId { get; private set; }
   public string ContentLocaleName { get; private set; } = string.Empty;
 
+  public long Revision { get; private set; }
   public ContentStatus Status { get; private set; }
 
   public bool? Boolean { get; private set; }
@@ -93,19 +94,22 @@ public class FieldIndexEntity
 
     Status = status;
 
-    Update(value);
+    long revision = (status == ContentStatus.Published ? contentLocale.PublishedRevision : null) ?? contentLocale.Revision;
+    Update(revision, value);
   }
 
   private FieldIndexEntity()
   {
   }
 
-  public void Update(string value)
+  public void Update(long revision, string value)
   {
     if (FieldType == null)
     {
       throw new InvalidOperationException($"The {nameof(FieldType)} is required.");
     }
+
+    Revision = revision;
 
     switch (FieldType.DataType)
     {

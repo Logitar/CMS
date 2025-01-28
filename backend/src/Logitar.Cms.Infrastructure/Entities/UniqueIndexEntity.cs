@@ -31,6 +31,7 @@ public class UniqueIndexEntity
   public Guid FieldDefinitionUid { get; private set; }
   public string FieldDefinitionName { get; private set; } = string.Empty;
 
+  public long Revision { get; private set; }
   public ContentStatus Status { get; private set; }
 
   public string Value { get; private set; } = string.Empty;
@@ -90,7 +91,8 @@ public class UniqueIndexEntity
 
     Status = status;
 
-    Update(value);
+    long revision = (status == ContentStatus.Published ? contentLocale.PublishedRevision : null) ?? contentLocale.Revision;
+    Update(revision, value);
 
     Content = content;
     ContentId = content.ContentId;
@@ -110,8 +112,10 @@ public class UniqueIndexEntity
     Convert.ToBase64String(fieldDefinitionId.ToByteArray()).TrimEnd('='),
     Helper.Normalize(value));
 
-  public void Update(string value)
+  public void Update(long revision, string value)
   {
+    Revision = revision;
+
     Value = value.Truncate(MaximumLength);
   }
 }

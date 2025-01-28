@@ -31,6 +31,7 @@ internal class FieldIndexConfiguration : IEntityTypeConfiguration<FieldIndexEnti
     builder.HasIndex(x => x.ContentUid);
     builder.HasIndex(x => x.ContentLocaleId);
     builder.HasIndex(x => x.ContentLocaleName);
+    builder.HasIndex(x => x.Revision);
     builder.HasIndex(x => x.Status);
     builder.HasIndex(x => x.Boolean);
     builder.HasIndex(x => x.DateTime);
