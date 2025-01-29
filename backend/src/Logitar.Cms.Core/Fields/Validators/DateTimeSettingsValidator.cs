@@ -9,8 +9,8 @@ public class DateTimeSettingsValidator : AbstractValidator<IDateTimeSettings>
   {
     When(x => x.MinimumValue.HasValue && x.MaximumValue.HasValue, () =>
     {
-      RuleFor(x => x.MinimumValue!.Value).LessThan(x => x.MaximumValue!.Value);
-      RuleFor(x => x.MaximumValue!.Value).GreaterThan(x => x.MinimumValue!.Value);
+      RuleFor(x => x.MinimumValue!.Value).LessThanOrEqualTo(x => x.MaximumValue!.Value);
+      RuleFor(x => x.MaximumValue!.Value).GreaterThanOrEqualTo(x => x.MinimumValue!.Value);
     });
   }
 }

@@ -16,11 +16,17 @@ const emit = defineEmits<{
   (e: "update:model-value", value: RichTextProperties): void;
 }>();
 
-function setMaximumLength(maximumLength: number | undefined): void {
+function setMaximumLength(maximumLength: number | string | undefined): void {
+  if (typeof maximumLength === "string") {
+    maximumLength = maximumLength ? parseNumber(maximumLength) : undefined;
+  }
   const value: RichTextProperties = { ...props.modelValue, maximumLength };
   emit("update:model-value", value);
 }
-function setMinimumLength(minimumLength: number | undefined): void {
+function setMinimumLength(minimumLength: number | string | undefined): void {
+  if (typeof minimumLength === "string") {
+    minimumLength = minimumLength ? parseNumber(minimumLength) : undefined;
+  }
   const value: RichTextProperties = { ...props.modelValue, minimumLength };
   emit("update:model-value", value);
 }
@@ -40,7 +46,7 @@ function setMinimumLength(minimumLength: number | undefined): void {
         :model-value="modelValue.minimumLength?.toString()"
         placeholder="fields.types.richText.minimumLength"
         type="number"
-        @update:model-value="setMinimumLength(parseNumber($event))"
+        @update:model-value="setMinimumLength"
       />
       <AppInput
         class="col"
@@ -51,7 +57,7 @@ function setMinimumLength(minimumLength: number | undefined): void {
         :model-value="modelValue.maximumLength?.toString()"
         placeholder="fields.types.richText.maximumLength"
         type="number"
-        @update:model-value="setMaximumLength(parseNumber($event))"
+        @update:model-value="setMaximumLength"
       />
     </div>
   </div>
