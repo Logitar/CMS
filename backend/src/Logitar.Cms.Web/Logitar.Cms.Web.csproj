@@ -16,14 +16,14 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/Logitar/CMS</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <AssemblyVersion>0.2.1.0</AssemblyVersion>
+    <AssemblyVersion>0.2.2.0</AssemblyVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <Version>0.2.1</Version>
+    <Version>0.2.2</Version>
     <NeutralLanguage>en-CA</NeutralLanguage>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
-    <PackageReleaseNotes>Fixed Number, String &amp; RichText bounds validation and handling.</PackageReleaseNotes>
+    <PackageReleaseNotes>Fixed empty field value descriptions.</PackageReleaseNotes>
     <PackageTags>logitar;cms;web;interface;rest;api;controller;filter;razor;view</PackageTags>
     <PackageProjectUrl>https://github.com/Logitar/CMS/tree/main/backend/src/Logitar.Cms.Web</PackageProjectUrl>
   </PropertyGroup>

@@ -29,7 +29,7 @@ defineEmits<{
     raw
     @update:model-value="$emit('update:model-value', ($event as boolean).toString())"
   >
-    <template v-if="definition.description" #after>
+    <template #after v-if="definition.description">
       <FieldValueDescription :definition="definition" :id="descriptionId" />
     </template>
   </AppCheckbox>
