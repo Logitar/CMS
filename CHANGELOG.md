@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Nothing yet.
 
+## [0.2.1] - 2025-01-29
+
+### Fixed
+
+- Number, String & RichText bounds validation and handling.
+
 ## [0.2.0] - 2025-01-28
 
 ### Added
@@ -41,6 +47,7 @@ Nothing yet.
 
 Initial release, including basic account management, languages, 8 field types, content types & field definitions, and contents, invariant & translated, field values, indices and published contents.
 
-[unreleased]: https://github.com/Logitar/CMS/compare/v0.2.0...HEAD
+[unreleased]: https://github.com/Logitar/CMS/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/Logitar/CMS/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/Logitar/CMS/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/Logitar/CMS/releases/tag/v0.1.0

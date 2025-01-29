@@ -3,5 +3,5 @@
 internal static class Api
 {
   public const string Title = "CMS API";
-  public static readonly Version Version = new(0, 2, 0);
+  public static readonly Version Version = new(0, 2, 1);
 }

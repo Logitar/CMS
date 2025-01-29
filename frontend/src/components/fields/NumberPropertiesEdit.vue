@@ -16,15 +16,24 @@ const emit = defineEmits<{
   (e: "update:model-value", value: NumberProperties): void;
 }>();
 
-function setMaximumValue(maximumValue: number | undefined): void {
+function setMaximumValue(maximumValue: number | string | undefined): void {
+  if (typeof maximumValue === "string") {
+    maximumValue = maximumValue ? parseNumber(maximumValue) : undefined;
+  }
   const value: NumberProperties = { ...props.modelValue, maximumValue };
   emit("update:model-value", value);
 }
-function setMinimumValue(minimumValue: number | undefined): void {
+function setMinimumValue(minimumValue: number | string | undefined): void {
+  if (typeof minimumValue === "string") {
+    minimumValue = minimumValue ? parseNumber(minimumValue) : undefined;
+  }
   const value: NumberProperties = { ...props.modelValue, minimumValue };
   emit("update:model-value", value);
 }
-function setStep(step: number | undefined): void {
+function setStep(step: number | string | undefined): void {
+  if (typeof step === "string") {
+    step = step ? parseNumber(step) : undefined;
+  }
   const value: NumberProperties = { ...props.modelValue, step };
   emit("update:model-value", value);
 }
@@ -43,7 +52,7 @@ function setStep(step: number | undefined): void {
         :model-value="modelValue.minimumValue?.toString()"
         placeholder="fields.types.number.minimumValue"
         type="number"
-        @update:model-value="setMinimumValue(parseNumber($event))"
+        @update:model-value="setMinimumValue"
       />
       <AppInput
         class="col"
@@ -54,7 +63,7 @@ function setStep(step: number | undefined): void {
         :model-value="modelValue.maximumValue?.toString()"
         placeholder="fields.types.number.maximumValue"
         type="number"
-        @update:model-value="setMaximumValue(parseNumber($event))"
+        @update:model-value="setMaximumValue"
       />
       <AppInput
         class="col"
@@ -67,7 +76,7 @@ function setStep(step: number | undefined): void {
         placeholder="fields.types.number.step"
         step="any"
         type="number"
-        @update:model-value="setStep(parseNumber($event))"
+        @update:model-value="setStep"
       />
     </div>
   </div>
