@@ -28,7 +28,7 @@ function onModelValueUpdate(tags: string[]): void {
     <template #label-override>
       <FieldValueLabel :definition="definition" />
     </template>
-    <template #after>
+    <template #after v-if="definition.description">
       <FieldValueDescription :definition="definition" :id="descriptionId" />
     </template>
   </AppTags>
