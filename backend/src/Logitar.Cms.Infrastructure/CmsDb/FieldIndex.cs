@@ -5,7 +5,7 @@ namespace Logitar.Cms.Infrastructure.CmsDb;
 
 public static class FieldIndex
 {
-  public static readonly TableId Table = new(nameof(CmsContext.FieldIndex));
+  public static readonly TableId Table = new(CmsContext.Schema, nameof(CmsContext.FieldIndex), alias: null);
 
   public static readonly ColumnId ContentId = new(nameof(FieldIndexEntity.ContentId), Table);
   public static readonly ColumnId ContentLocaleId = new(nameof(FieldIndexEntity.ContentLocaleId), Table);

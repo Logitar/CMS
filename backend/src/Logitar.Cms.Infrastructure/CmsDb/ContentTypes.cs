@@ -5,7 +5,7 @@ namespace Logitar.Cms.Infrastructure.CmsDb;
 
 public static class ContentTypes
 {
-  public static readonly TableId Table = new(nameof(CmsContext.ContentTypes));
+  public static readonly TableId Table = new(CmsContext.Schema, nameof(CmsContext.ContentTypes), alias: null);
 
   public static readonly ColumnId CreatedBy = new(nameof(ContentTypeEntity.CreatedBy), Table);
   public static readonly ColumnId CreatedOn = new(nameof(ContentTypeEntity.CreatedOn), Table);

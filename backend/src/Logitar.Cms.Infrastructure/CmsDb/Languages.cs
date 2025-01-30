@@ -5,7 +5,7 @@ namespace Logitar.Cms.Infrastructure.CmsDb;
 
 public static class Languages
 {
-  public static readonly TableId Table = new(nameof(CmsContext.Languages));
+  public static readonly TableId Table = new(CmsContext.Schema, nameof(CmsContext.Languages), alias: null);
 
   public static readonly ColumnId CreatedBy = new(nameof(LanguageEntity.CreatedBy), Table);
   public static readonly ColumnId CreatedOn = new(nameof(LanguageEntity.CreatedOn), Table);

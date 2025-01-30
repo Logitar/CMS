@@ -5,7 +5,7 @@ namespace Logitar.Cms.Infrastructure.CmsDb;
 
 public static class UniqueIndex
 {
-  public static readonly TableId Table = new(nameof(CmsContext.UniqueIndex));
+  public static readonly TableId Table = new(CmsContext.Schema, nameof(CmsContext.UniqueIndex), alias: null);
 
   public static readonly ColumnId ContentId = new(nameof(UniqueIndexEntity.ContentId), Table);
   public static readonly ColumnId ContentLocaleId = new(nameof(UniqueIndexEntity.ContentLocaleId), Table);

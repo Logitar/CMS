@@ -5,7 +5,7 @@ namespace Logitar.Cms.Infrastructure.CmsDb;
 
 public static class ContentLocales
 {
-  public static readonly TableId Table = new(nameof(CmsContext.ContentLocales));
+  public static readonly TableId Table = new(CmsContext.Schema, nameof(CmsContext.ContentLocales), alias: null);
 
   public static readonly ColumnId CreatedBy = new(nameof(ContentLocaleEntity.CreatedBy), Table);
   public static readonly ColumnId CreatedOn = new(nameof(ContentLocaleEntity.CreatedOn), Table);
