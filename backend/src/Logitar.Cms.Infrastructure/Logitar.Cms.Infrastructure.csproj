@@ -15,14 +15,14 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/Logitar/CMS</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <AssemblyVersion>0.2.3.0</AssemblyVersion>
+    <AssemblyVersion>0.3.0.0</AssemblyVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <Version>0.2.3</Version>
+    <Version>0.3.0</Version>
     <NeutralLanguage>en-CA</NeutralLanguage>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
-    <PackageReleaseNotes>Implement read user by unique name.</PackageReleaseNotes>
+    <PackageReleaseNotes>Moved data tables under a schema.</PackageReleaseNotes>
     <PackageTags>logitar;content;management;system;infrastructure;logic;caching;persistence</PackageTags>
     <PackageProjectUrl>https://github.com/Logitar/CMS/tree/main/backend/src/Logitar.Cms.Infrastructure</PackageProjectUrl>
   </PropertyGroup>
