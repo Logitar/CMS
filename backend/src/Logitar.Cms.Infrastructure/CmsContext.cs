@@ -5,6 +5,8 @@ namespace Logitar.Cms.Infrastructure;
 
 public class CmsContext : DbContext
 {
+  public const string Schema = "Cms";
+
   public CmsContext(DbContextOptions<CmsContext> options) : base(options)
   {
   }

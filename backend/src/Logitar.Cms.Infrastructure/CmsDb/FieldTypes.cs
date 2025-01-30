@@ -5,7 +5,7 @@ namespace Logitar.Cms.Infrastructure.CmsDb;
 
 public static class FieldTypes
 {
-  public static readonly TableId Table = new(nameof(CmsContext.FieldTypes));
+  public static readonly TableId Table = new(CmsContext.Schema, nameof(CmsContext.FieldTypes), alias: null);
 
   public static readonly ColumnId CreatedBy = new(nameof(FieldTypeEntity.CreatedBy), Table);
   public static readonly ColumnId CreatedOn = new(nameof(FieldTypeEntity.CreatedOn), Table);
