@@ -13,4 +13,5 @@ public interface IUserQuerier
   Task<UserModel> ReadAsync(User user, CancellationToken cancellationToken = default);
   Task<UserModel?> ReadAsync(UserId id, CancellationToken cancellationToken = default);
   Task<UserModel?> ReadAsync(Guid id, CancellationToken cancellationToken = default);
+  Task<UserModel?> ReadAsync(string uniqueName, CancellationToken cancellationToken = default);
 }

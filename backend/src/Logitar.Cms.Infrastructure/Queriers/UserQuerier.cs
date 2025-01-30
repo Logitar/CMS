@@ -60,6 +60,17 @@ internal class UserQuerier : IUserQuerier
 
     return user == null ? null : await MapAsync(user, cancellationToken);
   }
+  public async Task<UserModel?> ReadAsync(string uniqueName, CancellationToken cancellationToken)
+  {
+    string uniqueNameNormalized = Helper.Normalize(uniqueName);
+
+    UserEntity? user = await _users.AsNoTracking()
+      .Include(x => x.Identifiers)
+      .Include(x => x.Roles)
+      .SingleOrDefaultAsync(x => x.UniqueNameNormalized == uniqueNameNormalized, cancellationToken);
+
+    return user == null ? null : await MapAsync(user, cancellationToken);
+  }
 
   private async Task<UserModel> MapAsync(UserEntity user, CancellationToken cancellationToken)
   {

@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Nothing yet.
 
+## [0.2.3] - 2025-01-29
+
+### Added
+
+- Read user by unique name.
+
 ## [0.2.2] - 2025-01-29
 
 ### Fixed
@@ -53,7 +59,8 @@ Nothing yet.
 
 Initial release, including basic account management, languages, 8 field types, content types & field definitions, and contents, invariant & translated, field values, indices and published contents.
 
-[unreleased]: https://github.com/Logitar/CMS/compare/v0.2.2...HEAD
+[unreleased]: https://github.com/Logitar/CMS/compare/v0.2.3...HEAD
+[0.2.3]: https://github.com/Logitar/CMS/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/Logitar/CMS/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/Logitar/CMS/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/Logitar/CMS/compare/v0.1.0...v0.2.0
